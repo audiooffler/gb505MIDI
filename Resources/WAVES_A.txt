@@ -1,0 +1,254 @@
+TB Dst Saw	TB-303 Distored Sawtooth
+TB Dst Sqr 1	TB-303 Distored Square 1
+TB Dst Sqr 2	TB-303 Distored Square 2
+TB Reso Sqr1	TB-303 Resonant Square 1
+TB Reso Sqr2	TB-303 Resonant Square 2
+TB Saw	TB-303 Sawtooth
+TB SolidSaw1	TB-303 Solid Sawtooth 1
+TB SolidSaw2	TB-303 Solid Sawtooth 2
+TB Square 1	TB-303 Square 1
+TB Square 2	TB-303 Square 2
+TB Sqr Decay	TB-303 Square Decay
+TB Natural	TB-303 Natural
+JP8000 Saw 1	JP-8000 Sawtooth 1
+JP8000 Saw 2	JP-8000 Sawtooth 2
+MG Saw	Moog Sawtooth
+Synth Saw 1	Synthesized Sawtooth 1
+JP-8 Saw	Jupiter-8 Sawtooth
+P5 Saw	Prophet-5 Sawtooth
+Synth Saw 2	Synth Sawtooth 2
+OB Saw	Oberheim Sawtooth
+D-50 Saw	D-50 Sawtooth
+JP-6 Square	Jupiter-6 Square
+MG Square	Moog Square
+P5 Square	Prophet-5 Square
+JP-8 Pulse	Jupiter-8 Pulse
+JP-6 Pulse	Jupiter-6 Pulse
+MG Pulse	Moog Pulse
+260 Pulse	ARP 2600 Pulse
+JU-2 Sub OSC	Alpha-Juno-2 Oscillator
+Frog wave	Frog Wave
+Digiwave	Digiwave
+FM Pulse	FM Pulse
+JP8000 PWM	JP-8000 Pulse Width Modulation
+JP8000 FBK	JP-8000 Feedback
+260 Sub OSC	ARP 2600 Oscillator
+Dist Synth	Distored Synth
+Dist Square	Distored Square
+MG Triangle	Moog Triangle
+Jungle Bass	Jungle Bass
+260 Sine Bs	ARP 2600 Sine Bass
+MC-202 Bass	MC-202 Bass
+SH-101 Bass	SH-101 Bass
+Octa Bass	Octa Bass
+Funky Bass	Funky Bass
+Poly Bass	Poly Bass
+MG Bass	Moog Bass
+FM Super Bs	FM Super Bass
+Solid Bass	Solid Bass
+Organ Bass	Organ Bass
+Dirty Bass	Dirty Bass
+Upright Bs	Upright Bass
+Ac Bass	Acoustic Bass
+Voco Bass	Vocoder Bass
+Fingered Bs	Fingered Bass
+Pick Bass	Pick Bass
+Fretless Bs	Fretless Bass
+Slap Bass	Slap Bass
+Juno Rave	Juno Rave
+Blaster	Blaster
+Fat JP-6	Fat Jupiter-6
+OB Strings	Oberheim Strings
+Orch Strings	Orchestra Strings
+Pizzy Techno	Pizzy Techno
+Choir	Choir
+Syn Vox 1	Synthesized Vox 1
+Syn Vox 2	Synthesized Vox 2
+Syn Vox 3	Synthesized Vox 3
+Ac Piano	Acoustic Piano
+D-50 EP	D-50 E-Piano
+E.Piano	E-Piano
+Clavi	Clavinet
+Full Stop	Full Stop
+FM Club Org	FM Club Organ
+E.Organ 1	E-Organ 1
+E.Organ 2	E-Organ 2
+Church Org	Church Organ
+Power B fst	Power Hammond-B3 fast
+Power B slw	Power Hammond-B3 slow
+Org Chord	Organ Chord
+Tubular	Tubular
+Glockenspiel	Glockenspiel
+Vibraphone	Vibraphone
+FantabellSub	Fantasia Bell Sub
+DIGI Bell	DIGI Bell
+Steel Drum	Steel Drum
+Marimba	Marimba
+Balaphone	Balaphone
+Kalimba	Kalimba
+Steel Gtr	Steel Guitar
+Clean TC	Clean TC Guitar
+Dst Solo Gtr	Distored Solo Guitar
+Dist TekGtr	Distored Tek Guitar
+Gtr FX	Guitar Effects
+Harmo Gtr	Harmonics Guitar
+Wah Gtr 1	Wah-wah Guitar 1
+Wah Gtr 2	Wah-wah Guitar 2
+Wah Gtr 2a	Wah-wah Guitar 2a
+Wah Gtr 2b	Wah-wah Guitar 2b
+Wah Gtr 2c	Wah-wah Guitar 2c
+Wah Gtr 2d	Wah-wah Guitar 2d
+Sitar	Sitar
+Brass	Brass
+Trumpet	Trumpet
+Mute Trumpet	Muted Trumpet
+Soprano Sax	Soprano Saxophone
+Solo Sax	Solo Saxophone
+Baritone Sax	Baritone Saxophone
+Brass Fall	Brass Fall
+Flute	Flute
+Pan Flute	Pan Flute
+Shakuhachi	Shakuhachi
+Bagpipe	Bagpipe
+Breath	Breath
+Feedbackwave	Feedback Wave
+Atmosphere	Atmosphere
+Rezo Noise	Resonant Noize
+MG White Nz	Moog White Noise
+P5 Noise	Prophet-5 Noise
+MG Pink Nz	Moog Pink Noise
+Bomb Noise	Bomb Noise
+Sea	Sea
+Brush Noise	Brush Noise
+Space Noise	Space Noise
+Scream	Scream
+Jet Plane	Jet Plane
+Toy Gun 1	Toy Gun 1
+Crash	Crash
+Toy Gun 2	Toy Gun 2
+Toy Gun 3	Toy Gun 3
+Emergency	Emergency
+Buzzer	Buzzer
+Insect	Insect
+Tonality	Tonality
+Ring Osc	Ring Oscillator
+Reso FX	Resonant Effects
+SCRATCH MENU	≡ SCRATCH MENU
+Vinyl Noise	Vinyl Noise
+Scratch BD f	Scratch Bass Drum forward
+Scratch BD r	Scratch Bass Drum rewind
+Scratch SD f	Scratch Snare Drum forward
+Scratch SD r	Scratch Snare Drum rewind
+Scratch ALT	Scratch Alternative
+Tape Rewind	Tape Rewind
+Vinyl Stop	Vinyl Stop
+HIT MENU	≡ HIT MENU
+MG Blip	Moog Blip
+Beam HiQ	Beam High-Quality
+MG Attack	Moog Attack
+Air Blip	Air Blip
+Org Click	Organ Click
+Syn Hit	Synthesizer Hit
+Techno Scene	Techno Scene
+Techno Chord	Techno Chord
+Dist Hit	Distored Hit
+Thin Beef	Thin Beef
+Tekno Hit	Tekno Hit
+Back Hit	Back Hit
+TAO Hit	TAO Hit
+Philly Hit	Philly Hit
+INDUST. MENU	≡ INDUSTRIAL MENU
+Analog Bird	Analog Bird
+Retro UFO	Retro UFO
+PC-2 Machine	PC-2 Machine
+Hoo	Hoo
+Metal Sweep	Metal Sweep
+Afro Feet	Afro Feet
+Bomb	Bomb
+Bounce	Bounce
+ElectricDunk	Electric Dunk
+Iron Door	Iron Door
+Dist Swish	Distored Sqish
+Drill Hit	Drill Hit
+Thrill	Thrill
+PCM Press	PCM Press
+Air Gun	Air Gun
+VOICE MENU	≡ VOICE MENU
+One!	One!
+Two!	Two!
+Three!	Three!
+Kick it!	Kick it!
+Come on!	Come on!
+Wao!	Wao!
+Shout	Shout
+Ooh! 1	Ooh! 1
+Ooh! 2	Ooh! 2
+Voice loop	∞ Voice Loop
+Pa!	Pa!
+Canvas	Canvas
+Punch	Punch
+Chiki!	Chiki!
+Hey!	Hey!
+Laugh	Laugh
+Aah Formant	Aah Formant
+Eeh Formant	Eeh Formant
+Iih Formant	Iih Formant
+Ooh Formant	Ooh Formant
+Uuh Formant	Uuh Formant
+Dist Ooh Vox	Dist Ooh Vox
+Auh Voice	Auh Voice
+Stream	Stream
+Bird	Bird
+TOM MENU	≡ TOM-TOM MENU
+TR909 Tom	TR-909 Tom-Tom
+TR909 DstTom	TR-909 Distored Tom-Tom
+TR808 Tom	TR-808 Tom-Tom
+TR606 Tom	TR-606 Tom-Tom
+TR606 CmpTom	TR-606 Compressed Tom-Tom
+TR707 Tom	TR-707 Tom-Tom
+Syn Tom	Synthesized Tom-Tom
+Deep Tom	Deep Tom-Tom
+Can Tom	Can Tom-Tom
+Kick Tom	Kick Tom-Tom
+Natural Tom	Natural Tom-Tom
+PERCUS MENU1	≡ PERCUSSIONS MENU 1
+PERCUS MENU2	≡ PERCUSSIONS MENU 2
+TR808 Conga	TR-808 Conga
+HiBongo Open	High Bongo Open
+LoBongo Open	Low Bongo Open
+HiConga Mute	High Conga Muted
+HiConga Open	High Conga Open
+LoConga Open	Low Conga Open
+HiBongo LoFi	High Bongo Low Fidelity
+LoBongo LoFi	Low Bongo Low Fidelity
+HiCnga Mt LF	High Conga Muted Low Fidelity
+HiCnga Op LF	High Conga Open Low Fidelity
+LoConga LoFi	Low Conga Low Fidelity
+Timpani	Timpani
+Mute Surdo	Muted Surdo
+Open Surdo	Open Surdo
+Hi Timbale	High Timbale
+Lo Timbale	Low Timbale
+HiTimbale LF	High Timbale Low Fidelity
+LoTimbale LF	Low Timbale Low Fidelity
+Tabla	Tabla
+TablaBaya	Tabla Baya
+Udo	Udo
+AfroDrum Rat	Afro Drum Rattle
+Chenchen	Chenchen
+Op Pandeiro	Open Pandeiro
+Mt Pandeiro	Muted Pandeiro
+Tambourine 1	Tambourine 1
+Tambourine 2	Tambourine 2
+Tambourine 3	Tambourine 3
+Tambourine 4	Tambourine 4
+CR78 Tamb	CR-78 Tambourine
+COWBELL MENU	≡ COWBELL MENU
+TR808Cowbell	TR-808 Cowbell
+TR707Cowbell	TR-707 Cowbell
+CR78 Cowbell	CR-78 Cowbell
+Cowbell	Cowbell
+TR727 Agogo	TR-707 Agogo
+CR78 Beat	CR-78 Beat
+Triangle 1	Triangle 1
+Triangle 2	Triangle 2

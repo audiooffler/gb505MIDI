@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="qabmW6" name="MC-307SysEx" projectType="guiapp" version="1.0.0"
+              bundleIdentifier="com.yourcompany.MC307SysEx" includeBinaryInAppConfig="1"
+              jucerVersion="3.1.0">
+  <MAINGROUP id="n8CjoE" name="MC-307SysEx">
+    <FILE id="OXCXhz" name="JUCE Documentation.url" compile="0" resource="1"
+          file="Builds/VisualStudio2013/JUCE Documentation.url"/>
+    <GROUP id="{AC126E82-0D80-6CBE-EF59-78D17CC82F86}" name="Resources">
+      <FILE id="zf7hCa" name="Audio-x-midi.svg" compile="0" resource="1"
+            file="Resources/Audio-x-midi.svg"/>
+      <FILE id="mFQ2Fm" name="EnvSliderHandle.png" compile="0" resource="1"
+            file="Resources/LookAndFeel/EnvSliderHandle.png"/>
+      <FILE id="zp2dxO" name="KeyBlackOff.png" compile="0" resource="1" file="Resources/LookAndFeel/KeyBlackOff.png"/>
+      <FILE id="Hc1uSL" name="KeyBlackOn.png" compile="0" resource="1" file="Resources/LookAndFeel/KeyBlackOn.png"/>
+      <FILE id="RTZOtJ" name="KeyFollow.svg" compile="0" resource="1" file="Resources/LookAndFeel/KeyFollow.svg"/>
+      <FILE id="bglsBt" name="KeyWhiteOff.png" compile="0" resource="1" file="Resources/LookAndFeel/KeyWhiteOff.png"/>
+      <FILE id="ZT1Iq3" name="KeyWhiteOn.png" compile="0" resource="1" file="Resources/LookAndFeel/KeyWhiteOn.png"/>
+      <FILE id="O0uDMG" name="NoteValueGlyphs.svg" compile="0" resource="1"
+            file="Resources/Glyphs/NoteValueGlyphs.svg"/>
+      <FILE id="fYaUP9" name="RotaryKnob32.png" compile="0" resource="1"
+            file="Resources/LookAndFeel/RotaryKnob32.png"/>
+      <FILE id="PHPP71" name="RotaryKnob48.png" compile="0" resource="1"
+            file="Resources/LookAndFeel/RotaryKnob48.png"/>
+      <FILE id="tDDcGu" name="WAVES_A.txt" compile="0" resource="1" file="Resources/WAVES_A.txt"/>
+      <FILE id="ouyJPY" name="WAVES_B.txt" compile="0" resource="1" file="Resources/WAVES_B.txt"/>
+      <FILE id="dxVLyP" name="WAVES_C_JX305.txt" compile="0" resource="1"
+            file="Resources/WAVES_C_JX305.txt"/>
+      <FILE id="XReiGY" name="WAVES_C_MC307.txt" compile="0" resource="1"
+            file="Resources/WAVES_C_MC307.txt"/>
+      <FILE id="Yx33Y2" name="brushedSteel.jpg" compile="0" resource="1"
+            file="Resources/brushedSteel.jpg"/>
+      <FILE id="m6I5HV" name="d2.png" compile="0" resource="1" file="Resources/d2.png"/>
+      <FILE id="ne326Z" name="grooveboxLogo.svg" compile="0" resource="1"
+            file="Resources/grooveboxLogo.svg"/>
+      <FILE id="y9F0jy" name="icon.png" compile="0" resource="0" file="Resources/icon.png"/>
+      <FILE id="vDWcGB" name="icon_small.png" compile="0" resource="0" file="Resources/icon_small.png"/>
+      <FILE id="vHbK4V" name="jx305.png" compile="0" resource="1" file="Resources/jx305.png"/>
+      <FILE id="b6jCCn" name="ledOff.png" compile="0" resource="1" file="Resources/LookAndFeel/ledOff.png"/>
+      <FILE id="yT4lsV" name="ledOn.png" compile="0" resource="1" file="Resources/LookAndFeel/ledOn.png"/>
+      <FILE id="Bq4JDs" name="mc307.png" compile="0" resource="1" file="Resources/mc307.png"/>
+      <FILE id="Yrevpy" name="mc505.png" compile="0" resource="1" file="Resources/mc505.png"/>
+      <FILE id="a9iYtr" name="mixSliderThumb.png" compile="0" resource="1"
+            file="Resources/LookAndFeel/mixSliderThumb.png"/>
+      <FILE id="Y55Xy2" name="noConnection.png" compile="0" resource="1"
+            file="Resources/noConnection.png"/>
+    </GROUP>
+    <GROUP id="{385D6B75-C9E4-ACC2-A78F-2A156A1B409E}" name="Source">
+      <GROUP id="{80263E5F-3AB0-8034-B1E9-016F2E4CD937}" name="MIDIConnection">
+        <FILE id="UoIj9b" name="GrooveboxConnector.cpp" compile="1" resource="0"
+              file="Source/MIDIConnection/GrooveboxConnector.cpp"/>
+        <FILE id="QywkZE" name="GrooveboxConnector.h" compile="0" resource="0"
+              file="Source/MIDIConnection/GrooveboxConnector.h"/>
+        <FILE id="qFgS2h" name="SyxMsg.h" compile="0" resource="0" file="Source/MIDIConnection/SyxMsg.h"/>
+      </GROUP>
+      <GROUP id="{67FFAD91-1CB4-C0FF-5764-DC18CE66AD61}" name="GUI">
+        <GROUP id="{8E595398-8A61-A7D6-5DC8-D037684AC013}" name="GroupWidgets">
+          <FILE id="UWAbBF" name="PanelGroupDark.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/PanelGroupDark.cpp"/>
+          <FILE id="yqSrDU" name="PanelGroupDark.h" compile="0" resource="0"
+                file="Source/GUI/GroupWidgets/PanelGroupDark.h"/>
+          <FILE id="CcyDWd" name="PanelGroupGrey.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/PanelGroupGrey.cpp"/>
+          <FILE id="QC43zB" name="PanelGroupGrey.h" compile="0" resource="0"
+                file="Source/GUI/GroupWidgets/PanelGroupGrey.h"/>
+          <FILE id="i2f2Fc" name="PanelGroupTransp.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/PanelGroupTransp.cpp"/>
+          <FILE id="sbOqRW" name="PanelGroupTransp.h" compile="0" resource="0"
+                file="Source/GUI/GroupWidgets/PanelGroupTransp.h"/>
+          <FILE id="Bw1Nnl" name="RectangleBlack.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/RectangleBlack.cpp"/>
+          <FILE id="PEEbzJ" name="RectangleBlack.h" compile="0" resource="0"
+                file="Source/GUI/GroupWidgets/RectangleBlack.h"/>
+          <FILE id="HfMPRP" name="RectangleDark.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/RectangleDark.cpp"/>
+          <FILE id="TU08jT" name="RectangleDark.h" compile="0" resource="0" file="Source/GUI/GroupWidgets/RectangleDark.h"/>
+          <FILE id="Zin7FA" name="RectangleGrey.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/RectangleGrey.cpp"/>
+          <FILE id="VtqCYP" name="RectangleGrey.h" compile="0" resource="0" file="Source/GUI/GroupWidgets/RectangleGrey.h"/>
+        </GROUP>
+        <GROUP id="{5CE30D5B-37C8-2FC4-93C3-979CA95A79C1}" name="MixerSectionsEditors">
+          <FILE id="yEtHOF" name="MixPartTrack.cpp" compile="1" resource="0"
+                file="Source/GUI/MixerSectionsEditors/MixPartTrack.cpp"/>
+          <FILE id="cvf7Hi" name="MixPartTrack.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/MixPartTrack.h"/>
+          <FILE id="arvt1o" name="MixRhyTrack.cpp" compile="1" resource="0" file="Source/GUI/MixerSectionsEditors/MixRhyTrack.cpp"/>
+          <FILE id="oRk4GI" name="MixRhyTrack.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/MixRhyTrack.h"/>
+        </GROUP>
+        <GROUP id="{73B96D91-5127-8DE8-74B5-A6D55718BEFB}" name="ParameterWidgets">
+          <FILE id="FPPIUa" name="BigGreenToggle.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/BigGreenToggle.cpp"/>
+          <FILE id="mff723" name="BigGreenToggle.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/BigGreenToggle.h"/>
+          <FILE id="w1VxeU" name="BigOrangeToggle.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/BigOrangeToggle.cpp"/>
+          <FILE id="ETokKl" name="BigOrangeToggle.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/BigOrangeToggle.h"/>
+          <FILE id="fw6HL5" name="BlackToggle.cpp" compile="1" resource="0" file="Source/GUI/ParameterWidgets/BlackToggle.cpp"/>
+          <FILE id="QB3kun" name="BlackToggle.h" compile="0" resource="0" file="Source/GUI/ParameterWidgets/BlackToggle.h"/>
+          <FILE id="HYnkL3" name="GrabSwitch.cpp" compile="1" resource="0" file="Source/GUI/ParameterWidgets/GrabSwitch.cpp"/>
+          <FILE id="DFT7gc" name="GrabSwitch.h" compile="0" resource="0" file="Source/GUI/ParameterWidgets/GrabSwitch.h"/>
+          <FILE id="fAiACw" name="KeyfollowBubbleComponent.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/KeyfollowBubbleComponent.cpp"/>
+          <FILE id="oknTDH" name="KeyfollowBubbleComponent.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/KeyfollowBubbleComponent.h"/>
+          <FILE id="CLkD3m" name="KeyfollowMicroParameterSlider.cpp" compile="1"
+                resource="0" file="Source/GUI/ParameterWidgets/KeyfollowMicroParameterSlider.cpp"/>
+          <FILE id="VfpbsC" name="KeyfollowMicroParameterSlider.h" compile="0"
+                resource="0" file="Source/GUI/ParameterWidgets/KeyfollowMicroParameterSlider.h"/>
+          <FILE id="Dulhnw" name="Knob.cpp" compile="1" resource="0" file="Source/GUI/ParameterWidgets/Knob.cpp"/>
+          <FILE id="LF0Xsr" name="Knob.h" compile="0" resource="0" file="Source/GUI/ParameterWidgets/Knob.h"/>
+          <FILE id="xDPngq" name="MicroParameterSlider.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/MicroParameterSlider.cpp"/>
+          <FILE id="wAYUoX" name="MicroParameterSlider.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/MicroParameterSlider.h"/>
+          <FILE id="XbU7WK" name="MixPartLevelFader.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/MixPartLevelFader.cpp"/>
+          <FILE id="WBLAga" name="MixPartLevelFader.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/MixPartLevelFader.h"/>
+          <FILE id="NKc2yF" name="ParameterComboBox.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterComboBox.cpp"/>
+          <FILE id="CGTOJo" name="ParameterComboBox.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterComboBox.h"/>
+          <FILE id="azVTpl" name="ParameterEnvelopeSlider.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterEnvelopeSlider.cpp"/>
+          <FILE id="S6C0zX" name="ParameterEnvelopeSlider.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterEnvelopeSlider.h"/>
+          <FILE id="sQDSph" name="ParameterLedSwitch.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterLedSwitch.cpp"/>
+          <FILE id="YuUuMm" name="ParameterLedSwitch.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterLedSwitch.h"/>
+          <FILE id="ykcfOW" name="ParameterSlider.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterSlider.cpp"/>
+          <FILE id="lK4SwZ" name="ParameterSlider.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterSlider.h"/>
+          <FILE id="EuwUhe" name="ParameterStructDisplay.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterStructDisplay.cpp"/>
+          <FILE id="Bav4EQ" name="ParameterStructDisplay.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterStructDisplay.h"/>
+          <FILE id="rvVCQ2" name="ParameterTextEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterTextEditor.cpp"/>
+          <FILE id="kngviw" name="ParameterTextEditor.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterTextEditor.h"/>
+          <FILE id="YUcFuP" name="ParameterToggle.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterToggle.cpp"/>
+          <FILE id="nALWjy" name="ParameterToggle.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterToggle.h"/>
+          <FILE id="IP61R2" name="ParameterVelCurveDisplay.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterVelCurveDisplay.cpp"/>
+          <FILE id="AGdzfh" name="ParameterVelCurveDisplay.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterVelCurveDisplay.h"/>
+          <FILE id="vCRQyu" name="SmallGreenToggle.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/SmallGreenToggle.cpp"/>
+          <FILE id="LjaBLE" name="SmallGreenToggle.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/SmallGreenToggle.h"/>
+          <FILE id="JWknN0" name="SmallOrangeToggle.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/SmallOrangeToggle.cpp"/>
+          <FILE id="JNCQN2" name="SmallOrangeToggle.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/SmallOrangeToggle.h"/>
+          <FILE id="fexxhv" name="TextWithArrowButton.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/TextWithArrowButton.cpp"/>
+          <FILE id="OdkCKu" name="TextWithArrowButton.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/TextWithArrowButton.h"/>
+          <FILE id="AvvGoI" name="WaveformBrowser.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformBrowser.cpp"/>
+          <FILE id="cPb6Zt" name="WaveformBrowser.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformBrowser.h"/>
+          <FILE id="JukVG7" name="WaveformButton.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformButton.cpp"/>
+          <FILE id="kyMrgp" name="WaveformButton.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformButton.h"/>
+          <FILE id="oC16Kf" name="WaveformsAllGroups.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformsAllGroups.cpp"/>
+          <FILE id="WtNuI5" name="WaveformsAllGroups.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformsAllGroups.h"/>
+          <FILE id="eHUzKS" name="WaveformsGroup.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformsGroup.cpp"/>
+          <FILE id="xM2uBG" name="WaveformsGroup.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformsGroup.h"/>
+        </GROUP>
+        <GROUP id="{726CEA5C-C5CB-C9FB-CDE1-0EA7EA230B02}" name="PatchSectionEditors">
+          <FILE id="s3PlTF" name="PatchToneEditorAbstract.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorAbstract.h"/>
+          <FILE id="EsVWXz" name="AmpEditorAdvanced.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/AmpEditorAdvanced.cpp"/>
+          <FILE id="vQTHjT" name="AmpEditorAdvanced.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/AmpEditorAdvanced.h"/>
+          <FILE id="LVJt9G" name="Envelope.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/Envelope.cpp"/>
+          <FILE id="an3cik" name="Envelope.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/Envelope.h"/>
+          <FILE id="zT43wZ" name="FilterEditorAdvanced.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/FilterEditorAdvanced.cpp"/>
+          <FILE id="jSFNxI" name="FilterEditorAdvanced.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/FilterEditorAdvanced.h"/>
+          <FILE id="iZnTJW" name="FxmEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/FxmEditor.cpp"/>
+          <FILE id="KVGdkR" name="FxmEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/FxmEditor.h"/>
+          <FILE id="goXtdm" name="LfoEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/LfoEditor.cpp"/>
+          <FILE id="jYne6M" name="LfoEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/LfoEditor.h"/>
+          <FILE id="b5MHPW" name="LfoEditorAdvanced.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/LfoEditorAdvanced.cpp"/>
+          <FILE id="o50Qnc" name="LfoEditorAdvanced.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/LfoEditorAdvanced.h"/>
+          <FILE id="xptTQK" name="PatchControllerMatrixEditor.cpp" compile="1"
+                resource="0" file="Source/GUI/PatchSectionEditors/PatchControllerMatrixEditor.cpp"/>
+          <FILE id="nS1XVU" name="PatchControllerMatrixEditor.h" compile="0"
+                resource="0" file="Source/GUI/PatchSectionEditors/PatchControllerMatrixEditor.h"/>
+          <FILE id="TGEctn" name="PatchToneEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditor.cpp"/>
+          <FILE id="RBDMH0" name="PatchToneEditor.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditor.h"/>
+          <FILE id="X8zF11" name="PatchToneEditorOverview.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorOverview.cpp"/>
+          <FILE id="QOJXZ7" name="PatchToneEditorOverview.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorOverview.h"/>
+          <FILE id="eo87vy" name="PatchToneEditorAdvanced.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorAdvanced.cpp"/>
+          <FILE id="MOAmVe" name="PatchToneEditorAdvanced.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorAdvanced.h"/>
+          <FILE id="bWIiWQ" name="WaveEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.cpp"/>
+          <FILE id="iz4sHe" name="WaveEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.h"/>
+          <FILE id="NrGCov" name="PitchEditorAdvanced.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/PitchEditorAdvanced.cpp"/>
+          <FILE id="EHCkF3" name="PitchEditorAdvanced.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PitchEditorAdvanced.h"/>
+          <FILE id="JISOaH" name="SoloLegatoEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/SoloLegatoEditor.cpp"/>
+          <FILE id="U1yamy" name="SoloLegatoEditor.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/SoloLegatoEditor.h"/>
+          <FILE id="qm4bvp" name="ToneDelayEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneDelayEditor.cpp"/>
+          <FILE id="lIhL6O" name="ToneDelayEditor.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneDelayEditor.h"/>
+          <FILE id="P7ZvNp" name="ToneLimitsConstrainer.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneLimitsConstrainer.cpp"/>
+          <FILE id="NB89gb" name="ToneLimitsConstrainer.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneLimitsConstrainer.h"/>
+          <FILE id="N2dBLF" name="ToneMixTable.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTable.cpp"/>
+          <FILE id="dXTUKX" name="ToneMixTable.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/ToneMixTable.h"/>
+          <FILE id="gNOz6D" name="ToneMixTableBoard.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableBoard.cpp"/>
+          <FILE id="tua0yA" name="ToneMixTableBoard.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableBoard.h"/>
+          <FILE id="dIJBTx" name="ToneMixTableCanvas.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableCanvas.cpp"/>
+          <FILE id="HGvBqh" name="ToneMixTableCanvas.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableCanvas.h"/>
+          <FILE id="VP7P25" name="ToneMixTableTone.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableTone.cpp"/>
+          <FILE id="xzMcWB" name="ToneMixTableTone.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableTone.h"/>
+          <FILE id="iAYmAC" name="ToneMixTableToneVeloXFade.cpp" compile="1"
+                resource="0" file="Source/GUI/PatchSectionEditors/ToneMixTableToneVeloXFade.cpp"/>
+          <FILE id="JILApp" name="ToneMixTableToneVeloXFade.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/ToneMixTableToneVeloXFade.h"/>
+        </GROUP>
+        <FILE id="IU9iK0" name="AsciiWithNoteValuesTypeface.cpp" compile="1"
+              resource="0" file="Source/GUI/AsciiWithNoteValuesTypeface.cpp"/>
+        <FILE id="VLmOQk" name="AsciiWithNoteValuesTypeface.h" compile="0"
+              resource="0" file="Source/GUI/AsciiWithNoteValuesTypeface.h"/>
+        <FILE id="pWAYUj" name="GrooveboxKeyboard.cpp" compile="1" resource="0"
+              file="Source/GUI/GrooveboxKeyboard.cpp"/>
+        <FILE id="J6YUF5" name="GrooveboxKeyboard.h" compile="0" resource="0"
+              file="Source/GUI/GrooveboxKeyboard.h"/>
+        <FILE id="W0qoRl" name="GrooveboxLookAndFeel.cpp" compile="1" resource="0"
+              file="Source/GUI/GrooveboxLookAndFeel.cpp"/>
+        <FILE id="JVKfZL" name="GrooveboxLookAndFeel.h" compile="0" resource="0"
+              file="Source/GUI/GrooveboxLookAndFeel.h"/>
+        <FILE id="NQjyFs" name="GrooveboxSplashScreen.cpp" compile="1" resource="0"
+              file="Source/GUI/GrooveboxSplashScreen.cpp"/>
+        <FILE id="j87QR3" name="GrooveboxSplashScreen.h" compile="0" resource="0"
+              file="Source/GUI/GrooveboxSplashScreen.h"/>
+        <FILE id="MbW6xS" name="MFxEditor.cpp" compile="1" resource="0" file="Source/GUI/MFxEditor.cpp"/>
+        <FILE id="lvJUaJ" name="MFxEditor.h" compile="0" resource="0" file="Source/GUI/MFxEditor.h"/>
+        <FILE id="W39vRD" name="MainComponent.cpp" compile="1" resource="0"
+              file="Source/GUI/MainComponent.cpp"/>
+        <FILE id="ENKhlT" name="MainComponent.h" compile="0" resource="0" file="Source/GUI/MainComponent.h"/>
+        <FILE id="pPqrmM" name="MainWindow.h" compile="0" resource="0" file="Source/GUI/MainWindow.h"/>
+        <FILE id="sxMdJv" name="MidiLoggerTab.cpp" compile="1" resource="0"
+              file="Source/GUI/MidiLoggerTab.cpp"/>
+        <FILE id="AmQZ6j" name="MidiLoggerTab.h" compile="0" resource="0" file="Source/GUI/MidiLoggerTab.h"/>
+        <FILE id="CZqila" name="MixerTab.cpp" compile="1" resource="0" file="Source/GUI/MixerTab.cpp"/>
+        <FILE id="Pmw3kN" name="MixerTab.h" compile="0" resource="0" file="Source/GUI/MixerTab.h"/>
+        <FILE id="Ri1E8U" name="PatchEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchEditor.cpp"/>
+        <FILE id="rI2XOz" name="PatchEditor.h" compile="0" resource="0" file="Source/GUI/PatchEditor.h"/>
+        <FILE id="z4L3DQ" name="PatternTab.cpp" compile="1" resource="0" file="Source/GUI/PatternTab.cpp"/>
+        <FILE id="wiNUil" name="PatternTab.h" compile="0" resource="0" file="Source/GUI/PatternTab.h"/>
+      </GROUP>
+      <GROUP id="{B296F93E-F914-9B58-F002-B467166E309C}" name="GrooveboxMemory">
+        <FILE id="egVftm" name="GrooveboxMemoryBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/GrooveboxMemoryBlock.cpp"/>
+        <FILE id="GeDzU2" name="GrooveboxMemoryBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/GrooveboxMemoryBlock.h"/>
+        <FILE id="H4XV4A" name="OverallMemoryBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/OverallMemoryBlock.h"/>
+        <FILE id="WKdOF0" name="Parameter.cpp" compile="1" resource="0" file="Source/GrooveboxMemory/Parameter.cpp"/>
+        <FILE id="ii4sCZ" name="Parameter.h" compile="0" resource="0" file="Source/GrooveboxMemory/Parameter.h"/>
+        <FILE id="cjnfNJ" name="PartInfoBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/PartInfoBlock.cpp"/>
+        <FILE id="D4VQU9" name="PartInfoBlock.h" compile="0" resource="0" file="Source/GrooveboxMemory/PartInfoBlock.h"/>
+        <FILE id="oTWbrw" name="PatternBodyBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/PatternBodyBlock.h"/>
+        <FILE id="ria7JC" name="PatternSetupBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/PatternSetupBlock.h"/>
+        <FILE id="ndMYwY" name="QuickSysExBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/QuickSysExBlock.h"/>
+        <FILE id="BRrZZr" name="RhythmSetBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/RhythmSetBlock.h"/>
+        <FILE id="HlD58O" name="SynthPatchesBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/SynthPatchesBlock.cpp"/>
+        <FILE id="h0kudH" name="SynthPatchesBlock.h" compile="0" resource="0"
+              file="Source/GrooveboxMemory/SynthPatchesBlock.h"/>
+        <FILE id="JxJ4sm" name="SystemBlock.h" compile="0" resource="0" file="Source/GrooveboxMemory/SystemBlock.h"/>
+        <FILE id="mms8LX" name="Waveforms.cpp" compile="1" resource="0" file="Source/GrooveboxMemory/Waveforms.cpp"/>
+        <FILE id="q93eIL" name="Waveforms.h" compile="0" resource="0" file="Source/GrooveboxMemory/Waveforms.h"/>
+      </GROUP>
+      <FILE id="A5zRYm" name="GrooveboxPattern.cpp" compile="1" resource="0"
+            file="Source/GrooveboxPattern.cpp"/>
+      <FILE id="PENm5N" name="GrooveboxPattern.h" compile="0" resource="0"
+            file="Source/GrooveboxPattern.h"/>
+      <FILE id="p2EhLf" name="GrooveboxPatternSetup.cpp" compile="1" resource="0"
+            file="Source/GrooveboxPatternSetup.cpp"/>
+      <FILE id="tRTRul" name="GrooveboxPatternSetup.h" compile="0" resource="0"
+            file="Source/GrooveboxPatternSetup.h"/>
+      <FILE id="z4CH5h" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
+      <FILE id="tUTF7C" name="PatternEvent.h" compile="0" resource="0" file="Source/PatternEvent.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <VS2013 targetFolder="Builds/VisualStudio2013" smallIcon="vDWcGB" bigIcon="y9F0jy"
+            toolset="v120_xp">
+      <CONFIGURATIONS>
+        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="1" optimisation="1" targetName="MC-307SysEx"/>
+        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
+                       isDebug="0" optimisation="3" targetName="MC-307SysEx"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_gui_extra" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_gui_basics" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_graphics" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_events" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_data_structures" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_core" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_audio_processors" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_audio_formats" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_audio_devices" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_audio_utils" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_audio_basics" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+      </MODULEPATHS>
+    </VS2013>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
+  </MODULES>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

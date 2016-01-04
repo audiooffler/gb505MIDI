@@ -1,0 +1,251 @@
+SHKR+ MENU	≡ SHAKER+ MENU
+808 Maracas	TR-808 Maracas
+Maracas	Maracas
+Cabasa Up	Cabasa Up
+TechnoShaker	Techno Shaker
+TR626 Shaker	TR-626 Shaker
+Dance Shaker	Dance Shaker
+CR78 Guiro	CR-78 Guiro
+Long Guiro	Long Guiro
+Short Guiro	Short Guiro
+Mute Cuica	Muted Cuica
+Open Cuica	Open Cuica
+Whistle	Whistle
+TR727Quijada	TR-727 Quijada
+Jingle Bell	Jingle Bell
+Belltree	Belltree
+Wind Chime	Wind Chime
+RIM MENU	≡ RIMSHOT MENU
+TR909 Rim	TR-909 Rimshot
+TR808 Rim	TR-808 Rimshot
+TR808 RimLng	TR-808 Rimshot Long
+TR707 Rim	TR-707 Rimshot
+Analog Rim	Analog Rimshot
+Natural Rim	Natural Rimshot
+Ragga Rim 1	Ragga Rimshot 1
+Lo-Fi Rim	Low Fidelity Rimshot
+Wood Block	Wood Block
+Jungle Snap	Jungle Snap
+TR808 Claves	TR-808 Claves
+Hyoshigi	Hyoshigi
+CHH MENU 1	≡ CLOSED HI-HAT MENU 1
+CHH MENU 2	≡ CLOSED HI-HAT MENU 2
+TR909 CHH 1	TR-909 Closed Hi-Hat 1
+TR909 CHH 2	TR-909 Closed Hi-Hat 2
+TR808 CHH 1	TR-808 Closed Hi-Hat 1
+TR808 CHH 2	TR-808 Closed Hi-Hat 2
+TR808 CHH 3	TR-808 Closed Hi-Hat 3
+TR606 CHH 1	TR-606 Closed Hi-Hat 1
+TR606 CHH 2	TR-606 Closed Hi-Hat 2
+TR606 DstCHH	TR-606 Distored Hi-Hat
+TR707 CHH	TR-707 Closed Hi-Hat
+CR78 CHH	CR-78 Closed Hi-Hat
+DR55 CHH 1	DR-55 Closed Hi-Hat 1
+Closed Hat	Closed Hat
+Pop CHH	Pop Closed Hi-Hat
+Real CHH	Real Closed Hi-Hat
+Bristol CHH	Bristol Closed Hi-Hat
+DR550 CHH 2	DR-550 Closed Hi-Hat 2
+Tight CHH	Tight Closed Hi-Hat
+Hip CHH	Hip Closed Hi-Hat
+Room CHH	Room Closed Hi-Hat
+R8 Brush CHH	R-8 Brush Closed Hi-Hat
+Jungle Hat	Jungle Hat
+PHH MENU	≡ PEDAL HI-HAT MENU
+TR909 PHH 1	TR-909 Pedal Hi-Hat 1
+TR909 PHH 2	TR-909 Pedal Hi-Hat 2
+TR808 PHH 1	TR-808 Pedal Hi-Hat 1
+TR808 PHH 2	TR-808 Pedal Hi-Hat 2
+TR606 PHH 1	TR-606 Pedal Hi-Hat 1
+TR606 PHH 2	TR-606 Pedal Hi-Hat 2
+TR707 PHH	TR-707 Pedal Hi-Hat
+Hip PHH	Hip Pedal Hi-Hat
+Tight PHH	Tight Pedal Hi-Hat
+Pedal Hat 1	Pedal Hat 1
+Real PHH	Real Pedal Hi-Hat
+Pedal Hat 2	Pedal Hat 2
+OHH MENU 1	≡ OPEN HI-HAT MENU 1
+OHH MENU 2	≡ OPEN HI-HAT MENU 2
+TR909 OHH 1	TR-909 Open Hi-Hat 1
+TR909 OHH 2	TR-909 Open Hi-Hat 2
+TR909 OHH 3	TR-909 Open Hi-Hat 3
+TR909 DstOHH	TR-909 Distored Open Hi-Hat
+TR808 OHH 1	TR-808 Open Hi-Hat 1
+TR808 OHH 2	TR-808 Open Hi-Hat 2
+TR606 OHH	TR-606 Open Hi-Hat
+TR606 DstOHH	TR-606 Distored Open Hi-Hat
+TR707 OHH	TR-707 Open Hi-Hat
+CR78 OHH	CR-78 Open Hi-Hat
+Hip OHH	Hip Open Hi-Hat
+Pop Hat Open	Pop Hat Open
+Open Hat	Open Hat
+Cym OHH	Cym Open Hi-Hat
+DR550 OHH	DR-550 Open Hi-Hat
+Funk OHH	Funk Open Hi-Hat
+Real OHH	Real Open Hi-Hat
+R8 OHH	R-8 Open Hi-Hat
+CYMBAL MENU	≡ CYMBAL MENU
+TR606 Cym 1	TR-606 Cymbal 1
+TR606 Cym 2	TR-606 Cymbal 2
+TR909 Ride	TR-909 Ride Cymbal
+TR707 Ride	TR-707 Ride Cymbal
+Natural Ride	Natural Ride Cymbal
+Cup Cym	Cup Cymbal
+TR909 Crash	TR-909 Crash Cymbal
+NaturalCrash	Natural Crash Cymbal
+Jungle Crash	Jungle Crash Cymbal
+Asian Gong	Asian Gong
+CLAP MENU 1	≡ CLAP MENU 1
+CLAP MENU 2	≡ CLAP MENU 2
+TR909 Clap 1	TR-909 Clap 1
+TR909 Clap 2	TR-909 Clap 2
+TR808 Clap	TR-808 Clap
+TR707 Clap	TR-707 Clap
+Cheap Clap	Cheap Clap
+Funk Clap	Funk Clap
+Little Clap	Little Clap
+Real Clap 1	Real Clap 1
+Real Clap 2	Real Clap 2
+Funky Clap	Funky Clap
+Comp Clap	Comp Clap
+Hip Clap	Hip Clap
+Down Clap	Down Clap
+Group Clap	Group Clap
+Big Clap	Big Clap
+Claptail	Claptail
+Clap Snare 1	Clap Snare Drum 1
+Fuzzy Clap	Fuzzy Clap
+Snap	Snap
+Finger Snap	Finger Snap
+SNR MENU 1	≡ SNARE MENU 1
+SNR MENU 2	≡ SNARE MENU 2
+SNR MENU 3	≡ SNARE MENU 3
+SNR MENU 4	≡ SNARE MENU 4
+SNR MENU 5	≡ SNARE MENU 5
+SNR MENU 6	≡ SNARE MENU 6
+TR909 Snr 1	TR-909 Snare Drum 1
+TR909 Snr 2	TR-909 Snare Drum 2
+TR909 Snr 3	TR-909 Snare Drum 3
+TR909 Snr 4	TR-909 Snare Drum 4
+TR909 Snr 5	TR-909 Snare Drum 5
+TR909 Snr 6	TR-909 Snare Drum 6
+TR909 Snr 7	TR-909 Snare Drum 7
+TR909 DstSnr	TR-909 Distored Snare Drum
+TR808 Snr 1	TR-808 Snare Drum 1
+TR808 Snr 2	TR-808 Snare Drum 2
+TR808 Snr 3	TR-808 Snare Drum 3
+TR808 Snr 4	TR-808 Snare Drum 4
+TR808 Snr 5	TR-808 Snare Drum 5
+TR808 Snr 6	TR-808 Snare Drum 6
+TR808 Snr 7	TR-808 Snare Drum 7
+TR808 Snr 8	TR-808 Snare Drum 8
+TR808 Snr 9	TR-808 Snare Drum 9
+TR606 Snr 1	TR-606 Snare Drum 1
+TR606 Snr 2	TR-606 Snare Drum 2
+TR606 Snr 3	TR-606 Snare Drum 3
+DanceHall SD	Dance Hall Snare Drum
+TR707 Snare	TR-707 Snare Drum
+CR78 Snare	CR-78 Snare Drum
+Clap Snare 2	Clap Snare Drum 2
+Jngl Tiny SD	Jungle Tiny Snare Drum
+Jazz Snare	Jazz Snare Drum
+Headz Snare	Headz Snare Drum
+Whack Snare	Whack Snare Drum
+Rap Snare	Rap Snare Drum
+Jungle Snr 1	Jungle Snare Drum 1
+Antigua Snr	Antigua Snare Drum
+Real Snare	Real Snare Drum
+Tiny Snare 1	Tiny Snare Drum 1
+Tiny Snare 2	Tiny Snare Drum 2
+Break Snare1	Break Snare Drum 1
+Break Snare2	Break Snare Drum 2
+MC Snare	MC Snare Drum
+East Snare	East Snare Drum
+Phat Snare	Phat Snare Drum
+Brush Slap 1	Brush Slap 1
+Brush Slap 2	Brush Slap 2
+Deep Snare	Deep Snare Drum
+Fat Snare	Fat Snare Drum
+Disco Snare	Disco Snare Drum
+DJ Snare	DJ Snare Drum
+Macho Snare	Macho Snare Drum
+Hash Snare	Hash Snare Drum
+Lo-Hard Snr	Low-Hard Snare Drum
+Indus Snare	Industrial Snare Drum
+Rage Snare	Raggae Snare Drum
+TekRok Snare	TekRok Snare Drum
+Big Trash SD	Big Trash Snare Drum
+Ragga Rim 2	Ragga Rimshot 2
+Gate Rimshot	Gate Rimshot
+SideStiker	Side Stiker
+HipJazz Snr	Hip Jazz Snr
+HH Soul Snr	Hi-Hat Soul Snr
+Cross Snare	Cross Snare Drum
+Jungle Rim 1	Jungle Rimshot 1
+Ragga Snr 2	Ragga Snare Drum 2
+Upper Snare	Upper Snare Drum
+Lo-Fi Snare	Low Fidelity Snare Drum
+RaggaTightSD	Ragga Tight Snare Drum
+Flange Snr	Flange Snare
+Machine Snr	Machine Snare
+Clap Snare 3	Clap Snare Drum 3
+Solid Snare	Solid Snare Drum
+Funk Clap 2	Funk Clap 2
+Jungle Rim 2	Jungle Rimshot 2
+Jungle Rim 3	Jungle Rimshot 3
+Jungle Snr 2	Jungle Snare Drum 2
+Urban Snare	Urban Snare Drum
+Urban RollSD	Urban Roll Snare Drum
+R&B Snare	R&B Snare Drum
+R8 Brush Tap	R-8 Brush Tap
+R8 BrshSwill	R-8 Brush Swill
+R8 BrushRoll	R-8 Brush Roll
+Sim Snare	Sim Snare Drum
+ElectroSnr 1	Electro Snare Drum 1
+ElectroSnr 2	Electro Snare Drum 2
+Synth Snare	Synth Snare Drum
+Roll Snare	Roll Snare Drum
+KICK MENU 1	≡ KICK DRUM MENU 1
+KICK MENU 2	≡ KICK DRUM MENU 2
+KICK MENU 3	≡ KICK DRUM MENU 3
+TR909 Kick 1	TR-909 Kick Drum 1
+TR909 Kick 2	TR-909 Kick Drum 2
+TR909 Kick 3	TR-909 Kick Drum 3
+TR909 Kick 4	TR-909 Kick Drum 4
+Plastic BD 1	Plastic Bass Drum 1
+Plastic BD 2	Plastic Bass Drum 2
+Plastic BD 3	Plastic Bass Drum 3
+Plastic BD 4	Plastic Bass Drum 4
+TR909 Kick 5	TR-909 Kick Drum 5
+TR808 Kick 1	TR-808 Kick Drum 1
+TR808 Kick 2	TR-808 Kick Drum 2
+TR808 Kick 3	TR-808 Kick Drum 3
+TR808 Kick 4	TR-808 Kick Drum 4
+TR808 Kick 5	TR-808 Kick Drum 5
+TR606 Kick	TR-606 Kick Drum
+TR606 Dst BD	TR-606 Distored Bass Drum
+TR707 Kick 1	TR-707 Kick Drum 1
+TR707 Kick 2	TR-707 Kick Drum 2
+Toy Kick	Toy Kick Drum
+Analog Kick	Analog Kick Drum
+Boost Kick	Boost Kick Drum
+West Kick	West Kick Drum
+JungleKick 1	Jungle Kick Drum 1
+Optic Kick	Optic Kick Drum
+Wet Kick	Wet Kick Drum
+Lo-Fi Kick 1	Low Fidelity Kick Drum 1
+Hazy Kick	Hazy Kick Drum
+Hip Kick	Hip Kick Drum
+Video Kick	Video Kick Drum
+Tight Kick	Tight Kick Drum
+Break Kick	Break Kick Drum
+Turbo Kick	Turbo Kick Drum
+Ele Kick	Electronic Kick Drum
+Dance Kick 1	Dance Kick Drum 1
+Kick Ghost	Kick Drum Ghost
+Lo-Fi Kick 2	Low Fidelity Kick Drum 2
+JungleKick 2	Jungle Kick Drum 2
+TR909 Dst BD	TR-909 Distored Bass Drum
+Amsterdam BD	Amsterdam Bass Drum
+Gabba Kick	Gabba Kick Drum
+Roll Kick	Roll Kick Drum

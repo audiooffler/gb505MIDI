@@ -1,0 +1,236 @@
+MG Big Lead	Moog Big Lead
+JP Hardcore	Jupiter Hardcore
+JP Hoover	Jupiter Hoover
+JP Seq.Synth	Jupiter Sequenced Synth
+P5 Unisync	Prophet-5 Unisync
+P5 UnisyncLp	Prophet-5 Unisync Loop
+Mondigital	Mondigital
+MondigitalLp	Mondigital Loop
+OSC Saw	OSC Saw
+OSC Reso Saw	OSC Reso Saw
+Siren Synth	Siren Synth
+Sine	Sine
+MG Bass 2	Moog Bass 2
+MG Big Bass	Moog Big Bass
+Solid Bass 2	Solid Bass 2
+Jazz Bass	Jazz Bass
+Ac.Bass A	Acoustic Bass A
+Ac.Bass C	Acoustic Bass C
+Tremolo sfz	Tremolo sfz
+Choir Aah A	Choir Aah A
+Choir Aah B	Choir Aah B
+Choir Aah C	Choir Aah C
+Piano 2	Piano 2
+Lo-Fi Wurly	Low Fidelity Wurly
+E.Organ 3	Electric Organ 3
+Overdrive 1A	Overdrive 1A
+Overdrive 1C	Overdrive 1C
+Funk Gt	Funk Guitar
+Funk Gt Mute	Funk Guitar Muted
+D.MuteGt mp	Distored Muted Guitar mezzopiano
+Sitar 2	Sitar 2
+Bagpipe 2	Bagpipe 2
+Solo Tpt. A	Solo Trumpet A
+Solo Tpt. C	Solo Trumpet C
+Blow Sax A	Blow Saxophone A
+Blow Sax B	Blow Saxophone B
+Blow Sax C	Blow Saxophone C
+Tron Flute	Tron Flute
+DIDGERI MENU	≡ DIDGERIDOO MENU
+Didgeridoo 1	Didgeridoo 1
+Didgeridoo 2	Didgeridoo 2
+Didgeridoo 3	Didgeridoo 3
+BERIMBA MENU	≡ BERIMBA MENU
+Berimbau Opn	Berimbau Open
+Berimbau Up	Berimbau Up
+Berimbau Dn	Berimbau Down
+Berimbau Mut	Berimbau Muted
+Str Attack	String Attack
+Lo-Fi RoomTp	Low Fidelity Room Thumper
+Smear Hit 1	Smear Hit 1
+Smear Hit 2	Smear Hit 2
+LoFi MinorHt	Low Fidelity Minor Hit
+ClassicHseHt	Classic Hse Hit
+OrchPrc Hit	Orchestra Percussion Hit
+Sitar Gliss	Sitar Gliss
+Thunderbolt	Thunderbolt
+Construct. 2	Construction 2
+Jack Hammer	Jack Hammer
+Turbine	Turbine
+Sawing	Sawing
+120:Steaming	Steaming 120BPM
+SteamWhistle	Steam Whistle
+Firebomb	Firebomb
+Metal Bang	Metal Bang
+MetallicShot	Metallic Shot
+P-Zing	P-Zing
+Boing	Boing
+MG Zap MENU	≡ MOOG ZAP MENU
+MG Zap 1	Moog Zap 1
+MG Zap 2	Moog Zap 2
+MG Zap 3	Moog Zap 3
+MG Zap 4	Moog Zap 4
+MG Zap 5	Moog Zap 5
+MG Zap 6	Moog Zap 6
+MG Zap 7	Moog Zap 7
+MG Zap 8	Moog Zap 8
+MG Zap 9	Moog Zap 9
+MG Zap 10	Moog Zap 10
+MG Zap 11	Moog Zap 11
+MG Zap 12	Moog Zap 12
+MG Zap 13	Moog Zap 13
+MG Zap 14	Moog Zap 14
+MG Zap 15	Moog Zap 15
+SWEEP MENU	≡ SWEEP MENU
+MG Sweep 1	Moog Sweep 1
+MG Sweep 2	Moog Sweep 2
+MG Sweep 3	Moog Sweep 3
+MG Sweep 4	Moog Sweep 4
+MG Sweep 5	Moog Sweep 5
+MG Sweep 6	Moog Sweep 6
+Space FX Swp	Space Effects Sweep
+Siren 2	Siren 2
+VOICE MENU	≡ VOICE MENU
+Bull Scream	Bull Scream
+Hoo!	Hoo!
+Hey! 2	Hey! 2
+Ho	Ho
+Yoh	Yoh
+iYooh	iYooh
+Dolphin Hi 1	Dolphin High 1
+Dolphin Hi 2	Dolphin High 2
+Dolphin Md	Dolphin Mid
+Dolphin Lo	Dolphin Low
+TOM MENU 2	≡ TOM-TOM MENU 2
+DR220 Tom	DR220 Tom-Tom
+TR505 Tom	TR505 Tom-Tom
+TR626 Tom	TR626 Tom-Tom
+PERCUS MENU3	≡ PERCUSSION MENU 3
+PERCUS MENU4	≡ PERCUSSION MENU 4
+TR505 HiCong	TR-505 High Conga
+TR505 LoCong	TR-505 Low Conga
+TR626MtConga	TR-626 Muted Conga
+TR626OpConga	TR-626 Open Conga
+TR626LoConga	TR-626 Low Conga
+TR727HiBongo	TR-727 High Bongo
+TR727LoBongo	TR-727 Low Bongo
+TR626 HiTimb	TR-626 High Timbale
+TR626 LoTimb	TR-626 Low Timbale
+TR727 HiTimb	TR-727 High Timbale
+TR727 LoTimb	TR-727 Low Timbale
+Bendir	Bendir
+Timpani 2	Timpani 2
+TR505 Tabla	TR-505 Tabla
+TR626 Tamb	TR-626 Tambourine
+TR505HiCwbel	TR-505 High Cowbell
+TR505LoCwbel	TR-505 Low Cowbell
+TR626Cowbell	TR-626 Cowbell
+TR626 Claves	TR-626 Claves
+TR626 HiAgo	TR-626 High Agogo
+TR626 LoAgo	TR-626 Low Agogo
+TR727 Maracs	TR-727 Maracas
+TR727 Cabasa	TR-727 Cabasa
+TR727Whistle	TR-727 Whistle
+TR727 Chime	TR-727 Chime
+TABLABY MENU	≡ TABLABY MENU
+TablaBaya 1	TablaBaya 1
+TablaBaya 2	TablaBaya 2
+TablaBaya 3	TablaBaya 3
+TablaBaya 4	TablaBaya 4
+TablaBaya 5	TablaBaya 5
+TablaBaya 6	TablaBaya 6
+TablaBaya 7	TablaBaya 7
+TablaBaya 8	TablaBaya 8
+UDU POT MENU	≡ UDU POT MENU
+Udu Pot 1	Udu Pot 1
+Udu Pot 2	Udu Pot 2
+Udu Pot1 Lo	Udu Pot 1 Low
+Udu Pot1 Hi	Udu Pot 1 High
+Udu Pot1 Slp	Udu Pot 1 Slap
+Udu Pot1 Acc	Udu Pot 1 Accent
+Udu Pot2 Lng	Udu Pot 2 Long
+Udu Pot2 Mut	Udu Pot 2 Muted
+JAPAN MENU	≡ JAPAN MENU
+Wadaiko	Wadaiko
+Wadaiko Rim	Wadaiko Rimshot
+Shimedaiko 2	Shimedaiko 2
+Tsuzumi 2 p	Tsuzumi 2 piano
+Tsuzumi 2 mf	Tsuzumi 2 mezzoforte
+Tsuzumi 2 Hi	Tsuzumi 2 High
+Ohkawa 2	Ohkawa 2
+Mokugyo 1	Mokugyo 1
+Mokugyo 2	Mokugyo 2
+Kane	Kane
+Wind Bell	Wind Bell
+RIM MENU 2	≡ RIMSHOT MENU 2
+DR220 Rim	DR-220 Rimshot
+TR505 Rim	TR-505 Rimshot
+TR626 Rim	TR-626 Rimshot
+HIHAT MENU 2	≡ HI-HAT MENU 2
+DR110 CHH	DR-110 Closed Hi-Hat
+DR220 CHH	DR-220 Closed Hi-Hat
+TR505 CHH	TR-505 Closed Hi-Hat
+TR626 CHH	TR-626 Closed Hi-Hat
+TR909 CHH 3	TR-909 Closed Hi-Hat 3
+Lil' Hat	Little Hat
+HipHop Hat 1	Hip Hop Hat 1
+HipHop Hat 2	Hip Hop Hat 2
+DR110 OHH	DR-110 Open Hi-Hat
+DR220 OHH	DR-220 Open Hi-Hat
+TR505 OHH	TR-505 Open Hi-Hat
+TR626 OHH	TR-626 Open Hi-Hat
+CYMBAL MENU2	≡ CYMBAL MENU2
+DR110 Cym	DR-110 Cymbal
+DR220 Cym	DR-220 Cymbal
+TR626 Crash	TR-626 Crash Cymbal
+16 Drk Crash	16 Dark Crash Cymbal
+DR220 Ride	DR-220 Ride Cymbal
+TR626 Ride	TR-626 Ride Cymbal
+TR626 China	TR-626 China Cymbal
+TR626 CupCym	TR-626 Cup Cymbal
+ASIAGNG MENU	≡ ASIA GONG MENU
+Asian Gong 1	Asian Gong 1
+Asian Gong 2	Asian Gong 2
+Asian Gong 3	Asian Gong 3
+Asian Gong 4	Asian Gong 4
+Asian Gong 5	Asian Gong 5
+Asian Gong 6	Asian Gong 6
+Asian Gong 7	Asian Gong 7
+CLAP MENU 3	≡ CLAP MENU 3
+DR110 Clap	DR-110 Clap
+DR220 Clap	DR-220 Clap
+TR505 Clap	TR-505 Clap
+TR909 Clap 3	TR-909 Clap 3
+TR909 Clap 4	TR-909 Clap 4
+TR909 SnClp1	TR-909 Snare Drum Clap 1
+TR909 SnClp2	TR-909 Snare Drum Clap 2
+Afro Clap	Afro Clap
+SNR MENU 7	≡ SNARE MENU 7
+DR110 Snr	DR-110 Snare Drum
+DR220 Snr	DR-220 Snare Drum
+TR505 Snr	TR-505 Snare Drum
+TR626 Snr 2	TR-626 Snare Drum 2
+TR626 Snr 3	TR-626 Snare Drum 3
+TR909 Snr 8	TR-909 Snare Drum 8
+Funk Snr 1	Funk Snare Drum 1
+Picc. hrd Sn	Piccolo hard Snare Drum
+Picc. rol Sn	Piccolo rolling Snare Drum
+PurePhat Snr	Pure Phat Snare Drum
+Slamn' Snr	Slamming Snare Drum
+KICK MENU 4	≡ KICK DRUM MENU 4
+KICK MENU 5	≡ KICK DRUM MENU 5
+DR110 Kick	DR-110 Kick Drum
+DR220 Kick	DR-220 Kick Drum
+TR505 Kick	TR-505 Kick Drum
+TR626 Kick 1	TR-626 Kick Drum 1
+TR626 Kick 2	TR-626 Kick Drum 2
+TR909 Kick 6	TR-909 Kick Drum 6
+TR909 Kick 7	TR-909 Kick Drum 7
+TR909 Kick 8	TR-909 Kick Drum 8
+TR909 Kick 9	TR-909 Kick Drum 9
+TR909 Kick10	TR-909 Kick Drum 10
+HipHop Kick1	Hip Hop Kick Drum 1
+JungleKick 2	Jungle Kick Drum 2
+HipHop Kick2	Hip Hop Kick Drum 2
+HipHop Kick3	Hip Hop Kick Drum 3
+Hall Kick 2	Hall Kick Drum 2

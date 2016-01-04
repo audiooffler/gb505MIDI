@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="25.09"
+   height="17.09375"
+   id="svg6117"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="ToggleButton.svg"
+   inkscape:export-filename="C:\Users\Martin\Documents\Visual Studio 2013\Projects\MC-307SysEx\Resources\LookAndFeel\ToggleButtonOff.png"
+   inkscape:export-xdpi="89.68"
+   inkscape:export-ydpi="89.68">
+  <defs
+     id="defs6119">
+    <linearGradient
+       id="linearGradient6659">
+      <stop
+         style="stop-color:#111111;stop-opacity:1;"
+         offset="0"
+         id="stop6661" />
+      <stop
+         id="stop6667"
+         offset="0.29894787"
+         style="stop-color:#1b1b1b;stop-opacity:0.85555553;" />
+      <stop
+         style="stop-color:#1c1c1c;stop-opacity:0.91620111;"
+         offset="0.66079158"
+         id="stop6669" />
+      <stop
+         id="stop6691"
+         offset="0.86735195"
+         style="stop-color:#181818;stop-opacity:0.65921789;" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.24581006;"
+         offset="0.93058383"
+         id="stop6693" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.97206706;"
+         offset="1"
+         id="stop6663" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6659"
+       id="linearGradient6911"
+       x1="125.65895"
+       y1="-134.66533"
+       x2="125.65895"
+       y2="-150.56793"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient6913">
+      <stop
+         style="stop-color:#111111;stop-opacity:1;"
+         offset="0"
+         id="stop6915" />
+      <stop
+         id="stop6917"
+         offset="0.29894787"
+         style="stop-color:#1b1b1b;stop-opacity:0.85555553;" />
+      <stop
+         style="stop-color:#1c1c1c;stop-opacity:0.91620111;"
+         offset="0.66079158"
+         id="stop6919" />
+      <stop
+         id="stop6921"
+         offset="0.86735195"
+         style="stop-color:#181818;stop-opacity:0.65921789;" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.24581006;"
+         offset="0.93058383"
+         id="stop6923" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.97206706;"
+         offset="1"
+         id="stop6925" />
+    </linearGradient>
+    <filter
+       width="1.2"
+       x="-0.1"
+       color-interpolation-filters="sRGB"
+       inkscape:menu-tooltip="Glow of object's own color at the edges"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Glow"
+       id="filter13286-4-5-0">
+      <feGaussianBlur
+         result="result91"
+         stdDeviation="4 3"
+         id="feGaussianBlur13288-8-4-9" />
+      <feComposite
+         operator="over"
+         in="SourceGraphic"
+         in2="result91"
+         id="feComposite13290-8-3-4" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3826">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.420474"
+         id="feGaussianBlur3828" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3842">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.20253748"
+         id="feGaussianBlur3844" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3955">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.1870775"
+         id="feGaussianBlur3957" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       id="filter3967">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.09353875"
+         id="feGaussianBlur3969" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2"
+     inkscape:cx="219.89259"
+     inkscape:cy="-76.001642"
+     inkscape:document-units="px"
+     inkscape:current-layer="toggleButton"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1018"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3848" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata6122">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="toggleButton"
+     inkscape:groupmode="layer"
+     transform="translate(-113.75,150.65625)">
+    <g
+       inkscape:groupmode="layer"
+       id="toggleButtonOff"
+       style="display:inline">
+      <rect
+         style="fill:none;stroke:#272727;stroke-width:1.4;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;opacity:1"
+         id="rect3846-9"
+         width="23"
+         height="15"
+         x="114.75"
+         y="-149.5625"
+         ry="1"
+         rx="0.99999619" />
+      <rect
+         style="fill:#f4f4f4;fill-opacity:1;stroke:#f4f4f4;stroke-width:0.3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;opacity:1"
+         id="rect3846"
+         width="23"
+         height="15"
+         x="1"
+         y="1.09375"
+         transform="translate(113.75,-150.65625)"
+         ry="1"
+         rx="1" />
+      <path
+         style="fill:none;stroke:#272727;stroke-width:0.50000000000000000;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;display:inline;opacity:0.75084175;stroke-dasharray:none;filter:url(#filter3955)"
+         d="M 137.45775,-149.27025 C 137.6385,-149.0895 137.75,-148.8395 137.75,-148.5625 L 137.75,-135.5625 C 137.75,-135.2855 137.6385,-135.0355 137.45775,-134.85475 137.277,-134.674 137.027,-134.5625 136.75,-134.5625 L 115.75,-134.5625 C 115.473,-134.5625 115.223,-134.674 115.04225,-134.85475"
+         id="rect3846-4-0"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="csssssc" />
+      <path
+         style="fill:none;stroke:#ffffff;stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;filter:url(#filter3967)"
+         d="M 115.10475,-134.9485 C 114.924,-135.12925 114.75,-135.2855 114.75,-135.5625 L 114.75,-148.5625 C 114.75,-148.8395 114.8615,-149.0895 115.04225,-149.27025 115.223,-149.451 115.473,-149.5625 115.75,-149.5625 L 136.75,-149.5625 C 137.027,-149.5625 137.18325,-149.3885 137.364,-149.20775"
+         id="rect3846-4"
+         inkscape:connector-curvature="0"
+         sodipodi:nodetypes="csssssc" />
+      <text
+         xml:space="preserve"
+         style="font-size:8px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         x="114.625"
+         y="-139.1875"
+         id="text3975"
+         sodipodi:linespacing="125%"><tspan
+           sodipodi:role="line"
+           id="tspan3977"
+           x="114.625"
+           y="-139.1875">TODO</tspan></text>
+    </g>
+  </g>
+</svg>

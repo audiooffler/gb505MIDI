@@ -1,0 +1,131 @@
+Violin A	Violin A
+Violin B	Violin B
+Violin C	Violin C
+Cello A	Cello A
+Cello B	Cello B
+Cello C	Cello C
+Multi Str A	Multi String A
+Multi Str B	Multi String B
+Multi Str C	Multi String C
+Multi Str Lp	Multi String Loop
+Str Attack	String Attack
+GrandPiano A	Grand Piano A
+GrandPiano B	Grand Piano B
+GrandPiano C	Grand Piano C
+Suitcase p A	Suitcase Piano A
+Suitcase p B	Suitcase Piano B
+Suitcase p C	Suitcase Piano C
+Suitcase mfA	Suitcase Mezzoforte A
+Suitcase mfB	Suitcase Mezzoforte B
+Suitcase mfC	Suitcase Mezzoforte C
+Suitcase f A	Suitcase Forte A
+Suitcase f B	Suitcase Forte B
+Suitcase f C	Suitcase Forte C
+Harpsi A	Harpsichord A
+Harpsi B	Harpsichord B
+Harpsi C	Harpsichord C
+Clavi 2 A	Clavichord 2 A
+CIavi 2 B	CIavichord 2 B
+CIavi 2 C	CIavichord 2 C
+Rotary Org A	Rotary Organ A
+Rotary Org B	Rotary Organ B
+Rotary Org C	Rotary Organ C
+TheaterOrg A	Theater Organ A
+TheaterOrg B	Theater Organ B
+TheaterOrg C	Theater Organ C
+F.AccordionA	Folk Accordion A
+F.AccordionB	Folk Accordion B
+F.AccordionC	Folk Accordion C
+Bandoneon A	Bandoneon A
+Bandoneon B	Bandoneon B
+Bandoneon C	Bandoneon C
+Harmonica A	Harmonica A
+Harmonica B	Harmonica B
+Harmonica C	Harmonica C
+Celesta A	Celesta A
+Celesta B	Celesta B
+Celesta C	Celesta C
+Nylon Gtr A	Nylon Guitar A
+Nylon Gtr B	Nylon Guitar B
+Nylon Gtr C	Nylon Guitar C
+Mute Gtr	Muted Guitar
+Gtr Harm A	Guitar Harmonics A
+Gtr Harm B	Guitar Harmonics B
+Gtr Harm C	Guitar Harmonics C
+Pop Strat A	Pop Stratocaster Guitar A
+Pop Strat B	Pop Stratocaster Guitar B
+Pop Strat C	Pop Stratocaster Guitar C
+Gt.FretNoise	Guitar Fret Noise
+Gtr FX MENU	≡ GUITAR EFFECTS MENU
+Sitar 2 A	Sitar 2 A
+Sitar 2 B	Sitar 2 B
+Sitar 2 C	Sitar 2 C
+Sitar Drone	Sitar Drone
+Santur A	Santur A
+Santur B	Santur B
+Santur C	Santur C
+Shamisen A	Shamisen A
+Shamisen B	Shamisen B
+Shamisen C	Shamisen C
+Koto A	Koto A
+Koto B	Koto B
+Koto C	Koto C
+Harp A	Harp A
+Harp B	Harp B
+Harp C	Harp C
+D-50 Brass A	D-50 Brass A
+D-50 Brass B	D-50 Brass B
+D-50 Brass C	D-50 Brass C
+D-50 BrassLp	D-50 Brass Loop
+Solo Tpt A	Solo Trumpet A
+Solo Tpt B	Solo Trumpet B
+Solo Tpt C	Solo Trumpet C
+Trombone A	Trombone A
+Trombone B	Trombone B
+Trombone C	Trombone C
+Tuba A	Tuba A
+Tuba B	Tuba B
+Tuba C	Tuba C
+FrenchHorn A	French Horn A
+FrenchHorn B	French Horn B
+FrenchHorn C	French Horn C
+Blow Sax A	Blow Saxophone A
+Blow Sax B	Blow Saxophone B
+Blow Sax C	Blow Saxophone C
+Oboe A	Oboe A
+Oboe B	Oboe B
+Oboe C	Oboe C
+Clarinet A	Clarinet A
+Clarinet B	Clarinet B
+Clarinet C	Clarinet C
+Timpani Big	Timpani Big
+Shimedaiko	Shimedaiko
+Taiko	Taiko
+Tang Gu Mute	Tang Gu Muted
+Tang Gu Open	Tang Gu Open
+Dholak Hi Op	Dholak High Open
+Dholak Hi Mt	Dholak High Muted
+Dholak Lo Mt	Dholak Low Muted
+Dholak Lo Op	Dholak Low Open
+Tabla Hi Op	Tabla High Open
+Tabla Hi Mt	Tabla High Muted
+Tabla Lo Op	Tabla Low Open
+Tabla Lo Mt	Tabla Low Muted
+Xiao Bo	Xiao Bo
+Nao Bo	Nao Bo
+China Cym	China Cym
+Hu Yin Luo	Hu Yin Luo
+Bend Gong	Bend Gong
+Piccolo Snr	Piccolo Snare Drum
+Ballad Snr	Ballad Snare Drum
+Solo Snare	Solo Snare Drum
+Brush Slap 3	Brush Slap 3
+Brush Swish	Brush Swish
+Old Kick	Old Kick Drum
+Hybrid Kick	Hybrid Kick Drum
+TAIKO MENU	≡ TAIKO MENU
+DHOLAK MENU	≡ DHOLAK MENU
+TABLA MENU	≡ TABLA MENU
+CHINA MENU	≡ CHINA MENU
+SNR MENU 7	≡ SNARE MENU 7
+KICK MENU 4	≡ KICK DRUM MENU 4

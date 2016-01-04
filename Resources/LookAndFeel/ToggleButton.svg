@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="25.09"
+   height="17.09375"
+   id="svg6117"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="ToggleButton.svg"
+   inkscape:export-filename="C:\Users\Martin\Documents\Visual Studio 2013\Projects\MC-307SysEx\Resources\LookAndFeel\ToggleButtonOff.png"
+   inkscape:export-xdpi="89.68"
+   inkscape:export-ydpi="89.68">
+  <defs
+     id="defs6119">
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6659"
+       id="linearGradient6665"
+       x1="125.65895"
+       y1="-134.66533"
+       x2="125.65895"
+       y2="-150.56793"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient6659">
+      <stop
+         style="stop-color:#111111;stop-opacity:1;"
+         offset="0"
+         id="stop6661" />
+      <stop
+         id="stop6667"
+         offset="0.29894787"
+         style="stop-color:#1b1b1b;stop-opacity:0.85555553;" />
+      <stop
+         style="stop-color:#1c1c1c;stop-opacity:0.91620111;"
+         offset="0.66079158"
+         id="stop6669" />
+      <stop
+         id="stop6691"
+         offset="0.86735195"
+         style="stop-color:#181818;stop-opacity:0.65921789;" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.24581006;"
+         offset="0.93058383"
+         id="stop6693" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.97206706;"
+         offset="1"
+         id="stop6663" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient6659"
+       id="linearGradient6911"
+       x1="125.65895"
+       y1="-134.66533"
+       x2="125.65895"
+       y2="-150.56793"
+       gradientUnits="userSpaceOnUse" />
+    <linearGradient
+       id="linearGradient6913">
+      <stop
+         style="stop-color:#111111;stop-opacity:1;"
+         offset="0"
+         id="stop6915" />
+      <stop
+         id="stop6917"
+         offset="0.29894787"
+         style="stop-color:#1b1b1b;stop-opacity:0.85555553;" />
+      <stop
+         style="stop-color:#1c1c1c;stop-opacity:0.91620111;"
+         offset="0.66079158"
+         id="stop6919" />
+      <stop
+         id="stop6921"
+         offset="0.86735195"
+         style="stop-color:#181818;stop-opacity:0.65921789;" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.24581006;"
+         offset="0.93058383"
+         id="stop6923" />
+      <stop
+         style="stop-color:#303030;stop-opacity:0.97206706;"
+         offset="1"
+         id="stop6925" />
+    </linearGradient>
+    <filter
+       width="1.2"
+       x="-0.1"
+       color-interpolation-filters="sRGB"
+       inkscape:menu-tooltip="Glow of object's own color at the edges"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Glow"
+       id="filter13286-4-5-0">
+      <feGaussianBlur
+         result="result91"
+         stdDeviation="4 3"
+         id="feGaussianBlur13288-8-4-9" />
+      <feComposite
+         operator="over"
+         in="SourceGraphic"
+         in2="result91"
+         id="feComposite13290-8-3-4" />
+    </filter>
+    <linearGradient
+       y2="-150.56793"
+       x2="125.65895"
+       y1="-134.66533"
+       x1="125.65895"
+       gradientUnits="userSpaceOnUse"
+       id="linearGradient6939"
+       xlink:href="#linearGradient6659"
+       inkscape:collect="always" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1"
+     inkscape:cx="5.2691428"
+     inkscape:cy="-45.901833"
+     inkscape:document-units="px"
+     inkscape:current-layer="toggleButton"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="909"
+     inkscape:window-height="483"
+     inkscape:window-x="315"
+     inkscape:window-y="163"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata6122">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="toggleButton"
+     inkscape:groupmode="layer"
+     transform="translate(-113.75,150.65625)">
+    <g
+       inkscape:groupmode="layer"
+       id="toggleButtonOff"
+       style="display:inline">
+      <rect
+         style="color:#000000;fill:url(#linearGradient6939);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate"
+         id="rect5849"
+         width="24"
+         height="16"
+         x="114.28738"
+         y="-150.11012"
+         ry="2.0665123" />
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#484848;fill-opacity:1;stroke:#000000;stroke-width:0.66765094;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         d="M 121.35302,-147.23611 C 120.88093,-147.23611 120.41414,-146.59973 120.41414,-146.13032 L 120.41414,-145.98427 C 120.41414,-145.3566 120.88093,-144.87847 121.35302,-144.87847 L 131.22174,-144.87847 C 131.69115,-144.87847 132.16062,-145.3566 132.16062,-145.98427 L 132.16062,-146.13032 C 132.16062,-146.59973 131.69115,-147.23611 131.22174,-147.23611 z"
+         id="path15855-7" />
+    </g>
+    <g
+       id="toggleButtonOn"
+       inkscape:groupmode="layer"
+       style="display:none">
+      <rect
+         ry="2.0665123"
+         y="-150.11012"
+         x="114.28738"
+         height="16"
+         width="24"
+         id="whiteBg"
+         style="color:#000000;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:#ffffff;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <rect
+         ry="2.0665123"
+         y="-150.11012"
+         x="114.28738"
+         height="16"
+         width="24"
+         id="rect6752"
+         style="color:#000000;fill:url(#linearGradient6665);fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:1.10000002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" />
+      <path
+         id="path6750"
+         d="M 93.187491,-183.78125 C 92.480391,-183.78125 91.781241,-182.82808 91.781241,-182.125 L 91.781241,-181.90625 C 91.781241,-180.96614 92.480391,-180.25 93.187491,-180.25 L 107.96874,-180.25 C 108.67182,-180.25 109.37499,-180.96614 109.37499,-181.90625 L 109.37499,-182.125 C 109.37499,-182.82808 108.67182,-183.78125 107.96874,-183.78125 z"
+         style="fill:#ff5909;fill-opacity:1;stroke:#ff2009;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;filter:url(#filter13286-4-5-0)"
+         inkscape:connector-curvature="0"
+         transform="matrix(0.66765091,0,0,0.66765091,59.136309,-24.534392)" />
+      <path
+         id="path6748"
+         d="M 121.35302,-147.23611 C 120.88093,-147.23611 120.41414,-146.59973 120.41414,-146.13032 L 120.41414,-145.98427 C 120.41414,-145.3566 120.88093,-144.87847 121.35302,-144.87847 L 131.22174,-144.87847 C 131.69115,-144.87847 132.16062,-145.3566 132.16062,-145.98427 L 132.16062,-146.13032 C 132.16062,-146.59973 131.69115,-147.23611 131.22174,-147.23611 z"
+         style="fill:#ff1509;fill-opacity:1;stroke:#711c13;stroke-width:0.66765094;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
