@@ -2,10 +2,8 @@
 
 <JUCERPROJECT id="qabmW6" name="MC-307SysEx" projectType="guiapp" version="1.0.0"
               bundleIdentifier="com.yourcompany.MC307SysEx" includeBinaryInAppConfig="1"
-              jucerVersion="3.1.0">
+              jucerVersion="4.1.0">
   <MAINGROUP id="n8CjoE" name="MC-307SysEx">
-    <FILE id="OXCXhz" name="JUCE Documentation.url" compile="0" resource="1"
-          file="Builds/VisualStudio2013/JUCE Documentation.url"/>
     <GROUP id="{AC126E82-0D80-6CBE-EF59-78D17CC82F86}" name="Resources">
       <FILE id="zf7hCa" name="Audio-x-midi.svg" compile="0" resource="1"
             file="Resources/Audio-x-midi.svg"/>
@@ -334,17 +332,17 @@
                        isDebug="0" optimisation="3" targetName="MC-307SysEx"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_gui_basics" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_graphics" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_events" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_data_structures" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_core" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_audio_processors" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_audio_formats" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_audio_devices" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_audio_utils" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
-        <MODULEPATH id="juce_audio_basics" path="c:\Users\Martin\Documents\Visual Studio 2013\JUCE\modules\"/>
+        <MODULEPATH id="juce_gui_extra" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_graphics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_events" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_data_structures" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_core" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
       </MODULEPATHS>
     </VS2013>
   </EXPORTFORMATS>

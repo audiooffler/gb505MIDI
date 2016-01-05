@@ -76,6 +76,42 @@ public:
 		return l;
 	}
 	
+	void drawToggleButton(Graphics& g, ToggleButton& button, bool isMouseOverButton, bool isButtonDown)
+	{
+		if (button.hasKeyboardFocus(true))
+		{
+			g.setColour(button.findColour(TextEditor::focusedOutlineColourId));
+			g.drawRect(0, 0, button.getWidth(), button.getHeight());
+		}
+
+		float fontSize = jmin(15.0f, button.getHeight() * 0.75f);
+		const float tickWidth = fontSize * 1.1f;
+
+		drawTickBox(g, button, 4.0f, (button.getHeight() - tickWidth) * 0.5f,
+			tickWidth, tickWidth,
+			button.getToggleState(),
+			button.isEnabled(),
+			isMouseOverButton,
+			isButtonDown);
+
+		g.setColour(button.findColour(ToggleButton::textColourId));
+		g.setFont(fontSize);
+
+		if (!button.isEnabled())
+			g.setOpacity(0.5f);
+
+		const int textX = (int)tickWidth + 5;
+
+		if (button.getButtonText().isNotEmpty() && button.getWidth() - textX - 2 > 0)
+		{
+			g.drawFittedText(button.getButtonText(),
+				textX, 0,
+				button.getWidth() - textX - 2, button.getHeight(),
+				Justification::centredLeft, 10);
+		}
+	}
+
+
 	void drawTickBox(Graphics &g,
 		Component &c,
 		float 	x,
@@ -143,14 +179,23 @@ public:
 			.draw(g, Rectangle<float>(7.0f, 3.0f, (float)width, (float)height));
 	}
 
-	void getTooltipSize(const String& tipText, int& width, int& height)
+	Rectangle<int> getTooltipBounds(const String& tipText, Point<int> screenPos, Rectangle<int> parentArea) override
 	{
 		const TextLayout tl(layoutTooltipText(tipText, Colours::black));
 
-		width = (int)(tl.getWidth() + 14.0f);
-		height = (int)(tl.getHeight() + 6.0f);
+		int width = (int)(tl.getWidth() + 14.0f);
+		int height = (int)(tl.getHeight() + 6.0f);
+		return Rectangle<int>(screenPos.x, screenPos.y, width, height);
 	}
-	
+
+	//void getTooltipSize(const String& tipText, int& width, int& height)
+	//{
+	//	const TextLayout tl(layoutTooltipText(tipText, Colours::black));
+
+	//	width = (int)(tl.getWidth() + 14.0f);
+	//	height = (int)(tl.getHeight() + 6.0f);
+	//}
+	//
 	private:
 		ScopedPointer<Image> m_knobFilmStripImage;
 		ScopedPointer<Image> m_knobFilmStripSmall;
