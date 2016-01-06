@@ -63,7 +63,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	Parameter* m_paramPtr;
-	ScopedPointer<GrooveboxLookAndFeel> m_comboBoxlookAndFeel;
+	SharedResourcePointer<GrooveboxLookAndFeel> m_comboBoxlookAndFeel;
     //[/UserVariables]
 
     //==============================================================================

@@ -75,6 +75,10 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 		else if (i == 0) panPosStrings.add(String(i));
 		else if (i>0) panPosStrings.add("R" + String(i));
 	}
+	StringArray slicerRateStrings;
+	slicerRateStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_4th) + " Quarter (1/4)");
+	slicerRateStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_half) + " Half (1/2)");
+	slicerRateStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_whole) + " Whole (1/1)");
 	StringArray ampTypeStrings(StringArray::fromTokens("SMALL BUILTIN 2STACK 3STACK", false));
 	StringArray outputMonoStereoStrings(StringArray::fromTokens("MONO STEREO", false));
 	StringArray postGainDBStrings(StringArray::fromTokens("0 +6dB +12dB +18dB", false));
@@ -305,7 +309,7 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 	case 11: // SLICER
 		m_EffectDescription = "By applying successive cuts to the sound, this effect turns a conventional sound into a sound that appears to be played as a backing phrase. This is especially effective when applied to sustain-type sounds.";
 		setupParameter("Timing Pattern", 0x0E, 0, 33, 3, StringArray::fromTokens("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34", false), "Select a pattern to specify the timing at which the sound will be cut.");
-		setupParameter("Rate", 0x0F, 0, 2, 1, StringArray::fromTokens("Quarter Note (1/4),Half Note (1/2),Whole Note (1/1)", ",", ""), "Determines the note value unit which will be cut.");
+		setupParameter("Rate", 0x0F, 0, 2, 1, slicerRateStrings, "Determines the note value unit which will be cut.");
 		setupParameter("Accent Pattern", 0x10, 0, 15, 0, StringArray::fromTokens("1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16", false), "Specifies the location of the accents.");
 		setupParameter("Accent Level", 0x11, 0, 127, 64, StringArray(), "Adjusts the volume of the accents.\r\nAs this setting is increased, the accent will be more pronounced.");
 		setupParameter("Attack", 0x12, 0, 9, 5, StringArray::fromTokens("1 2 3 4 5 6 7 8 9 10", false), "Adjusts the attack speed of the sound.\r\nAs this setting is increased, the attack will become faster.");
