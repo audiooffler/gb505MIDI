@@ -355,26 +355,26 @@ public:
 	uint8 getNumMeasures() { return m_numMeasures; }
 	float getBPM() { return m_bpm; }
 
-	String getPart1PatchName() { return m_part1PatchName; }
-	String getPart2PatchName() { return m_part2PatchName; }
-	String getPart3PatchName() { return m_part3PatchName; }
-	String getPart4PatchName() { return m_part4PatchName; }
-	String getPart5PatchName() { return m_part5PatchName; }
-	String getPart6PatchName() { return m_part6PatchName; }
-	String getPart7PatchName() { return m_part7PatchName; }
-	String getPartRRhythmnSetName() { return m_partRRhythmnSetName; }
+	String getPart1PatchName() { return m_part1PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPart2PatchName() { return m_part2PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPart3PatchName() { return m_part3PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPart4PatchName() { return m_part4PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPart5PatchName() { return m_part5PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPart6PatchName() { return m_part6PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPart7PatchName() { return m_part7PatchName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
+	String getPartRRhythmnSetName() { return m_partRRhythmnSetName.retainCharacters("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[包^_`abcdefghijklmnopqrstuvwxyz{|}"); }
 	String getPartPatchName(PartSelector part) 
 	{
 		switch (part)
 		{
-		case GrooveboxPatternSetup::Setup_Part_1: return m_part1PatchName;
-		case GrooveboxPatternSetup::Setup_Part_2: return m_part2PatchName;
-		case GrooveboxPatternSetup::Setup_Part_3: return m_part3PatchName;
-		case GrooveboxPatternSetup::Setup_Part_4: return m_part4PatchName;
-		case GrooveboxPatternSetup::Setup_Part_5: return m_part5PatchName;
-		case GrooveboxPatternSetup::Setup_Part_6: return m_part6PatchName;
-		case GrooveboxPatternSetup::Setup_Part_7: return m_part7PatchName;
-		case GrooveboxPatternSetup::Setup_Part_R: return m_partRRhythmnSetName;
+		case GrooveboxPatternSetup::Setup_Part_1: return getPart1PatchName();
+		case GrooveboxPatternSetup::Setup_Part_2: return getPart2PatchName();
+		case GrooveboxPatternSetup::Setup_Part_3: return getPart3PatchName();
+		case GrooveboxPatternSetup::Setup_Part_4: return getPart4PatchName();
+		case GrooveboxPatternSetup::Setup_Part_5: return getPart5PatchName();
+		case GrooveboxPatternSetup::Setup_Part_6: return getPart6PatchName();
+		case GrooveboxPatternSetup::Setup_Part_7: return getPart7PatchName();
+		case GrooveboxPatternSetup::Setup_Part_R: return getPartRRhythmnSetName();
 		default: return String::empty;
 		}
 	}
