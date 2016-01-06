@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -30,7 +30,10 @@
 GrabSwitch::GrabSwitch (const String &name)
     : ParameterToggle(name), m_grabbed(false)
 {
-    cachedImage_grabSwitchOff54x49_png = ImageCache::getFromMemory (grabSwitchOff54x49_png, grabSwitchOff54x49_pngSize);
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
+    cachedImage_grabSwitchOff54x49_png_1 = ImageCache::getFromMemory (grabSwitchOff54x49_png, grabSwitchOff54x49_pngSize);
 
     //[UserPreSize]
 	cachedImage_grabSwitchOn54x49_png = ImageCache::getFromMemory(grabSwitchOn54x49_png, grabSwitchOn54x49_pngSize);
@@ -63,7 +66,7 @@ void GrabSwitch::paint (Graphics& g)
     //[/UserPrePaint]
 
     g.setColour (Colours::black);
-    g.drawImageWithin (cachedImage_grabSwitchOff54x49_png,
+    g.drawImageWithin (cachedImage_grabSwitchOff54x49_png_1,
                        0, 0, getWidth() - 0, getHeight() - 0,
                        RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize,
                        false);
@@ -86,7 +89,7 @@ void GrabSwitch::paint (Graphics& g)
 	}
 	else
 	{
-		m_currentImgPtr = &cachedImage_grabSwitchOff54x49_png;
+		m_currentImgPtr = &cachedImage_grabSwitchOff54x49_png_1;
 	}
 	g.drawImage(*m_currentImgPtr, 0, 0, getWidth(), getHeight(), 0, 0, m_currentImgPtr->getWidth(), m_currentImgPtr->getHeight());
     //[/UserPaint]
@@ -94,6 +97,9 @@ void GrabSwitch::paint (Graphics& g)
 
 void GrabSwitch::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     //[UserResized] Add your own custom resize handling here..
 	ParameterToggle::resized();
     //[/UserResized]

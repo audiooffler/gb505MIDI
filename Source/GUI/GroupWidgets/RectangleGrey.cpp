@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -29,6 +29,9 @@
 //==============================================================================
 RectangleGrey::RectangleGrey ()
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -60,9 +63,9 @@ void RectangleGrey::paint (Graphics& g)
     g.fillAll (Colour (0xff7f848d));
 
     g.setGradientFill (ColourGradient (Colour (0xff969a9d),
-                                       48.0f, static_cast<float> (proportionOfHeight (0.0127f)),
+                                       56.0f, 40.0f,
                                        Colour (0xff767b7d),
-                                       56.0f, static_cast<float> (proportionOfHeight (0.7722f)),
+                                       64.0f, 136.0f,
                                        false));
     g.fillRoundedRectangle (0.0f, 0.0f, static_cast<float> (getWidth() - 0), static_cast<float> (getHeight() - 0), 5.000f);
 
@@ -75,6 +78,9 @@ void RectangleGrey::paint (Graphics& g)
 
 void RectangleGrey::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -97,9 +103,9 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="RectangleGrey" componentName=""
                  parentClasses="public Component" constructorParams="" variableInitialisers=""
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="128" initialHeight="32">
+                 fixedSize="0" initialWidth="128" initialHeight="32">
   <BACKGROUND backgroundColour="ff7f848d">
-    <ROUNDRECT pos="0 0 0M 0M" cornerSize="5" fill="linear: 48 1.266%, 56 77.215%, 0=ff969a9d, 1=ff767b7d"
+    <ROUNDRECT pos="0 0 0M 0M" cornerSize="5" fill="linear: 56 40, 64 136, 0=ff969a9d, 1=ff767b7d"
                hasStroke="1" stroke="2, mitered, butt" strokeColour="solid: ff888b90"/>
   </BACKGROUND>
 </JUCER_COMPONENT>

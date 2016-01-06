@@ -44,6 +44,9 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+
+	void currentTabChanged(int newCurrentTabIndex, const String &newCurrentTabName) override;
+
 	/* ApplicationCommandTarget implementation: */
 	enum CommandIDs
 	{

@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -35,12 +35,15 @@ extern QuickSysExBlock* quickSysEx;
 //==============================================================================
 MixerTab::MixerTab ()
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_mixerGroup = new PanelGroupDark ("partMixGrp","PART MIXER"));
     addAndMakeVisible (component2 = new RectangleGrey());
-    addAndMakeVisible (component9 = new RectangleGrey());
+    addAndMakeVisible (m_MixPart7 = new MixPartTrack (AllParts::Part7));
     addAndMakeVisible (m_blackStripePartNames = new RectangleDark());
     addAndMakeVisible (m_labelBD = new Label ("labelBD",
-                                              "BD"));
+                                              TRANS("BD")));
     m_labelBD->setFont (Font (12.00f, Font::bold));
     m_labelBD->setJustificationType (Justification::centred);
     m_labelBD->setEditable (false, false, false);
@@ -49,7 +52,7 @@ MixerTab::MixerTab ()
     m_labelBD->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelSD = new Label ("labelSD",
-                                              "SD"));
+                                              TRANS("SD")));
     m_labelSD->setFont (Font (12.00f, Font::bold));
     m_labelSD->setJustificationType (Justification::centred);
     m_labelSD->setEditable (false, false, false);
@@ -58,7 +61,7 @@ MixerTab::MixerTab ()
     m_labelSD->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelHH = new Label ("labelHH",
-                                              "HH"));
+                                              TRANS("HH")));
     m_labelHH->setFont (Font (12.00f, Font::bold));
     m_labelHH->setJustificationType (Justification::centred);
     m_labelHH->setEditable (false, false, false);
@@ -67,7 +70,7 @@ MixerTab::MixerTab ()
     m_labelHH->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelCLP = new Label ("labelCLP",
-                                               "CLP"));
+                                               TRANS("CLP")));
     m_labelCLP->setFont (Font (12.00f, Font::bold));
     m_labelCLP->setJustificationType (Justification::centred);
     m_labelCLP->setEditable (false, false, false);
@@ -76,7 +79,7 @@ MixerTab::MixerTab ()
     m_labelCLP->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelCYM = new Label ("labelCYM",
-                                               "CYM"));
+                                               TRANS("CYM")));
     m_labelCYM->setFont (Font (12.00f, Font::bold));
     m_labelCYM->setJustificationType (Justification::centred);
     m_labelCYM->setEditable (false, false, false);
@@ -85,7 +88,7 @@ MixerTab::MixerTab ()
     m_labelCYM->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelTOMPERC = new Label ("labelTOMPERC",
-                                                   "TOM/PERC"));
+                                                   TRANS("TOM/PERC")));
     m_labelTOMPERC->setFont (Font (12.00f, Font::bold));
     m_labelTOMPERC->setJustificationType (Justification::centred);
     m_labelTOMPERC->setEditable (false, false, false);
@@ -94,7 +97,7 @@ MixerTab::MixerTab ()
     m_labelTOMPERC->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelHIT = new Label ("labelHIT",
-                                               "HIT"));
+                                               TRANS("HIT")));
     m_labelHIT->setFont (Font (12.00f, Font::bold));
     m_labelHIT->setJustificationType (Justification::centred);
     m_labelHIT->setEditable (false, false, false);
@@ -103,7 +106,7 @@ MixerTab::MixerTab ()
     m_labelHIT->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_labelOTHERS = new Label ("labelOTHERS",
-                                                  "OTHERS"));
+                                                  TRANS("OTHERS")));
     m_labelOTHERS->setFont (Font (12.00f, Font::bold));
     m_labelOTHERS->setJustificationType (Justification::centred);
     m_labelOTHERS->setEditable (false, false, false);
@@ -118,9 +121,8 @@ MixerTab::MixerTab ()
     addAndMakeVisible (m_MixPart4 = new MixPartTrack (AllParts::Part4));
     addAndMakeVisible (m_MixPart5 = new MixPartTrack (AllParts::Part5));
     addAndMakeVisible (m_MixPart6 = new MixPartTrack (AllParts::Part6));
-    addAndMakeVisible (m_MixPart7 = new MixPartTrack (AllParts::Part7));
     addAndMakeVisible (m_panLabel = new Label ("panLabel",
-                                               "PAN"));
+                                               TRANS("PAN")));
     m_panLabel->setFont (Font (12.00f, Font::bold));
     m_panLabel->setJustificationType (Justification::centredRight);
     m_panLabel->setEditable (false, false, false);
@@ -129,7 +131,7 @@ MixerTab::MixerTab ()
     m_panLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_levelLabel = new Label ("levelLabel",
-                                                 "LEVEL"));
+                                                 TRANS("LEVEL")));
     m_levelLabel->setFont (Font (12.00f, Font::bold));
     m_levelLabel->setJustificationType (Justification::centredRight);
     m_levelLabel->setEditable (false, false, false);
@@ -138,7 +140,7 @@ MixerTab::MixerTab ()
     m_levelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_panLabel2 = new Label ("panLabel",
-                                                "MUTE"));
+                                                TRANS("MUTE")));
     m_panLabel2->setFont (Font (12.00f, Font::bold));
     m_panLabel2->setJustificationType (Justification::centredRight);
     m_panLabel2->setEditable (false, false, false);
@@ -147,8 +149,8 @@ MixerTab::MixerTab ()
     m_panLabel2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_keyShiftLabel = new Label ("keyShift",
-                                                    "KEY\n"
-                                                    "SHIFT"));
+                                                    TRANS("KEY\n"
+                                                    "SHIFT")));
     m_keyShiftLabel->setFont (Font (12.00f, Font::bold));
     m_keyShiftLabel->setJustificationType (Justification::centredRight);
     m_keyShiftLabel->setEditable (false, false, false);
@@ -157,8 +159,8 @@ MixerTab::MixerTab ()
     m_keyShiftLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_reverbLabel = new Label ("reverbLabel",
-                                                  "REV DLY\n"
-                                                  "SENDS"));
+                                                  TRANS("REV\n"
+                                                  "SEND")));
     m_reverbLabel->setFont (Font (12.00f, Font::bold));
     m_reverbLabel->setJustificationType (Justification::centredRight);
     m_reverbLabel->setEditable (false, false, false);
@@ -167,7 +169,7 @@ MixerTab::MixerTab ()
     m_reverbLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_mFxLabel = new Label ("reverbLabel",
-                                               "M-FX"));
+                                               TRANS("M-FX")));
     m_mFxLabel->setFont (Font (12.00f, Font::bold));
     m_mFxLabel->setJustificationType (Justification::centredRight);
     m_mFxLabel->setEditable (false, false, false);
@@ -190,7 +192,16 @@ MixerTab::MixerTab ()
     addAndMakeVisible (m_darkSepRect5 = new RectangleDark());
     addAndMakeVisible (m_darkSepRect6 = new RectangleDark());
     addAndMakeVisible (m_darkSepRect7 = new RectangleDark());
-    addAndMakeVisible (m_darkSepRect8 = new RectangleDark());
+    addAndMakeVisible (m_dlyLabel = new Label ("dlyLabel",
+                                               TRANS("DLY\n"
+                                               "SEND")));
+    m_dlyLabel->setFont (Font (12.00f, Font::bold));
+    m_dlyLabel->setJustificationType (Justification::centredRight);
+    m_dlyLabel->setEditable (false, false, false);
+    m_dlyLabel->setColour (Label::textColourId, Colours::white);
+    m_dlyLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_dlyLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 	if (QuickSysExSequencerBlock* s = quickSysEx->getQuickSysExSequencerBlock())
@@ -220,7 +231,7 @@ MixerTab::~MixerTab()
 
     m_mixerGroup = nullptr;
     component2 = nullptr;
-    component9 = nullptr;
+    m_MixPart7 = nullptr;
     m_blackStripePartNames = nullptr;
     m_labelBD = nullptr;
     m_labelSD = nullptr;
@@ -237,7 +248,6 @@ MixerTab::~MixerTab()
     m_MixPart4 = nullptr;
     m_MixPart5 = nullptr;
     m_MixPart6 = nullptr;
-    m_MixPart7 = nullptr;
     m_panLabel = nullptr;
     m_levelLabel = nullptr;
     m_panLabel2 = nullptr;
@@ -259,7 +269,7 @@ MixerTab::~MixerTab()
     m_darkSepRect5 = nullptr;
     m_darkSepRect6 = nullptr;
     m_darkSepRect7 = nullptr;
-    m_darkSepRect8 = nullptr;
+    m_dlyLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -288,48 +298,50 @@ void MixerTab::paint (Graphics& g)
 
 void MixerTab::resized()
 {
-    m_mixerGroup->setBounds (0, 0, 668, 504);
-    component2->setBounds (60, 24, 604, 476);
-    component9->setBounds (60, 440, 604, 60);
-    m_blackStripePartNames->setBounds (132, 440, 532, 4);
-    m_labelBD->setBounds (60, 448, 71, 20);
-    m_labelSD->setBounds (136, 448, 72, 20);
-    m_labelHH->setBounds (212, 448, 72, 20);
-    m_labelCLP->setBounds (288, 448, 72, 20);
-    m_labelCYM->setBounds (364, 448, 72, 20);
-    m_labelTOMPERC->setBounds (440, 448, 72, 20);
-    m_labelHIT->setBounds (516, 448, 72, 20);
-    m_labelOTHERS->setBounds (592, 448, 72, 20);
-    m_MixPartR->setBounds (60, 24, 72, 416);
-    m_MixPart1->setBounds (136, 24, 72, 416);
-    m_MixPart2->setBounds (212, 24, 72, 416);
-    m_MixPart3->setBounds (288, 24, 72, 416);
-    m_MixPart4->setBounds (364, 24, 72, 416);
-    m_MixPart5->setBounds (440, 24, 72, 416);
-    m_MixPart6->setBounds (516, 24, 72, 416);
-    m_MixPart7->setBounds (592, 24, 72, 416);
-    m_panLabel->setBounds (0, 136, 56, 48);
-    m_levelLabel->setBounds (0, 184, 56, 192);
-    m_panLabel2->setBounds (0, 408, 56, 72);
-    m_keyShiftLabel->setBounds (0, 108, 56, 24);
-    m_reverbLabel->setBounds (-4, 28, 60, 32);
-    m_mFxLabel->setBounds (-8, 72, 64, 32);
-    m_toggleBD->setBounds (80, 468, 31, 27);
-    m_toggleSD->setBounds (156, 468, 31, 27);
-    m_toggleHH->setBounds (232, 468, 31, 27);
-    m_toggleCLP->setBounds (308, 468, 31, 27);
-    m_toggleCYM->setBounds (384, 468, 31, 27);
-    m_toggleTOMPERC->setBounds (460, 468, 31, 27);
-    m_toggleHIT->setBounds (536, 468, 31, 27);
-    m_toggleOTHERS->setBounds (612, 468, 31, 27);
-    m_darkSepRect1->setBounds (132, 24, 4, (416) - 0);
-    m_darkSepRect2->setBounds (208, 24, 4, (416) - 0);
-    m_darkSepRect3->setBounds (284, 24, 4, (416) - 0);
-    m_darkSepRect4->setBounds (360, 24, 4, (416) - 0);
-    m_darkSepRect5->setBounds (436, 24, 4, (416) - 0);
-    m_darkSepRect6->setBounds (512, 24, 4, (416) - 0);
-    m_darkSepRect7->setBounds (588, 24, 4, (416) - 0);
-    m_darkSepRect8->setBounds ((136) + -4, (24) + (416) - -4 - 4, 536, 4);
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
+    m_mixerGroup->setBounds (0, 0, 668, 632);
+    component2->setBounds (60, 24, 604, 604);
+    m_MixPart7->setBounds (592, 24, 72, 544);
+    m_blackStripePartNames->setBounds (132, 568, 532, 4);
+    m_labelBD->setBounds (76, 576, 40, 20);
+    m_labelSD->setBounds (136, 576, 72, 20);
+    m_labelHH->setBounds (212, 576, 72, 20);
+    m_labelCLP->setBounds (288, 576, 72, 20);
+    m_labelCYM->setBounds (364, 576, 72, 20);
+    m_labelTOMPERC->setBounds (440, 576, 72, 20);
+    m_labelHIT->setBounds (516, 576, 72, 20);
+    m_labelOTHERS->setBounds (592, 576, 72, 20);
+    m_MixPartR->setBounds (60, 24, 72, 544);
+    m_MixPart1->setBounds (136, 24, 72, 544);
+    m_MixPart2->setBounds (212, 24, 72, 544);
+    m_MixPart3->setBounds (288, 24, 72, 544);
+    m_MixPart4->setBounds (364, 24, 72, 544);
+    m_MixPart5->setBounds (440, 24, 72, 544);
+    m_MixPart6->setBounds (516, 24, 72, 544);
+    m_panLabel->setBounds (0, 248, 56, 48);
+    m_levelLabel->setBounds (0, 312, 56, 192);
+    m_panLabel2->setBounds (0, 512, 56, 116);
+    m_keyShiftLabel->setBounds (0, 212, 56, 28);
+    m_reverbLabel->setBounds (0, 24, 56, 60);
+    m_mFxLabel->setBounds (0, 152, 56, 52);
+    m_toggleBD->setBounds (80, 596, 31, 27);
+    m_toggleSD->setBounds (156, 596, 31, 27);
+    m_toggleHH->setBounds (232, 596, 31, 27);
+    m_toggleCLP->setBounds (308, 596, 31, 27);
+    m_toggleCYM->setBounds (384, 596, 31, 27);
+    m_toggleTOMPERC->setBounds (460, 596, 31, 27);
+    m_toggleHIT->setBounds (536, 596, 31, 27);
+    m_toggleOTHERS->setBounds (612, 596, 31, 27);
+    m_darkSepRect1->setBounds (132, 24, 4, 544 - 0);
+    m_darkSepRect2->setBounds (208, 24, 4, 544 - 0);
+    m_darkSepRect3->setBounds (284, 24, 4, 544 - 0);
+    m_darkSepRect4->setBounds (360, 24, 4, 544 - 0);
+    m_darkSepRect5->setBounds (436, 24, 4, 544 - 0);
+    m_darkSepRect6->setBounds (512, 24, 4, 544 - 0);
+    m_darkSepRect7->setBounds (588, 24, 4, 544 - 0);
+    m_dlyLabel->setBounds (0, 88, 56, 60);
     //[UserResized] Add your own custom resize handling here..
     Component::resized();
     //[/UserResized]
@@ -359,134 +371,131 @@ BEGIN_JUCER_METADATA
           hasStroke="0"/>
   </BACKGROUND>
   <JUCERCOMP name="" id="d78f1e5774ca8458" memberName="m_mixerGroup" virtualName=""
-             explicitFocusOrder="0" pos="0 0 668 504" sourceFile="GroupWidgets/PanelGroupDark.cpp"
+             explicitFocusOrder="0" pos="0 0 668 632" sourceFile="GroupWidgets/PanelGroupDark.cpp"
              constructorParams="&quot;partMixGrp&quot;,&quot;PART MIXER&quot;"/>
   <JUCERCOMP name="" id="e14c4fa2a949f949" memberName="component2" virtualName=""
-             explicitFocusOrder="0" pos="60 24 604 476" sourceFile="GroupWidgets/RectangleGrey.cpp"
+             explicitFocusOrder="0" pos="60 24 604 604" sourceFile="GroupWidgets/RectangleGrey.cpp"
              constructorParams=""/>
-  <JUCERCOMP name="" id="774804a2ff473afa" memberName="component9" virtualName=""
-             explicitFocusOrder="0" pos="60 440 604 60" sourceFile="GroupWidgets/RectangleGrey.cpp"
-             constructorParams=""/>
+  <JUCERCOMP name="" id="ed229350a70faf33" memberName="m_MixPart7" virtualName=""
+             explicitFocusOrder="0" pos="592 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             constructorParams="AllParts::Part7"/>
   <JUCERCOMP name="" id="7847d426b3778105" memberName="m_blackStripePartNames"
-             virtualName="" explicitFocusOrder="0" pos="132 440 532 4" sourceFile="GroupWidgets/RectangleDark.cpp"
+             virtualName="" explicitFocusOrder="0" pos="132 568 532 4" sourceFile="GroupWidgets/RectangleDark.cpp"
              constructorParams=""/>
   <LABEL name="labelBD" id="c0d4aaf48f2e8a91" memberName="m_labelBD" virtualName=""
-         explicitFocusOrder="0" pos="60 448 71 20" textCol="ffffffff"
+         explicitFocusOrder="0" pos="76 576 40 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="BD" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelSD" id="334a7978723dda88" memberName="m_labelSD" virtualName=""
-         explicitFocusOrder="0" pos="136 448 72 20" textCol="ffffffff"
+         explicitFocusOrder="0" pos="136 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="SD" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelHH" id="d5330474f55352b1" memberName="m_labelHH" virtualName=""
-         explicitFocusOrder="0" pos="212 448 72 20" textCol="ffffffff"
+         explicitFocusOrder="0" pos="212 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="HH" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelCLP" id="9be8ef3ea8ba86fc" memberName="m_labelCLP"
-         virtualName="" explicitFocusOrder="0" pos="288 448 72 20" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="288 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="CLP" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelCYM" id="5d882c3577085443" memberName="m_labelCYM"
-         virtualName="" explicitFocusOrder="0" pos="364 448 72 20" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="364 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="CYM" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelTOMPERC" id="9ef35206c0a6da32" memberName="m_labelTOMPERC"
-         virtualName="" explicitFocusOrder="0" pos="440 448 72 20" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="440 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="TOM/PERC" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelHIT" id="9469ea515dac4f19" memberName="m_labelHIT"
-         virtualName="" explicitFocusOrder="0" pos="516 448 72 20" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="516 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="HIT" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="labelOTHERS" id="b2e2868c6a2abd03" memberName="m_labelOTHERS"
-         virtualName="" explicitFocusOrder="0" pos="592 448 72 20" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="592 576 72 20" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="OTHERS" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="" id="83fd3ebb8d9abefe" memberName="m_MixPartR" virtualName=""
-             explicitFocusOrder="0" pos="60 24 72 416" sourceFile="MixerSectionsEditors/MixRhyTrack.cpp"
+             explicitFocusOrder="0" pos="60 24 72 544" sourceFile="MixerSectionsEditors/MixRhyTrack.cpp"
              constructorParams="AllParts::PartR"/>
   <JUCERCOMP name="" id="156795e5be1d9d51" memberName="m_MixPart1" virtualName=""
-             explicitFocusOrder="0" pos="136 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             explicitFocusOrder="0" pos="136 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
              constructorParams="AllParts::Part1"/>
   <JUCERCOMP name="" id="f33cd4fc656357ea" memberName="m_MixPart2" virtualName=""
-             explicitFocusOrder="0" pos="212 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             explicitFocusOrder="0" pos="212 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
              constructorParams="AllParts::Part2"/>
   <JUCERCOMP name="" id="823c0a7ac0f938f9" memberName="m_MixPart3" virtualName=""
-             explicitFocusOrder="0" pos="288 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             explicitFocusOrder="0" pos="288 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
              constructorParams="AllParts::Part3"/>
   <JUCERCOMP name="" id="8767896e8751884f" memberName="m_MixPart4" virtualName=""
-             explicitFocusOrder="0" pos="364 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             explicitFocusOrder="0" pos="364 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
              constructorParams="AllParts::Part4"/>
   <JUCERCOMP name="" id="a6071b0c55a79fd5" memberName="m_MixPart5" virtualName=""
-             explicitFocusOrder="0" pos="440 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             explicitFocusOrder="0" pos="440 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
              constructorParams="AllParts::Part5"/>
   <JUCERCOMP name="" id="479168b76adef9d" memberName="m_MixPart6" virtualName=""
-             explicitFocusOrder="0" pos="516 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
+             explicitFocusOrder="0" pos="516 24 72 544" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
              constructorParams="AllParts::Part6"/>
-  <JUCERCOMP name="" id="ed229350a70faf33" memberName="m_MixPart7" virtualName=""
-             explicitFocusOrder="0" pos="592 24 72 416" sourceFile="MixerSectionsEditors/MixPartTrack.cpp"
-             constructorParams="AllParts::Part7"/>
   <LABEL name="panLabel" id="ed38016865dd30d8" memberName="m_panLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 136 56 48" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="0 248 56 48" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="PAN" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="levelLabel" id="4de070007710033a" memberName="m_levelLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 184 56 192" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="0 312 56 192" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="LEVEL" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="panLabel" id="23443e2ef9174f81" memberName="m_panLabel2"
-         virtualName="" explicitFocusOrder="0" pos="0 408 56 72" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="0 512 56 116" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="MUTE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="keyShift" id="d6ccdb805c997011" memberName="m_keyShiftLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 108 56 24" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="0 212 56 28" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="KEY&#10;SHIFT" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="reverbLabel" id="440467d4712aa20" memberName="m_reverbLabel"
-         virtualName="" explicitFocusOrder="0" pos="-4 28 60 32" textCol="ffffffff"
-         edTextCol="ff000000" edBkgCol="0" labelText="REV DLY&#10;SENDS"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12" bold="1" italic="0" justification="34"/>
+         virtualName="" explicitFocusOrder="0" pos="0 24 56 60" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="REV&#10;SEND" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="reverbLabel" id="fd0f7b7681452bfd" memberName="m_mFxLabel"
-         virtualName="" explicitFocusOrder="0" pos="-8 72 64 32" textCol="ffffffff"
+         virtualName="" explicitFocusOrder="0" pos="0 152 56 52" textCol="ffffffff"
          edTextCol="ff000000" edBkgCol="0" labelText="M-FX" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="toggleBD" id="64b544053d530afc" memberName="m_toggleBD"
-             virtualName="" explicitFocusOrder="0" pos="80 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="80 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleSD" id="908a8bc326de0c3" memberName="m_toggleSD"
-             virtualName="" explicitFocusOrder="0" pos="156 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="156 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleHH" id="138c01d5348cc45c" memberName="m_toggleHH"
-             virtualName="" explicitFocusOrder="0" pos="232 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="232 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleCLP" id="96c607149f8f920d" memberName="m_toggleCLP"
-             virtualName="" explicitFocusOrder="0" pos="308 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="308 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleCYM" id="10910759dc54046b" memberName="m_toggleCYM"
-             virtualName="" explicitFocusOrder="0" pos="384 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="384 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleTOMPERC" id="5ad0f74af50bac33" memberName="m_toggleTOMPERC"
-             virtualName="" explicitFocusOrder="0" pos="460 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="460 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleHIT" id="e7f0f449c90695f2" memberName="m_toggleHIT"
-             virtualName="" explicitFocusOrder="0" pos="536 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="536 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="toggleTOMPERC" id="ee75aa8cb42083be" memberName="m_toggleOTHERS"
-             virtualName="" explicitFocusOrder="0" pos="612 468 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="612 596 31 27" sourceFile="ParameterWidgets/BigGreenToggle.cpp"
              constructorParams=""/>
   <JUCERCOMP name="" id="51afc631a0bcf51b" memberName="m_darkSepRect1" virtualName=""
              explicitFocusOrder="0" pos="132 24 4 0M" posRelativeH="156795e5be1d9d51"
@@ -509,10 +518,11 @@ BEGIN_JUCER_METADATA
   <JUCERCOMP name="" id="f004f120f1909e38" memberName="m_darkSepRect7" virtualName=""
              explicitFocusOrder="0" pos="588 24 4 0M" posRelativeH="156795e5be1d9d51"
              sourceFile="GroupWidgets/RectangleDark.cpp" constructorParams=""/>
-  <JUCERCOMP name="" id="f0a137b00e3e6f03" memberName="m_darkSepRect8" virtualName=""
-             explicitFocusOrder="0" pos="-4 -4Rr 536 4" posRelativeX="156795e5be1d9d51"
-             posRelativeY="156795e5be1d9d51" sourceFile="GroupWidgets/RectangleDark.cpp"
-             constructorParams=""/>
+  <LABEL name="dlyLabel" id="25a0e2522a92111" memberName="m_dlyLabel"
+         virtualName="" explicitFocusOrder="0" pos="0 88 56 60" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="DLY&#10;SEND" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

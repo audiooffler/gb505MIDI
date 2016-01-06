@@ -217,6 +217,7 @@ PatternTab::PatternTab ()
     addAndMakeVisible (component = new MFXEditor());
 
     //[UserPreSize]
+
 	m_dragSmfImageButton->setMouseCursor(MouseCursor::DraggingHandCursor);
 	m_dragSmfImageButton->setVisible(false);
 	m_dragSmfImageButton->addMouseListener(this,false);
@@ -275,12 +276,16 @@ PatternTab::PatternTab ()
 
 	buttonClicked(m_searchDevicesButton);
 
-	// This registers all of our commands with the command manager but has to be done after the window has
-	// been created so we can find the number of rendering engines available
-	applicationCommandManager->registerAllCommandsForTarget(this);
+	
 	//commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
 	// this lets the command manager use keypresses that arrive in our window to send out commands
 	addKeyListener(applicationCommandManager->getKeyMappings());
+
+	// This registers all of our commands with the command manager but has to be done after the window has
+	// been created so we can find the number of rendering engines available
+	applicationCommandManager->registerAllCommandsForTarget(this);
+
+	applicationCommandManager->setFirstCommandTarget(this);
 	m_afterConstructor = true;
     //[/Constructor]
 }
@@ -509,12 +514,12 @@ void PatternTab::getAllCommands(Array <CommandID>& commands)
 {
 	// this returns the set of all commands that this target can perform..
 	const CommandID ids[] = {
-		CommandIDs::fileOpenPattern,
-		CommandIDs::fileImportPattern,
-		CommandIDs::fileSavePattern,
-		CommandIDs::fileExportPattern,
-		CommandIDs::fileQuit,
-		CommandIDs::grooveBoxLoadPattern
+		PatternTab::fileOpenPattern,
+		PatternTab::fileImportPattern,
+		PatternTab::fileSavePattern,
+		PatternTab::fileExportPattern,
+		PatternTab::fileQuit,
+		PatternTab::grooveBoxLoadPattern
 	};
 
 	commands.addArray(ids, numElementsInArray(ids));
@@ -526,20 +531,21 @@ void PatternTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo& res
 
 	switch (commandID)
 	{
-	case CommandIDs::fileOpenPattern:
+	case PatternTab::fileOpenPattern:
 		result.setInfo("Open SysEx Pattern File...", "Opens a raw pattern file, either binary SysEx (.syx) or Hex SysEx text (.txt)", fileCategory, 0);
 		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
 		break;
-	case CommandIDs::fileImportPattern:
+	case PatternTab::fileImportPattern:
 		result.setInfo("Import Pattern from MIDI File", "Tries to extract pattern data from a Standard MIDI File (.mid)", fileCategory, 0);
 		result.addDefaultKeypress('i', ModifierKeys::commandModifier);
+		result.setActive(true);
 		break;
-	case CommandIDs::fileSavePattern:
+	case PatternTab::fileSavePattern:
 		result.setInfo("Save Pattern as SysEx...", "Saves a pattern file as raw data, either binary SysEx (.syx) or Hex SysEx text (.txt)", fileCategory, 0);
 		result.addDefaultKeypress('s', ModifierKeys::commandModifier);
 		result.setActive(m_currentPattern!=nullptr && m_currentPattern->isNotEmpty());
 		break;
-	case CommandIDs::fileExportPattern:
+	case PatternTab::fileExportPattern:
 		result.setInfo("Export Pattern as MIDI...", "Converts pattern to Standard MIDI File (.mid)", fileCategory, 0);
 		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
 		if (m_currentPattern != nullptr && m_currentPattern->isNotEmpty())
@@ -553,12 +559,12 @@ void PatternTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo& res
 			m_dragSmfImageButton->setVisible(false);
 		}
 		break;
-	case CommandIDs::fileQuit:
+	case PatternTab::fileQuit:
 		result.setInfo("Quit", "Close application.", fileCategory, 0);
 		result.addDefaultKeypress(KeyPress::F4Key, ModifierKeys::altModifier);
 		result.addDefaultKeypress('q', ModifierKeys::commandModifier);
 		break;
-	case CommandIDs::grooveBoxLoadPattern:
+	case PatternTab::grooveBoxLoadPattern:
 		result.setInfo("Request Pattern", "Request temporary pattern data from groovebox.", fileCategory, 0);
 		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
 		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
@@ -614,23 +620,21 @@ StringArray PatternTab::getMenuBarNames()
 
 PopupMenu PatternTab::getMenuForIndex(int topLevelMenuIndex, const String &/*menuName*/)
 {
-	ApplicationCommandManager* commandManager = applicationCommandManager;
-
 	PopupMenu menu;
 
 	if (topLevelMenuIndex == 0)
 	{
-		menu.addCommandItem(commandManager, CommandIDs::fileOpenPattern);
-		menu.addCommandItem(commandManager, CommandIDs::fileSavePattern);
+		menu.addCommandItem(applicationCommandManager, CommandIDs::fileOpenPattern);
+		menu.addCommandItem(applicationCommandManager, CommandIDs::fileSavePattern);
 		menu.addSeparator();
-		menu.addCommandItem(commandManager, CommandIDs::fileImportPattern);
-		menu.addCommandItem(commandManager, CommandIDs::fileExportPattern);
+		menu.addCommandItem(applicationCommandManager, CommandIDs::fileImportPattern);
+		menu.addCommandItem(applicationCommandManager, CommandIDs::fileExportPattern);
 		menu.addSeparator();
-		menu.addCommandItem(commandManager, CommandIDs::fileQuit);
+		menu.addCommandItem(applicationCommandManager, CommandIDs::fileQuit);
 	}
 	else if (topLevelMenuIndex == 1)
 	{
-		menu.addCommandItem(commandManager, CommandIDs::grooveBoxLoadPattern);
+		menu.addCommandItem(applicationCommandManager, CommandIDs::grooveBoxLoadPattern);
 	}
 
 	return menu;

@@ -56,12 +56,12 @@ public:
 	/* ApplicationCommandTarget implementation: */
 	enum CommandIDs
 	{
-		fileOpenPattern = 0x1001,
-		fileImportPattern = 0x1002,
-		fileSavePattern = 0x1003,
-		fileExportPattern = 0x1004,
-		fileQuit = 0x100F,
-		grooveBoxLoadPattern = 0x2001
+		fileOpenPattern = 0x2001,
+		fileImportPattern = 0x2002,
+		fileSavePattern = 0x2003,
+		fileExportPattern = 0x2004,
+		fileQuit = StandardApplicationCommandIDs::quit,
+		grooveBoxLoadPattern = 0x3001
 	};
 	ApplicationCommandTarget* getNextCommandTarget() override;
 	void getAllCommands(Array <CommandID>& commands) override;
@@ -69,9 +69,9 @@ public:
 	bool perform(const InvocationInfo& info) override;
 
 	/* MenuBarModel implementation: */
-	StringArray getMenuBarNames();
-	PopupMenu getMenuForIndex(int topLevelMenuIndex, const String &menuName);
-	void menuItemSelected(int menuItemID, int topLevelMenuIndex);
+	StringArray getMenuBarNames() override;
+	PopupMenu getMenuForIndex(int topLevelMenuIndex, const String &menuName) override;
+	void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
 
 	/* FileDragAndDropTarget implementation: */
 	bool isInterestedInFileDrag(const StringArray &files);

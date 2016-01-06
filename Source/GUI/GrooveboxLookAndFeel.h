@@ -185,7 +185,7 @@ public:
 
 		int width = (int)(tl.getWidth() + 14.0f);
 		int height = (int)(tl.getHeight() + 6.0f);
-		return Rectangle<int>(screenPos.x, screenPos.y, width, height);
+		return Rectangle<int>(screenPos.x, screenPos.y + 2, width, height);
 	}
 
 	//void getTooltipSize(const String& tipText, int& width, int& height)

@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -27,7 +27,7 @@
 BigOrangeToggle::BigOrangeToggle()
 : ParameterToggle()
 {
-	cachedImage_bigOrangeToggleOff_png = ImageCache::getFromMemory(bigOrangeToggleOff_png, bigOrangeToggleOff_pngSize);
+	cachedImage_bigOrangeToggleOff_png_1 = ImageCache::getFromMemory(bigOrangeToggleOff_png, bigOrangeToggleOff_pngSize);
 	cachedImage_bigOrangeToggleOn_png = ImageCache::getFromMemory(bigOrangeToggleOn_png, bigOrangeToggleOn_pngSize);
 	setSize(27, 27);
 }
@@ -37,7 +37,10 @@ BigOrangeToggle::BigOrangeToggle()
 BigOrangeToggle::BigOrangeToggle (const String& componentName)
     : ParameterToggle(componentName)
 {
-    cachedImage_bigOrangeToggleOff_png = ImageCache::getFromMemory (bigOrangeToggleOff_png, bigOrangeToggleOff_pngSize);
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
+    cachedImage_bigOrangeToggleOff_png_1 = ImageCache::getFromMemory (bigOrangeToggleOff_png, bigOrangeToggleOff_pngSize);
 
     //[UserPreSize]
 	cachedImage_bigOrangeToggleOn_png = ImageCache::getFromMemory(bigOrangeToggleOn_png, bigOrangeToggleOn_pngSize);
@@ -69,9 +72,9 @@ void BigOrangeToggle::paint (Graphics& g)
     //[/UserPrePaint]
 
     g.setColour (Colours::black);
-    g.drawImage (cachedImage_bigOrangeToggleOff_png,
-                 (getWidth() / 2) - ((27) / 2), (getHeight() / 2) - ((27) / 2), 27, 27,
-                 0, 0, cachedImage_bigOrangeToggleOff_png.getWidth(), cachedImage_bigOrangeToggleOff_png.getHeight());
+    g.drawImage (cachedImage_bigOrangeToggleOff_png_1,
+                 (getWidth() / 2) - (27 / 2), (getHeight() / 2) - (27 / 2), 27, 27,
+                 0, 0, cachedImage_bigOrangeToggleOff_png_1.getWidth(), cachedImage_bigOrangeToggleOff_png_1.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
 	if (getToggleState())
@@ -86,6 +89,9 @@ void BigOrangeToggle::paint (Graphics& g)
 
 void BigOrangeToggle::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     //[UserResized] Add your own custom resize handling here..
 	ToggleButton::resized();
     //[/UserResized]

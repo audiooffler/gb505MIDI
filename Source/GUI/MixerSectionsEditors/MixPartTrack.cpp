@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -36,6 +36,9 @@ extern QuickSysExBlock* quickSysEx;
 MixPartTrack::MixPartTrack (AllParts part)
     : m_part(part)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_mixLevel = new MixPartLevelFader ("06"));
     m_mixLevel->setRange (0, 127, 1);
     m_mixLevel->setSliderStyle (Slider::LinearVertical);
@@ -220,6 +223,9 @@ void MixPartTrack::paint (Graphics& g)
 
 void MixPartTrack::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_mixLevel->setBounds (20, 284, 32, getHeight() - 348);
     m_panSlider->setBounds (12, 224, 48, 48);
     m_delaySlider->setBounds (12, 64, 48, 48);
@@ -232,7 +238,7 @@ void MixPartTrack::resized()
     m_mfxLabel->setBounds (4, 130, getWidth() - 8, 12);
     m_delayLabel->setBounds (0, 110, getWidth() - 0, 12);
     m_reverbLabel->setBounds (0, 50, getWidth() - 0, 12);
-    m_mfxGrab->setBounds (36 - ((54) / 2), 136, 54, 49);
+    m_mfxGrab->setBounds (36 - (54 / 2), 136, 54, 49);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }

@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -30,9 +30,9 @@
 
 #include "GroupWidgets/PanelGroupDark.h"
 #include "GroupWidgets/RectangleGrey.h"
+#include "MixerSectionsEditors/MixPartTrack.h"
 #include "GroupWidgets/RectangleDark.h"
 #include "MixerSectionsEditors/MixRhyTrack.h"
-#include "MixerSectionsEditors/MixPartTrack.h"
 #include "ParameterWidgets/BigGreenToggle.h"
 
 
@@ -84,7 +84,7 @@ private:
     //==============================================================================
     ScopedPointer<PanelGroupDark> m_mixerGroup;
     ScopedPointer<RectangleGrey> component2;
-    ScopedPointer<RectangleGrey> component9;
+    ScopedPointer<MixPartTrack> m_MixPart7;
     ScopedPointer<RectangleDark> m_blackStripePartNames;
     ScopedPointer<Label> m_labelBD;
     ScopedPointer<Label> m_labelSD;
@@ -101,7 +101,6 @@ private:
     ScopedPointer<MixPartTrack> m_MixPart4;
     ScopedPointer<MixPartTrack> m_MixPart5;
     ScopedPointer<MixPartTrack> m_MixPart6;
-    ScopedPointer<MixPartTrack> m_MixPart7;
     ScopedPointer<Label> m_panLabel;
     ScopedPointer<Label> m_levelLabel;
     ScopedPointer<Label> m_panLabel2;
@@ -123,7 +122,7 @@ private:
     ScopedPointer<RectangleDark> m_darkSepRect5;
     ScopedPointer<RectangleDark> m_darkSepRect6;
     ScopedPointer<RectangleDark> m_darkSepRect7;
-    ScopedPointer<RectangleDark> m_darkSepRect8;
+    ScopedPointer<Label> m_dlyLabel;
 
 
     //==============================================================================

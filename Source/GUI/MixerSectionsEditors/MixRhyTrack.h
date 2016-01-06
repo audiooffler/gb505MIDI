@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -85,16 +85,21 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<GrabSwitch> m_mfxGrab;
     ScopedPointer<MicroParameterSlider> m_mfxHelper;
     ScopedPointer<MixPartLevelFader> m_mixLevel;
     ScopedPointer<Knob> m_panSlider;
     ScopedPointer<Knob> m_delaySlider;
     ScopedPointer<Knob> m_ReverbSlider;
     ScopedPointer<MicroParameterSlider> m_keyShiftSlider;
-    ScopedPointer<GrabSwitch> m_mfxGrab;
     ScopedPointer<BigOrangeToggle> m_muteToggle;
     ScopedPointer<ImageButton> imageButton;
     ScopedPointer<SmallGreenToggle> m_mfx_RHYtoggle;
+    ScopedPointer<Label> m_panLabel;
+    ScopedPointer<Label> m_keyShiftLabel;
+    ScopedPointer<Label> m_reverbLabel;
+    ScopedPointer<Label> m_delayLabel;
+    ScopedPointer<Label> m_mfxLabel;
 
 
     //==============================================================================

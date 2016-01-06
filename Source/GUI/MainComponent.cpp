@@ -66,6 +66,12 @@ MainComponent::MainComponent ()
 	applicationCommandManager->setFirstCommandTarget(this);
 	// this lets the command manager use keypresses that arrive in our window to send out commands
 	addKeyListener(applicationCommandManager->getKeyMappings());
+
+	if (ApplicationCommandTarget* appCmdTarget = dynamic_cast<ApplicationCommandTarget*>(getCurrentContentComponent()))
+	{
+		applicationCommandManager->setFirstCommandTarget(appCmdTarget);
+	}
+
 	grabKeyboardFocus();
     //[/Constructor]
 }
@@ -102,6 +108,16 @@ void MainComponent::resized()
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+
+void MainComponent::currentTabChanged(int newCurrentTabIndex, const String &newCurrentTabName)
+{
+	TabbedComponent::currentTabChanged(newCurrentTabIndex, newCurrentTabName);
+	if (ApplicationCommandTarget* appCmdTarget = dynamic_cast<ApplicationCommandTarget*>(getCurrentContentComponent()))
+	{
+		applicationCommandManager->setFirstCommandTarget(appCmdTarget);
+	}
+}
+
 //==============================================================================
 // The following methods implement the ApplicationCommandTarget interface, allowing
 // this window to publish a set of actions it can perform, and which can be mapped

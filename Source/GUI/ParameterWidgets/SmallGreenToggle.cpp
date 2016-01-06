@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -27,7 +27,7 @@
 SmallGreenToggle::SmallGreenToggle()
 	: ParameterToggle()
 {
-	cachedImage_smallOrangeToggleOff_png = ImageCache::getFromMemory(smallOrangeToggleOff_png, smallOrangeToggleOff_pngSize);
+	cachedImage_smallOrangeToggleOff_png_1 = ImageCache::getFromMemory(smallOrangeToggleOff_png, smallOrangeToggleOff_pngSize);
 	cachedImage_smallGreenToggleOn_png = ImageCache::getFromMemory(smallGreenToggleOn_png, smallGreenToggleOn_pngSize);
 	setSize(12, 12);
 }
@@ -37,7 +37,10 @@ SmallGreenToggle::SmallGreenToggle()
 SmallGreenToggle::SmallGreenToggle (const String& componentName)
     : ParameterToggle(componentName)
 {
-    cachedImage_smallOrangeToggleOff_png = ImageCache::getFromMemory (smallOrangeToggleOff_png, smallOrangeToggleOff_pngSize);
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
+    cachedImage_smallOrangeToggleOff_png_1 = ImageCache::getFromMemory (smallOrangeToggleOff_png, smallOrangeToggleOff_pngSize);
 
     //[UserPreSize]
 	cachedImage_smallGreenToggleOn_png = ImageCache::getFromMemory(smallGreenToggleOn_png, smallGreenToggleOn_pngSize);
@@ -69,9 +72,9 @@ void SmallGreenToggle::paint (Graphics& g)
     //[/UserPrePaint]
 
     g.setColour (Colours::black);
-    g.drawImage (cachedImage_smallOrangeToggleOff_png,
-                 (getWidth() / 2) - ((12) / 2), (getHeight() / 2) - ((12) / 2), 12, 12,
-                 0, 0, cachedImage_smallOrangeToggleOff_png.getWidth(), cachedImage_smallOrangeToggleOff_png.getHeight());
+    g.drawImage (cachedImage_smallOrangeToggleOff_png_1,
+                 (getWidth() / 2) - (12 / 2), (getHeight() / 2) - (12 / 2), 12, 12,
+                 0, 0, cachedImage_smallOrangeToggleOff_png_1.getWidth(), cachedImage_smallOrangeToggleOff_png_1.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
 	if (getToggleState())
@@ -86,6 +89,9 @@ void SmallGreenToggle::paint (Graphics& g)
 
 void SmallGreenToggle::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     //[UserResized] Add your own custom resize handling here..
 	ToggleButton::resized();
     //[/UserResized]
