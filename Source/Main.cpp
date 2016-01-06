@@ -28,6 +28,7 @@ OverallMemoryBlock* grooveboxMemory;
 QuickSysExBlock* quickSysEx;
 Waveforms* waveForms;
 ApplicationCommandManager* applicationCommandManager;
+OpenGLContext* openGlContext;
 
 //==============================================================================
 class MC307SysExApplication  : public JUCEApplication
@@ -49,6 +50,14 @@ public:
 		//_CrtSetBreakAlloc(9552);
 
         // This method is where you should put your application's initialisation code..
+
+		#if JUCE_OPENGL
+		if (openGlContext == nullptr)
+		{
+			openGlContext = new OpenGLContext();
+		}
+		#endif
+
 		applicationCommandManager = new ApplicationCommandManager();
 		appProperties = new ApplicationProperties();
 		PropertiesFile::Options options;
@@ -68,6 +77,9 @@ public:
 		lookAndFeel = new GrooveboxLookAndFeel();
 		LookAndFeel::setDefaultLookAndFeel(lookAndFeel);
         mainWindow = new MainWindow();
+		#if JUCE_OPENGL
+		if (openGlContext != nullptr) openGlContext->attachTo(*mainWindow);
+		#endif
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
 		mainWindow->grabKeyboardFocus();
@@ -83,6 +95,10 @@ public:
 		deleteAndZero(toolTipWindow);
 		deleteAndZero(undoManager);
 		if (grooveboxConnector!=nullptr) deleteAndZero(grooveboxConnector);
+		#if JUCE_OPENGL
+		if (openGlContext != nullptr) openGlContext->detach();
+		deleteAndZero(openGlContext);
+		#endif
         mainWindow = nullptr; // (deletes our window)
 		lookAndFeel = nullptr;
 		deleteAndZero(quickSysEx);

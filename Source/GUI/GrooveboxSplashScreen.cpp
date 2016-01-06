@@ -94,6 +94,9 @@ GrooveboxSplashScreen::~GrooveboxSplashScreen()
 void GrooveboxSplashScreen::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
+	#ifdef JUCE_MSVC
+	g;
+	#endif
     //[/UserPrePaint]
 
     //[UserPaint] Add your own custom painting code here..

@@ -32,7 +32,6 @@ ParameterComboBox::ParameterComboBox (const String& componentName)
 {
 
     //[UserPreSize]
-	m_comboBoxlookAndFeel = new GrooveboxLookAndFeel();
 	m_comboBoxlookAndFeel->setColour(PopupMenu::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	setLookAndFeel(m_comboBoxlookAndFeel);
 	setColour(backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
