@@ -58,13 +58,13 @@ public:
 	// look up parameter that is registered to a MIDI CC number. returns nullptr if none in this block matches the CC number.
 	Parameter* getParameterForCC(uint8 ccNo);
 
-	// the incoming message will be deleted by this function!
+	// handle one sysex message
 	virtual bool handleSysEx(SyxMsg* msg);
 
 	// called when loading from sysex file or by RetrieveSysExThread
 	// overrideable, e.g. for pattern setup and pattern body blocks
 	// TODO: quick sysex
-	virtual bool handleSysEx(OwnedArray<SyxMsg, CriticalSection>& sysExMessageArray);
+	virtual void handleSysEx(OwnedArray<SyxMsg, CriticalSection>& sysExMessageArray);
 
 	// does nothing but calling handleCC of children by default but may be overridden in subclasses to handle CC evets
 	void handleCCFromGroovebox(uint8 channel, uint8 controllerType, uint8 value);
@@ -93,10 +93,10 @@ public:
 protected:
 
 	String m_name;	  // name of the data block
-	uint32 m_address; // compulsory, careful when calculating: interpret as 4 x 7 bit instread of 4 x 8 bit!
+	uint32 m_address; // compulsory, careful when calculating: interpret as 4 x 7 bit instead of 4 x 8 bit!
 	String m_description; // set optional, descriptive
 	String m_referenceSectionInOperationManual; // set optional, descriptive
-	uint32 m_totalSize; // set optional, careful when calculating: interpret as 4 x 7 bit instread of 4 x 8 bit!
+	uint32 m_totalSize; // set optional, careful when calculating: interpret as 4 x 7 bit instead of 4 x 8 bit!
 	OwnedArray<GrooveboxMemoryBlock, CriticalSection> m_subBlocks; // filled optionally (may have no sub blocks)
 	OwnedArray<Parameter, CriticalSection> m_parameters; // filled optionally (may have none if it just has sub blocks)
 	MemoryBlock m_data; // filled optionally (may have none if it just has sub blocks)

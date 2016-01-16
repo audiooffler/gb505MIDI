@@ -14,6 +14,7 @@
 #include "SynthPatchesBlock.h"
 #include "RhythmSetBlock.h"
 #include "SystemBlock.h"
+#include "OverallMemoryBlock.h"
 
 // creates a grooevbox sysex memory block. the name property must be set by subclass constructrors.
 // careful when calculating with address or totalSize, interpret as 4 x 7 bit instread of 4 x 8 bit!
@@ -119,88 +120,84 @@ Parameter* GrooveboxMemoryBlock::getParameterForCC(uint8 ccNo)
 	return nullptr;
 }
 
-bool GrooveboxMemoryBlock::handleSysEx(SyxMsg* msg)
+bool GrooveboxMemoryBlock::handleSysEx(SyxMsg* sysExMsg)
 {
-	OwnedArray<SyxMsg, CriticalSection> sysExArray;
-	sysExArray.add(msg);
-	return handleSysEx(sysExArray);
-}
+	// only hande DT1 sysex messages
+	if (sysExMsg == nullptr || sysExMsg->getType() != SyxMsg::Type_DT1) return false;
 
-// called when loading from sysex file or by RetrieveSysExThread or even when groovebox sends single changes
-bool GrooveboxMemoryBlock::handleSysEx(OwnedArray<SyxMsg, CriticalSection>& sysExMessageArray)
-{
-	bool success(false);
-	// set registered UI components
-	for (int i = sysExMessageArray.size() - 1; i >= 0; i--)
+	uint32 blockStartAddress = sysExMsg->getBlockStartAddress();	// First 2 Bytes
+	uint16 addressOffset = sysExMsg->getAddressOffset();			// Least 2 Bytes
+	// for the following block types: first 3 Bytes are address || least byte offset
+	if (
+		dynamic_cast<ScaleTuneBlock*>(this) ||
+		dynamic_cast<PartInfoPartBlock*>(this) ||
+		dynamic_cast<PatchToneBlock*>(this) ||
+		dynamic_cast<RhythmNoteBlock*>(this)
+		)
 	{
-		SyxMsg* sysExMsg = sysExMessageArray[i];
-		uint32 blockStartAddress = sysExMsg->getBlockStartAddress();
-		uint16 addressOffset = sysExMsg->getAddressOffset();
-		// for DBG
-		if (
-		//	dynamic_cast<SystemBlock*>(this) ||
-		//	dynamic_cast<PartInfoBlock*>(this) ||
-		//	dynamic_cast<PatchPartBlock*>(this) ||
-		//	dynamic_cast<RhythmSetBlock*>(this) ||
-			dynamic_cast<ScaleTuneBlock*>(this) ||		
-			dynamic_cast<PartInfoPartBlock*>(this) ||	
-			dynamic_cast<PatchToneBlock*>(this) ||		
-			dynamic_cast<RhythmNoteBlock*>(this)
-		  )		
-		{
-			blockStartAddress = blockStartAddress + (addressOffset & 0xFF00);
-		}
-		// END DBG
-		if (sysExMsg->getType() == SyxMsg::Type_DT1)
-		{
-			// if total byte length is not defined handle in subBlocks if start address is not smaller
-			if (m_totalSize < 1 && m_subBlocks.size()>0 && blockStartAddress >= m_address)
-			{
-				for (int s = m_subBlocks.size() - 1; s >= 0; s--)
-				{
-					success |= m_subBlocks[s]->handleSysEx(sysExMessageArray);
-				}
-			}
-			// if no subBlock but byte length defined and start address matching set data
-			else if (m_totalSize > 0 && m_subBlocks.size() == 0 && blockStartAddress == m_address)
-			{
-				uint8* data;
-				uint32 dataLength(0);
-				sysExMsg->getSysExDataArrayPtr(&data, dataLength);
-				
-				//m_data.copyFrom(data, sysExMsg->getAddressOffset(), dataLength);
-				for (uint16 t = 0, addressOffset = sysExMsg->getAddressOffset(); t < dataLength; addressOffset++, t++)
-				{
-					// addressOffset only 1 Byte for these block types:
-					if (dynamic_cast<ScaleTuneBlock*>(this) ||		// 1-1-2. Scale Tune (2nd-last Byte for Part-No of 1-1. System)
-						dynamic_cast<PartInfoPartBlock*>(this) ||	// 1-2-2. Part Info Part n (2nd-last Byte for Part-No of 1-2. Part Info)
-						dynamic_cast<PatchToneBlock*>(this) ||		// 1-3-2. Patch Tone (2nd-last Byte for Tone-No of 1-3. Patch Tone)
-						dynamic_cast<RhythmNoteBlock*>(this))		// 1-4-2. Rhythm Note n	(2nd-last Byte for Key-No of 1-3 Rhythm Setup)
-					{
-						addressOffset = addressOffset & 0xFF;
-					}
+		blockStartAddress = blockStartAddress + (addressOffset & 0xFF00);
+		addressOffset = addressOffset & 0xFF;
+	}
+	bool success(false);
 
-					if (addressOffset < m_parameters.size())
+	// if in a block without defined parameters (total byte length is zero) handle in subBlocks if start address is not smaller
+	if (m_totalSize < 1 && m_subBlocks.size() > 0 && blockStartAddress >= m_address)
+	{
+		for (int s = 0; s < m_subBlocks.size(); s++)
+		{
+			success |= m_subBlocks[s]->handleSysEx(sysExMsg);
+		}
+	}
+	// if no subBlock but byte length defined and start address matching set data
+	else if (m_totalSize > 0 && m_subBlocks.size() == 0 && blockStartAddress == m_address)
+	{
+		uint8* data;
+		uint32 dataLength(0);
+		sysExMsg->getSysExDataArrayPtr(&data, dataLength);
+
+		//m_data.copyFrom(data, sysExMsg->getAddressOffset(), dataLength);
+		for (uint16 t = 0, addressOffset = sysExMsg->getAddressOffset(); t < dataLength; addressOffset++, t++)
+		{
+			// addressOffset only 1 Byte for these block types:
+			if (dynamic_cast<ScaleTuneBlock*>(this) ||		// 1-1-2. Scale Tune (2nd-last Byte for Part-No of 1-1. System)
+				dynamic_cast<PartInfoPartBlock*>(this) ||	// 1-2-2. Part Info Part n (2nd-last Byte for Part-No of 1-2. Part Info)
+				dynamic_cast<PatchToneBlock*>(this) ||		// 1-3-2. Patch Tone (2nd-last Byte for Tone-No of 1-3. Patch Tone)
+				dynamic_cast<RhythmNoteBlock*>(this))		// 1-4-2. Rhythm Note n	(2nd-last Byte for Key-No of 1-3 Rhythm Setup)
+			{
+				addressOffset = addressOffset & 0xFF;
+			}
+
+			if (addressOffset < m_parameters.size())
+			{
+				if (Parameter* param = m_parameters[addressOffset])
+				{
+					// 2 byte parameter:
+					if (param->getMax()>127 && addressOffset + 1 < m_parameters.size())
 					{
-						Parameter* param = m_parameters[addressOffset];
-						// 2 byte parameter:
-						if (param->getMax()>127 && addressOffset + 1 < m_parameters.size())
-						{
-							param->setValue((data[t] & 0xF) << 4 | (data[t + 1] & 0xF), Parameter::MidiInFromGroovebox);
-							// jump over next byte
-							t++; addressOffset++;
-						}
-						else // 1 byte parameter:
-							param->setValue(data[t], Parameter::MidiInFromGroovebox);
+						param->setValue((data[t] & 0xF) << 4 | (data[t + 1] & 0xF), Parameter::MidiInFromGroovebox);
+						// jump over next byte
+						t++; addressOffset++;
 					}
+					else // 1 byte parameter:
+						param->setValue(data[t], Parameter::MidiInFromGroovebox);
+					// sysExMessage sucessfully consumed
+					success = true;
 				}
-				// delete sysExMessage from list, it's been consumed
-				sysExMessageArray.remove(i, true);
-				success = true;
 			}
 		}
 	}
-	return success; // (true before if some block bytes where loaded successfully )
+	return success;
+}
+
+// called when loading from sysex file or by RetrieveSysExThread or even when groovebox sends single changes
+void GrooveboxMemoryBlock::handleSysEx(OwnedArray<SyxMsg, CriticalSection>& sysExMessageArray)
+{
+	
+	while (sysExMessageArray.size() > 0)
+	{
+		handleSysEx(sysExMessageArray[0]);
+		sysExMessageArray.remove(0, true);
+	}
 }
 
 // does nothing but calling handleCC of children by default but may be overridden in subclasses to handle CC evets

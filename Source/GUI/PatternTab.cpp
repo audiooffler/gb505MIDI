@@ -19,6 +19,7 @@
 
 //[Headers] You can add your own extra header files here...
 #include "MainWindow.h"
+#include "../GrooveboxMemory/OverallMemoryBlock.h"
 //[/Headers]
 
 #include "PatternTab.h"
@@ -32,6 +33,7 @@ extern MidiOutput* midiOutputDevice;
 extern int preferredMidiInId;
 extern int preferredMidiOutId;
 extern GrooveboxConnector* grooveboxConnector;
+extern OverallMemoryBlock* grooveboxMemory;
 
 //[/MiscUserDefs]
 
@@ -734,10 +736,12 @@ void PatternTab::loadFile(const File &file)
 		if (file.getFileExtension().toLowerCase() == ".syx")
 		{
 			loadedSucessfully = m_currentPattern->loadBinarySysExFile(file);
+			loadedSucessfully = grooveboxMemory->loadBinarySysExFile(file);
 		}
 		else if (file.getFileExtension().toLowerCase() == ".txt")
 		{
 			loadedSucessfully = m_currentPattern->loadHexTxtSysExFile(file);
+			loadedSucessfully = grooveboxMemory->loadHexTxtSysExFile(file);
 		}
 		else if (file.getFileExtension().toLowerCase() == ".mid")
 		{

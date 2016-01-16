@@ -23,23 +23,21 @@ class OverallMemoryBlock : public GrooveboxMemoryBlock
 {
 public:
 
-	OverallMemoryBlock() : GrooveboxMemoryBlock(0x00000000, "Groovebox SysEx Memory")
-	{
-		m_name = "Overall";
-		addSubBlock(new SystemBlock());
-		addSubBlock(new PartInfoBlock());
-		addSubBlock(new SynthPatchesBlock());
-		addSubBlock(new RhythmSetBlock());
-		addSubBlock(new PatternSetupBlock());
-		addSubBlock(new PatternBodyBlock());
-	}
+	OverallMemoryBlock();
 
-	SystemBlock* getSystemBlock() { return dynamic_cast<SystemBlock*> (m_subBlocks[0]); }
-	PartInfoBlock* getPartInfoBlock() { return dynamic_cast<PartInfoBlock*> (m_subBlocks[1]); }
-	SynthPatchesBlock* getSynthPatchesBlock() { return dynamic_cast<SynthPatchesBlock*> (m_subBlocks[2]); }
-	RhythmSetBlock* getRhythmSetBlock() { return dynamic_cast<RhythmSetBlock*> (m_subBlocks[3]); }
-	PatternSetupBlock* getPatternSetupBlock() { return dynamic_cast<PatternSetupBlock*> (m_subBlocks[4]); }
-	PatternBodyBlock* getPatternBodyBlock() { return dynamic_cast<PatternBodyBlock*> (m_subBlocks[5]); }
+	SystemBlock* getSystemBlock();
+	PartInfoBlock* getPartInfoBlock();
+	SynthPatchesBlock* getSynthPatchesBlock();
+	RhythmSetBlock* getRhythmSetBlock();
+	PatternSetupBlock* getPatternSetupBlock();
+	PatternBodyBlock* getPatternBodyBlock();
+
+	// Load SysEx data
+	bool loadFromArray(OwnedArray<SyxMsg, CriticalSection>& sysExMessageArray);
+	bool loadFromGroovebox();
+	bool loadBinarySysExFile(const File& file);
+	bool loadHexTxtSysExFile(const File& file);
+	bool loadStandardMidiFile(const File& file);
 
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OverallMemoryBlock);

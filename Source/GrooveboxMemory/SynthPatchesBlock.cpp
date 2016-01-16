@@ -357,7 +357,7 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 // ----------------------------------------------------------------------------
 
 PatchPartBlock::PatchPartBlock(SynthParts part) :
-	GrooveboxMemoryBlock(0x02000000 | ((uint32)part << 16), "Patches for Part " + String((uint8)part), "1-3"),
+	GrooveboxMemoryBlock(0x02000000 | ((uint32)part << 16), "Patches for Part " + String((uint8)part + 1), "1-3"),
 	m_part(part)
 {
 	m_name = "Patch Part " + String((uint8)m_part + 1);

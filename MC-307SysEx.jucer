@@ -49,6 +49,7 @@
               file="Source/MIDIConnection/GrooveboxConnector.cpp"/>
         <FILE id="QywkZE" name="GrooveboxConnector.h" compile="0" resource="0"
               file="Source/MIDIConnection/GrooveboxConnector.h"/>
+        <FILE id="EQAwgb" name="SyxMsg.cpp" compile="1" resource="0" file="Source/MIDIConnection/SyxMsg.cpp"/>
         <FILE id="qFgS2h" name="SyxMsg.h" compile="0" resource="0" file="Source/MIDIConnection/SyxMsg.h"/>
       </GROUP>
       <GROUP id="{67FFAD91-1CB4-C0FF-5764-DC18CE66AD61}" name="GUI">
@@ -287,6 +288,8 @@
               file="Source/GrooveboxMemory/GrooveboxMemoryBlock.cpp"/>
         <FILE id="GeDzU2" name="GrooveboxMemoryBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/GrooveboxMemoryBlock.h"/>
+        <FILE id="O6vAWc" name="OverallMemoryBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/OverallMemoryBlock.cpp"/>
         <FILE id="H4XV4A" name="OverallMemoryBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/OverallMemoryBlock.h"/>
         <FILE id="WKdOF0" name="Parameter.cpp" compile="1" resource="0" file="Source/GrooveboxMemory/Parameter.cpp"/>
