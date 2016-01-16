@@ -197,4 +197,7 @@ FakesAssemblies/
 /JuceLibraryCode
 /Builds
 Thumbs.db
+<<<<<<< HEAD
 privK.ppk
+=======
+>>>>>>> remotes/origin/master
