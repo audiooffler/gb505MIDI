@@ -196,3 +196,5 @@ FakesAssemblies/
 *.opt
 /JuceLibraryCode
 /Builds
+Thumbs.db
+privK.ppk
