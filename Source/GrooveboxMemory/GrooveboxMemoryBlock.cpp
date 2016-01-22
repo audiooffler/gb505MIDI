@@ -195,7 +195,10 @@ void GrooveboxMemoryBlock::handleSysEx(OwnedArray<SyxMsg, CriticalSection>& sysE
 	
 	while (sysExMessageArray.size() > 0)
 	{
-		handleSysEx(sysExMessageArray[0]);
+		if (!handleSysEx(sysExMessageArray[0]))
+		{
+			DBG("Could not handle " + sysExMessageArray[0]->toString());
+		}
 		sysExMessageArray.remove(0, true);
 	}
 }
