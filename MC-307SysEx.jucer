@@ -297,6 +297,8 @@
         <FILE id="cjnfNJ" name="PartInfoBlock.cpp" compile="1" resource="0"
               file="Source/GrooveboxMemory/PartInfoBlock.cpp"/>
         <FILE id="D4VQU9" name="PartInfoBlock.h" compile="0" resource="0" file="Source/GrooveboxMemory/PartInfoBlock.h"/>
+        <FILE id="HjMnvT" name="PatternBodyBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/PatternBodyBlock.cpp"/>
         <FILE id="oTWbrw" name="PatternBodyBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/PatternBodyBlock.h"/>
         <FILE id="ria7JC" name="PatternSetupBlock.h" compile="0" resource="0"
