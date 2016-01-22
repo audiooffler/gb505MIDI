@@ -84,7 +84,7 @@ public:
 
 	uint8 getDeviceId();
 	
-	uint32 get32BitAddress();
+	uint32 get32BitAddress();	// e.g. the value of 0x40000000 for first sysex of pattern body
 
 	uint32 getBlockStartAddress();
 
