@@ -39,25 +39,13 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 		const uint8* patternDataBlock;
 		int patternDataBlockSize;
 		patternDataBlock = unpack7BitTo8BitData(sysExDataPtr, sysExDataSize, patternDataBlockSize);
-		DBG("address: 0x" + String::toHexString((int)sysExMsg->get32BitAddress()).paddedLeft('0', 8) + ", SysEx size: " + String(sysExDataSize)+
-			", Pattern Block size: " + String(patternDataBlockSize));
+		/*DBG("address: 0x" + String::toHexString((int)sysExMsg->get32BitAddress()).paddedLeft('0', 8) + ", SysEx size: " + String(sysExDataSize)+
+			", Pattern Block size: " + String(patternDataBlockSize));*/
 		for (int i = 0; i < patternDataBlockSize; i += 8)
 		{
 			PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
 			m_sequenceBlocks.add(newPatternEvent);
-			DBG(String(newPatternEvent->absoluteTick).paddedLeft('0', 5) + " " + 
-				newPatternEvent->getTypeString() + "\t" +
-				newPatternEvent->getPartString() + "\t" +
-				(newPatternEvent->getType() == PatternEventType::Evt_Note ? "Vel: " + String(newPatternEvent->getNoteVelocity())+", ": "") + 
-				(newPatternEvent->getType() == PatternEventType::Evt_Note ? "GateTicks: " + String(newPatternEvent->getNoteGateTicks())+", " : "") +
-				String::toHexString((int)newPatternEvent->bytes[0]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[1]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[2]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[3]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[4]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[5]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[6]).paddedLeft('0', 2) + " " +
-				String::toHexString((int)newPatternEvent->bytes[7]).paddedLeft('0', 2) + " ");
+			DBG(newPatternEvent->toDebugString());
 			/*
 			else if (c_eventType == GrooveboxPattern::Evt_TickInc)
 			{
@@ -183,6 +171,62 @@ String PatternBodyBlock::PatternEventData::getAbsoluteTickString(unsigned int ab
 	return String(measure).paddedLeft('0', 2) + "-" + String(quarter).paddedLeft('0', 2) + "-" + String(ticksRest).paddedLeft('0', 2);
 }
 
+String PatternBodyBlock::PatternEventData::getPartString(PatternBodyBlock::PatternPart part)
+{
+	switch (part)
+	{
+	case PatternBodyBlock::Pattern_Part_1:
+		return "PART 1";
+	case PatternBodyBlock::Pattern_Part_2:
+		return "PART 2";
+	case PatternBodyBlock::Pattern_Part_3:
+		return "PART 3";
+	case PatternBodyBlock::Pattern_Part_4:
+		return "PART 4";
+	case PatternBodyBlock::Pattern_Part_5:
+		return "PART 5";
+	case PatternBodyBlock::Pattern_Part_6:
+		return "PART 6";
+	case PatternBodyBlock::Pattern_Part_7:
+		return "PART 7";
+	case PatternBodyBlock::Pattern_Part_R:
+		return "PART R";
+	case PatternBodyBlock::Pattern_MuteCtrl:
+		return "MUTE-CT";
+	case PatternBodyBlock::Pattern_Part_Unknown:
+	default:
+		return "PART?";
+	}
+}
+
+String PatternBodyBlock::PatternEventData::getRhythmGroupString(RhythmGroup rhythmGroup)
+{
+	switch (rhythmGroup)
+	{
+	case PatternBodyBlock::Rhythm_Group_BD:
+		return "BD";
+	case PatternBodyBlock::Rhythm_Group_SD:
+		return "SD";
+	case PatternBodyBlock::Rhythm_Group_HH:
+		return "HH";
+	case PatternBodyBlock::Rhythm_Group_CLP:
+		return "CLP";
+	case PatternBodyBlock::Rhythm_Group_CYM:
+		return "CYM";
+	case PatternBodyBlock::Rhythm_Group_TomPerc:
+		return"TomPerc";
+	case PatternBodyBlock::Rhythm_Group_Hit:
+		return "Hit";
+	case PatternBodyBlock::Rhythm_Group_Others:
+		return "Others";
+	case PatternBodyBlock::Rhythm_Group_All:
+		return "All";
+	case PatternBodyBlock::Rhythm_Group_Unknown:
+	default:
+		return "Unknown";
+	}
+}
+
 PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength)
 {
 	for (unsigned int j = 0; j < 8; j++) 
@@ -263,7 +307,7 @@ String PatternBodyBlock::PatternEventData::getTypeString()
 PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 {
 	// BYTE 2: get part/channel for event
-	switch (bytes[2])
+	switch (bytes[3])
 	{
 	case 0x00:	return Pattern_Part_1;
 	case 0x01:	return Pattern_Part_2;
@@ -274,36 +318,21 @@ PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 	case 0x06:	return Pattern_Part_7;
 	case 0x09:	return Pattern_Part_R;
 	case 0x0E:	return Pattern_MuteCtrl;
-	default: return Pattern_Part_Unknown;
-	}
-}
-
-String PatternBodyBlock::PatternEventData::getPartString()
-{
-	PatternPart part = getPart();
-	switch (part)
-	{
-	case PatternBodyBlock::Pattern_Part_1:
-		return "PART 1";
-	case PatternBodyBlock::Pattern_Part_2:
-		return "PART 2";
-	case PatternBodyBlock::Pattern_Part_3:
-		return "PART 3";
-	case PatternBodyBlock::Pattern_Part_4:
-		return "PART 4";
-	case PatternBodyBlock::Pattern_Part_5:
-		return "PART 5";
-	case PatternBodyBlock::Pattern_Part_6:
-		return "PART 6";
-	case PatternBodyBlock::Pattern_Part_7:
-		return "PART 7";
-	case PatternBodyBlock::Pattern_Part_R:
-		return "PART R";
-	case PatternBodyBlock::Pattern_MuteCtrl:
-		return "MUTE-CT";
-	case PatternBodyBlock::Pattern_Part_Unknown:	
-	default:
-		return "PART?";
+	default: 
+		// fallback to byte 2
+		switch (bytes[2])
+		{
+		case 0x00:	return Pattern_Part_1;
+		case 0x01:	return Pattern_Part_2;
+		case 0x02:	return Pattern_Part_3;
+		case 0x03:	return Pattern_Part_4;
+		case 0x04:	return Pattern_Part_5;
+		case 0x05:	return Pattern_Part_6;
+		case 0x06:	return Pattern_Part_7;
+		case 0x09:	return Pattern_Part_R;
+		case 0x0E:	return Pattern_MuteCtrl;
+		default:	return Pattern_Part_Unknown;
+		}
 	}
 }
 
@@ -320,6 +349,11 @@ uint16 PatternBodyBlock::PatternEventData::getNoteGateTicks()
 uint8 PatternBodyBlock::PatternEventData::getPAftKey()
 {
 	return bytes[5];
+}
+
+String PatternBodyBlock::PatternEventData::getPAftKeyString()
+{
+	return NOTENAMES[getPAftKey()];
 }
 
 uint8 PatternBodyBlock::PatternEventData::getPAftPressure()
@@ -390,9 +424,60 @@ void PatternBodyBlock::PatternEventData::getSysExBytes(uint8* fourBytes) // make
 
 String PatternBodyBlock::PatternEventData::toDebugString()
 {
-	String result = getAbsoluteTickString(absoluteTick) + "\t";
+	PatternEventType type = getType();
+	uint8 sysExData[4] = { 0, 0, 0, 0 };
+	if (type == Evt_SysExData) getSysExBytes(sysExData);
+	String result = String::toHexString(bytes, 8, 1).toUpperCase() + "\t";
+	result += getAbsoluteTickString(absoluteTick) + "\t";
 	result += String(getRelativeTickIncrement()) + "\t";
+	if (type != Evt_TickInc) result += getPartString(getPart()) + "\t";
 	result += getTypeString() + "\t";
-	result += getPartString() + "\t";
-	result += String(bytes[3]) + "\t";
+	result += String(bytes[2]) + "\t";
+	switch (type)
+	{
+	case PatternBodyBlock::Evt_Note:
+		result += "v: " + String(getNoteVelocity()).paddedLeft('0', 3) + "\t";
+		result += getAbsoluteTickString(getNoteGateTicks()) + "\t";
+		break;
+	case PatternBodyBlock::Evt_TickInc:
+		break;
+	case PatternBodyBlock::Evt_PAft:
+		result += getPAftKeyString() + "\t";
+		result += "p: "+String(getPAftPressure()).paddedLeft('0',3) + "\t";
+		break;
+	case PatternBodyBlock::Evt_Cc:
+		result += "no: " + String(getCcNo()).paddedLeft('0', 3) + "\t";
+		result += "to: " + String(getCcValue()).paddedLeft('0', 3) + "\t";
+		break;
+	case PatternBodyBlock::Evt_Pc:
+		result += "pr: " + String(getPcProgram()).paddedLeft('0', 3) + "\t";
+		break;
+	case PatternBodyBlock::Evt_CAft:
+		result += "p: " + String(getCAftPressure()).paddedLeft('0', 3) + "\t"; 
+		break;
+	case PatternBodyBlock::Evt_PBend:
+		result += String(getPitchBendValue()).paddedLeft('0', 6) + "\t";
+		break;
+	case PatternBodyBlock::Evt_Tempo:
+		result += String(getTempValue()).paddedLeft('0', 6) + "\t";
+		break;
+	case PatternBodyBlock::Evt_PartMute:
+		result += getPartString(getMutePart())+"\t";
+		result += String(getMuteState() ? +"On" : "Mute") + "\t";
+		break;
+	case PatternBodyBlock::Evt_RhyMute:
+		result += getRhythmGroupString(getMuteRhythmGroup()) + "\t";
+		result += String(getMuteState() ? +"On" : "Mute") + "\t";
+		break;
+	case PatternBodyBlock::Evt_SysExSize:
+		result += String(getSysExSize()) + "\t";
+		break;
+	case PatternBodyBlock::Evt_SysExData:
+		result += String::toHexString(sysExData, 4, 1).toUpperCase()+"\t";
+		break;
+	case PatternBodyBlock::Evt_Unknown:
+	default:
+		break;
+	}
+	return result;
 }

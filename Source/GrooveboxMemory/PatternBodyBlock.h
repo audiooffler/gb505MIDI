@@ -73,6 +73,8 @@ public:
 		static unsigned long mostRecentAbsoluteTick;	// static, for all PatternEventData instances, increased by constructor of new instances by their relative tick increment
 		static uint8 lastRelativeTickIncrement; // set on instance construction by byte 1
 		static String getAbsoluteTickString(unsigned int absoluteTicks);	// MM-BB-TT. 4/4 measure. TODO: different measures, load from setup
+		static String getPartString(PatternPart part);
+		static String getRhythmGroupString(RhythmGroup rhythmGroup);
 
 		PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength);
 		uint8 bytes[8];
@@ -82,10 +84,10 @@ public:
 		PatternEventType getType();
 		String getTypeString();
 		PatternPart getPart();
-		String getPartString();
 		uint8 getNoteVelocity();
 		uint16 getNoteGateTicks();
 		uint8 getPAftKey();
+		String getPAftKeyString();
 		uint8 getPAftPressure();
 		uint8 getCcNo();
 		uint8 getCcValue();
