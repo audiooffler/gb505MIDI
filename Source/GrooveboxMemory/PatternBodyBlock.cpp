@@ -170,8 +170,18 @@ const uint8* PatternBodyBlock::unpack7BitTo8BitData(const uint8* packed7BitData,
 }
 
 const String PatternBodyBlock::PatternEventData::NOTENAMES[] = { "C -1","C#-1","D -1","D#-1","E -1","F -1","F#-1","G -1","G#-1","A -1","A#-1","B -1","C  0","C# 0","D  0","D# 0","E  0","F  0","F# 0","G  0","G# 0","A  0","A# 0","B  0","C  1","C# 1","D  1","D# 1","E  1","F  1","F# 1","G  1","G# 1","A  1","A# 1","B  1","C  2","C# 2","D  2","D# 2","E  2","F  2","F# 2","G  2","G# 2","A  2","A# 2","B  2","C  3","C# 3","D  3","D# 3","E  3","F  3","F# 3","G  3","G# 3","A  3","A# 3","B  3","C  4","C# 4","D  4","D# 4","E  4","F  4","F# 4","G  4","G# 4","A  4","A# 4","B  4","C  5","C# 5","D  5","D# 5","E  5","F  5","F# 5","G  5","G# 5","A  5","A# 5","B  5","C  6","C# 6","D  6","D# 6","E  6","F  6","F# 6","G  6","G# 6","A  6","A# 6","B  6","C  7","C# 7","D  7","D# 7","E  7","F  7","F# 7","G  7","G# 7","A  7","A# 7","B  7","C  8","C# 8","D  8","D# 8","E  8","F  8","F# 8","G  8","G# 8","A  8","A# 8","B  8","C  9","C# 9","D  9","D# 9","E  9","F  9","F# 9","G  9" };
+const unsigned int PatternBodyBlock::PatternEventData::ticksPerQuarterNote = 96;
 unsigned long PatternBodyBlock::PatternEventData::mostRecentAbsoluteTick = 0;
 uint8 PatternBodyBlock::PatternEventData::lastRelativeTickIncrement = 0;
+
+String PatternBodyBlock::PatternEventData::getAbsoluteTickString(unsigned int absoluteTicks)
+{
+	unsigned int ticksRest = (absoluteTicks % ticksPerQuarterNote);
+	unsigned int quarter = absoluteTicks / ticksPerQuarterNote;
+	unsigned int measure = quarter / 4;
+	quarter = quarter % 4;
+	return String(measure).paddedLeft('0', 2) + "-" + String(quarter).paddedLeft('0', 2) + "-" + String(ticksRest).paddedLeft('0', 2);
+}
 
 PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength)
 {
@@ -239,11 +249,11 @@ String PatternBodyBlock::PatternEventData::getTypeString()
 	case PatternBodyBlock::Evt_PartMute:
 		return "MUTE PT";
 	case PatternBodyBlock::Evt_RhyMute:
-		return "MUTE R";
+		return "MUTE RY";
 	case PatternBodyBlock::Evt_SysExSize:
-		return "SYX-SIZE";
+		return "SYX-SIZ";
 	case PatternBodyBlock::Evt_SysExData:
-		return "SYX-DATA";
+		return "SYX-DAT";
 	case PatternBodyBlock::Evt_Unknown:
 	default:
 		return "TYPE?";
@@ -290,7 +300,7 @@ String PatternBodyBlock::PatternEventData::getPartString()
 	case PatternBodyBlock::Pattern_Part_R:
 		return "PART R";
 	case PatternBodyBlock::Pattern_MuteCtrl:
-		return "MUTE-CTL";
+		return "MUTE-CT";
 	case PatternBodyBlock::Pattern_Part_Unknown:	
 	default:
 		return "PART?";
@@ -376,4 +386,13 @@ void PatternBodyBlock::PatternEventData::getSysExBytes(uint8* fourBytes) // make
 		fourBytes[2] = bytes[5];
 		fourBytes[3] = bytes[7];
 	}
+}
+
+String PatternBodyBlock::PatternEventData::toDebugString()
+{
+	String result = getAbsoluteTickString(absoluteTick) + "\t";
+	result += String(getRelativeTickIncrement()) + "\t";
+	result += getTypeString() + "\t";
+	result += getPartString() + "\t";
+	result += String(bytes[3]) + "\t";
 }

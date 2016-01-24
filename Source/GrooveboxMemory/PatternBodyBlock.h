@@ -69,8 +69,10 @@ public:
 	struct PatternEventData
 	{
 		const static String NOTENAMES[];
+		const static unsigned int ticksPerQuarterNote;
 		static unsigned long mostRecentAbsoluteTick;	// static, for all PatternEventData instances, increased by constructor of new instances by their relative tick increment
 		static uint8 lastRelativeTickIncrement; // set on instance construction by byte 1
+		static String getAbsoluteTickString(unsigned int absoluteTicks);	// MM-BB-TT. 4/4 measure. TODO: different measures, load from setup
 
 		PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength);
 		uint8 bytes[8];
@@ -96,6 +98,7 @@ public:
 		uint16 getTempValue();
 		uint32 getSysExSize();
 		void getSysExBytes(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
+		String toDebugString();
 	};
 
 	PatternBodyBlock();
