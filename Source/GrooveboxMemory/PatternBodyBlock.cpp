@@ -32,6 +32,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 			PatternEventData::mostRecentAbsoluteTick = 0;
 			PatternEventData::lastRelativeTickIncrement = 0;
 		}
+		if (address == 0x40000000) m_sequenceBlocks.clear();
 		uint8* sysExDataPtr;
 		uint32 sysExDataSize;
 		sysExMsg->getSysExDataArrayPtr(&sysExDataPtr, sysExDataSize);
