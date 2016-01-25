@@ -12,13 +12,9 @@
 #define PATTERNBODYBLOCK_H_INCLUDED
 
 #include "GrooveboxMemoryBlock.h"
+#include "JuceHeader.h"
 
-// TODO: to csv (readable in excel), similar to microscope view -> select channels (all/none dialog)
-//String PatternBodyBlock::toCsvString()
-//{
-//
-//}
-class PatternBodyBlock : public GrooveboxMemoryBlock
+class PatternBodyBlock : public GrooveboxMemoryBlock, public TableListBoxModel
 {
 public:
 	enum PatternPart
@@ -66,6 +62,24 @@ public:
 		Evt_Unknown = -1
 	};
 
+	enum PatternTableListColumnId
+	{
+		Col_Position = 10,
+		Col_Raw0 = 0,
+		Col_TicksInc = 11,
+		Col_Raw1 = 1,
+		Col_EventType = 12,
+		Col_Raw2 = 2,
+		Col_Raw3 = 3,
+		Col_Part= 13,
+		Col_Raw4 = 4,
+		Col_Raw5 = 5,
+		Col_Raw6 = 6,
+		Col_Raw7 = 7,
+		Col_Value1 = 13,
+		Col_Value2 = 14
+	};
+
 	struct PatternEventData
 	{
 		const static String NOTENAMES[];
@@ -110,7 +124,10 @@ public:
 	// unpack SysEx data array, size of unpacked data is returned via rerence parameter. don't forger to delete the returned array after usage
 	static const uint8* unpack7BitTo8BitData(const uint8* packed7BitData, int packed7BitDataSize, int &unpackedDataSize);
 
-	String toCsvString();
+	int getNumRows() override;
+	void paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) override;
+	void paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
+	String getCellTooltip(int rowNumber, int columnId) override;
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternBodyBlock)
