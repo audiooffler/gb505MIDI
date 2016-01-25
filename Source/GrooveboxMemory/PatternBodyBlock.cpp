@@ -16,6 +16,7 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_name = "Pattern Body";
 	// no parameters, just big data block
 	m_sequenceBlocks.clear();
+	//TableListBox::updateContent();
 	PatternEventData::mostRecentAbsoluteTick = 0;
 	PatternEventData::lastRelativeTickIncrement = 0;
 }
@@ -32,7 +33,6 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 			PatternEventData::mostRecentAbsoluteTick = 0;
 			PatternEventData::lastRelativeTickIncrement = 0;
 		}
-		if (address == 0x40000000) m_sequenceBlocks.clear();
 		uint8* sysExDataPtr;
 		uint32 sysExDataSize;
 		sysExMsg->getSysExDataArrayPtr(&sysExDataPtr, sysExDataSize);
@@ -121,6 +121,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 			//currentTimestamp += c_tickIncrement/**m_tickLength*/;	// multiplicated with m_tickLength would be the timestamp in seconds
 		
 		}
+		// TODO: call TableListBox::updateContent();
 		return true;
 	}
 	return false;
@@ -480,4 +481,26 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 		break;
 	}
 	return result;
+}
+
+int PatternBodyBlock::getNumRows()
+{
+	return m_sequenceBlocks.size();
+}
+
+void PatternBodyBlock::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
+{
+	g.fillAll(Colours::white);
+	g.setColour(rowIsSelected ? Colours::lightskyblue : Colours::grey);
+	g.drawRect(0.0f, 0.0f, (float)width, (float)height, 1.0f);
+}
+
+void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+{
+
+}
+
+String PatternBodyBlock::getCellTooltip(int rowNumber, int columnId)
+{
+
 }
