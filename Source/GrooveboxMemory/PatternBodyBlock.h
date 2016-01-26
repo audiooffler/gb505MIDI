@@ -76,8 +76,8 @@ public:
 		Col_Raw5 = 5,
 		Col_Raw6 = 6,
 		Col_Raw7 = 7,
-		Col_Value1 = 13,
-		Col_Value2 = 14
+		Col_Value1 = 14,
+		Col_Value2 = 15
 	};
 
 	struct PatternEventData
@@ -111,9 +111,10 @@ public:
 		PatternPart getMutePart();
 		RhythmGroup getMuteRhythmGroup();
 		bool getMuteState();	// false=Mute, true=On
-		uint16 getTempValue();
+		uint16 getTempoValue();
 		uint32 getSysExSize();
-		void getSysExBytes(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
+		uint8* getSysExBytesPtr(); // pointer to last 4 bytes
+		void getSysExBytesCopyTo(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
 		String toDebugString();
 	};
 

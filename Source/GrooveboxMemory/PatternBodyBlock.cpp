@@ -344,7 +344,7 @@ uint8 PatternBodyBlock::PatternEventData::getNoteVelocity()
 
 uint16 PatternBodyBlock::PatternEventData::getNoteGateTicks()
 {
-	return (uint16)(bytes[6] << 8 | bytes[7]);
+	return (uint16)bytes[6] << 8 | (uint16)bytes[7];
 }
 
 uint8 PatternBodyBlock::PatternEventData::getPAftKey()
@@ -384,7 +384,7 @@ uint8 PatternBodyBlock::PatternEventData::getCAftPressure()
 
 uint16 PatternBodyBlock::PatternEventData::getPitchBendValue()
 {
-	return (uint16)(bytes[5] << 8 | bytes[6]);
+	return (uint16)bytes[5] << 8 | (uint16)bytes[6];
 }
 
 PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getMutePart()
@@ -402,17 +402,22 @@ bool PatternBodyBlock::PatternEventData::getMuteState()	// false=Mute, true=On
 	return bytes[7]!=0;
 }
 
-uint16 PatternBodyBlock::PatternEventData::getTempValue()
+uint16 PatternBodyBlock::PatternEventData::getTempoValue()
 {
-	return (uint16)(bytes[6] << 8 | bytes[7]);
+	return ((uint16)bytes[6] << 8 | (uint16)bytes[7]) / (uint16)1000;
 }
 
 uint32 PatternBodyBlock::PatternEventData::getSysExSize()
 {
-	return (uint32)(bytes[4] << 24 | bytes[5] << 16 | bytes[6] << 8 | bytes[7]);
+	return (uint32)bytes[4] << 24 | (uint32)bytes[5] << 16 | (uint32)bytes[6] << 8 | (uint32)bytes[7];
 }
 
-void PatternBodyBlock::PatternEventData::getSysExBytes(uint8* fourBytes) // make sure to give reference to a 4-byte array which values are to be set
+uint8* PatternBodyBlock::PatternEventData::getSysExBytesPtr() // pointer to last 4 bytes
+{
+	return &(bytes[4]);
+}
+
+void PatternBodyBlock::PatternEventData::getSysExBytesCopyTo(uint8* fourBytes) // make sure to give reference to a 4-byte array which values are to be set
 {
 	if (fourBytes != nullptr)
 	{
@@ -427,7 +432,7 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 {
 	PatternEventType type = getType();
 	uint8 sysExData[4] = { 0, 0, 0, 0 };
-	if (type == Evt_SysExData) getSysExBytes(sysExData);
+	if (type == Evt_SysExData) getSysExBytesCopyTo(sysExData);
 	String result = String::toHexString(bytes, 8, 1).toUpperCase() + "\t";
 	result += getAbsoluteTickString(absoluteTick) + "\t";
 	result += String(getRelativeTickIncrement()) + "\t";
@@ -460,7 +465,7 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 		result += String(getPitchBendValue()).paddedLeft('0', 6) + "\t";
 		break;
 	case PatternBodyBlock::Evt_Tempo:
-		result += String(getTempValue()).paddedLeft('0', 6) + "\t";
+		result += String(getTempoValue()).paddedLeft('0', 6) + "\t";
 		break;
 	case PatternBodyBlock::Evt_PartMute:
 		result += getPartString(getMutePart())+"\t";
@@ -502,8 +507,112 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 	if (rowNumber < m_sequenceBlocks.size())
 	{
 		PatternEventData* event = m_sequenceBlocks[rowNumber];
-		PatternTableListColumnId col = (PatternTableListColumnId)columnId;
-
+		String cellText;
+		switch ((PatternTableListColumnId)columnId)
+		{
+		case PatternBodyBlock::Col_Position:
+			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick);
+			break;
+		case PatternBodyBlock::Col_Raw0:
+			cellText = String::toHexString((int)event->bytes[0]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_TicksInc:
+			cellText = String(event->getRelativeTickIncrement());
+			break;
+		case PatternBodyBlock::Col_Raw1:
+			cellText = String::toHexString((int)event->bytes[1]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_EventType:
+			cellText = event->getTypeString();
+			break;
+		case PatternBodyBlock::Col_Raw2:
+			cellText = String::toHexString((int)event->bytes[2]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_Raw3:
+			cellText = String::toHexString((int)event->bytes[3]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_Part:
+			cellText = PatternEventData::getPartString(event->getPart());
+			break;
+		case PatternBodyBlock::Col_Raw4:
+			cellText = String::toHexString((int)event->bytes[4]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_Raw5:
+			cellText = String::toHexString((int)event->bytes[5]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_Raw6:
+			cellText = String::toHexString((int)event->bytes[6]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_Raw7:
+			cellText = String::toHexString((int)event->bytes[7]).toUpperCase();
+			break;
+		case PatternBodyBlock::Col_Value1:
+			switch (event->getType())
+			{
+			case PatternBodyBlock::Evt_Note:
+				cellText = String(event->getNoteVelocity());
+				break;
+			case PatternBodyBlock::Evt_PAft:
+				cellText = String(event->getPAftKeyString());
+				break;
+			case PatternBodyBlock::Evt_Cc:
+				cellText = String(event->getCcNo());
+				break;
+			case PatternBodyBlock::Evt_Pc:
+				cellText = String(event->getPcProgram());
+				break;
+			case PatternBodyBlock::Evt_CAft:
+				cellText = String(event->getCcValue());
+				break;
+			case PatternBodyBlock::Evt_PBend:
+				cellText = String(event->getPitchBendValue());
+				break;
+			case PatternBodyBlock::Evt_Tempo:
+				cellText = String(event->getTempoValue());
+				break;
+			case PatternBodyBlock::Evt_PartMute:
+				cellText = PatternEventData::getPartString(event->getMutePart());
+				break;
+			case PatternBodyBlock::Evt_RhyMute:
+				cellText = PatternEventData::getRhythmGroupString(event->getMuteRhythmGroup());
+				break;
+			case PatternBodyBlock::Evt_SysExSize:
+				cellText = String(event->getSysExSize());
+				break;
+			case PatternBodyBlock::Evt_SysExData:
+				cellText = String::toHexString(event->getSysExBytesPtr(), 4).toUpperCase();
+				break;
+			default:
+				break;
+			}
+			break;
+		case PatternBodyBlock::Col_Value2:
+			switch (event->getType())
+			{
+			case PatternBodyBlock::Evt_Note:
+				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks());
+				break;
+			case PatternBodyBlock::Evt_PAft:
+				cellText = String(event->getPAftPressure());
+				break;
+			case PatternBodyBlock::Evt_Cc:
+				cellText = String(event->getCcValue());
+				break;
+			case PatternBodyBlock::Evt_PartMute:
+				cellText = String(event->getMuteState() ? "On" : "Mute");
+				break;
+			case PatternBodyBlock::Evt_RhyMute:
+				cellText = String(event->getMuteState() ? "On" : "Mute");
+				break;
+			default:
+				break;
+			}
+			break;
+			break;
+		default:
+			break;
+		}
+		g.drawText(cellText, 0, 0, width, height, Justification::centredRight);
 	}
 
 }
