@@ -14,7 +14,7 @@
 #include "GrooveboxMemoryBlock.h"
 #include "JuceHeader.h"
 
-class PatternBodyBlock : public GrooveboxMemoryBlock, public TableListBoxModel
+class PatternBodyBlock : public GrooveboxMemoryBlock, public TableListBoxModel, public ChangeBroadcaster
 {
 public:
 	enum PatternPart
@@ -65,20 +65,22 @@ public:
 	enum PatternTableListColumnId
 	{
 		Col_Position = 10,
-		Col_Raw0 = 0,
+		Col_Raw0 = 1,
 		Col_TicksInc = 11,
-		Col_Raw1 = 1,
+		Col_Raw1 = 2,
 		Col_EventType = 12,
-		Col_Raw2 = 2,
-		Col_Raw3 = 3,
+		Col_Raw2 = 3,
+		Col_Raw3 = 4,
 		Col_Part= 13,
-		Col_Raw4 = 4,
-		Col_Raw5 = 5,
-		Col_Raw6 = 6,
-		Col_Raw7 = 7,
+		Col_Raw4 = 5,
+		Col_Raw5 = 6,
+		Col_Raw6 = 7,
+		Col_Raw7 = 8,
 		Col_Value1 = 14,
 		Col_Value2 = 15
 	};
+
+	const static String PATTERNTABLE_COLUMN_NAMES_FOR_IDS[];
 
 	struct PatternEventData
 	{
@@ -108,6 +110,7 @@ public:
 		uint8 getPcProgram();
 		uint8 getCAftPressure();
 		uint16 getPitchBendValue();
+		String getPitchBendString();
 		PatternPart getMutePart();
 		RhythmGroup getMuteRhythmGroup();
 		bool getMuteState();	// false=Mute, true=On

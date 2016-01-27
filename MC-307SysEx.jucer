@@ -267,12 +267,12 @@
               file="Source/GUI/GrooveboxSplashScreen.cpp"/>
         <FILE id="j87QR3" name="GrooveboxSplashScreen.h" compile="0" resource="0"
               file="Source/GUI/GrooveboxSplashScreen.h"/>
-        <FILE id="MbW6xS" name="MFxEditor.cpp" compile="1" resource="0" file="Source/GUI/MFxEditor.cpp"/>
-        <FILE id="lvJUaJ" name="MFxEditor.h" compile="0" resource="0" file="Source/GUI/MFxEditor.h"/>
         <FILE id="W39vRD" name="MainComponent.cpp" compile="1" resource="0"
               file="Source/GUI/MainComponent.cpp"/>
         <FILE id="ENKhlT" name="MainComponent.h" compile="0" resource="0" file="Source/GUI/MainComponent.h"/>
         <FILE id="pPqrmM" name="MainWindow.h" compile="0" resource="0" file="Source/GUI/MainWindow.h"/>
+        <FILE id="MbW6xS" name="MFxEditor.cpp" compile="1" resource="0" file="Source/GUI/MFxEditor.cpp"/>
+        <FILE id="lvJUaJ" name="MFxEditor.h" compile="0" resource="0" file="Source/GUI/MFxEditor.h"/>
         <FILE id="sxMdJv" name="MidiLoggerTab.cpp" compile="1" resource="0"
               file="Source/GUI/MidiLoggerTab.cpp"/>
         <FILE id="AmQZ6j" name="MidiLoggerTab.h" compile="0" resource="0" file="Source/GUI/MidiLoggerTab.h"/>
@@ -280,6 +280,10 @@
         <FILE id="Pmw3kN" name="MixerTab.h" compile="0" resource="0" file="Source/GUI/MixerTab.h"/>
         <FILE id="Ri1E8U" name="PatchEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchEditor.cpp"/>
         <FILE id="rI2XOz" name="PatchEditor.h" compile="0" resource="0" file="Source/GUI/PatchEditor.h"/>
+        <FILE id="Z6b1wS" name="PatternEditorTab.cpp" compile="1" resource="0"
+              file="Source/GUI/PatternEditorTab.cpp"/>
+        <FILE id="PJYBAJ" name="PatternEditorTab.h" compile="0" resource="0"
+              file="Source/GUI/PatternEditorTab.h"/>
         <FILE id="z4L3DQ" name="PatternTab.cpp" compile="1" resource="0" file="Source/GUI/PatternTab.cpp"/>
         <FILE id="wiNUil" name="PatternTab.h" compile="0" resource="0" file="Source/GUI/PatternTab.h"/>
       </GROUP>

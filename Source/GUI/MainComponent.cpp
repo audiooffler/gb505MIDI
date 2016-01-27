@@ -22,6 +22,7 @@
 #include "PatternTab.h"
 #include "PatchEditor.h"
 #include "MidiLoggerTab.h"
+#include "PatternEditorTab.h"
 //[/Headers]
 
 #include "MainComponent.h"
@@ -38,6 +39,7 @@ MainComponent::MainComponent ()
 
     //[UserPreSize]
 	addTab(TRANS("Pattern"), Colours::whitesmoke, new PatternTab(), true);
+	addTab(TRANS("Pattern"), Colours::whitesmoke, new PatternEditorTab(), true);
 	addTab(TRANS("Mixer"), Colours::whitesmoke, new MixerTab(), true);
 	SynthParts part(SynthPart1);
 	String partNameString;
@@ -143,7 +145,8 @@ void MainComponent::getAllCommands(Array <CommandID>& commands)
 		CommandIDs::gotoPart7Tab,
 		CommandIDs::gotoPartRTab,
 		CommandIDs::gotoMixerTab,
-		CommandIDs::gotoPatternTab
+		CommandIDs::gotoPatternTab,
+		CommandIDs::gotoPatternEditorTab
 	};
 	commands.addArray(ids, numElementsInArray(ids));
 }
@@ -194,6 +197,9 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo& 
 		result.setInfo("Go to pattern", "Opens the pattern settings", gotoTabCategory, 0);
 		result.addDefaultKeypress('p', ModifierKeys::commandModifier);
 		break;
+	case CommandIDs::gotoPatternEditorTab:
+		result.setInfo("Go to pattern editor", "Opens the pattern event table", gotoTabCategory, 0);
+		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
 	default:
 		break;
 	}
@@ -234,6 +240,8 @@ bool MainComponent::perform(const InvocationInfo& info)
 	case CommandIDs::gotoPatternTab:
 		setCurrentTabIndex(0, true);
 		break;
+	case CommandIDs::gotoPatternEditorTab:
+		setCurrentTabIndex(10, true);
 	default:
 		return false;
 	}

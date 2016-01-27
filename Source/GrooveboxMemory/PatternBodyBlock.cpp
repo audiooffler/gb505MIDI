@@ -122,6 +122,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 		
 		}
 		// TODO: call TableListBox::updateContent();
+		sendChangeMessage();
 		return true;
 	}
 	return false;
@@ -159,6 +160,7 @@ const uint8* PatternBodyBlock::unpack7BitTo8BitData(const uint8* packed7BitData,
 }
 
 const String PatternBodyBlock::PatternEventData::NOTENAMES[] = { "C -1","C#-1","D -1","D#-1","E -1","F -1","F#-1","G -1","G#-1","A -1","A#-1","B -1","C  0","C# 0","D  0","D# 0","E  0","F  0","F# 0","G  0","G# 0","A  0","A# 0","B  0","C  1","C# 1","D  1","D# 1","E  1","F  1","F# 1","G  1","G# 1","A  1","A# 1","B  1","C  2","C# 2","D  2","D# 2","E  2","F  2","F# 2","G  2","G# 2","A  2","A# 2","B  2","C  3","C# 3","D  3","D# 3","E  3","F  3","F# 3","G  3","G# 3","A  3","A# 3","B  3","C  4","C# 4","D  4","D# 4","E  4","F  4","F# 4","G  4","G# 4","A  4","A# 4","B  4","C  5","C# 5","D  5","D# 5","E  5","F  5","F# 5","G  5","G# 5","A  5","A# 5","B  5","C  6","C# 6","D  6","D# 6","E  6","F  6","F# 6","G  6","G# 6","A  6","A# 6","B  6","C  7","C# 7","D  7","D# 7","E  7","F  7","F# 7","G  7","G# 7","A  7","A# 7","B  7","C  8","C# 8","D  8","D# 8","E  8","F  8","F# 8","G  8","G# 8","A  8","A# 8","B  8","C  9","C# 9","D  9","D# 9","E  9","F  9","F# 9","G  9" };
+
 const unsigned int PatternBodyBlock::PatternEventData::ticksPerQuarterNote = 96;
 unsigned long PatternBodyBlock::PatternEventData::mostRecentAbsoluteTick = 0;
 uint8 PatternBodyBlock::PatternEventData::lastRelativeTickIncrement = 0;
@@ -384,7 +386,13 @@ uint8 PatternBodyBlock::PatternEventData::getCAftPressure()
 
 uint16 PatternBodyBlock::PatternEventData::getPitchBendValue()
 {
-	return (uint16)bytes[5] << 8 | (uint16)bytes[6];
+	return (uint16)bytes[5] << 7 | (uint16)bytes[6];
+}
+
+String PatternBodyBlock::PatternEventData::getPitchBendString()
+{
+	int val = (int)getPitchBendValue() - 0x2000;
+	return String((val > 0) ? "+" : "") + String(val);
 }
 
 PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getMutePart()
@@ -462,7 +470,7 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 		result += "p: " + String(getCAftPressure()).paddedLeft('0', 3) + "\t"; 
 		break;
 	case PatternBodyBlock::Evt_PBend:
-		result += String(getPitchBendValue()).paddedLeft('0', 6) + "\t";
+		result += getPitchBendString().paddedLeft('0', 6) + "\t";
 		break;
 	case PatternBodyBlock::Evt_Tempo:
 		result += String(getTempoValue()).paddedLeft('0', 6) + "\t";
@@ -488,6 +496,8 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 	return result;
 }
 
+const String PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[] = {"", "[0]", "[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "", "Pos", "Inc", "Type", "Part", "Data 1", "Data 2" };
+
 int PatternBodyBlock::getNumRows()
 {
 	return m_sequenceBlocks.size();
@@ -495,15 +505,15 @@ int PatternBodyBlock::getNumRows()
 
 void PatternBodyBlock::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
 {
-	g.fillAll(rowIsSelected ? Colours::lightskyblue : Colours::white);
-	// left and bottom border
-	g.setColour(Colours::grey);
-	g.drawLine((float)width, 0.0f, (float)width, (float)height);
-	g.drawLine(0.0f, (float)height, (float)width, (float)height);
+	g.fillAll(rowIsSelected ? Colours::lightskyblue : Colours::transparentBlack);
 }
 
 void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
+	// left and bottom border
+	g.setColour(Colours::grey);
+	g.drawLine((float)width, 0.0f, (float)width, (float)height);
+	g.drawLine(0.0f, (float)height, (float)width, (float)height);
 	if (rowNumber < m_sequenceBlocks.size())
 	{
 		PatternEventData* event = m_sequenceBlocks[rowNumber];
@@ -565,7 +575,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 				cellText = String(event->getCcValue());
 				break;
 			case PatternBodyBlock::Evt_PBend:
-				cellText = String(event->getPitchBendValue());
+				cellText = String(event->getPitchBendString());
 				break;
 			case PatternBodyBlock::Evt_Tempo:
 				cellText = String(event->getTempoValue());
@@ -612,7 +622,8 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 		default:
 			break;
 		}
-		g.drawText(cellText, 0, 0, width, height, Justification::centredRight);
+		g.setColour(columnId>=10?Colours::black:Colours::grey);
+		g.drawText(cellText, 2, 0, width - 4, height, columnId >= 10 && columnId != Col_Part ? Justification::centredRight : Justification::centred);
 	}
 
 }
