@@ -59,6 +59,7 @@ public:
 		Evt_RhyMute = 9,
 		Evt_SysExSize = 10,
 		Evt_SysExData = 11,
+		Evt_NoteOff = 12, // not in original roland format, but producable for conversion to midi
 		Evt_Unknown = -1
 	};
 
@@ -100,6 +101,8 @@ public:
 		PatternEventType getType();
 		String getTypeString();
 		PatternPart getPart();
+		int getMidiChannel(); // for midi conversion: Part1=Ch1...Part7=Ch1,PartR=Ch10
+		int getNoteNumber();
 		uint8 getNoteVelocity();
 		uint16 getNoteGateTicks();
 		uint8 getPAftKey();
@@ -119,6 +122,7 @@ public:
 		uint8* getSysExBytesPtr(); // pointer to last 4 bytes
 		void getSysExBytesCopyTo(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
 		String toDebugString();
+		MidiMessage toMidiMessage();
 	};
 
 	PatternBodyBlock();
@@ -132,8 +136,13 @@ public:
 	void paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	String getCellTooltip(int rowNumber, int columnId) override;
+	void selectedRowsChanged(int lastRowSelected) override;
+	void setTableSelectionMidiOutId(int id);
+	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut; }
+
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
+	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternBodyBlock)
 };
 

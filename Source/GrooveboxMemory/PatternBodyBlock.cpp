@@ -339,6 +339,16 @@ PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 	}
 }
 
+int PatternBodyBlock::PatternEventData::getMidiChannel()
+{
+	return (int)getPart() + 1;
+}
+
+int PatternBodyBlock::PatternEventData::getNoteNumber()
+{
+	return bytes[1];
+}
+
 uint8 PatternBodyBlock::PatternEventData::getNoteVelocity()
 {
 	return bytes[4];
@@ -496,6 +506,49 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 	return result;
 }
 
+MidiMessage PatternBodyBlock::PatternEventData::toMidiMessage()
+{
+	if (getType() == PatternBodyBlock::Evt_PartMute)
+	{
+		uint8 quickSysExAddress[2]{0x70, 0x01};
+		uint8 quickSysExData[2]{bytes[5], bytes[7]};
+		uint8 deviceId((grooveboxConnector != nullptr) ? grooveboxConnector->getActiveDeviceId() : 0x10);
+		ScopedPointer<SyxMsg> syx = new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
+		MidiMessage msg = syx->getAsMidiMessage();
+		return msg;
+	}
+	else if (getType() == PatternBodyBlock::Evt_RhyMute)
+	{
+		uint8 quickSysExAddress[2]{0x70, 0x02};
+		uint8 quickSysExData[2]{bytes[5], bytes[7]};
+		uint8 deviceId((grooveboxConnector != nullptr) ? grooveboxConnector->getActiveDeviceId() : 0x10);
+		ScopedPointer<SyxMsg> syx = new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
+		MidiMessage msg = syx->getAsMidiMessage();
+		return msg;
+	}
+	switch (getType())
+	{
+	case PatternBodyBlock::Evt_Note:
+		return MidiMessage::noteOn(getMidiChannel(), getNoteNumber(), getNoteVelocity());
+	case PatternBodyBlock::Evt_NoteOff:
+		return MidiMessage::noteOff(getMidiChannel(), getNoteNumber());
+	case PatternBodyBlock::Evt_PAft:
+		return MidiMessage::aftertouchChange(getMidiChannel(), getPAftKey(), getPAftPressure());
+	case PatternBodyBlock::Evt_Cc:
+		return MidiMessage::controllerEvent(getMidiChannel(), getCcNo(), getCcValue());
+	case PatternBodyBlock::Evt_Pc:
+		return MidiMessage::programChange(getMidiChannel(), getPcProgram());
+	case PatternBodyBlock::Evt_CAft:
+		return MidiMessage::channelPressureChange(getMidiChannel(), getCAftPressure());
+	case PatternBodyBlock::Evt_PBend:
+		return MidiMessage::pitchWheel(getMidiChannel(), getPitchBendValue());
+	case PatternBodyBlock::Evt_Tempo:
+		return MidiMessage::tempoMetaEvent((int)(6000000000 / ((uint16)bytes[6] << 8 | (uint16)bytes[7])));	
+	default:
+		return MidiMessage(); // just an active sense message (empty sysex)
+	}
+}
+
 const String PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[] = {"", "[0]", "[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "", "Pos", "Inc", "Type", "Part", "Data 1", "Data 2" };
 
 int PatternBodyBlock::getNumRows()
@@ -503,12 +556,12 @@ int PatternBodyBlock::getNumRows()
 	return m_sequenceBlocks.size();
 }
 
-void PatternBodyBlock::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
+void PatternBodyBlock::paintRowBackground(Graphics& g, int /*rowNumber*/, int /*width*/, int /*height*/, bool rowIsSelected)
 {
 	g.fillAll(rowIsSelected ? Colours::lightskyblue : Colours::transparentBlack);
 }
 
-void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
+void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool /*rowIsSelected*/)
 {
 	// left and bottom border
 	g.setColour(Colours::grey);
@@ -628,7 +681,27 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 
 }
 
-String PatternBodyBlock::getCellTooltip(int rowNumber, int columnId)
+String PatternBodyBlock::getCellTooltip(int /*rowNumber*/, int /*columnId*/)
 {
 	return String::empty;
+}
+
+void PatternBodyBlock::selectedRowsChanged(int lastRowSelected)
+{
+	if (lastRowSelected >= 0 && lastRowSelected < m_sequenceBlocks.size() && tableSelectionMidiOut!=nullptr)
+	{
+		for (int i = 1; i < 17; i++)
+		{
+			tableSelectionMidiOut->sendMessageNow(MidiMessage::allNotesOff(i));
+		}
+		tableSelectionMidiOut->sendMessageNow(m_sequenceBlocks[lastRowSelected]->toMidiMessage());
+	}
+}
+
+void PatternBodyBlock::setTableSelectionMidiOutId(int id)
+{
+	if (id >= 0 && id < MidiOutput::getDevices().size())
+	{
+		tableSelectionMidiOut = MidiOutput::openDevice(id);
+	}
 }

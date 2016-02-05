@@ -35,7 +35,9 @@
                                                                     //[/Comments]
 */
 class PatternEditorTab  : public Component,
-                          public ChangeListener
+                          public ChangeListener,
+                          public ComboBoxListener,
+                          public ButtonListener
 {
 public:
     //==============================================================================
@@ -49,6 +51,8 @@ public:
 
     void paint (Graphics& g) override;
     void resized() override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
 
 
@@ -59,6 +63,9 @@ private:
 
     //==============================================================================
     ScopedPointer<TableListBox> m_patternEventTable;
+    ScopedPointer<ComboBox> m_midiOutComboBox;
+    ScopedPointer<Label> m_midiOutLabel;
+    ScopedPointer<TextButton> m_panicButton;
 
 
     //==============================================================================
