@@ -139,6 +139,9 @@ public:
 	void selectedRowsChanged(int lastRowSelected) override;
 	void setTableSelectionMidiOutId(int id);
 	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut; }
+	void setTableFilters(bool p_R = true, bool p_1 = true, bool p_2 = true, bool p_3 = true, bool p_4 = true, bool p_5 = true, bool p_6 = true, bool p_7 = true, bool p_muteCtl = true,
+		bool t_note = true, uint8 t_noteLower = 0, uint8 t_noteUpper = 127, bool t_pc = true, bool t_cc = true, uint8 t_ccLower = 0, uint8 t_ccUpper = 127,
+		bool t_bend = true, bool t_pAft = true, uint8 t_pAftLower = 0, uint8 t_pAftUpper = 127, bool t_CAft = true, bool t_tempo = true, bool t_mute = true, bool t_sysEx = true);
 
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each

@@ -705,3 +705,10 @@ void PatternBodyBlock::setTableSelectionMidiOutId(int id)
 		tableSelectionMidiOut = MidiOutput::openDevice(id);
 	}
 }
+
+void PatternBodyBlock::setTableFilters(bool p_R, bool p_1, bool p_2, bool p_3, bool p_4, bool p_5, bool p_6, bool p_7, bool p_muteCtl,
+	bool t_note, uint8 t_noteLower, uint8 t_noteUpper, bool t_pc, bool t_cc, uint8 t_ccLower, uint8 t_ccUpper,
+	bool t_bend, bool t_pAft, uint8 t_pAftLower, uint8 t_pAftUpper, bool t_CAft, bool t_tempo, bool t_mute, bool t_sysEx)
+{
+
+}
