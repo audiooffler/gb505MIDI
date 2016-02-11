@@ -396,6 +396,7 @@ PatternEditorTab::PatternEditorTab ()
 
 	m_patternEventTable->setModel(patternBodyBlock);
 	m_patternEventTable->setHeader(m_patternEventTableHeader);
+	m_patternEventTable->setHeaderHeight(24);
 	changeListenerCallback(patternBodyBlock);
 	patternBodyBlock->setTableSelectionMidiOutId( m_midiOutComboBox->getSelectedId() > 0 ? m_midiOutComboBox->getSelectedId() - 1 : -1);
 
@@ -406,7 +407,16 @@ PatternEditorTab::PatternEditorTab ()
 
 
     //[Constructor] You can add your own custom stuff here..
-	m_viewPartToggleR->addListener(this);
+	m_viewPartToggle1->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x00));
+	m_viewPartToggle2->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x01));
+	m_viewPartToggle3->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x02));
+	m_viewPartToggle4->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x03));
+	m_viewPartToggle5->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x04));
+	m_viewPartToggle6->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x05));
+	m_viewPartToggle7->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x06));
+	m_viewPartToggleR->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x09));
+	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x0E));
+
 	m_viewPartToggle1->addListener(this);
 	m_viewPartToggle2->addListener(this);
 	m_viewPartToggle3->addListener(this);
@@ -414,7 +424,24 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewPartToggle5->addListener(this);
 	m_viewPartToggle6->addListener(this);
 	m_viewPartToggle7->addListener(this);
+	m_viewPartToggleR->addListener(this);
 	m_viewPartToggleMuteCtl->addListener(this);
+
+	m_viewTypeToggleNote->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10));
+	m_noteRangeLowerSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x11));
+	m_noteRangeUpperSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x12));
+	m_viewTypeTogglePc->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x13));
+	m_viewTypeToggleCc->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x14));
+	m_ccRangeLowerSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x15));
+	m_ccRangeUpperSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x16));
+	m_viewTypeToggleBend->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x17));
+	m_viewTypeTogglePAft->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x18));
+	m_PAftRangeLowerSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x19));
+	m_PAftRangeUpperSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1A));
+	m_viewTypeToggleCAft->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1B));
+	m_viewTypeToggleTempo->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C));
+	m_viewTypeToggleMute->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D));
+	m_viewTypeToggleSysEx->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E));
 
 	m_viewTypeToggleNote->addListener(this);
 	m_viewTypeTogglePc->addListener(this);
@@ -426,14 +453,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewTypeToggleMute->addListener(this);
 	m_viewTypeToggleSysEx->addListener(this);
 
-	m_noteRangeLowerSlider->setValue(0, dontSendNotification);
-	m_noteRangeUpperSlider->setValue(127, dontSendNotification);
-	m_ccRangeLowerSlider->setValue(0, dontSendNotification);
-	m_ccRangeUpperSlider->setValue(127, dontSendNotification);
-	m_PAftRangeLowerSlider->setValue(0, dontSendNotification);
-	m_PAftRangeUpperSlider->setValue(127, dontSendNotification);
-
-	refreshTableFilters();
+	patternBodyBlock->refreshFilteredContent();
     //[/Constructor]
 }
 
@@ -615,6 +635,7 @@ void PatternEditorTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
+	PatternBodyBlock* patternBodyBlock = grooveboxMemory->getPatternBodyBlock();
     //[/UserbuttonClicked_Pre]
 
     if (buttonThatWasClicked == m_panicButton)
@@ -635,16 +656,17 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_m_viewAllPartsButton] -- add your button handler code here..
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
-		m_viewPartToggleR->setToggleState(true, dontSendNotification);
-		m_viewPartToggle1->setToggleState(true, dontSendNotification);
-		m_viewPartToggle2->setToggleState(true, dontSendNotification);
-		m_viewPartToggle3->setToggleState(true, dontSendNotification);
-		m_viewPartToggle4->setToggleState(true, dontSendNotification);
-		m_viewPartToggle5->setToggleState(true, dontSendNotification);
-		m_viewPartToggle6->setToggleState(true, dontSendNotification);
-		m_viewPartToggle7->setToggleState(true, dontSendNotification);
-		m_viewPartToggleMuteCtl->setToggleState(true, dontSendNotification);
-		refreshTableFilters();
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x00)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x01)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x02)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x03)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x04)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x05)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x06)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x09)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x0E)->setValue(1, Parameter::GuiWidget);
+		
+		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllPartsButton]
     }
     else if (buttonThatWasClicked == m_viewNoPartsButton)
@@ -652,93 +674,106 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_m_viewNoPartsButton] -- add your button handler code here..
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
-		m_viewPartToggleR->setToggleState(false, dontSendNotification);
-		m_viewPartToggle1->setToggleState(false, dontSendNotification);
-		m_viewPartToggle2->setToggleState(false, dontSendNotification);
-		m_viewPartToggle3->setToggleState(false, dontSendNotification);
-		m_viewPartToggle4->setToggleState(false, dontSendNotification);
-		m_viewPartToggle5->setToggleState(false, dontSendNotification);
-		m_viewPartToggle6->setToggleState(false, dontSendNotification);
-		m_viewPartToggle7->setToggleState(false, dontSendNotification);
-		m_viewPartToggleMuteCtl->setToggleState(false, dontSendNotification);
-		refreshTableFilters();
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x00)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x01)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x02)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x03)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x04)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x05)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x06)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x09)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x0E)->setValue(0, Parameter::GuiWidget);
+		
+		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoPartsButton]
     }
     else if (buttonThatWasClicked == m_viewAllEventsButton)
     {
         //[UserButtonCode_m_viewAllEventsButton] -- add your button handler code here..
-		m_viewTypeToggleNote->setToggleState(true, dontSendNotification);
-		m_viewTypeTogglePc->setToggleState(true, dontSendNotification);
-		m_viewTypeToggleCc->setToggleState(true, dontSendNotification);
-		m_viewTypeToggleBend->setToggleState(true, dontSendNotification);
-		m_viewTypeTogglePAft->setToggleState(true, dontSendNotification);
-		m_viewTypeToggleCAft->setToggleState(true, dontSendNotification);
-		m_viewTypeToggleTempo->setToggleState(true, dontSendNotification);
-		m_viewTypeToggleMute->setToggleState(true, dontSendNotification);
-		m_viewTypeToggleSysEx->setToggleState(true, dontSendNotification);
-		m_noteRangeLowerSlider->setValue(0, dontSendNotification);
-		m_noteRangeUpperSlider->setValue(127, dontSendNotification);
-		m_ccRangeLowerSlider->setValue(0, dontSendNotification);
-		m_ccRangeUpperSlider->setValue(127, dontSendNotification);
-		m_PAftRangeLowerSlider->setValue(0, dontSendNotification);
-		m_PAftRangeUpperSlider->setValue(127, dontSendNotification);
-		m_patternEventTable->updateContent();
-		refreshTableFilters();
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x11)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x12)->setValue(127, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x13)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x14)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x15)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x16)->setValue(127, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x17)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x18)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x19)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1A)->setValue(127, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1B)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E)->setValue(1, Parameter::GuiWidget);
+
+		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllEventsButton]
     }
     else if (buttonThatWasClicked == m_viewNoEventsButton)
     {
         //[UserButtonCode_m_viewNoEventsButton] -- add your button handler code here..
-		m_viewTypeToggleNote->setToggleState(false, dontSendNotification);
-		m_viewTypeTogglePc->setToggleState(false, dontSendNotification);
-		m_viewTypeToggleCc->setToggleState(false, dontSendNotification);
-		m_viewTypeToggleBend->setToggleState(false, dontSendNotification);
-		m_viewTypeTogglePAft->setToggleState(false, dontSendNotification);
-		m_viewTypeToggleCAft->setToggleState(false, dontSendNotification);
-		m_viewTypeToggleTempo->setToggleState(false, dontSendNotification);
-		m_viewTypeToggleMute->setToggleState(false, dontSendNotification);
-		m_viewTypeToggleSysEx->setToggleState(false, dontSendNotification);
-		refreshTableFilters();
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x13)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x14)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x17)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x18)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1B)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E)->setValue(0, Parameter::GuiWidget);
+
+		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoEventsButton]
     }
 
     //[UserbuttonClicked_Post]
+	else if (dynamic_cast<ToggleButton*>(buttonThatWasClicked))
+	{
+		patternBodyBlock->refreshFilteredContent();
+	}
     //[/UserbuttonClicked_Post]
 }
 
 void PatternEditorTab::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
+	PatternBodyBlock* patternBodyBlock = grooveboxMemory->getPatternBodyBlock();
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == m_noteRangeLowerSlider)
     {
         //[UserSliderCode_m_noteRangeLowerSlider] -- add your slider handling code here..
+		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_noteRangeLowerSlider]
     }
     else if (sliderThatWasMoved == m_noteRangeUpperSlider)
     {
         //[UserSliderCode_m_noteRangeUpperSlider] -- add your slider handling code here..
+		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_noteRangeUpperSlider]
     }
     else if (sliderThatWasMoved == m_ccRangeLowerSlider)
     {
         //[UserSliderCode_m_ccRangeLowerSlider] -- add your slider handling code here..
+		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_ccRangeLowerSlider]
     }
     else if (sliderThatWasMoved == m_ccRangeUpperSlider)
     {
         //[UserSliderCode_m_ccRangeUpperSlider] -- add your slider handling code here..
+		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_ccRangeUpperSlider]
     }
     else if (sliderThatWasMoved == m_PAftRangeLowerSlider)
     {
         //[UserSliderCode_m_PAftRangeLowerSlider] -- add your slider handling code here..
+		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_PAftRangeLowerSlider]
     }
     else if (sliderThatWasMoved == m_PAftRangeUpperSlider)
     {
         //[UserSliderCode_m_PAftRangeUpperSlider] -- add your slider handling code here..
+		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_PAftRangeUpperSlider]
     }
 
@@ -757,37 +792,6 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 	}
 }
 
-void PatternEditorTab::refreshTableFilters()
-{
-	grooveboxMemory->getPatternBodyBlock()->setTableFilters(
-		m_viewPartToggleR->getToggleState(),
-		m_viewPartToggle1->getToggleState(),
-		m_viewPartToggle2->getToggleState(),
-		m_viewPartToggle3->getToggleState(),
-		m_viewPartToggle4->getToggleState(),
-		m_viewPartToggle5->getToggleState(),
-		m_viewPartToggle6->getToggleState(),
-		m_viewPartToggle7->getToggleState(),
-		m_viewPartToggleMuteCtl->getToggleState(),
-		m_viewTypeToggleNote->getToggleState(),
-		(uint8) m_noteRangeLowerSlider->getValue(),
-		(uint8) m_noteRangeUpperSlider->getValue(),
-		m_viewTypeTogglePc->getToggleState(),
-		m_viewTypeToggleCc->getToggleState(),
-		(uint8)m_ccRangeLowerSlider->getValue(),
-		(uint8)m_ccRangeUpperSlider->getValue(),
-		m_viewTypeToggleBend->getToggleState(),
-		m_viewTypeTogglePAft->getToggleState(),
-		(uint8)m_PAftRangeLowerSlider->getValue(),
-		(uint8)m_PAftRangeUpperSlider->getValue(),
-		m_viewTypeToggleCAft->getToggleState(),
-		m_viewTypeToggleTempo->getToggleState(),
-		m_viewTypeToggleMute->getToggleState(),
-		m_viewTypeToggleSysEx->getToggleState()
-	);	
-
-	m_patternEventTable->updateContent();
-}
 //[/MiscUserCode]
 
 

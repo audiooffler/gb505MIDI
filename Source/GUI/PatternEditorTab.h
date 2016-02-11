@@ -52,7 +52,6 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     void changeListenerCallback (ChangeBroadcaster *source) override;
-	void refreshTableFilters();
     //[/UserMethods]
 
     void paint (Graphics& g) override;
