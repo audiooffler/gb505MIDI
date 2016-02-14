@@ -407,15 +407,15 @@ PatternEditorTab::PatternEditorTab ()
 
 
     //[Constructor] You can add your own custom stuff here..
-	m_viewPartToggle1->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x00));
-	m_viewPartToggle2->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x01));
-	m_viewPartToggle3->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x02));
-	m_viewPartToggle4->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x03));
-	m_viewPartToggle5->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x04));
-	m_viewPartToggle6->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x05));
-	m_viewPartToggle7->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x06));
-	m_viewPartToggleR->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x09));
-	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x0E));
+	m_viewPartToggle1->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1));
+	m_viewPartToggle2->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2));
+	m_viewPartToggle3->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3));
+	m_viewPartToggle4->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4));
+	m_viewPartToggle5->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5));
+	m_viewPartToggle6->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6));
+	m_viewPartToggle7->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7));
+	m_viewPartToggleR->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR));
+	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute));
 
 	m_viewPartToggle1->addListener(this);
 	m_viewPartToggle2->addListener(this);
@@ -656,15 +656,15 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_m_viewAllPartsButton] -- add your button handler code here..
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x00)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x01)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x02)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x03)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x04)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x05)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x06)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x09)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x0E)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(1, Parameter::GuiWidget);
 		
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllPartsButton]
@@ -674,15 +674,15 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_m_viewNoPartsButton] -- add your button handler code here..
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x00)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x01)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x02)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x03)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x04)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x05)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x06)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x09)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x0E)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(0, Parameter::GuiWidget);
 		
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoPartsButton]
@@ -690,21 +690,21 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_viewAllEventsButton)
     {
         //[UserButtonCode_m_viewAllEventsButton] -- add your button handler code here..
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x11)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x12)->setValue(127, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x13)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x14)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x15)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x16)->setValue(127, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x17)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x18)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x19)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1A)->setValue(127, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1B)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotes)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotesMin)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotesMax)->setValue(127, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPC)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCC)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCCMin)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCCMax)->setValue(127, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewBend)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAft)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAftMin)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAftMax)->setValue(127, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCAft)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(1, Parameter::GuiWidget);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllEventsButton]
@@ -712,15 +712,15 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_viewNoEventsButton)
     {
         //[UserButtonCode_m_viewNoEventsButton] -- add your button handler code here..
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x13)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x14)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x17)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x18)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1B)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotes)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPC)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCC)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewBend)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAft)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCAft)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(0, Parameter::GuiWidget);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoEventsButton]

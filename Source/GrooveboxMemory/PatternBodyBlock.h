@@ -60,6 +60,7 @@ public:
 		Evt_SysExSize = 10,
 		Evt_SysExData = 11,
 		Evt_NoteOff = 12, // not in original roland format, but producable for conversion to midi
+		Evt_SysExJoined = 13, // not in original roland format, but producable for conversion to midi
 		Evt_Unknown = -1
 	};
 
@@ -94,9 +95,15 @@ public:
 		static String getRhythmGroupString(RhythmGroup rhythmGroup);
 
 		PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength);
+		// constructor for joined sysex (not roland-standard)
+		PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex);
+		// constructor for note off
+		PatternEventData(unsigned long absTick, int8 key, uint8 part);
 		uint8 bytes[8];
 		unsigned long absoluteTick;	// set on construction by mostRecentAbsoluteTick + lastRelativeTickIncrement
-		
+		MemoryBlock joinedSysexData;
+		bool isNoteOff=false;
+
 		uint8 getRelativeTickIncrement();
 		PatternEventType getType();
 		String getTypeString();
@@ -145,13 +152,44 @@ public:
 	class VirtualPatternTableFilterBlock : public GrooveboxMemoryBlock
 	{
 	public:
+		enum ParameterAdressOffsets
+		{
+			ViewPart1 = 0x00,
+			ViewPart2 = 0x01,
+			ViewPart3 = 0x02,
+			ViewPart4 = 0x03,
+			ViewPart5 = 0x04,
+			ViewPart6 = 0x05,
+			ViewPart7 = 0x06,
+			ViewPartR = 0x09,
+			ViewMuteCtrl = 0x0E,
+			ViewNotes = 0x10,
+			ViewNotesMin = 0x11,
+			ViewNotesMax= 0x12,
+			ViewPC = 0x13,
+			ViewCC = 0x14,
+			ViewCCMin = 0x15,
+			ViewCCMax = 0x16,
+			ViewBend = 0x17,
+			ViewPAft = 0x18,
+			ViewPAftMin = 0x19,
+			ViewPAftMax = 0x1A,
+			ViewCAft = 0x1B,
+			ViewTempo = 0x1C,
+			ViewMute = 0x1D,
+			ViewSysEx = 0x1E
+		};
 		VirtualPatternTableFilterBlock();
 	private:
 	};
 	VirtualPatternTableFilterBlock* getPatternTableFilterParams(){ return m_patternTableFilterParams; }
 
+	// returns true, if event is to be shown according to VirtualPatternTableFilterBlock m_patternTableFilterParams
+	bool filter(PatternEventData* event) const;
+
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
+	Array<PatternEventData*> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 

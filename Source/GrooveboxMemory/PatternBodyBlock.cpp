@@ -17,6 +17,7 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_name = "Pattern Body";
 	// no parameters, just big data block
 	m_sequenceBlocks.clear();
+	m_filteredsequenceBlocks.clear();
 	//TableListBox::updateContent();
 	PatternEventData::mostRecentAbsoluteTick = 0;
 	PatternEventData::lastRelativeTickIncrement = 0;
@@ -27,10 +28,15 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 	uint32 address = sysExMsg->get32BitAddress();
 	if (address >= 0x40000000)
 	{
+		// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
+		MemoryBlock sysExBuilder;
+		unsigned int sysExBuilderByteIndex(0);
+
 		// if first sysex of pattern body received --> clear
 		if (address == 0x40000000)
 		{
 			m_sequenceBlocks.clear();
+			m_filteredsequenceBlocks.clear();
 			PatternEventData::mostRecentAbsoluteTick = 0;
 			PatternEventData::lastRelativeTickIncrement = 0;
 		}
@@ -46,7 +52,30 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 		{
 			PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
 			m_sequenceBlocks.add(newPatternEvent);
-			DBG(newPatternEvent->toDebugString());
+
+			if (newPatternEvent->getType() == Evt_SysExSize)
+			{
+				sysExBuilder.setSize(newPatternEvent->getSysExSize());
+				sysExBuilderByteIndex = 0;
+			}
+			else if (newPatternEvent->getType() == Evt_SysExData)
+			{
+				for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
+				{
+					sysExBuilder[sysExBuilderByteIndex] = newPatternEvent->bytes[b];
+					sysExBuilderByteIndex++;
+					if (newPatternEvent->bytes[b] == 0xF7)	// SYSEX EOX --> create midi message
+					{
+						// add additional merged sysex
+						PatternEventData* joinedSysExEvent = new PatternEventData(newPatternEvent->absoluteTick, &sysExBuilder);
+						m_sequenceBlocks.add(joinedSysExEvent);
+						sysExBuilder.setSize(0);
+						sysExBuilderByteIndex = 0;
+						break;
+					}
+				}
+			}
+			/*DBG(newPatternEvent->toDebugString());*/
 			/*
 			else if (c_eventType == GrooveboxPattern::Evt_TickInc)
 			{
@@ -123,7 +152,37 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 		
 		}
 		// TODO: call TableListBox::updateContent();
-		sendChangeMessage();
+
+		// TODO: produce note-offs
+		// iterate through PatternEventData in m_sequenceBlocks. if note-On
+		// get channel, note value, get gate time, get absolute ticks, calc end note absolute ticks
+		// generate new PatternEventData for note off (constructor)
+		// copy bytes [1](key), [2]=[3] (part, valid one) from noteOn event,  set [4](vel ) to  0
+		// find first entry in m_sequenceBlocks with abs > calculated abs ticks
+		// insert before that
+		for (int e = 0; e < m_sequenceBlocks.size(); e++)
+		{
+			if (m_sequenceBlocks[e]->getType() == Evt_Note)
+			{
+				unsigned long absNoteEndTick = m_sequenceBlocks[e]->absoluteTick + m_sequenceBlocks[e]->getNoteGateTicks();
+				PatternEventData* noteOffEvent = new PatternEventData(absNoteEndTick, (uint8)m_sequenceBlocks[e]->getNoteNumber(), (uint8)m_sequenceBlocks[e]->getPart());
+				for (int s = 0; s < m_sequenceBlocks.size(); s++)
+				{
+					if (m_sequenceBlocks[s]->absoluteTick > absNoteEndTick)
+					{
+						// sort before
+						m_sequenceBlocks.insert(s, noteOffEvent);
+						break;
+					}
+					else if (s == m_sequenceBlocks.size()-1)
+					{
+						// add to end
+						m_sequenceBlocks.add(noteOffEvent);
+					}
+				}
+			}
+		}
+		refreshFilteredContent();
 		return true;
 	}
 	return false;
@@ -242,6 +301,28 @@ PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData,
 	PatternEventData::lastRelativeTickIncrement = getRelativeTickIncrement();
 }
 
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex)
+{
+	for (unsigned int j = 0; j < 8; j++) { bytes[j] = 0; }
+	absoluteTick = absTick;
+	joinedSysexData.setSize(joinedSysex->getSize());
+	joinedSysexData.copyFrom(joinedSysex->getData(), 0, joinedSysex->getSize());
+}
+
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8 key, uint8 part)
+{
+	bytes[0] = 0; // no valid tick inc for note-offs!
+	bytes[1] = key;
+	bytes[2] = part;
+	bytes[3] = part;
+	bytes[4] = 0; // velocity = 0 for note off
+	bytes[5] = 0;
+	bytes[6] = 0;
+	bytes[7] = 0;
+	isNoteOff = true;
+	absoluteTick = absTick;
+}
+
 uint8 PatternBodyBlock::PatternEventData::getRelativeTickIncrement()
 {
 	return bytes[0];
@@ -269,7 +350,18 @@ PatternBodyBlock::PatternEventType PatternBodyBlock::PatternEventData::getType()
 		{
 			return Evt_Note;
 		}
-		else return Evt_Unknown;
+		else if (isNoteOff)
+		{
+			return Evt_NoteOff;
+		}
+		else if (joinedSysexData.getSize() > 0)
+		{
+			return Evt_SysExJoined;
+		}
+		else
+		{
+			return Evt_Unknown;
+		}
 	}
 }
 
@@ -280,6 +372,8 @@ String PatternBodyBlock::PatternEventData::getTypeString()
 	{
 	case PatternBodyBlock::Evt_Note: 
 		return PatternBodyBlock::PatternEventData::NOTENAMES[bytes[1]];
+	case PatternBodyBlock::Evt_NoteOff:
+		return PatternBodyBlock::PatternEventData::NOTENAMES[bytes[1]] + " Off";
 	case PatternBodyBlock::Evt_TickInc:
 		return "INC";
 	case PatternBodyBlock::Evt_PAft:
@@ -302,6 +396,8 @@ String PatternBodyBlock::PatternEventData::getTypeString()
 		return "SYX-SIZ";
 	case PatternBodyBlock::Evt_SysExData:
 		return "SYX-DAT";
+	case PatternBodyBlock::Evt_SysExJoined:
+		return "SYSEX";
 	case PatternBodyBlock::Evt_Unknown:
 	default:
 		return "TYPE?";
@@ -554,7 +650,7 @@ const String PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[] = {"", "[0]",
 
 int PatternBodyBlock::getNumRows()
 {
-	return m_sequenceBlocks.size();
+	return m_filteredsequenceBlocks.size();
 }
 
 void PatternBodyBlock::paintRowBackground(Graphics& g, int /*rowNumber*/, int /*width*/, int /*height*/, bool rowIsSelected)
@@ -569,9 +665,9 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 	g.setColour(Colours::grey);
 	g.drawLine((float)width, 0.0f, (float)width, (float)height);
 	g.drawLine(0.0f, (float)height, (float)width, (float)height);
-	if (rowNumber < m_sequenceBlocks.size())
+	if (rowNumber < m_filteredsequenceBlocks.size())
 	{
-		PatternEventData* event = m_sequenceBlocks[rowNumber];
+		PatternEventData* event = m_filteredsequenceBlocks[rowNumber];
 		String cellText;
 		switch ((PatternTableListColumnId)columnId)
 		{
@@ -690,13 +786,13 @@ String PatternBodyBlock::getCellTooltip(int /*rowNumber*/, int /*columnId*/)
 
 void PatternBodyBlock::selectedRowsChanged(int lastRowSelected)
 {
-	if (lastRowSelected >= 0 && lastRowSelected < m_sequenceBlocks.size() && tableSelectionMidiOut!=nullptr)
+	if (lastRowSelected >= 0 && lastRowSelected < m_filteredsequenceBlocks.size() && tableSelectionMidiOut!=nullptr)
 	{
 		for (int i = 1; i < 17; i++)
 		{
 			tableSelectionMidiOut->sendMessageNow(MidiMessage::allNotesOff(i));
 		}
-		tableSelectionMidiOut->sendMessageNow(m_sequenceBlocks[lastRowSelected]->toMidiMessage());
+		tableSelectionMidiOut->sendMessageNow(m_filteredsequenceBlocks[lastRowSelected]->toMidiMessage());
 	}
 }
 
@@ -712,34 +808,96 @@ PatternBodyBlock::VirtualPatternTableFilterBlock::VirtualPatternTableFilterBlock
 	GrooveboxMemoryBlock(0xF0000000, "Pattern Table Filter Paramters","",0x20)
 {
 	m_name = "Pattern Filters";
-	setupParameter("View Part 1", 0x00, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 1");
-	setupParameter("View Part 2", 0x01, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 2");
-	setupParameter("View Part 3", 0x02, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 3");
-	setupParameter("View Part 4", 0x03, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 4");
-	setupParameter("View Part 5", 0x04, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 5");
-	setupParameter("View Part 6", 0x05, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 6");
-	setupParameter("View Part 7", 0x06, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 7");
-	setupParameter("View Part R", 0x09, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part R");
-	setupParameter("View Mute Ctrl", 0x0E, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Mute Control Part");
+	setupParameter("View Part 1", ViewPart1, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 1");
+	setupParameter("View Part 2", ViewPart2, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 2");
+	setupParameter("View Part 3", ViewPart3, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 3");
+	setupParameter("View Part 4", ViewPart4, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 4");
+	setupParameter("View Part 5", ViewPart5, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 5");
+	setupParameter("View Part 6", ViewPart6, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 6");
+	setupParameter("View Part 7", ViewPart7, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 7");
+	setupParameter("View Part R", ViewPartR, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part R");
+	setupParameter("View Mute Ctrl", ViewMuteCtrl, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Mute Control Part");
 
 	StringArray noteNames(StringArray::fromTokens("C -1;C#-1;D -1;D#-1;E -1;F -1;F#-1;G -1;G#-1;A -1;A#-1;B -1;C  0;C# 0;D  0;D# 0;E  0;F  0;F# 0;G  0;G# 0;A  0;A# 0;B  0;C  1;C# 1;D  1;D# 1;E  1;F  1;F# 1;G  1;G# 1;A  1;A# 1;B  1;C  2;C# 2;D  2;D# 2;E  2;F  2;F# 2;G  2;G# 2;A  2;A# 2;B  2;C  3;C# 3;D  3;D# 3;E  3;F  3;F# 3;G  3;G# 3;A  3;A# 3;B  3;C  4;C# 4;D  4;D# 4;E  4;F  4;F# 4;G  4;G# 4;A  4;A# 4;B  4;C  5;C# 5;D  5;D# 5;E  5;F  5;F# 5;G  5;G# 5;A  5;A# 5;B  5;C  6;C# 6;D  6;D# 6;E  6;F  6;F# 6;G  6;G# 6;A  6;A# 6;B  6;C  7;C# 7;D  7;D# 7;E  7;F  7;F# 7;G  7;G# 7;A  7;A# 7;B  7;C  8;C# 8;D  8;D# 8;E  8;F  8;F# 8;G  8;G# 8;A  8;A# 8;B  8;C  9;C# 9;D  9;D# 9;E  9;F  9;F# 9;G  9", ";", String::empty));
-	setupParameter("View Notes", 0x10, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Note Events");
-	setupParameter("View Notes Min", 0x11, 0, 127, 0, noteNames, "Note Key range lower limit");
-	setupParameter("View Notes Max", 0x12, 0, 127, 127, noteNames, "Note Key range upper limit");
-	setupParameter("View PC", 0x13, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Program Change Events");
-	setupParameter("View CC", 0x14, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Controller Change Events");
-	setupParameter("View CC Min", 0x15, 0, 127, 0, StringArray(), "Controller number range lower limit");
-	setupParameter("View CC Max", 0x16, 0, 127, 127, StringArray(), "Controller number range upper limit");
-	setupParameter("View BEND", 0x17, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Pitch Bend Events");
-	setupParameter("View P-AFT", 0x18, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Polyphonic Aftertouch Events");
-	setupParameter("View P-AFT Min", 0x19, 0, 127, 0, noteNames, "Aftertouch Key range lower limit");
-	setupParameter("View P-AFT Max", 0x1A, 0, 127, 127, noteNames, "Aftertouch Key range upper limit");
-	setupParameter("View C-AFT", 0x1B, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Channel Aftertouch Events");
-	setupParameter("View Tempo", 0x1C, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Tempo Change Events");
-	setupParameter("View Mute", 0x1D, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Mute Events");
-	setupParameter("View SysEx", 0x1E, 0, 1, 1, StringArray::fromTokens("Off On", false), "View System Exclusive Events");
+	setupParameter("View Notes", ViewNotes, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Note Events");
+	setupParameter("View Notes Min", ViewNotesMin, 0, 127, 0, noteNames, "Note Key range lower limit");
+	setupParameter("View Notes Max", ViewNotesMax, 0, 127, 127, noteNames, "Note Key range upper limit");
+	setupParameter("View PC", ViewPC, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Program Change Events");
+	setupParameter("View CC", ViewCC, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Controller Change Events");
+	setupParameter("View CC Min", ViewCCMin, 0, 127, 0, StringArray(), "Controller number range lower limit");
+	setupParameter("View CC Max", ViewCCMax, 0, 127, 127, StringArray(), "Controller number range upper limit");
+	setupParameter("View BEND", ViewBend, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Pitch Bend Events");
+	setupParameter("View P-AFT", ViewPAft, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Polyphonic Aftertouch Events");
+	setupParameter("View P-AFT Min", ViewPAftMin, 0, 127, 0, noteNames, "Aftertouch Key range lower limit");
+	setupParameter("View P-AFT Max", ViewPAftMax, 0, 127, 127, noteNames, "Aftertouch Key range upper limit");
+	setupParameter("View C-AFT", ViewCAft, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Channel Aftertouch Events");
+	setupParameter("View Tempo", ViewTempo, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Tempo Change Events");
+	setupParameter("View Mute", ViewMute, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Mute Events");
+	setupParameter("View SysEx", ViewSysEx, 0, 1, 1, StringArray::fromTokens("Off On", false), "View System Exclusive Events");
 }
 
 void PatternBodyBlock::refreshFilteredContent()
 {
+	m_filteredsequenceBlocks.clearQuick();
+	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	{
+		if (filter(m_sequenceBlocks[i])) m_filteredsequenceBlocks.add(m_sequenceBlocks[i]);
+	}
+	sendChangeMessage();
+}
+
+bool PatternBodyBlock::filter(PatternEventData* event) const
+{
+	if (event->getPart() == Pattern_Part_1 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart1)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_2 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart2)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_3 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart3)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_4 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart4)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_5 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart5)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_6 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart6)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_7 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart7)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_Part_R && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->getValue() == 0) return false;
+	if (event->getPart() == Pattern_MuteCtrl && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->getValue() == 0) return false;
+	if (event->getType() == PatternEventType::Evt_Note || event->getType() == PatternEventType::Evt_NoteOff)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotes)->getValue() == 0) return false;
+		if (event->getNoteNumber()<m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMin)->getValue()) return false;
+		if (event->getNoteNumber()>m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMax)->getValue()) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_Pc)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPC)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_Cc)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCC)->getValue() == 0) return false;
+		if (event->getCcNo()<m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCCMin)->getValue()) return false;
+		if (event->getCcNo()>m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCCMax)->getValue()) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_PBend)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewBend)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_PAft)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAft)->getValue() == 0) return false;
+		if (event->getPAftKey()<m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAftMin)->getValue()) return false;
+		if (event->getPAftKey()>m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAftMax)->getValue()) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_CAft)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCAft)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_Tempo)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewTempo)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_PartMute || event->getType() == PatternEventType::Evt_RhyMute)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMute)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_SysExData || event->getType() == PatternEventType::Evt_SysExSize || event->getType() == PatternEventType::Evt_SysExJoined)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->getValue() == 0) return false;
+	}
+	return true;
 }
