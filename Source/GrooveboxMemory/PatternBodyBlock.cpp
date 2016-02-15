@@ -26,166 +26,135 @@ PatternBodyBlock::PatternBodyBlock() :
 bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 {
 	uint32 address = sysExMsg->get32BitAddress();
-	if (address >= 0x40000000)
+	if (address < 0x40000000) return false;
+
+	// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
+	MemoryBlock sysExBuilder;
+	unsigned int sysExBuilderByteIndex(0);
+
+	// if first sysex of pattern body received --> clear
+	if (address == 0x40000000)
 	{
-		// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
-		MemoryBlock sysExBuilder;
-		unsigned int sysExBuilderByteIndex(0);
-
-		// if first sysex of pattern body received --> clear
-		if (address == 0x40000000)
-		{
-			m_sequenceBlocks.clear();
-			m_filteredsequenceBlocks.clear();
-			PatternEventData::mostRecentAbsoluteTick = 0;
-			PatternEventData::lastRelativeTickIncrement = 0;
-		}
-		uint8* sysExDataPtr;
-		uint32 sysExDataSize;
-		sysExMsg->getSysExDataArrayPtr(&sysExDataPtr, sysExDataSize);
-		const uint8* patternDataBlock;
-		int patternDataBlockSize;
-		patternDataBlock = unpack7BitTo8BitData(sysExDataPtr, sysExDataSize, patternDataBlockSize);
-		/*DBG("address: 0x" + String::toHexString((int)sysExMsg->get32BitAddress()).paddedLeft('0', 8) + ", SysEx size: " + String(sysExDataSize)+
-			", Pattern Block size: " + String(patternDataBlockSize));*/
-		for (int i = 0; i < patternDataBlockSize; i += 8)
-		{
-			PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
-			m_sequenceBlocks.add(newPatternEvent);
-
-			if (newPatternEvent->getType() == Evt_SysExSize)
-			{
-				sysExBuilder.setSize(newPatternEvent->getSysExSize());
-				sysExBuilderByteIndex = 0;
-			}
-			else if (newPatternEvent->getType() == Evt_SysExData)
-			{
-				for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
-				{
-					sysExBuilder[sysExBuilderByteIndex] = newPatternEvent->bytes[b];
-					sysExBuilderByteIndex++;
-					if (newPatternEvent->bytes[b] == 0xF7)	// SYSEX EOX --> create midi message
-					{
-						// add additional merged sysex
-						PatternEventData* joinedSysExEvent = new PatternEventData(newPatternEvent->absoluteTick, &sysExBuilder);
-						m_sequenceBlocks.add(joinedSysExEvent);
-						sysExBuilder.setSize(0);
-						sysExBuilderByteIndex = 0;
-						break;
-					}
-				}
-			}
-			/*DBG(newPatternEvent->toDebugString());*/
-			/*
-			else if (c_eventType == GrooveboxPattern::Evt_TickInc)
-			{
-				// do nothing, just increments the currentTimestamp
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_PAft)
-			{
-				c_trackPointer->addEvent(MidiMessage::aftertouchChange(c_eventPart + 1, eventBlockPtr[5], eventBlockPtr[6]), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_Cc)
-			{
-				c_trackPointer->addEvent(MidiMessage::controllerEvent(c_eventPart + 1, eventBlockPtr[5], eventBlockPtr[6]), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_Pc)
-			{
-				c_trackPointer->addEvent(MidiMessage::programChange(c_eventPart + 1, eventBlockPtr[5]), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_CAft)
-			{
-				c_trackPointer->addEvent(MidiMessage::channelPressureChange(c_eventPart + 1, eventBlockPtr[5]), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_PBend)
-			{
-				c_trackPointer->addEvent(MidiMessage::pitchWheel(c_eventPart + 1, SyxMsg::getUnsigned14BitValueFrom7BitBytes(eventBlockPtr[5], eventBlockPtr[6])));
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_Tempo)
-			{
-				c_trackPointer->addEvent(MidiMessage::tempoMetaEvent((int)(6000000000 / ((uint16)eventBlockPtr[6] << 8 | (uint16)eventBlockPtr[7]))), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_PartMute)
-			{
-				uint8 quickSysExAddress[2]{0x70, 0x01};
-				uint8 quickSysExData[2]{eventBlockPtr[5], eventBlockPtr[7]};
-				ScopedPointer<SyxMsg> msg = new SyxMsg(SyxMsg::Type_DT1_Quick, m_deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
-				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String((eventBlockPtr[7]) ? "Unmute " : "Mute ") + GrooveboxPatternSetup::getPartName((GrooveboxPatternSetup::PartSelector)eventBlockPtr[5])), currentTimestamp);
-				c_trackPointer->addEvent(msg->getAsMidiMessage(), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_RhyMute)
-			{
-				uint8 quickSysExAddress[2]{0x70, 0x02};
-				uint8 quickSysExData[2]{eventBlockPtr[5], eventBlockPtr[7]};
-				ScopedPointer<SyxMsg> msg = new SyxMsg(SyxMsg::Type_DT1_Quick, m_deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
-				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String((eventBlockPtr[7]) ? "Unmute " : "Mute ") + GrooveboxPatternSetup::getRhythmGroupName((GrooveboxPatternSetup::RhythmGroupSelector)eventBlockPtr[5])), currentTimestamp);
-				c_trackPointer->addEvent(msg->getAsMidiMessage(), currentTimestamp);
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_SysExSize)
-			{
-				sysExBuilder.setSize((uint32)eventBlockPtr[4] << 24 | (uint32)eventBlockPtr[5] << 16 | (uint32)eventBlockPtr[6] << 8 | (uint32)eventBlockPtr[7]);
-				sysExBuilderByteIndex = 0;
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_SysExData)
-			{
-				for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
-				{
-					sysExBuilder[sysExBuilderByteIndex] = eventBlockPtr[b];
-					sysExBuilderByteIndex++;
-					if (eventBlockPtr[b] == 0xF7)	// SYSEX EOX --> create midi message
-					{
-						c_trackPointer->addEvent(MidiMessage::createSysExMessage(sysExBuilder.getData(), sysExBuilder.getSize()), currentTimestamp);
-						sysExBuilder.setSize(0);
-						sysExBuilderByteIndex = 0;
-						break;
-					}
-				}
-			}
-			else if (c_eventType == GrooveboxPattern::Evt_Unknown)
-			{
-				// ignore
-			}
-
-			// after finish processing current event: position timestamp for next event
-			*/
-			//currentTimestamp += c_tickIncrement/**m_tickLength*/;	// multiplicated with m_tickLength would be the timestamp in seconds
-		
-		}
-		// TODO: call TableListBox::updateContent();
-
-		// TODO: produce note-offs
-		// iterate through PatternEventData in m_sequenceBlocks. if note-On
-		// get channel, note value, get gate time, get absolute ticks, calc end note absolute ticks
-		// generate new PatternEventData for note off (constructor)
-		// copy bytes [1](key), [2]=[3] (part, valid one) from noteOn event,  set [4](vel ) to  0
-		// find first entry in m_sequenceBlocks with abs > calculated abs ticks
-		// insert before that
-		for (int e = 0; e < m_sequenceBlocks.size(); e++)
-		{
-			if (m_sequenceBlocks[e]->getType() == Evt_Note)
-			{
-				unsigned long absNoteEndTick = m_sequenceBlocks[e]->absoluteTick + m_sequenceBlocks[e]->getNoteGateTicks();
-				PatternEventData* noteOffEvent = new PatternEventData(absNoteEndTick, (uint8)m_sequenceBlocks[e]->getNoteNumber(), (uint8)m_sequenceBlocks[e]->getPart());
-				for (int s = 0; s < m_sequenceBlocks.size(); s++)
-				{
-					if (m_sequenceBlocks[s]->absoluteTick > absNoteEndTick)
-					{
-						// sort before
-						m_sequenceBlocks.insert(s, noteOffEvent);
-						break;
-					}
-					else if (s == m_sequenceBlocks.size()-1)
-					{
-						// add to end
-						m_sequenceBlocks.add(noteOffEvent);
-					}
-				}
-			}
-		}
-		refreshFilteredContent();
-		return true;
+		m_sequenceBlocks.clear();
+		m_filteredsequenceBlocks.clear();
+		PatternEventData::mostRecentAbsoluteTick = 0;
+		PatternEventData::lastRelativeTickIncrement = 0;
 	}
-	return false;
+	uint8* sysExDataPtr;
+	uint32 sysExDataSize;
+	sysExMsg->getSysExDataArrayPtr(&sysExDataPtr, sysExDataSize);
+	const uint8* patternDataBlock;
+	int patternDataBlockSize;
+	patternDataBlock = unpack7BitTo8BitData(sysExDataPtr, sysExDataSize, patternDataBlockSize);
+	/*DBG("address: 0x" + String::toHexString((int)sysExMsg->get32BitAddress()).paddedLeft('0', 8) + ", SysEx size: " + String(sysExDataSize)+
+		", Pattern Block size: " + String(patternDataBlockSize));*/
+	for (int i = 0; i < patternDataBlockSize; i += 8)
+	{
+		PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
+		m_sequenceBlocks.add(newPatternEvent);
+
+		if (newPatternEvent->getType() == Evt_SysExSize)
+		{
+			sysExBuilder.setSize(newPatternEvent->getSysExSize());
+			sysExBuilderByteIndex = 0;
+		}
+		else if (newPatternEvent->getType() == Evt_SysExData)
+		{
+			for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
+			{
+				sysExBuilder[sysExBuilderByteIndex] = newPatternEvent->bytes[b];
+				sysExBuilderByteIndex++;
+				if (newPatternEvent->bytes[b] == 0xF7)	// SYSEX EOX --> create midi message
+				{
+					// add additional merged sysex
+					PatternEventData* joinedSysExEvent = new PatternEventData(newPatternEvent->absoluteTick, &sysExBuilder);
+					m_sequenceBlocks.add(joinedSysExEvent);
+					sysExBuilder.setSize(0);
+					sysExBuilderByteIndex = 0;
+					break;
+				}
+			}
+		}
+		/*DBG(newPatternEvent->toDebugString());*/
+		/*
+		else if (c_eventType == GrooveboxPattern::Evt_TickInc)
+		{
+			// do nothing, just increments the currentTimestamp
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_PAft)
+		{
+			c_trackPointer->addEvent(MidiMessage::aftertouchChange(c_eventPart + 1, eventBlockPtr[5], eventBlockPtr[6]), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_Cc)
+		{
+			c_trackPointer->addEvent(MidiMessage::controllerEvent(c_eventPart + 1, eventBlockPtr[5], eventBlockPtr[6]), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_Pc)
+		{
+			c_trackPointer->addEvent(MidiMessage::programChange(c_eventPart + 1, eventBlockPtr[5]), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_CAft)
+		{
+			c_trackPointer->addEvent(MidiMessage::channelPressureChange(c_eventPart + 1, eventBlockPtr[5]), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_PBend)
+		{
+			c_trackPointer->addEvent(MidiMessage::pitchWheel(c_eventPart + 1, SyxMsg::getUnsigned14BitValueFrom7BitBytes(eventBlockPtr[5], eventBlockPtr[6])));
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_Tempo)
+		{
+			c_trackPointer->addEvent(MidiMessage::tempoMetaEvent((int)(6000000000 / ((uint16)eventBlockPtr[6] << 8 | (uint16)eventBlockPtr[7]))), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_PartMute)
+		{
+			uint8 quickSysExAddress[2]{0x70, 0x01};
+			uint8 quickSysExData[2]{eventBlockPtr[5], eventBlockPtr[7]};
+			ScopedPointer<SyxMsg> msg = new SyxMsg(SyxMsg::Type_DT1_Quick, m_deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
+			c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String((eventBlockPtr[7]) ? "Unmute " : "Mute ") + GrooveboxPatternSetup::getPartName((GrooveboxPatternSetup::PartSelector)eventBlockPtr[5])), currentTimestamp);
+			c_trackPointer->addEvent(msg->getAsMidiMessage(), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_RhyMute)
+		{
+			uint8 quickSysExAddress[2]{0x70, 0x02};
+			uint8 quickSysExData[2]{eventBlockPtr[5], eventBlockPtr[7]};
+			ScopedPointer<SyxMsg> msg = new SyxMsg(SyxMsg::Type_DT1_Quick, m_deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
+			c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String((eventBlockPtr[7]) ? "Unmute " : "Mute ") + GrooveboxPatternSetup::getRhythmGroupName((GrooveboxPatternSetup::RhythmGroupSelector)eventBlockPtr[5])), currentTimestamp);
+			c_trackPointer->addEvent(msg->getAsMidiMessage(), currentTimestamp);
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_SysExSize)
+		{
+			sysExBuilder.setSize((uint32)eventBlockPtr[4] << 24 | (uint32)eventBlockPtr[5] << 16 | (uint32)eventBlockPtr[6] << 8 | (uint32)eventBlockPtr[7]);
+			sysExBuilderByteIndex = 0;
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_SysExData)
+		{
+			for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
+			{
+				sysExBuilder[sysExBuilderByteIndex] = eventBlockPtr[b];
+				sysExBuilderByteIndex++;
+				if (eventBlockPtr[b] == 0xF7)	// SYSEX EOX --> create midi message
+				{
+					c_trackPointer->addEvent(MidiMessage::createSysExMessage(sysExBuilder.getData(), sysExBuilder.getSize()), currentTimestamp);
+					sysExBuilder.setSize(0);
+					sysExBuilderByteIndex = 0;
+					break;
+				}
+			}
+		}
+		else if (c_eventType == GrooveboxPattern::Evt_Unknown)
+		{
+			// ignore
+		}
+
+		// after finish processing current event: position timestamp for next event
+		*/
+		//currentTimestamp += c_tickIncrement/**m_tickLength*/;	// multiplicated with m_tickLength would be the timestamp in seconds
+		
+	}
+	// TODO: call TableListBox::updateContent();
+
+	refreshFilteredContent();
+	return true;
 }
 
 // unpack SysEx data array, size of unpacked data is returned via rerence parameter. don't forger to delete the returned array after usage
@@ -346,13 +315,13 @@ PatternBodyBlock::PatternEventType PatternBodyBlock::PatternEventData::getType()
 	case 0x95: return Evt_SysExSize;
 	case 0x96: return Evt_SysExData;
 	default:
+		if (isNoteOff)
+		{
+			return Evt_NoteOff;
+		}
 		if (bytes[1] >= 0x00 && bytes[1] <= 0x7F)	// note event
 		{
 			return Evt_Note;
-		}
-		else if (isNoteOff)
-		{
-			return Evt_NoteOff;
 		}
 		else if (joinedSysexData.getSize() > 0)
 		{
@@ -842,6 +811,36 @@ void PatternBodyBlock::refreshFilteredContent()
 	for (int i = 0; i < m_sequenceBlocks.size(); i++)
 	{
 		if (filter(m_sequenceBlocks[i])) m_filteredsequenceBlocks.add(m_sequenceBlocks[i]);
+	}
+	// TODO: produce note-offs
+	// iterate through PatternEventData in m_sequenceBlocks. if note-On
+	// get channel, note value, get gate time, get absolute ticks, calc end note absolute ticks
+	// generate new PatternEventData for note off (constructor)
+	// copy bytes [1](key), [2]=[3] (part, valid one) from noteOn event,  set [4](vel ) to  0
+	// find first entry in m_sequenceBlocks with abs > calculated abs ticks
+	// insert before that
+	PatternEventData* currentNoteOnEventPtr = nullptr;
+	for (int e = 0; e < m_filteredsequenceBlocks.size(); e++)
+	{
+		currentNoteOnEventPtr = m_filteredsequenceBlocks[e];
+		if (currentNoteOnEventPtr->getType() != Evt_Note) continue;
+		unsigned long absNoteEndTick = currentNoteOnEventPtr->absoluteTick + currentNoteOnEventPtr->getNoteGateTicks();
+		PatternEventData* newNoteOffEvent = new PatternEventData(absNoteEndTick, (uint8)currentNoteOnEventPtr->getNoteNumber(), (uint8)currentNoteOnEventPtr->getPart());
+		for (int s = 0; s < m_filteredsequenceBlocks.size(); s++)
+		{
+			if (m_filteredsequenceBlocks[s]->absoluteTick > absNoteEndTick)
+			{
+				// sort before
+				m_filteredsequenceBlocks.insert(s, newNoteOffEvent);
+				break;
+			}
+			else if (s == m_filteredsequenceBlocks.size() - 1)
+			{
+				// add to end
+				m_filteredsequenceBlocks.add(newNoteOffEvent);
+				break;
+			}
+		}
 	}
 	sendChangeMessage();
 }
