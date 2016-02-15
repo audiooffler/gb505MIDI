@@ -9,6 +9,7 @@
 */
 
 #include "PatternBodyBlock.h"
+#include "../GUI/GrooveboxLookAndFeel.h"
 
 PatternBodyBlock::PatternBodyBlock() :
 	GrooveboxMemoryBlock(0x40000000, "Pattern Body Data", "1-6", 0x00000000),
@@ -45,6 +46,45 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewTempo)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMute)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->addChangeListener(this);
+
+	m_midiCCNames.set(5, "PORTA TIME");
+	m_midiCCNames.set(7, "PART LEVEL");
+	m_midiCCNames.set(10, "PART PAN");
+	m_midiCCNames.set(15, "LFO1 WAVE");
+	m_midiCCNames.set(16, "LFO1 RATE");
+	m_midiCCNames.set(18, "LFO1->PITCH");
+	m_midiCCNames.set(19, "LFO1->FILTER");
+	m_midiCCNames.set(21, "COARSE TUNE");
+	m_midiCCNames.set(25, "P-ENV-DEPTH");
+	m_midiCCNames.set(26, "P-ENV A");
+	m_midiCCNames.set(27, "P-ENV D");
+	m_midiCCNames.set(28, "F-ENV S");
+	m_midiCCNames.set(29, "F-ENV R");
+	m_midiCCNames.set(31, "A-ENV S");
+	m_midiCCNames.set(34, "FILTER TYPE");
+	m_midiCCNames.set(35, "TONE PAN");
+	m_midiCCNames.set(36, "TONE LVL");
+	m_midiCCNames.set(37, "RND PAN");
+	m_midiCCNames.set(39, "P-ENV S");
+	m_midiCCNames.set(40, "P-ENV R");
+	m_midiCCNames.set(65, "PORTA SW");
+	m_midiCCNames.set(71, "FILTER RES");
+	m_midiCCNames.set(72, "A-ENV R");
+	m_midiCCNames.set(73, "A-ENV A");
+	m_midiCCNames.set(74, "FILTER CUT");
+	m_midiCCNames.set(75, "A-ENV D");
+	m_midiCCNames.set(77, "FINE TUNE");
+	m_midiCCNames.set(80, "LFO1->AMP");
+	m_midiCCNames.set(81, "F-ENV-DEPTH");
+	m_midiCCNames.set(82, "F-ENV A");
+	m_midiCCNames.set(83, "F-ENV D");
+	m_midiCCNames.set(85, "KEY SHIFT");
+	m_midiCCNames.set(86, "M-FX SW");
+	m_midiCCNames.set(91, "REVERB");
+	m_midiCCNames.set(94, "DELAY");
+	m_midiCCNames.set(126, "SOLO ON");
+	m_midiCCNames.set(127, "SOLO OFF");
+
 }
 
 bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
@@ -647,7 +687,7 @@ int PatternBodyBlock::getNumRows()
 
 void PatternBodyBlock::paintRowBackground(Graphics& g, int /*rowNumber*/, int /*width*/, int /*height*/, bool rowIsSelected)
 {
-	g.fillAll(rowIsSelected ? Colours::lightskyblue : Colours::transparentBlack);
+	g.fillAll(rowIsSelected ? GrooveboxLookAndFeel::Mc307LcdThumb : Colours::transparentBlack);
 }
 
 void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool /*rowIsSelected*/)
@@ -709,7 +749,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 				cellText = String(event->getPAftKeyString());
 				break;
 			case PatternBodyBlock::Evt_Cc:
-				cellText = String(event->getCcNo());
+				cellText = String(event->getCcNo()) + " " + m_midiCCNames[event->getCcNo()];
 				break;
 			case PatternBodyBlock::Evt_Pc:
 				cellText = String(event->getPcProgram());

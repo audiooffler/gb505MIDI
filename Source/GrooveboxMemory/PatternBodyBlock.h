@@ -195,6 +195,7 @@ private:
 	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
+	HashMap<int, String> m_midiCCNames;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternBodyBlock)
 };
