@@ -100,11 +100,9 @@ public:
 		// constructor for note off
 		PatternEventData(unsigned long absTick, int8 key, uint8 part);
 
-		~PatternEventData();
-
 		uint8 bytes[8];
 		unsigned long absoluteTick;	// set on construction by mostRecentAbsoluteTick + lastRelativeTickIncrement
-		MemoryBlock joinedSysexData;
+		ScopedPointer<MemoryBlock> m_joinedSysexData;
 		bool isNoteOff=false;
 
 		uint8 getRelativeTickIncrement();
@@ -185,6 +183,7 @@ public:
 		};
 		VirtualPatternTableFilterBlock();
 	private:
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(VirtualPatternTableFilterBlock)
 	};
 	VirtualPatternTableFilterBlock* getPatternTableFilterParams(){ return m_patternTableFilterParams; }
 
@@ -193,7 +192,7 @@ public:
 
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
-	Array<PatternEventData*> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
+	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 

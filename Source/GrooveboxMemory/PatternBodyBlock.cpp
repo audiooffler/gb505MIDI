@@ -176,7 +176,6 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 		
 	}
 	// TODO: call TableListBox::updateContent();
-	sysExBuilder.reset();
 	refreshFilteredContent();
 	return true;
 }
@@ -298,8 +297,8 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, Memo
 {
 	for (unsigned int j = 0; j < 8; j++) { bytes[j] = 0; }
 	absoluteTick = absTick;
-	joinedSysexData.setSize(joinedSysex->getSize());
-	joinedSysexData.copyFrom(joinedSysex->getData(), 0, joinedSysex->getSize());
+	m_joinedSysexData->setSize(joinedSysex->getSize());
+	m_joinedSysexData->copyFrom(joinedSysex->getData(), 0, joinedSysex->getSize());
 }
 
 PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8 key, uint8 part)
@@ -314,11 +313,6 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8
 	bytes[7] = 0;
 	isNoteOff = true;
 	absoluteTick = absTick;
-}
-
-PatternBodyBlock::PatternEventData::~PatternEventData()
-{
-	joinedSysexData.reset();
 }
 
 uint8 PatternBodyBlock::PatternEventData::getRelativeTickIncrement()
@@ -352,7 +346,7 @@ PatternBodyBlock::PatternEventType PatternBodyBlock::PatternEventData::getType()
 		{
 			return Evt_Note;
 		}
-		else if (joinedSysexData.getSize() > 0)
+		else if (m_joinedSysexData->getSize() > 0)
 		{
 			return Evt_SysExJoined;
 		}
@@ -836,18 +830,16 @@ PatternBodyBlock::VirtualPatternTableFilterBlock::VirtualPatternTableFilterBlock
 
 void PatternBodyBlock::refreshFilteredContent()
 {
-	m_filteredsequenceBlocks.clearQuick();
+	m_filteredsequenceBlocks.clearQuick(true);
 	for (int i = 0; i < m_sequenceBlocks.size(); i++)
 	{
-		if (filter(m_sequenceBlocks[i])) m_filteredsequenceBlocks.add(m_sequenceBlocks[i]);
+		if (filter(m_sequenceBlocks[i]))
+		{
+			PatternEventData* eventCopy = new PatternEventData(*(m_sequenceBlocks[i]));
+			m_filteredsequenceBlocks.add(eventCopy);
+		}
 	}
-	// TODO: produce note-offs
-	// iterate through PatternEventData in m_sequenceBlocks. if note-On
-	// get channel, note value, get gate time, get absolute ticks, calc end note absolute ticks
-	// generate new PatternEventData for note off (constructor)
-	// copy bytes [1](key), [2]=[3] (part, valid one) from noteOn event,  set [4](vel ) to  0
-	// find first entry in m_sequenceBlocks with abs > calculated abs ticks
-	// insert before that
+	// produce note-offs
 	PatternEventData* currentNoteOnEventPtr = nullptr;
 	for (int e = 0; e < m_filteredsequenceBlocks.size(); e++)
 	{
@@ -876,9 +868,10 @@ void PatternBodyBlock::refreshFilteredContent()
 
 void PatternBodyBlock::changeListenerCallback(ChangeBroadcaster *source)
 {
-	if (source == m_patternTableFilterParams)
+	if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
-		refreshFilteredContent();
+		if (param->getBlock() == m_patternTableFilterParams)
+			refreshFilteredContent();
 	}
 }
 

@@ -39,11 +39,11 @@ PatternEditorTab::PatternEditorTab ()
 	PatternBodyBlock* patternBodyBlock = grooveboxMemory->getPatternBodyBlock();
 	patternBodyBlock->addChangeListener(this);
 	m_patternEventTableHeader = new TableHeaderComponent();
-	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Position], PatternBodyBlock::Col_Position, 60);
+	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Position], PatternBodyBlock::Col_Position, 70);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Raw0], PatternBodyBlock::Col_Raw0, 30);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_TicksInc], PatternBodyBlock::Col_TicksInc, 30);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Raw1], PatternBodyBlock::Col_Raw1, 30);
-	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_EventType], PatternBodyBlock::Col_EventType, 60);
+	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_EventType], PatternBodyBlock::Col_EventType, 70);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Raw2], PatternBodyBlock::Col_Raw2, 30);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Raw3], PatternBodyBlock::Col_Raw3, 30);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Part], PatternBodyBlock::Col_Part, 60);
@@ -716,7 +716,6 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 void PatternEditorTab::sliderValueChanged (Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
-	PatternBodyBlock* patternBodyBlock = grooveboxMemory->getPatternBodyBlock();
     //[/UsersliderValueChanged_Pre]
 
     if (sliderThatWasMoved == m_noteRangeLowerSlider)
