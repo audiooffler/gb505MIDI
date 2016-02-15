@@ -20,6 +20,7 @@
 //[Headers] You can add your own extra header files here...
 #include "../GrooveboxMemory/OverallMemoryBlock.h"
 #include "../GrooveboxMemory/PatternBodyBlock.h"
+#include "GrooveboxLookAndFeel.h"
 //[/Headers]
 
 #include "PatternEditorTab.h"
@@ -69,6 +70,7 @@ PatternEditorTab::PatternEditorTab ()
     m_midiOutLabel->setFont (Font (12.00f, Font::bold));
     m_midiOutLabel->setJustificationType (Justification::centredRight);
     m_midiOutLabel->setEditable (false, false, false);
+    m_midiOutLabel->setColour (Label::textColourId, Colours::white);
     m_midiOutLabel->setColour (TextEditor::textColourId, Colours::black);
     m_midiOutLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
@@ -394,6 +396,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_midiOutComboBox->addItemList(MidiOutput::getDevices(), 1);
 	m_midiOutComboBox->setTextWhenNothingSelected(midiOutNames[MidiOutput::getDefaultDeviceIndex() + 1]);
 
+	m_patternEventTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_patternEventTable->setModel(patternBodyBlock);
 	m_patternEventTable->setHeader(m_patternEventTableHeader);
 	m_patternEventTable->setHeaderHeight(24);
@@ -415,7 +418,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewPartToggle6->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6));
 	m_viewPartToggle7->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7));
 	m_viewPartToggleR->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR));
-	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute));
+	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl));
 
 	m_viewPartToggle1->addListener(this);
 	m_viewPartToggle2->addListener(this);
@@ -665,7 +668,7 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(1, Parameter::GuiWidget);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(1, Parameter::GuiWidget);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(1, Parameter::GuiWidget);
-		
+
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllPartsButton]
     }
@@ -683,7 +686,7 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(0, Parameter::GuiWidget);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(0, Parameter::GuiWidget);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(0, Parameter::GuiWidget);
-		
+
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoPartsButton]
     }
@@ -822,10 +825,10 @@ BEGIN_JUCER_METADATA
             virtualName="" explicitFocusOrder="0" pos="112 8 176 20" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="midiOutLabel" id="b10a8e943634f13a" memberName="m_midiOutLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 8 88 20" edTextCol="ff000000"
-         edBkgCol="0" labelText="MIDI OUT:" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="34"/>
+         virtualName="" explicitFocusOrder="0" pos="8 8 88 20" textCol="ffffffff"
+         edTextCol="ff000000" edBkgCol="0" labelText="MIDI OUT:" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
   <TEXTBUTTON name="panicButton" id="7514cd2cffbbc78c" memberName="m_panicButton"
               virtualName="" explicitFocusOrder="0" pos="296 8 150 20" buttonText="MIDI Panic!"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
