@@ -420,16 +420,6 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewPartToggleR->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR));
 	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl));
 
-	m_viewPartToggle1->addListener(this);
-	m_viewPartToggle2->addListener(this);
-	m_viewPartToggle3->addListener(this);
-	m_viewPartToggle4->addListener(this);
-	m_viewPartToggle5->addListener(this);
-	m_viewPartToggle6->addListener(this);
-	m_viewPartToggle7->addListener(this);
-	m_viewPartToggleR->addListener(this);
-	m_viewPartToggleMuteCtl->addListener(this);
-
 	m_viewTypeToggleNote->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10));
 	m_noteRangeLowerSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x11));
 	m_noteRangeUpperSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x12));
@@ -445,16 +435,6 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewTypeToggleTempo->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C));
 	m_viewTypeToggleMute->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D));
 	m_viewTypeToggleSysEx->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E));
-
-	m_viewTypeToggleNote->addListener(this);
-	m_viewTypeTogglePc->addListener(this);
-	m_viewTypeToggleCc->addListener(this);
-	m_viewTypeToggleBend->addListener(this);
-	m_viewTypeTogglePAft->addListener(this);
-	m_viewTypeToggleCAft->addListener(this);
-	m_viewTypeToggleTempo->addListener(this);
-	m_viewTypeToggleMute->addListener(this);
-	m_viewTypeToggleSysEx->addListener(this);
 
 	patternBodyBlock->refreshFilteredContent();
     //[/Constructor]
@@ -730,10 +710,6 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     }
 
     //[UserbuttonClicked_Post]
-	else if (dynamic_cast<ToggleButton*>(buttonThatWasClicked))
-	{
-		patternBodyBlock->refreshFilteredContent();
-	}
     //[/UserbuttonClicked_Post]
 }
 
@@ -746,37 +722,31 @@ void PatternEditorTab::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == m_noteRangeLowerSlider)
     {
         //[UserSliderCode_m_noteRangeLowerSlider] -- add your slider handling code here..
-		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_noteRangeLowerSlider]
     }
     else if (sliderThatWasMoved == m_noteRangeUpperSlider)
     {
         //[UserSliderCode_m_noteRangeUpperSlider] -- add your slider handling code here..
-		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_noteRangeUpperSlider]
     }
     else if (sliderThatWasMoved == m_ccRangeLowerSlider)
     {
         //[UserSliderCode_m_ccRangeLowerSlider] -- add your slider handling code here..
-		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_ccRangeLowerSlider]
     }
     else if (sliderThatWasMoved == m_ccRangeUpperSlider)
     {
         //[UserSliderCode_m_ccRangeUpperSlider] -- add your slider handling code here..
-		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_ccRangeUpperSlider]
     }
     else if (sliderThatWasMoved == m_PAftRangeLowerSlider)
     {
         //[UserSliderCode_m_PAftRangeLowerSlider] -- add your slider handling code here..
-		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_PAftRangeLowerSlider]
     }
     else if (sliderThatWasMoved == m_PAftRangeUpperSlider)
     {
         //[UserSliderCode_m_PAftRangeUpperSlider] -- add your slider handling code here..
-		patternBodyBlock->refreshFilteredContent();
         //[/UserSliderCode_m_PAftRangeUpperSlider]
     }
 

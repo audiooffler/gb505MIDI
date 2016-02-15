@@ -14,7 +14,7 @@
 #include "GrooveboxMemoryBlock.h"
 #include "JuceHeader.h"
 
-class PatternBodyBlock : public GrooveboxMemoryBlock, public TableListBoxModel, public ChangeBroadcaster
+class PatternBodyBlock : public GrooveboxMemoryBlock, public TableListBoxModel, public ChangeBroadcaster, public ChangeListener
 {
 public:
 	enum PatternPart
@@ -99,6 +99,9 @@ public:
 		PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex);
 		// constructor for note off
 		PatternEventData(unsigned long absTick, int8 key, uint8 part);
+
+		~PatternEventData();
+
 		uint8 bytes[8];
 		unsigned long absoluteTick;	// set on construction by mostRecentAbsoluteTick + lastRelativeTickIncrement
 		MemoryBlock joinedSysexData;
@@ -148,8 +151,9 @@ public:
 	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut; }
 	
 	void refreshFilteredContent();
+	void changeListenerCallback(ChangeBroadcaster *source) override;
 
-	class VirtualPatternTableFilterBlock : public GrooveboxMemoryBlock
+	class VirtualPatternTableFilterBlock : public GrooveboxMemoryBlock, public ChangeBroadcaster
 	{
 	public:
 		enum ParameterAdressOffsets

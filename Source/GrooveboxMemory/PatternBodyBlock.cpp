@@ -21,6 +21,30 @@ PatternBodyBlock::PatternBodyBlock() :
 	//TableListBox::updateContent();
 	PatternEventData::mostRecentAbsoluteTick = 0;
 	PatternEventData::lastRelativeTickIncrement = 0;
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart1)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart2)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart3)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart4)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart5)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart6)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart7)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotes)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMin)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMax)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPC)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCC)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCCMin)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCCMax)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewBend)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAft)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAftMin)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAftMax)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCAft)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewTempo)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMute)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->addChangeListener(this);
 }
 
 bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
@@ -152,7 +176,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 		
 	}
 	// TODO: call TableListBox::updateContent();
-
+	sysExBuilder.reset();
 	refreshFilteredContent();
 	return true;
 }
@@ -290,6 +314,11 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8
 	bytes[7] = 0;
 	isNoteOff = true;
 	absoluteTick = absTick;
+}
+
+PatternBodyBlock::PatternEventData::~PatternEventData()
+{
+	joinedSysexData.reset();
 }
 
 uint8 PatternBodyBlock::PatternEventData::getRelativeTickIncrement()
@@ -843,6 +872,14 @@ void PatternBodyBlock::refreshFilteredContent()
 		}
 	}
 	sendChangeMessage();
+}
+
+void PatternBodyBlock::changeListenerCallback(ChangeBroadcaster *source)
+{
+	if (source == m_patternTableFilterParams)
+	{
+		refreshFilteredContent();
+	}
 }
 
 bool PatternBodyBlock::filter(PatternEventData* event) const
