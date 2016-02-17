@@ -390,6 +390,16 @@ PatternEditorTab::PatternEditorTab ()
     m_viewNoEventsButton->setButtonText (TRANS("NONE"));
     m_viewNoEventsButton->addListener (this);
 
+    addAndMakeVisible (m_viewSinglePartToggle = new SmallGreenToggle());
+    addAndMakeVisible (m_viewSinglePartLabel = new Label ("viewSinglePartLabel",
+                                                          TRANS("SINGLE")));
+    m_viewSinglePartLabel->setFont (Font (12.00f, Font::bold));
+    m_viewSinglePartLabel->setJustificationType (Justification::centredRight);
+    m_viewSinglePartLabel->setEditable (false, false, false);
+    m_viewSinglePartLabel->setColour (Label::textColourId, Colours::black);
+    m_viewSinglePartLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_viewSinglePartLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 	StringArray midiOutNames(MidiOutput::getDevices());
@@ -404,6 +414,8 @@ PatternEditorTab::PatternEditorTab ()
 	patternBodyBlock->setTableSelectionMidiOutId( m_midiOutComboBox->getSelectedId() > 0 ? m_midiOutComboBox->getSelectedId() - 1 : -1);
 
 	m_patternEventTable->setColour(TableListBox::outlineColourId, Colours::grey);
+
+	m_viewSinglePartToggle->addListener(this);
     //[/UserPreSize]
 
     setSize (600, 400);
@@ -419,6 +431,8 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewPartToggle7->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7));
 	m_viewPartToggleR->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR));
 	m_viewPartToggleMuteCtl->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl));
+
+	m_viewSinglePartToggle->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSingeParts));
 
 	m_viewTypeToggleNote->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x10));
 	m_noteRangeLowerSlider->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x11));
@@ -507,6 +521,8 @@ PatternEditorTab::~PatternEditorTab()
     m_viewNoPartsButton = nullptr;
     m_viewAllEventsButton = nullptr;
     m_viewNoEventsButton = nullptr;
+    m_viewSinglePartToggle = nullptr;
+    m_viewSinglePartLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -546,21 +562,21 @@ void PatternEditorTab::resized()
     m_PAftRangeLowerSlider->setBounds (372, 104, 48, 16);
     m_PAftRangeUpperSlider->setBounds (372, 128, 48, 16);
     m_viewPartToggleR->setBounds (112, 44, 25, 17);
-    m_viewPartLabelR->setBounds (92, 44, 20, 16);
-    m_viewPartToggle1->setBounds (160, 44, 25, 17);
-    m_viewPartLabel1->setBounds (140, 44, 20, 16);
-    m_viewPartToggle2->setBounds (208, 44, 25, 17);
-    m_viewPartLabel2->setBounds (188, 44, 20, 16);
-    m_viewPartToggle3->setBounds (256, 44, 25, 17);
-    m_viewPartLabel3->setBounds (236, 44, 20, 16);
-    m_viewPartToggle4->setBounds (304, 44, 25, 17);
-    m_viewPartLabel4->setBounds (284, 44, 20, 16);
-    m_viewPartToggle5->setBounds (352, 44, 25, 17);
-    m_viewPartLabel5->setBounds (332, 44, 20, 16);
-    m_viewPartToggle6->setBounds (400, 44, 25, 17);
-    m_viewPartLabel6->setBounds (380, 44, 20, 16);
-    m_viewPartToggleMuteCtl->setBounds (540, 44, 25, 17);
-    m_viewPartLabelMuteCtl->setBounds (476, 44, 66, 16);
+    m_viewPartLabelR->setBounds (94, 44, 20, 16);
+    m_viewPartToggle1->setBounds (156, 44, 25, 17);
+    m_viewPartLabel1->setBounds (138, 44, 20, 16);
+    m_viewPartToggle2->setBounds (200, 44, 25, 17);
+    m_viewPartLabel2->setBounds (182, 44, 20, 16);
+    m_viewPartToggle3->setBounds (244, 44, 25, 17);
+    m_viewPartLabel3->setBounds (226, 44, 20, 16);
+    m_viewPartToggle4->setBounds (288, 44, 25, 17);
+    m_viewPartLabel4->setBounds (270, 44, 20, 16);
+    m_viewPartToggle5->setBounds (332, 44, 25, 17);
+    m_viewPartLabel5->setBounds (314, 44, 20, 16);
+    m_viewPartToggle6->setBounds (376, 44, 25, 17);
+    m_viewPartLabel6->setBounds (358, 44, 20, 16);
+    m_viewPartToggleMuteCtl->setBounds (508, 44, 25, 17);
+    m_viewPartLabelMuteCtl->setBounds (445, 44, 66, 16);
     m_viewPartsLabel->setBounds (12, 44, 84, 16);
     m_viewEventsLabel2->setBounds (12, 80, 92, 16);
     m_viewTypeToggleNote->setBounds (144, 80, 25, 17);
@@ -586,12 +602,14 @@ void PatternEditorTab::resized()
     m_toLabel2->setBounds (200, 128, 44, 16);
     m_fromLabel3->setBounds (328, 105, 44, 16);
     m_toLabel3->setBounds (328, 128, 44, 16);
-    m_viewPartToggle7->setBounds (448, 44, 25, 17);
-    m_viewPartLabel7->setBounds (428, 44, 20, 16);
+    m_viewPartToggle7->setBounds (420, 44, 25, 17);
+    m_viewPartLabel7->setBounds (402, 44, 20, 16);
     m_viewAllPartsButton->setBounds (604, 40, 52, 24);
     m_viewNoPartsButton->setBounds (660, 40, 52, 24);
     m_viewAllEventsButton->setBounds (604, 100, 52, 24);
     m_viewNoEventsButton->setBounds (660, 100, 52, 24);
+    m_viewSinglePartToggle->setBounds (584, 46, 12, 12);
+    m_viewSinglePartLabel->setBounds (533, 44, 54, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -639,15 +657,15 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_m_viewAllPartsButton] -- add your button handler code here..
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(1, Parameter::Init);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllPartsButton]
@@ -657,15 +675,15 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
         //[UserButtonCode_m_viewNoPartsButton] -- add your button handler code here..
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart2)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart3)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart4)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart5)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart6)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPartR)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(0, Parameter::Init);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoPartsButton]
@@ -673,21 +691,21 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_viewAllEventsButton)
     {
         //[UserButtonCode_m_viewAllEventsButton] -- add your button handler code here..
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotes)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotesMin)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotesMax)->setValue(127, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPC)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCC)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCCMin)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCCMax)->setValue(127, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewBend)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAft)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAftMin)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAftMax)->setValue(127, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCAft)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(1, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(1, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotes)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotesMin)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotesMax)->setValue(127, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPC)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCC)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCCMin)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCCMax)->setValue(127, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewBend)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAft)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAftMin)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAftMax)->setValue(127, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCAft)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(1, Parameter::Init);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllEventsButton]
@@ -695,21 +713,26 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_viewNoEventsButton)
     {
         //[UserButtonCode_m_viewNoEventsButton] -- add your button handler code here..
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotes)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPC)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCC)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewBend)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAft)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCAft)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(0, Parameter::GuiWidget);
-		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(0, Parameter::GuiWidget);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewNotes)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPC)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCC)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewBend)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPAft)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewCAft)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(0, Parameter::Init);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoEventsButton]
     }
 
     //[UserbuttonClicked_Post]
+	else if (buttonThatWasClicked == m_viewSinglePartToggle)
+	{
+		m_viewAllPartsButton->setEnabled(!m_viewSinglePartToggle->getToggleState());
+		//m_viewAllPartsButton->setVisible(!m_viewSinglePartToggle->getToggleState());
+	}
     //[/UserbuttonClicked_Post]
 }
 
@@ -843,63 +866,63 @@ BEGIN_JUCER_METADATA
              virtualName="" explicitFocusOrder="0" pos="112 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabelR" id="bc5132eee7a0ee16" memberName="m_viewPartLabelR"
-         virtualName="" explicitFocusOrder="0" pos="92 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="94 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="R" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle1" id="a18931839c0b8bc7" memberName="m_viewPartToggle1"
-             virtualName="" explicitFocusOrder="0" pos="160 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="156 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel1" id="ad4994c83a8227fe" memberName="m_viewPartLabel1"
-         virtualName="" explicitFocusOrder="0" pos="140 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="138 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="1" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle2" id="cc67029767436e76" memberName="m_viewPartToggle2"
-             virtualName="" explicitFocusOrder="0" pos="208 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="200 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel2" id="40f4c0d942746fc2" memberName="m_viewPartLabel2"
-         virtualName="" explicitFocusOrder="0" pos="188 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="182 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="2" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle3" id="f1d2259f5fdc632a" memberName="m_viewPartToggle3"
-             virtualName="" explicitFocusOrder="0" pos="256 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="244 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel3" id="c00f1c442319a709" memberName="m_viewPartLabel3"
-         virtualName="" explicitFocusOrder="0" pos="236 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="226 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="3" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle4" id="19611dc9b01f2f43" memberName="m_viewPartToggle4"
-             virtualName="" explicitFocusOrder="0" pos="304 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="288 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel4" id="b2bba0a8be3d9218" memberName="m_viewPartLabel4"
-         virtualName="" explicitFocusOrder="0" pos="284 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="270 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="4" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle5" id="78c5acd471a43391" memberName="m_viewPartToggle5"
-             virtualName="" explicitFocusOrder="0" pos="352 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="332 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel5" id="625a82943feb34fc" memberName="m_viewPartLabel5"
-         virtualName="" explicitFocusOrder="0" pos="332 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="314 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="5" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle6" id="83663b51ab2a6441" memberName="m_viewPartToggle6"
-             virtualName="" explicitFocusOrder="0" pos="400 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="376 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel6" id="c5f2bc21f7910cd1" memberName="m_viewPartLabel6"
-         virtualName="" explicitFocusOrder="0" pos="380 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="358 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="6" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggleMuteCtl" id="c2ce082733354a5e" memberName="m_viewPartToggleMuteCtl"
-             virtualName="" explicitFocusOrder="0" pos="540 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="508 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabelMuteCtl" id="ada9c424b62b9157" memberName="m_viewPartLabelMuteCtl"
-         virtualName="" explicitFocusOrder="0" pos="476 44 66 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="445 44 66 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="MUTE-CTL" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
@@ -1011,10 +1034,10 @@ BEGIN_JUCER_METADATA
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle7" id="dedfac941a8fd441" memberName="m_viewPartToggle7"
-             virtualName="" explicitFocusOrder="0" pos="448 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="420 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel7" id="1259e0a46cb4feda" memberName="m_viewPartLabel7"
-         virtualName="" explicitFocusOrder="0" pos="428 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="402 44 20 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="7" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
@@ -1030,6 +1053,14 @@ BEGIN_JUCER_METADATA
   <TEXTBUTTON name="viewNoEventsButton" id="e2a123523e69342" memberName="m_viewNoEventsButton"
               virtualName="" explicitFocusOrder="0" pos="660 100 52 24" buttonText="NONE"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+  <JUCERCOMP name="viewSinglePartToggle" id="71afd96cb7e4d50f" memberName="m_viewSinglePartToggle"
+             virtualName="" explicitFocusOrder="0" pos="584 46 12 12" sourceFile="ParameterWidgets/SmallGreenToggle.cpp"
+             constructorParams=""/>
+  <LABEL name="viewSinglePartLabel" id="bedb99fb622fc099" memberName="m_viewSinglePartLabel"
+         virtualName="" explicitFocusOrder="0" pos="533 44 54 16" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="SINGLE" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

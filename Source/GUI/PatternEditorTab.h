@@ -28,6 +28,7 @@
 #include "GroupWidgets/RectangleDark.h"
 #include "GroupWidgets/RectangleGrey.h"
 #include "ParameterWidgets/BlackToggle.h"
+#include "ParameterWidgets/SmallGreenToggle.h"
 
 
 //==============================================================================
@@ -54,11 +55,11 @@ public:
     void changeListenerCallback (ChangeBroadcaster *source) override;
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
-    void buttonClicked (Button* buttonThatWasClicked);
-    void sliderValueChanged (Slider* sliderThatWasMoved);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
 
 
@@ -129,6 +130,8 @@ private:
     ScopedPointer<TextButton> m_viewNoPartsButton;
     ScopedPointer<TextButton> m_viewAllEventsButton;
     ScopedPointer<TextButton> m_viewNoEventsButton;
+    ScopedPointer<SmallGreenToggle> m_viewSinglePartToggle;
+    ScopedPointer<Label> m_viewSinglePartLabel;
 
 
     //==============================================================================

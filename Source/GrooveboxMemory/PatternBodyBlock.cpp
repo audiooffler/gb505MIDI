@@ -31,6 +31,7 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart7)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSingeParts)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotes)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMin)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMax)->addChangeListener(this);
@@ -386,7 +387,7 @@ PatternBodyBlock::PatternEventType PatternBodyBlock::PatternEventData::getType()
 		{
 			return Evt_Note;
 		}
-		else if (m_joinedSysexData->getSize() > 0)
+		else if (m_joinedSysexData!=nullptr && m_joinedSysexData->getSize() > 0)
 		{
 			return Evt_SysExJoined;
 		}
@@ -850,6 +851,8 @@ PatternBodyBlock::VirtualPatternTableFilterBlock::VirtualPatternTableFilterBlock
 	setupParameter("View Part R", ViewPartR, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part R");
 	setupParameter("View Mute Ctrl", ViewMuteCtrl, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Mute Control Part");
 
+	setupParameter("View Single Parts", ViewSingeParts, 0, 1, 0, StringArray::fromTokens("Off On", false));
+
 	StringArray noteNames(StringArray::fromTokens("C -1;C#-1;D -1;D#-1;E -1;F -1;F#-1;G -1;G#-1;A -1;A#-1;B -1;C  0;C# 0;D  0;D# 0;E  0;F  0;F# 0;G  0;G# 0;A  0;A# 0;B  0;C  1;C# 1;D  1;D# 1;E  1;F  1;F# 1;G  1;G# 1;A  1;A# 1;B  1;C  2;C# 2;D  2;D# 2;E  2;F  2;F# 2;G  2;G# 2;A  2;A# 2;B  2;C  3;C# 3;D  3;D# 3;E  3;F  3;F# 3;G  3;G# 3;A  3;A# 3;B  3;C  4;C# 4;D  4;D# 4;E  4;F  4;F# 4;G  4;G# 4;A  4;A# 4;B  4;C  5;C# 5;D  5;D# 5;E  5;F  5;F# 5;G  5;G# 5;A  5;A# 5;B  5;C  6;C# 6;D  6;D# 6;E  6;F  6;F# 6;G  6;G# 6;A  6;A# 6;B  6;C  7;C# 7;D  7;D# 7;E  7;F  7;F# 7;G  7;G# 7;A  7;A# 7;B  7;C  8;C# 8;D  8;D# 8;E  8;F  8;F# 8;G  8;G# 8;A  8;A# 8;B  8;C  9;C# 9;D  9;D# 9;E  9;F  9;F# 9;G  9", ";", String::empty));
 	setupParameter("View Notes", ViewNotes, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Note Events");
 	setupParameter("View Notes Min", ViewNotesMin, 0, 127, 0, noteNames, "Note Key range lower limit");
@@ -911,7 +914,50 @@ void PatternBodyBlock::changeListenerCallback(ChangeBroadcaster *source)
 	if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
 		if (param->getBlock() == m_patternTableFilterParams)
+		{
+			// when switching to single mode
+			if (param->getAddressOffset() == PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSingeParts && param->getValue() == 1)
+			{
+				Array<uint16> currentlyViewedParts;
+				if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->getValue() == 1)
+				{
+					currentlyViewedParts.add(VirtualPatternTableFilterBlock::ViewPartR);
+				}
+				for (uint16 addressOffset = PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1; addressOffset <= PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7; addressOffset++)
+				{
+					if (m_patternTableFilterParams->getParameter(addressOffset)->getValue() == 1)
+					{
+						currentlyViewedParts.add(addressOffset);
+					}
+				}
+				if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->getValue() == 1)
+				{
+					currentlyViewedParts.add(VirtualPatternTableFilterBlock::ViewMuteCtrl);
+				}
+				// set view off for all parts except first in list of currently viewed
+				if (currentlyViewedParts.size() > 1)
+				{
+					for (uint16 i = 1; i < currentlyViewedParts.size(); i++)
+					{
+						m_patternTableFilterParams->getParameter(currentlyViewedParts[i])->setValue(0, Parameter::Init);
+					}
+				}
+			}
+			else if (param->getAddressOffset() >= PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1 && param->getAddressOffset() <= PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMuteCtrl)
+			{
+				// if a part is selected and if view single part mode
+				if (param->getValue()==1 && m_patternTableFilterParams->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSingeParts)->getValue() == 1)
+				{
+					for (uint16 addressOffset = PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1; addressOffset <= PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart7; addressOffset++)
+					{
+						if (param->getAddressOffset() != addressOffset) m_patternTableFilterParams->getParameter(addressOffset)->setValue(0, Parameter::Init);
+					}
+					if (param->getAddressOffset() != VirtualPatternTableFilterBlock::ViewPartR) m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->setValue(0, Parameter::Init);
+					if (param->getAddressOffset() != VirtualPatternTableFilterBlock::ViewMuteCtrl) m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->setValue(0, Parameter::Init);
+				}
+			}
 			refreshFilteredContent();
+		}
 	}
 }
 

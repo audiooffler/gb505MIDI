@@ -169,7 +169,7 @@ void Parameter::setValue(uint8 value, ChangeSource source)
 	}
 	// send to midi if midioutput device is open
 	// don't send if it's coming from the groovebox itself and also during init the parant block is not yet fully constructed, so obviously it can't generate sysex messages yet
-	if (source != ChangeSource::MidiInFromGroovebox && source != ChangeSource::Init && midiOutputDevice != nullptr)
+	if (source != ChangeSource::MidiInFromGroovebox && source != ChangeSource::Init && midiOutputDevice != nullptr && getAddress()<0xF0000000)
 	{
 		int ccChannel(0);
 		// send CC whenever defined but first get it's channel 

@@ -165,6 +165,7 @@ public:
 			ViewPart7 = 0x06,
 			ViewPartR = 0x09,
 			ViewMuteCtrl = 0x0E,
+			ViewSingeParts = 0x0F,
 			ViewNotes = 0x10,
 			ViewNotesMin = 0x11,
 			ViewNotesMax= 0x12,
