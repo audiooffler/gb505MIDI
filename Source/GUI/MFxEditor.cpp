@@ -446,10 +446,11 @@ void MFXEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 					label->setTooltip(param->getDescription());
 					slider->setTooltip(param->getDescription());
 				}
-			}
-			else {
-				label->setVisible(false);
-				slider->setVisible(false);
+				else
+				{
+					label->setVisible(false);
+					slider->setVisible(false);
+				}
 			}
 		}
         //[/UserComboBoxCode_m_MFXTypeComboBox]
