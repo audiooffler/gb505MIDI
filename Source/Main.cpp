@@ -59,6 +59,7 @@ public:
 		#endif
 
 		applicationCommandManager = new ApplicationCommandManager();
+		applicationCommandManager->registerAllCommandsForTarget(this);
 		appProperties = new ApplicationProperties();
 		PropertiesFile::Options options;
 		options.applicationName = getApplicationName();
@@ -82,7 +83,7 @@ public:
 		#endif
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
-		mainWindow->grabKeyboardFocus();
+		mainWindow->getContentComponent()->grabKeyboardFocus();
     }
 
     void shutdown()

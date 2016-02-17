@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -40,8 +40,11 @@ extern OverallMemoryBlock* grooveboxMemory;
 //==============================================================================
 PatternTab::PatternTab ()
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_receivedSysExLabel = new Label ("receivedSysExLabel",
-                                                         "Received SysEx (DT1):"));
+                                                         TRANS("Received SysEx (DT1):")));
     m_receivedSysExLabel->setFont (Font (15.00f, Font::plain));
     m_receivedSysExLabel->setJustificationType (Justification::centredLeft);
     m_receivedSysExLabel->setEditable (false, false, false);
@@ -49,8 +52,8 @@ PatternTab::PatternTab ()
     m_receivedSysExLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_deviceIdLabel = new Label ("deviceIdLabel",
-                                                    "connected groovebox:"));
-    m_deviceIdLabel->setTooltip ("(17 .. 32, as shown on device display)");
+                                                    TRANS("connected groovebox:")));
+    m_deviceIdLabel->setTooltip (TRANS("(17 .. 32, as shown on device display)"));
     m_deviceIdLabel->setFont (Font (15.00f, Font::plain));
     m_deviceIdLabel->setJustificationType (Justification::centredLeft);
     m_deviceIdLabel->setEditable (false, false, false);
@@ -60,12 +63,12 @@ PatternTab::PatternTab ()
     addAndMakeVisible (m_midiInComboBox = new ComboBox ("midiInComboBox"));
     m_midiInComboBox->setEditableText (false);
     m_midiInComboBox->setJustificationType (Justification::centredLeft);
-    m_midiInComboBox->setTextWhenNothingSelected (String::empty);
-    m_midiInComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
+    m_midiInComboBox->setTextWhenNothingSelected (String());
+    m_midiInComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_midiInComboBox->addListener (this);
 
     addAndMakeVisible (m_midiInLabel = new Label ("midiInLabel",
-                                                  "Midi In:"));
+                                                  TRANS("Midi In:")));
     m_midiInLabel->setFont (Font (15.00f, Font::plain));
     m_midiInLabel->setJustificationType (Justification::centredLeft);
     m_midiInLabel->setEditable (false, false, false);
@@ -75,12 +78,12 @@ PatternTab::PatternTab ()
     addAndMakeVisible (m_midiOutComboBox = new ComboBox ("midiOutComboBox"));
     m_midiOutComboBox->setEditableText (false);
     m_midiOutComboBox->setJustificationType (Justification::centredLeft);
-    m_midiOutComboBox->setTextWhenNothingSelected (String::empty);
-    m_midiOutComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
+    m_midiOutComboBox->setTextWhenNothingSelected (String());
+    m_midiOutComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_midiOutComboBox->addListener (this);
 
     addAndMakeVisible (m_midiOutLabel = new Label ("midiOutLabel",
-                                                   "Midi Out:"));
+                                                   TRANS("Midi Out:")));
     m_midiOutLabel->setFont (Font (15.00f, Font::plain));
     m_midiOutLabel->setJustificationType (Justification::centredLeft);
     m_midiOutLabel->setEditable (false, false, false);
@@ -88,8 +91,8 @@ PatternTab::PatternTab ()
     m_midiOutLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_bpmLabel = new Label ("bpmLabel",
-                                               "Tempo (BPM):"));
-    m_bpmLabel->setTooltip ("(4 byte, hex, seperated by whitespace)");
+                                               TRANS("Tempo (BPM):")));
+    m_bpmLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_bpmLabel->setFont (Font (15.00f, Font::plain));
     m_bpmLabel->setJustificationType (Justification::centredLeft);
     m_bpmLabel->setEditable (false, false, false);
@@ -97,7 +100,7 @@ PatternTab::PatternTab ()
     m_bpmLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_bpmText = new TextEditor ("bpmText"));
-    m_bpmText->setTooltip ("(4 byte, hex, seperated by whitespace)");
+    m_bpmText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_bpmText->setMultiLine (false);
     m_bpmText->setReturnKeyStartsNewLine (false);
     m_bpmText->setReadOnly (true);
@@ -106,11 +109,11 @@ PatternTab::PatternTab ()
     m_bpmText->setPopupMenuEnabled (true);
     m_bpmText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
     m_bpmText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_bpmText->setText ("120.0");
+    m_bpmText->setText (TRANS("120.0"));
 
     addAndMakeVisible (m_measuresLabel = new Label ("measuresLabel",
-                                                    "Length in Measures:"));
-    m_measuresLabel->setTooltip ("(4 byte, hex, seperated by whitespace)");
+                                                    TRANS("Length in Measures:")));
+    m_measuresLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_measuresLabel->setFont (Font (15.00f, Font::plain));
     m_measuresLabel->setJustificationType (Justification::centredLeft);
     m_measuresLabel->setEditable (false, false, false);
@@ -118,7 +121,7 @@ PatternTab::PatternTab ()
     m_measuresLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_measuresText = new TextEditor ("measuresText"));
-    m_measuresText->setTooltip ("(4 byte, hex, seperated by whitespace)");
+    m_measuresText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_measuresText->setMultiLine (false);
     m_measuresText->setReturnKeyStartsNewLine (false);
     m_measuresText->setReadOnly (true);
@@ -127,11 +130,11 @@ PatternTab::PatternTab ()
     m_measuresText->setPopupMenuEnabled (true);
     m_measuresText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
     m_measuresText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_measuresText->setText ("4");
+    m_measuresText->setText (TRANS("4"));
 
     addAndMakeVisible (m_beatLabel = new Label ("measuresLabel",
-                                                "Beat:"));
-    m_beatLabel->setTooltip ("(4 byte, hex, seperated by whitespace)");
+                                                TRANS("Beat:")));
+    m_beatLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_beatLabel->setFont (Font (15.00f, Font::plain));
     m_beatLabel->setJustificationType (Justification::centredLeft);
     m_beatLabel->setEditable (false, false, false);
@@ -139,7 +142,7 @@ PatternTab::PatternTab ()
     m_beatLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_beatText = new TextEditor ("beatText"));
-    m_beatText->setTooltip ("(4 byte, hex, seperated by whitespace)");
+    m_beatText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_beatText->setMultiLine (false);
     m_beatText->setReturnKeyStartsNewLine (false);
     m_beatText->setReadOnly (true);
@@ -148,11 +151,11 @@ PatternTab::PatternTab ()
     m_beatText->setPopupMenuEnabled (true);
     m_beatText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
     m_beatText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_beatText->setText ("4/4");
+    m_beatText->setText (TRANS("4/4"));
 
     addAndMakeVisible (m_measuresLabel3 = new Label ("measuresLabel",
-                                                     "Pattern Setup:"));
-    m_measuresLabel3->setTooltip ("(4 byte, hex, seperated by whitespace)");
+                                                     TRANS("Pattern Setup:")));
+    m_measuresLabel3->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_measuresLabel3->setFont (Font (15.00f, Font::plain));
     m_measuresLabel3->setJustificationType (Justification::centredLeft);
     m_measuresLabel3->setEditable (false, false, false);
@@ -160,8 +163,8 @@ PatternTab::PatternTab ()
     m_measuresLabel3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_patternNameLabel = new Label ("patternNameLabel",
-                                                       "Name:"));
-    m_patternNameLabel->setTooltip ("(4 byte, hex, seperated by whitespace)");
+                                                       TRANS("Name:")));
+    m_patternNameLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_patternNameLabel->setFont (Font (15.00f, Font::plain));
     m_patternNameLabel->setJustificationType (Justification::centredLeft);
     m_patternNameLabel->setEditable (false, false, false);
@@ -169,7 +172,7 @@ PatternTab::PatternTab ()
     m_patternNameLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_patternNameText = new TextEditor ("patternNameText"));
-    m_patternNameText->setTooltip ("(4 byte, hex, seperated by whitespace)");
+    m_patternNameText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
     m_patternNameText->setMultiLine (false);
     m_patternNameText->setReturnKeyStartsNewLine (false);
     m_patternNameText->setReadOnly (true);
@@ -178,7 +181,7 @@ PatternTab::PatternTab ()
     m_patternNameText->setPopupMenuEnabled (true);
     m_patternNameText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
     m_patternNameText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_patternNameText->setText ("EMPTY PATTERN");
+    m_patternNameText->setText (TRANS("EMPTY PATTERN"));
 
     addAndMakeVisible (m_receivedSysExList = new ListBox());
     m_receivedSysExList->setName ("receivedSysExList");
@@ -187,30 +190,27 @@ PatternTab::PatternTab ()
     m_imageViewComponent->setName ("imageViewComponent");
 
     addAndMakeVisible (m_searchDevicesButton = new TextButton ("searchDevicesButton"));
-    m_searchDevicesButton->setButtonText ("Search");
+    m_searchDevicesButton->setButtonText (TRANS("Search"));
     m_searchDevicesButton->addListener (this);
 
     addAndMakeVisible (m_deviceToUseComboBox = new ComboBox ("deviceIdConnectBox"));
     m_deviceToUseComboBox->setEditableText (false);
     m_deviceToUseComboBox->setJustificationType (Justification::centredLeft);
-    m_deviceToUseComboBox->setTextWhenNothingSelected ("Select a device ID first");
-    m_deviceToUseComboBox->setTextWhenNoChoicesAvailable ("(no compatible devices found)");
+    m_deviceToUseComboBox->setTextWhenNothingSelected (TRANS("Select a device ID first"));
+    m_deviceToUseComboBox->setTextWhenNoChoicesAvailable (TRANS("(no compatible devices found)"));
     m_deviceToUseComboBox->addListener (this);
 
     addAndMakeVisible (m_getPatternButton = new TextButton ("sendButton"));
-    m_getPatternButton->setButtonText ("Request Temporary Pattern Data");
+    m_getPatternButton->setButtonText (TRANS("Request Temporary Pattern Data"));
     m_getPatternButton->addListener (this);
 
     addAndMakeVisible (m_saveMidiFileButton = new TextButton ("saveMidiFileButton"));
-    m_saveMidiFileButton->setButtonText ("Save MIDI File...");
+    m_saveMidiFileButton->setButtonText (TRANS("Save MIDI File..."));
     m_saveMidiFileButton->addListener (this);
 
-    addAndMakeVisible (m_menuBar = new MenuBarComponent (this));
-    m_menuBar->setName ("menuBar");
-
     addAndMakeVisible (m_dragSmfImageButton = new ImageButton ("dragSmfImageButton"));
-    m_dragSmfImageButton->setTooltip ("Drag and Drop as Standard MIDI File (.mid)");
-    m_dragSmfImageButton->setButtonText (String::empty);
+    m_dragSmfImageButton->setTooltip (TRANS("Drag and Drop as Standard MIDI File (.mid)"));
+    m_dragSmfImageButton->setButtonText (String());
 
     m_dragSmfImageButton->setImages (false, true, true,
                                      ImageCache::getFromMemory (audioxmidi_png, audioxmidi_pngSize), 0.700f, Colour (0x00000000),
@@ -228,7 +228,7 @@ PatternTab::PatternTab ()
 	m_loadedMessagesListModel = nullptr;
 
 	m_getPatternButton->setCommandToTrigger(applicationCommandManager, CommandIDs::grooveBoxLoadPattern, true);
-	m_saveMidiFileButton->setCommandToTrigger(applicationCommandManager, CommandIDs::fileExportPattern, true);
+	m_saveMidiFileButton->setCommandToTrigger(applicationCommandManager, CommandIDs::fileExportPatternSmfFile, true);
 
 	m_imageViewComponent->setImagePlacement(RectanglePlacement::fillDestination);
 
@@ -278,16 +278,16 @@ PatternTab::PatternTab ()
 
 	buttonClicked(m_searchDevicesButton);
 
-	
+
 	//commandManager.registerAllCommandsForTarget(JUCEApplication::getInstance());
 	// this lets the command manager use keypresses that arrive in our window to send out commands
-	addKeyListener(applicationCommandManager->getKeyMappings());
+	//addKeyListener(applicationCommandManager->getKeyMappings());
 
 	// This registers all of our commands with the command manager but has to be done after the window has
 	// been created so we can find the number of rendering engines available
-	applicationCommandManager->registerAllCommandsForTarget(this);
+	//applicationCommandManager->registerAllCommandsForTarget(this);
 
-	applicationCommandManager->setFirstCommandTarget(this);
+	//applicationCommandManager->setFirstCommandTarget(this);
 	m_afterConstructor = true;
     //[/Constructor]
 }
@@ -320,7 +320,6 @@ PatternTab::~PatternTab()
     m_deviceToUseComboBox = nullptr;
     m_getPatternButton = nullptr;
     m_saveMidiFileButton = nullptr;
-    m_menuBar = nullptr;
     m_dragSmfImageButton = nullptr;
     component = nullptr;
 
@@ -350,30 +349,32 @@ void PatternTab::paint (Graphics& g)
 
 void PatternTab::resized()
 {
-    m_receivedSysExLabel->setBounds (8, 304, 408, 24);
-    m_deviceIdLabel->setBounds (getWidth() - 360 - 152, 120, 152, 24);
-    m_midiInComboBox->setBounds (getWidth() - 288 - 176, 40, 176, 24);
-    m_midiInLabel->setBounds (getWidth() - 464 - 72, 40, 72, 24);
-    m_midiOutComboBox->setBounds (getWidth() - 288 - 176, 72, 176, 24);
-    m_midiOutLabel->setBounds (getWidth() - 464 - 72, 72, 72, 24);
-    m_bpmLabel->setBounds (640, 256, 96, 24);
-    m_bpmText->setBounds (744, 256, 48, 24);
-    m_measuresLabel->setBounds (448, 256, 136, 24);
-    m_measuresText->setBounds (592, 256, 32, 24);
-    m_beatLabel->setBounds (336, 256, 48, 24);
-    m_beatText->setBounds (392, 256, 40, 24);
-    m_measuresLabel3->setBounds (8, 256, 104, 24);
-    m_patternNameLabel->setBounds (128, 256, 56, 24);
-    m_patternNameText->setBounds (192, 256, 128, 24);
-    m_receivedSysExList->setBounds (8, 328, getWidth() - 448, 392);
-    m_imageViewComponent->setBounds (getWidth() - 8 - 264, 32, 264, 176);
-    m_searchDevicesButton->setBounds (getWidth() - 290 - 62, 120, 62, 24);
-    m_deviceToUseComboBox->setBounds (getWidth() - 288 - 224, 152, 224, 24);
-    m_getPatternButton->setBounds (8, 224, 312, 24);
-    m_saveMidiFileButton->setBounds (344, 224, 176, 24);
-    m_menuBar->setBounds (0, 0, getWidth() - 0, 24);
-    m_dragSmfImageButton->setBounds (getWidth() - 24 - 64, 128, 64, 64);
-    component->setBounds (getWidth() - 432, 296, 432, 488);
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
+    m_receivedSysExLabel->setBounds (8, 280, 408, 24);
+    m_deviceIdLabel->setBounds (getWidth() - 360 - 152, 96, 152, 24);
+    m_midiInComboBox->setBounds (getWidth() - 288 - 197, 16, 197, 24);
+    m_midiInLabel->setBounds (getWidth() - 488 - 72, 16, 72, 24);
+    m_midiOutComboBox->setBounds (getWidth() - 288 - 197, 48, 197, 24);
+    m_midiOutLabel->setBounds (getWidth() - 488 - 72, 48, 72, 24);
+    m_bpmLabel->setBounds (640, 232, 96, 24);
+    m_bpmText->setBounds (744, 232, 48, 24);
+    m_measuresLabel->setBounds (448, 232, 136, 24);
+    m_measuresText->setBounds (592, 232, 32, 24);
+    m_beatLabel->setBounds (336, 232, 48, 24);
+    m_beatText->setBounds (392, 232, 40, 24);
+    m_measuresLabel3->setBounds (8, 232, 104, 24);
+    m_patternNameLabel->setBounds (128, 232, 56, 24);
+    m_patternNameText->setBounds (192, 232, 128, 24);
+    m_receivedSysExList->setBounds (8, 304, getWidth() - 448, 392);
+    m_imageViewComponent->setBounds (getWidth() - 8 - 264, 8, 264, 176);
+    m_searchDevicesButton->setBounds (getWidth() - 290 - 62, 96, 62, 24);
+    m_deviceToUseComboBox->setBounds (getWidth() - 288 - 224, 128, 224, 24);
+    m_getPatternButton->setBounds (8, 200, 312, 24);
+    m_saveMidiFileButton->setBounds (344, 200, 176, 24);
+    m_dragSmfImageButton->setBounds (getWidth() - 24 - 64, 104, 64, 64);
+    component->setBounds (getWidth() - 432, 272, 432, 488);
     //[UserResized] Add your own custom resize handling here..
 	m_logoDrawable->setBounds(16, 16, m_midiInLabel->getX() - 16, m_getPatternButton->getY() - 16);
 	m_logoDrawable->setTransformToFit(m_logoDrawable->getBounds().toFloat(), RectanglePlacement::onlyReduceInSize);
@@ -516,11 +517,10 @@ void PatternTab::getAllCommands(Array <CommandID>& commands)
 {
 	// this returns the set of all commands that this target can perform..
 	const CommandID ids[] = {
-		PatternTab::fileOpenPattern,
-		PatternTab::fileImportPattern,
-		PatternTab::fileSavePattern,
-		PatternTab::fileExportPattern,
-		PatternTab::fileQuit,
+		PatternTab::fileOpenPatternSyxFile,
+		PatternTab::fileSavePatternSyxFile,
+		PatternTab::fileImportPatternSmfFile,
+		PatternTab::fileExportPatternSmfFile,
 		PatternTab::grooveBoxLoadPattern
 	};
 
@@ -533,21 +533,21 @@ void PatternTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo& res
 
 	switch (commandID)
 	{
-	case PatternTab::fileOpenPattern:
+	case PatternTab::fileOpenPatternSyxFile:
 		result.setInfo("Open SysEx Pattern File...", "Opens a raw pattern file, either binary SysEx (.syx) or Hex SysEx text (.txt)", fileCategory, 0);
 		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
 		break;
-	case PatternTab::fileImportPattern:
+	case PatternTab::fileImportPatternSmfFile:
 		result.setInfo("Import Pattern from MIDI File", "Tries to extract pattern data from a Standard MIDI File (.mid)", fileCategory, 0);
 		result.addDefaultKeypress('i', ModifierKeys::commandModifier);
 		result.setActive(true);
 		break;
-	case PatternTab::fileSavePattern:
+	case PatternTab::fileSavePatternSyxFile:
 		result.setInfo("Save Pattern as SysEx...", "Saves a pattern file as raw data, either binary SysEx (.syx) or Hex SysEx text (.txt)", fileCategory, 0);
 		result.addDefaultKeypress('s', ModifierKeys::commandModifier);
 		result.setActive(m_currentPattern!=nullptr && m_currentPattern->isNotEmpty());
 		break;
-	case PatternTab::fileExportPattern:
+	case PatternTab::fileExportPatternSmfFile:
 		result.setInfo("Export Pattern as MIDI...", "Converts pattern to Standard MIDI File (.mid)", fileCategory, 0);
 		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
 		if (m_currentPattern != nullptr && m_currentPattern->isNotEmpty())
@@ -561,13 +561,8 @@ void PatternTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo& res
 			m_dragSmfImageButton->setVisible(false);
 		}
 		break;
-	case PatternTab::fileQuit:
-		result.setInfo("Quit", "Close application.", fileCategory, 0);
-		result.addDefaultKeypress(KeyPress::F4Key, ModifierKeys::altModifier);
-		result.addDefaultKeypress('q', ModifierKeys::commandModifier);
-		break;
 	case PatternTab::grooveBoxLoadPattern:
-		result.setInfo("Request Pattern", "Request temporary pattern data from groovebox.", fileCategory, 0);
+		result.setInfo("Send Pattern Request SysEx", "Request temporary pattern data from groovebox.", fileCategory, 0);
 		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
 		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
 	default:
@@ -580,26 +575,20 @@ bool PatternTab::perform(const InvocationInfo& info)
 	FileChooser fileChooser("Open SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
 	switch (info.commandID)
 	{
-	case CommandIDs::fileOpenPattern:
+	case CommandIDs::fileOpenPatternSyxFile:
 		if (fileChooser.browseForFileToOpen())
 		{
 			loadFile(fileChooser.getResult());
 		}
 		break;
-	case CommandIDs::fileImportPattern:
+	case CommandIDs::fileImportPatternSmfFile:
 		// TODO: import from midi (convert midi to groovebox sysex)
 		break;
-	case CommandIDs::fileSavePattern:
+	case CommandIDs::fileSavePatternSyxFile:
 		saveAsSysExFile();
 		break;
-	case CommandIDs::fileExportPattern:
+	case CommandIDs::fileExportPatternSmfFile:
 		exportAsMidiFile();
-		break;
-	case CommandIDs::fileQuit:
-		if (MainWindow* mainWindow = dynamic_cast<MainWindow*>(getTopLevelComponent()))
-		{
-			mainWindow->closeButtonPressed();
-		}
 		break;
 	case CommandIDs::grooveBoxLoadPattern:
 		loadFromGroovebox();
@@ -608,44 +597,6 @@ bool PatternTab::perform(const InvocationInfo& info)
 		return false;
 	}
 	return true;
-}
-
-//==============================================================================
-// The following method implement the MenuBarModel interface.
-
-StringArray PatternTab::getMenuBarNames()
-{
-	const char* const names[] = { "File", "groovebox", nullptr };
-
-	return StringArray(names);
-}
-
-PopupMenu PatternTab::getMenuForIndex(int topLevelMenuIndex, const String &/*menuName*/)
-{
-	PopupMenu menu;
-
-	if (topLevelMenuIndex == 0)
-	{
-		menu.addCommandItem(applicationCommandManager, CommandIDs::fileOpenPattern);
-		menu.addCommandItem(applicationCommandManager, CommandIDs::fileSavePattern);
-		menu.addSeparator();
-		menu.addCommandItem(applicationCommandManager, CommandIDs::fileImportPattern);
-		menu.addCommandItem(applicationCommandManager, CommandIDs::fileExportPattern);
-		menu.addSeparator();
-		menu.addCommandItem(applicationCommandManager, CommandIDs::fileQuit);
-	}
-	else if (topLevelMenuIndex == 1)
-	{
-		menu.addCommandItem(applicationCommandManager, CommandIDs::grooveBoxLoadPattern);
-	}
-
-	return menu;
-}
-
-void PatternTab::menuItemSelected(int /*menuItemID*/, int /*topLevelMenuIndex*/)
-{
-	// most of our menu items are invoked automatically as commands, but we can handle the
-	// other special cases here..
 }
 
 //==============================================================================
@@ -848,7 +799,7 @@ void PatternTab::exportAsMidiFile()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="PatternTab" componentName=""
-                 parentClasses="public Component, public ApplicationCommandManager, public ApplicationCommandTarget, public MenuBarModel, public FileDragAndDropTarget, public DragAndDropContainer"
+                 parentClasses="public Component, public ApplicationCommandTarget, public FileDragAndDropTarget, public DragAndDropContainer"
                  constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="0" initialWidth="800"
                  initialHeight="640">
@@ -857,105 +808,101 @@ BEGIN_JUCER_METADATA
   </METHODS>
   <BACKGROUND backgroundColour="fff5f5f5"/>
   <LABEL name="receivedSysExLabel" id="4737d9b1518cb0c2" memberName="m_receivedSysExLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 304 408 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="8 280 408 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Received SysEx (DT1):" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <LABEL name="deviceIdLabel" id="65b602092445c531" memberName="m_deviceIdLabel"
-         virtualName="" explicitFocusOrder="0" pos="360Rr 120 152 24"
-         tooltip="(17 .. 32, as shown on device display)" edTextCol="ff000000"
-         edBkgCol="0" labelText="connected groovebox:" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="33"/>
+         virtualName="" explicitFocusOrder="0" pos="360Rr 96 152 24" tooltip="(17 .. 32, as shown on device display)"
+         edTextCol="ff000000" edBkgCol="0" labelText="connected groovebox:"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="15" bold="0" italic="0" justification="33"/>
   <COMBOBOX name="midiInComboBox" id="917638ab10b9bff1" memberName="m_midiInComboBox"
-            virtualName="" explicitFocusOrder="0" pos="288Rr 40 176 24" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="288Rr 16 197 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="midiInLabel" id="1fb21c53016c00be" memberName="m_midiInLabel"
-         virtualName="" explicitFocusOrder="0" pos="464Rr 40 72 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="488Rr 16 72 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Midi In:" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <COMBOBOX name="midiOutComboBox" id="9b6d2ada3deafb58" memberName="m_midiOutComboBox"
-            virtualName="" explicitFocusOrder="0" pos="288Rr 72 176 24" editable="0"
+            virtualName="" explicitFocusOrder="0" pos="288Rr 48 197 24" editable="0"
             layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="midiOutLabel" id="b10a8e943634f13a" memberName="m_midiOutLabel"
-         virtualName="" explicitFocusOrder="0" pos="464Rr 72 72 24" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="488Rr 48 72 24" edTextCol="ff000000"
          edBkgCol="0" labelText="Midi Out:" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
   <LABEL name="bpmLabel" id="35ab1e98fdf77369" memberName="m_bpmLabel"
-         virtualName="" explicitFocusOrder="0" pos="640 256 96 24" tooltip="(4 byte, hex, seperated by whitespace)"
+         virtualName="" explicitFocusOrder="0" pos="640 232 96 24" tooltip="(4 byte, hex, seperated by whitespace)"
          edTextCol="ff000000" edBkgCol="0" labelText="Tempo (BPM):" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <TEXTEDITOR name="bpmText" id="d621e92137923d8e" memberName="m_bpmText" virtualName=""
-              explicitFocusOrder="0" pos="744 256 48 24" tooltip="(4 byte, hex, seperated by whitespace)"
+              explicitFocusOrder="0" pos="744 232 48 24" tooltip="(4 byte, hex, seperated by whitespace)"
               bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="120.0" multiline="0"
               retKeyStartsLine="0" readonly="1" scrollbars="1" caret="0" popupmenu="1"/>
   <LABEL name="measuresLabel" id="c48296727a3f0042" memberName="m_measuresLabel"
-         virtualName="" explicitFocusOrder="0" pos="448 256 136 24" tooltip="(4 byte, hex, seperated by whitespace)"
+         virtualName="" explicitFocusOrder="0" pos="448 232 136 24" tooltip="(4 byte, hex, seperated by whitespace)"
          edTextCol="ff000000" edBkgCol="0" labelText="Length in Measures:"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="15" bold="0" italic="0" justification="33"/>
   <TEXTEDITOR name="measuresText" id="459fa482571aa848" memberName="m_measuresText"
-              virtualName="" explicitFocusOrder="0" pos="592 256 32 24" tooltip="(4 byte, hex, seperated by whitespace)"
+              virtualName="" explicitFocusOrder="0" pos="592 232 32 24" tooltip="(4 byte, hex, seperated by whitespace)"
               bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="4" multiline="0"
               retKeyStartsLine="0" readonly="1" scrollbars="1" caret="0" popupmenu="1"/>
   <LABEL name="measuresLabel" id="982dd1c0902bdcb6" memberName="m_beatLabel"
-         virtualName="" explicitFocusOrder="0" pos="336 256 48 24" tooltip="(4 byte, hex, seperated by whitespace)"
+         virtualName="" explicitFocusOrder="0" pos="336 232 48 24" tooltip="(4 byte, hex, seperated by whitespace)"
          edTextCol="ff000000" edBkgCol="0" labelText="Beat:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <TEXTEDITOR name="beatText" id="40b80ef540e69d5e" memberName="m_beatText"
-              virtualName="" explicitFocusOrder="0" pos="392 256 40 24" tooltip="(4 byte, hex, seperated by whitespace)"
+              virtualName="" explicitFocusOrder="0" pos="392 232 40 24" tooltip="(4 byte, hex, seperated by whitespace)"
               bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="4/4" multiline="0"
               retKeyStartsLine="0" readonly="1" scrollbars="1" caret="0" popupmenu="1"/>
   <LABEL name="measuresLabel" id="cd690b5f396110f4" memberName="m_measuresLabel3"
-         virtualName="" explicitFocusOrder="0" pos="8 256 104 24" tooltip="(4 byte, hex, seperated by whitespace)"
+         virtualName="" explicitFocusOrder="0" pos="8 232 104 24" tooltip="(4 byte, hex, seperated by whitespace)"
          edTextCol="ff000000" edBkgCol="0" labelText="Pattern Setup:"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="15" bold="0" italic="0" justification="33"/>
   <LABEL name="patternNameLabel" id="3adefa6b7c5bad59" memberName="m_patternNameLabel"
-         virtualName="" explicitFocusOrder="0" pos="128 256 56 24" tooltip="(4 byte, hex, seperated by whitespace)"
+         virtualName="" explicitFocusOrder="0" pos="128 232 56 24" tooltip="(4 byte, hex, seperated by whitespace)"
          edTextCol="ff000000" edBkgCol="0" labelText="Name:" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="15" bold="0" italic="0" justification="33"/>
   <TEXTEDITOR name="patternNameText" id="f85a59ae1b778ae" memberName="m_patternNameText"
-              virtualName="" explicitFocusOrder="0" pos="192 256 128 24" tooltip="(4 byte, hex, seperated by whitespace)"
+              virtualName="" explicitFocusOrder="0" pos="192 232 128 24" tooltip="(4 byte, hex, seperated by whitespace)"
               bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="EMPTY PATTERN"
               multiline="0" retKeyStartsLine="0" readonly="1" scrollbars="1"
               caret="0" popupmenu="1"/>
   <GENERICCOMPONENT name="receivedSysExList" id="93c14b7479ff5d1e" memberName="m_receivedSysExList"
-                    virtualName="" explicitFocusOrder="0" pos="8 328 448M 392" class="ListBox"
+                    virtualName="" explicitFocusOrder="0" pos="8 304 448M 392" class="ListBox"
                     params=""/>
   <GENERICCOMPONENT name="imageViewComponent" id="4485472e5d29f5b8" memberName="m_imageViewComponent"
-                    virtualName="" explicitFocusOrder="0" pos="8Rr 32 264 176" class="ImageComponent"
+                    virtualName="" explicitFocusOrder="0" pos="8Rr 8 264 176" class="ImageComponent"
                     params=""/>
   <TEXTBUTTON name="searchDevicesButton" id="ebd8589c7189fa14" memberName="m_searchDevicesButton"
-              virtualName="" explicitFocusOrder="0" pos="290Rr 120 62 24" buttonText="Search"
+              virtualName="" explicitFocusOrder="0" pos="290Rr 96 62 24" buttonText="Search"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <COMBOBOX name="deviceIdConnectBox" id="b72d9dc6a1898892" memberName="m_deviceToUseComboBox"
-            virtualName="" explicitFocusOrder="0" pos="288Rr 152 224 24"
+            virtualName="" explicitFocusOrder="0" pos="288Rr 128 224 24"
             editable="0" layout="33" items="" textWhenNonSelected="Select a device ID first"
             textWhenNoItems="(no compatible devices found)"/>
   <TEXTBUTTON name="sendButton" id="dd1f3dc10a40b071" memberName="m_getPatternButton"
-              virtualName="" explicitFocusOrder="0" pos="8 224 312 24" buttonText="Request Temporary Pattern Data"
+              virtualName="" explicitFocusOrder="0" pos="8 200 312 24" buttonText="Request Temporary Pattern Data"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="saveMidiFileButton" id="544c57a2d5d00d96" memberName="m_saveMidiFileButton"
-              virtualName="" explicitFocusOrder="0" pos="344 224 176 24" buttonText="Save MIDI File..."
+              virtualName="" explicitFocusOrder="0" pos="344 200 176 24" buttonText="Save MIDI File..."
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
-  <GENERICCOMPONENT name="menuBar" id="3fba78e08ffb4662" memberName="m_menuBar" virtualName=""
-                    explicitFocusOrder="0" pos="0 0 0M 24" class="MenuBarComponent"
-                    params="this"/>
   <IMAGEBUTTON name="dragSmfImageButton" id="6a5f2f0b4329ef02" memberName="m_dragSmfImageButton"
-               virtualName="" explicitFocusOrder="0" pos="24Rr 128 64 64" tooltip="Drag and Drop as Standard MIDI File (.mid)"
+               virtualName="" explicitFocusOrder="0" pos="24Rr 104 64 64" tooltip="Drag and Drop as Standard MIDI File (.mid)"
                buttonText="" connectedEdges="0" needsCallback="0" radioGroupId="0"
                keepProportions="1" resourceNormal="audioxmidi_png" opacityNormal="0.69999998807907104"
                colourNormal="0" resourceOver="audioxmidi_png" opacityOver="1"
                colourOver="0" resourceDown="audioxmidi_png" opacityDown="1"
                colourDown="0"/>
   <JUCERCOMP name="" id="1c042851e92cf4e0" memberName="component" virtualName=""
-             explicitFocusOrder="0" pos="0Rr 296 432 488" sourceFile="MFxEditor.cpp"
+             explicitFocusOrder="0" pos="0Rr 272 432 488" sourceFile="MFxEditor.cpp"
              constructorParams=""/>
 </JUCER_COMPONENT>
 

@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -37,9 +37,7 @@
                                                                     //[/Comments]
 */
 class PatternTab  : public Component,
-                    public ApplicationCommandManager,
                     public ApplicationCommandTarget,
-                    public MenuBarModel,
                     public FileDragAndDropTarget,
                     public DragAndDropContainer,
                     public ComboBoxListener,
@@ -56,22 +54,16 @@ public:
 	/* ApplicationCommandTarget implementation: */
 	enum CommandIDs
 	{
-		fileOpenPattern = 0x2001,
-		fileImportPattern = 0x2002,
-		fileSavePattern = 0x2003,
-		fileExportPattern = 0x2004,
-		fileQuit = StandardApplicationCommandIDs::quit,
+		fileOpenPatternSyxFile = 0x2001,
+		fileSavePatternSyxFile = 0x2002,
+		fileImportPatternSmfFile = 0x2011,
+		fileExportPatternSmfFile = 0x2012,
 		grooveBoxLoadPattern = 0x3001
 	};
 	ApplicationCommandTarget* getNextCommandTarget() override;
 	void getAllCommands(Array <CommandID>& commands) override;
 	void getCommandInfo(CommandID commandID, ApplicationCommandInfo& result) override;
 	bool perform(const InvocationInfo& info) override;
-
-	/* MenuBarModel implementation: */
-	StringArray getMenuBarNames() override;
-	PopupMenu getMenuForIndex(int topLevelMenuIndex, const String &menuName) override;
-	void menuItemSelected(int menuItemID, int topLevelMenuIndex) override;
 
 	/* FileDragAndDropTarget implementation: */
 	bool isInterestedInFileDrag(const StringArray &files);
@@ -127,11 +119,11 @@ public:
 
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
-    void buttonClicked (Button* buttonThatWasClicked);
-    void mouseDrag (const MouseEvent& e);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void mouseDrag (const MouseEvent& e) override;
 
     // Binary resources:
     static const char* audioxmidi_png;
@@ -185,7 +177,6 @@ private:
     ScopedPointer<ComboBox> m_deviceToUseComboBox;
     ScopedPointer<TextButton> m_getPatternButton;
     ScopedPointer<TextButton> m_saveMidiFileButton;
-    ScopedPointer<MenuBarComponent> m_menuBar;
     ScopedPointer<ImageButton> m_dragSmfImageButton;
     ScopedPointer<MFXEditor> component;
 

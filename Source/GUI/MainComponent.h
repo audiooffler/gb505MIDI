@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -35,8 +35,9 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class MainComponent : public TabbedComponentWithMenu,
-                       public ApplicationCommandTarget
+class MainComponent  : public TabbedComponentWithMenu,
+                       public ApplicationCommandTarget,
+                       public Button::Listener
 {
 public:
     //==============================================================================
@@ -45,8 +46,6 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-
-	void currentTabChanged(int newCurrentTabIndex, const String &newCurrentTabName) override;
 
 	/* ApplicationCommandTarget implementation: */
 	enum CommandIDs
@@ -67,6 +66,9 @@ public:
 	void getAllCommands(Array <CommandID>& commands) override;
 	void getCommandInfo(CommandID commandID, ApplicationCommandInfo& result) override;
 	bool perform(const InvocationInfo& info) override;
+
+	/* Button::Listener implementation for listening to menu button */
+	void buttonClicked(Button* buttonThatWasClicked) override;
 
 	class CustomViewport : public Viewport
 	{
@@ -90,8 +92,8 @@ public:
 
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
 
 
