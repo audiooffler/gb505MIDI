@@ -34,7 +34,7 @@ extern ApplicationCommandManager*  applicationCommandManager;
 
 //==============================================================================
 MainComponent::MainComponent ()
-    : TabbedComponent (TabbedButtonBar::TabsAtTop)
+	: TabbedComponentWithMenu()
 {
 
     //[UserPreSize]
@@ -93,7 +93,7 @@ MainComponent::~MainComponent()
 void MainComponent::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
-	TabbedComponent::paint(g);
+	TabbedComponentWithMenu::paint(g);
     //[/UserPrePaint]
 
     //[UserPaint] Add your own custom painting code here..
@@ -103,7 +103,7 @@ void MainComponent::paint (Graphics& g)
 void MainComponent::resized()
 {
     //[UserResized] Add your own custom resize handling here..
-	TabbedComponent::resized();
+	TabbedComponentWithMenu::resized();
     //[/UserResized]
 }
 
@@ -113,7 +113,7 @@ void MainComponent::resized()
 
 void MainComponent::currentTabChanged(int newCurrentTabIndex, const String &newCurrentTabName)
 {
-	TabbedComponent::currentTabChanged(newCurrentTabIndex, newCurrentTabName);
+	TabbedComponentWithMenu::currentTabChanged(newCurrentTabIndex, newCurrentTabName);
 	if (ApplicationCommandTarget* appCmdTarget = dynamic_cast<ApplicationCommandTarget*>(getCurrentContentComponent()))
 	{
 		applicationCommandManager->setFirstCommandTarget(appCmdTarget);

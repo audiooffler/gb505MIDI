@@ -286,6 +286,8 @@
               file="Source/GUI/PatternEditorTab.h"/>
         <FILE id="z4L3DQ" name="PatternTab.cpp" compile="1" resource="0" file="Source/GUI/PatternTab.cpp"/>
         <FILE id="wiNUil" name="PatternTab.h" compile="0" resource="0" file="Source/GUI/PatternTab.h"/>
+        <FILE id="khOcWg" name="TabbedComponentWithMenu.h" compile="0" resource="0"
+              file="Source/GUI/TabbedComponentWithMenu.h"/>
       </GROUP>
       <GROUP id="{B296F93E-F914-9B58-F002-B467166E309C}" name="GrooveboxMemory">
         <FILE id="egVftm" name="GrooveboxMemoryBlock.cpp" compile="1" resource="0"

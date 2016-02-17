@@ -22,6 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+#include "TabbedComponentWithMenu.h"
 //[/Headers]
 
 
@@ -34,7 +35,7 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class MainComponent  : public TabbedComponent,
+class MainComponent : public TabbedComponentWithMenu,
                        public ApplicationCommandTarget
 {
 public:
