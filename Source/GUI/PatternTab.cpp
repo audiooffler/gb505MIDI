@@ -367,14 +367,14 @@ void PatternTab::resized()
     m_measuresLabel3->setBounds (8, 232, 104, 24);
     m_patternNameLabel->setBounds (128, 232, 56, 24);
     m_patternNameText->setBounds (192, 232, 128, 24);
-    m_receivedSysExList->setBounds (8, 304, getWidth() - 448, 392);
+    m_receivedSysExList->setBounds (8, 304, getWidth() - 365, 392);
     m_imageViewComponent->setBounds (getWidth() - 8 - 264, 8, 264, 176);
     m_searchDevicesButton->setBounds (getWidth() - 290 - 62, 96, 62, 24);
     m_deviceToUseComboBox->setBounds (getWidth() - 288 - 224, 128, 224, 24);
     m_getPatternButton->setBounds (8, 200, 312, 24);
     m_saveMidiFileButton->setBounds (344, 200, 176, 24);
     m_dragSmfImageButton->setBounds (getWidth() - 24 - 64, 104, 64, 64);
-    component->setBounds (getWidth() - 432, 272, 432, 488);
+    component->setBounds (getWidth() - 5 - 344, 296, 344, 400);
     //[UserResized] Add your own custom resize handling here..
 	m_logoDrawable->setBounds(16, 16, m_midiInLabel->getX() - 16, m_getPatternButton->getY() - 16);
 	m_logoDrawable->setTransformToFit(m_logoDrawable->getBounds().toFloat(), RectanglePlacement::onlyReduceInSize);
@@ -876,7 +876,7 @@ BEGIN_JUCER_METADATA
               multiline="0" retKeyStartsLine="0" readonly="1" scrollbars="1"
               caret="0" popupmenu="1"/>
   <GENERICCOMPONENT name="receivedSysExList" id="93c14b7479ff5d1e" memberName="m_receivedSysExList"
-                    virtualName="" explicitFocusOrder="0" pos="8 304 448M 392" class="ListBox"
+                    virtualName="" explicitFocusOrder="0" pos="8 304 365M 392" class="ListBox"
                     params=""/>
   <GENERICCOMPONENT name="imageViewComponent" id="4485472e5d29f5b8" memberName="m_imageViewComponent"
                     virtualName="" explicitFocusOrder="0" pos="8Rr 8 264 176" class="ImageComponent"
@@ -902,7 +902,7 @@ BEGIN_JUCER_METADATA
                colourOver="0" resourceDown="audioxmidi_png" opacityDown="1"
                colourDown="0"/>
   <JUCERCOMP name="" id="1c042851e92cf4e0" memberName="component" virtualName=""
-             explicitFocusOrder="0" pos="0Rr 272 432 488" sourceFile="MFxEditor.cpp"
+             explicitFocusOrder="0" pos="5Rr 296 344 400" sourceFile="MFxEditor.cpp"
              constructorParams=""/>
 </JUCER_COMPONENT>
 

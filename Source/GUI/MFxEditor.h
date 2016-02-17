@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -23,9 +23,11 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
 #include "ParameterWidgets/ParameterSlider.h"
+#include "ParameterWidgets/ParameterComboBox.h"
 #include "../GrooveboxMemory/PartInfoBlock.h"
 //[/Headers]
 
+#include "GroupWidgets/PanelGroupGrey.h"
 
 
 //==============================================================================
@@ -49,10 +51,10 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
 
 
 
@@ -63,8 +65,9 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<ParameterSlider> m_paramSlider1;
+    ScopedPointer<PanelGroupGrey> component;
     ScopedPointer<Label> m_paramLabel1;
+    ScopedPointer<ParameterSlider> m_paramSlider1;
     ScopedPointer<ParameterSlider> m_paramSlider2;
     ScopedPointer<Label> m_paramLabel2;
     ScopedPointer<ParameterSlider> m_paramSlider3;
@@ -85,7 +88,7 @@ private:
     ScopedPointer<Label> m_paramLabel10;
     ScopedPointer<ParameterSlider> m_paramSlider11;
     ScopedPointer<Label> m_paramLabel11;
-    ScopedPointer<ComboBox> m_MFXTypeComboBox;
+    ScopedPointer<ParameterComboBox> m_MFXTypeComboBox;
     ScopedPointer<Label> m_MFXTypeLabel;
     ScopedPointer<TextEditor> m_MFXTypeDescriptionTextEditor;
 
