@@ -1,9 +1,62 @@
-/*
+﻿/*
   ==============================================================================
 
     OverallMemoryBlock.cpp
     Created: 16 Jan 2016 6:21:56pm
     Author:  Martin
+
+	Overall Memory Layout
+
+	OverallMemoryBlock					(OverallMemoryBlock.h)
+	├─ SystemBlock						(SystemBlock.h)		00000000
+	│   ├─ SystemCommonBlock								00000000
+	│   ├─ ScaleTuneBlock(SynthPart1)
+	│   ├─ ScaleTuneBlock(SynthPart2)
+	│   ├─ ScaleTuneBlock(SynthPart3)
+	│   ├─ ScaleTuneBlock(SynthPart4)
+	│   ├─ ScaleTuneBlock(SynthPart5)
+	│   ├─ ScaleTuneBlock(SynthPart6)
+	│   └─ ScaleTuneBlock(SynthPart7)
+	├─ PartInfoBlock					(PartInfoBlock.h)	01 00 00 00
+	│   ├─ PartInfoCommonBlock
+	│   ├─ PartInfoPartBlock(Part1)
+	│   ├─ PartInfoPartBlock(Part2)
+	│   ├─ PartInfoPartBlock(Part3)
+	│   ├─ PartInfoPartBlock(Part4)
+	│   ├─ PartInfoPartBlock(Part5)
+	│   ├─ PartInfoPartBlock(Part6)
+	│   ├─ PartInfoPartBlock(Part7)
+	│   └─ PartInfoPartBlock(PartR)
+	├─ SynthPatchesBlock				(SynthPatchesBlock.h)	02 00 00 00
+	│   ├─ PatchPartBlock(SynthPart1)
+	│   │   ├─ PatchCommonBlock(SynthPart1)
+	│   │   ├─ PatchToneBlock(SynthPart1, Tone1)
+	│   │   ├─ PatchToneBlock(SynthPart1, Tone2)
+	│   │   ├─ PatchToneBlock(SynthPart1, Tone3)
+	│   │   └─ PatchToneBlock(SynthPart1, Tone4)
+	│   .   .
+	│   .   .
+	│   .   .
+	│   │   └─ PatchToneBlock(SynthPart7, Tone4)
+	├─ RhythmSetBlock					(RhythmSetBlock.h)	02 09 00 0
+	│   ├─ RhythmCommonBlock
+	│   ├─ RhythmNoteBlock(35)
+	│   .
+	│   .
+	│   .
+	│   └─ RhythmNoteBlock(98)
+	├─ PatternSetupBlock				(PatternSetupBlock.h)	30 00 00 00
+	│   ├─ PatternSetupConfigBlock
+	│   ├─ PatternSetupEffectsBlock
+	│   ├─ PatternSetupPartBlock(PartR)
+	│   ├─ PatternSetupPartBlock(Part1)
+	│   ├─ PatternSetupPartBlock(Part2)
+	│   ├─ PatternSetupPartBlock(Part3)
+	│   ├─ PatternSetupPartBlock(Part4)
+	│   ├─ PatternSetupPartBlock(Part5)
+	│   ├─ PatternSetupPartBlock(Part6)
+	│   └─ PatternSetupPartBlock(Part7)
+	└─ PatternBodyBlock					(PatternBodyBlock.h)	40 00 00 00
 
   ==============================================================================
 */

@@ -59,7 +59,8 @@ MainComponent::MainComponent ()
 	MidiLoggerTab* loggerTab = new MidiLoggerTab();
 	Logger::setCurrentLogger(loggerTab);
 	addTab(TRANS("MIDI Logger"), Colours::whitesmoke, loggerTab, true);
-
+	
+	getMenuButton()->setTriggeredOnMouseDown(true);
 	getMenuButton()->addListener(this);
 
     //[/UserPreSize]

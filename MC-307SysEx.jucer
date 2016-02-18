@@ -307,6 +307,8 @@
               file="Source/GrooveboxMemory/PatternBodyBlock.cpp"/>
         <FILE id="oTWbrw" name="PatternBodyBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/PatternBodyBlock.h"/>
+        <FILE id="CsRYPO" name="PatternSetupBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/PatternSetupBlock.cpp"/>
         <FILE id="ria7JC" name="PatternSetupBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/PatternSetupBlock.h"/>
         <FILE id="ndMYwY" name="QuickSysExBlock.h" compile="0" resource="0"

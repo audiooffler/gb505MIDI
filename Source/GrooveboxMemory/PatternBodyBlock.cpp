@@ -825,7 +825,8 @@ void PatternBodyBlock::selectedRowsChanged(int lastRowSelected)
 		{
 			tableSelectionMidiOut->sendMessageNow(MidiMessage::allNotesOff(i));
 		}
-		tableSelectionMidiOut->sendMessageNow(m_filteredsequenceBlocks[lastRowSelected]->toMidiMessage());
+		if (m_filteredsequenceBlocks[lastRowSelected]->getMidiChannel() >= 1 && m_filteredsequenceBlocks[lastRowSelected]->getMidiChannel() <= 16)
+			tableSelectionMidiOut->sendMessageNow(m_filteredsequenceBlocks[lastRowSelected]->toMidiMessage());
 	}
 }
 

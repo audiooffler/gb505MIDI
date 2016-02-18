@@ -132,7 +132,9 @@ bool GrooveboxMemoryBlock::handleSysEx(SyxMsg* sysExMsg)
 		dynamic_cast<ScaleTuneBlock*>(this) ||
 		dynamic_cast<PartInfoPartBlock*>(this) ||
 		dynamic_cast<PatchToneBlock*>(this) ||
-		dynamic_cast<RhythmNoteBlock*>(this)
+		dynamic_cast<RhythmNoteBlock*>(this) ||
+		dynamic_cast<PatternSetupEffectsBlock*>(this)||
+		dynamic_cast<PatternSetupPartBlock*>(this)
 		)
 	{
 		blockStartAddress = blockStartAddress + (addressOffset & 0xFF00);
@@ -162,7 +164,9 @@ bool GrooveboxMemoryBlock::handleSysEx(SyxMsg* sysExMsg)
 			if (dynamic_cast<ScaleTuneBlock*>(this) ||		// 1-1-2. Scale Tune (2nd-last Byte for Part-No of 1-1. System)
 				dynamic_cast<PartInfoPartBlock*>(this) ||	// 1-2-2. Part Info Part n (2nd-last Byte for Part-No of 1-2. Part Info)
 				dynamic_cast<PatchToneBlock*>(this) ||		// 1-3-2. Patch Tone (2nd-last Byte for Tone-No of 1-3. Patch Tone)
-				dynamic_cast<RhythmNoteBlock*>(this))		// 1-4-2. Rhythm Note n	(2nd-last Byte for Key-No of 1-3 Rhythm Setup)
+				dynamic_cast<RhythmNoteBlock*>(this) ||		// 1-4-2. Rhythm Note n	(2nd-last Byte for Key-No of 1-3 Rhythm Setup)
+				dynamic_cast<PatternSetupEffectsBlock*>(this) ||
+				dynamic_cast<PatternSetupPartBlock*>(this))
 			{
 				addressOffset = addressOffset & 0xFF;
 			}
