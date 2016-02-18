@@ -22,7 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
-#include "Widgets/MicroParameterSlider.h"
+#include "ParameterWidgets/MicroParameterSlider.h"
 //[/Headers]
 
 #include "GroupWidgets/RectangleDark.h"
