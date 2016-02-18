@@ -50,7 +50,7 @@ public:
 
 	Parameter* getParamPtr(uint8 index) // 0 to 11, else null will be returned
 	{
-		return index < 12 ? m_params[index] : nullptr;
+		return index < (uint8)m_params.size() ? m_params[index] : nullptr;
 	}
 
 	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
@@ -66,7 +66,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	Parameter* m_params[12];
+	Array <Parameter*> m_params;
     //[/UserVariables]
 
     //==============================================================================

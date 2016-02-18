@@ -37,6 +37,7 @@ PatternEditorTab::PatternEditorTab ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
 	PatternBodyBlock* patternBodyBlock = grooveboxMemory->getPatternBodyBlock();
+	PatternSetupBlock* patternSetupBlock = grooveboxMemory->getPatternSetupBlock();
 	patternBodyBlock->addChangeListener(this);
 	m_patternEventTableHeader = new TableHeaderComponent();
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Position], PatternBodyBlock::Col_Position, 70);
@@ -400,6 +401,94 @@ PatternEditorTab::PatternEditorTab ()
     m_viewSinglePartLabel->setColour (TextEditor::textColourId, Colours::black);
     m_viewSinglePartLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (m_patchNameLabel = new Label ("patchNameLabel",
+                                                     TRANS("PATTERN NAME")));
+    m_patchNameLabel->setFont (Font (12.00f, Font::bold));
+    m_patchNameLabel->setJustificationType (Justification::centredLeft);
+    m_patchNameLabel->setEditable (false, false, false);
+    m_patchNameLabel->setColour (Label::textColourId, Colours::black);
+    m_patchNameLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_patchNameLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_patternNameEditor = new ParameterTextEditor ("patternNameEditor"));
+    m_patternNameEditor->setMultiLine (false);
+    m_patternNameEditor->setReturnKeyStartsNewLine (false);
+    m_patternNameEditor->setReadOnly (false);
+    m_patternNameEditor->setScrollbarsShown (false);
+    m_patternNameEditor->setCaretVisible (true);
+    m_patternNameEditor->setPopupMenuEnabled (true);
+    m_patternNameEditor->setColour (TextEditor::textColourId, Colours::black);
+    m_patternNameEditor->setColour (TextEditor::backgroundColourId, Colour (0xfff2f59b));
+    m_patternNameEditor->setColour (TextEditor::outlineColourId, Colours::grey);
+    m_patternNameEditor->setText (String());
+
+    addAndMakeVisible (m_keySignatureComboBox = new ParameterComboBox ("keySignatureComboBox"));
+    m_keySignatureComboBox->setEditableText (false);
+    m_keySignatureComboBox->setJustificationType (Justification::centred);
+    m_keySignatureComboBox->setTextWhenNothingSelected (TRANS("4/4"));
+    m_keySignatureComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_keySignatureComboBox->addItem (TRANS("2/4"), 1);
+    m_keySignatureComboBox->addItem (TRANS("3/4"), 2);
+    m_keySignatureComboBox->addItem (TRANS("4/4"), 3);
+    m_keySignatureComboBox->addItem (TRANS("5/4"), 4);
+    m_keySignatureComboBox->addItem (TRANS("6/4"), 5);
+    m_keySignatureComboBox->addItem (TRANS("7/4"), 6);
+    m_keySignatureComboBox->addItem (TRANS("5/8"), 7);
+    m_keySignatureComboBox->addItem (TRANS("6/8"), 8);
+    m_keySignatureComboBox->addItem (TRANS("7/8"), 9);
+    m_keySignatureComboBox->addItem (TRANS("9/8"), 10);
+    m_keySignatureComboBox->addItem (TRANS("12/8"), 11);
+    m_keySignatureComboBox->addItem (TRANS("9/16"), 12);
+    m_keySignatureComboBox->addItem (TRANS("11/16"), 13);
+    m_keySignatureComboBox->addItem (TRANS("13/16"), 14);
+    m_keySignatureComboBox->addItem (TRANS("15/16"), 15);
+    m_keySignatureComboBox->addItem (TRANS("17/16"), 16);
+    m_keySignatureComboBox->addItem (TRANS("19/16"), 17);
+    m_keySignatureComboBox->addListener (this);
+
+    addAndMakeVisible (m_timeSignatureLabel = new Label ("timeSignatureLabel",
+                                                         TRANS("TIME SIGNATURE")));
+    m_timeSignatureLabel->setFont (Font (12.00f, Font::bold));
+    m_timeSignatureLabel->setJustificationType (Justification::centredLeft);
+    m_timeSignatureLabel->setEditable (false, false, false);
+    m_timeSignatureLabel->setColour (Label::textColourId, Colours::black);
+    m_timeSignatureLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_timeSignatureLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_measuresLabel = new Label ("measuresLabel",
+                                                    TRANS("MEASURES")));
+    m_measuresLabel->setFont (Font (12.00f, Font::bold));
+    m_measuresLabel->setJustificationType (Justification::centredLeft);
+    m_measuresLabel->setEditable (false, false, false);
+    m_measuresLabel->setColour (Label::textColourId, Colours::black);
+    m_measuresLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_measuresLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_measuresSlider = new MicroParameterSlider ("measuresSlider"));
+    m_measuresSlider->setRange (1, 32, 1);
+    m_measuresSlider->setSliderStyle (Slider::LinearBar);
+    m_measuresSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
+    m_measuresSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
+    m_measuresSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_measuresSlider->addListener (this);
+
+    addAndMakeVisible (m_tempoSlider = new MicroParameterSlider ("tempoSlider"));
+    m_tempoSlider->setRange (20, 240, 0.1);
+    m_tempoSlider->setSliderStyle (Slider::LinearBar);
+    m_tempoSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
+    m_tempoSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
+    m_tempoSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_tempoSlider->addListener (this);
+
+    addAndMakeVisible (m_tempoLabel = new Label ("tempoLabel",
+                                                 TRANS("TEMPO")));
+    m_tempoLabel->setFont (Font (12.00f, Font::bold));
+    m_tempoLabel->setJustificationType (Justification::centredLeft);
+    m_tempoLabel->setEditable (false, false, false);
+    m_tempoLabel->setColour (Label::textColourId, Colours::black);
+    m_tempoLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_tempoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 	StringArray midiOutNames(MidiOutput::getDevices());
@@ -416,9 +505,23 @@ PatternEditorTab::PatternEditorTab ()
 	m_patternEventTable->setColour(TableListBox::outlineColourId, Colours::grey);
 
 	m_viewSinglePartToggle->addListener(this);
+
+	m_patternNameEditor->setParameter1(patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x00));
+	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x10)->addChangeListener(this);
+	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x11)->addChangeListener(this);
+	
+	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x13)->addChangeListener(this);
+	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x14)->addChangeListener(this);
+	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x15)->addChangeListener(this);
+	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x16)->addChangeListener(this);
+	m_tempoSlider->setValue(120.0, dontSendNotification);
+
+	m_measuresSlider->setParameter(patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x12));
+
+	m_keySignatureComboBox->setSelectedId(3, dontSendNotification);
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (1024, 400);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -523,6 +626,14 @@ PatternEditorTab::~PatternEditorTab()
     m_viewNoEventsButton = nullptr;
     m_viewSinglePartToggle = nullptr;
     m_viewSinglePartLabel = nullptr;
+    m_patchNameLabel = nullptr;
+    m_patternNameEditor = nullptr;
+    m_keySignatureComboBox = nullptr;
+    m_timeSignatureLabel = nullptr;
+    m_measuresLabel = nullptr;
+    m_measuresSlider = nullptr;
+    m_tempoSlider = nullptr;
+    m_tempoLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -610,6 +721,14 @@ void PatternEditorTab::resized()
     m_viewNoEventsButton->setBounds (660, 100, 52, 24);
     m_viewSinglePartToggle->setBounds (584, 46, 12, 12);
     m_viewSinglePartLabel->setBounds (533, 44, 54, 16);
+    m_patchNameLabel->setBounds (728, 12, 98, 24);
+    m_patternNameEditor->setBounds (728, 36, 128, 22);
+    m_keySignatureComboBox->setBounds (732, 84, 60, 18);
+    m_timeSignatureLabel->setBounds (728, 60, 124, 24);
+    m_measuresLabel->setBounds (728, 108, 124, 24);
+    m_measuresSlider->setBounds (732, 132, 48, 16);
+    m_tempoSlider->setBounds (732, 176, 48, 16);
+    m_tempoLabel->setBounds (728, 152, 124, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -627,6 +746,24 @@ void PatternEditorTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 			m_midiOutComboBox->getSelectedId() - 1 :
 			-1);
         //[/UserComboBoxCode_m_midiOutComboBox]
+    }
+    else if (comboBoxThatHasChanged == m_keySignatureComboBox)
+    {
+        //[UserComboBoxCode_m_keySignatureComboBox] -- add your combo box handling code here..
+		int selected = m_keySignatureComboBox->getSelectedId();
+		if (selected > 0)
+		{
+			String text = m_keySignatureComboBox->getItemText(selected);
+			StringArray signatureStrings = StringArray::fromTokens(text, "/", "");
+			if (signatureStrings.size() > 1)
+			{
+				uint8 numerator = (uint8)signatureStrings[0].getIntValue();
+				uint8 denominator = (uint8)signatureStrings[1].getIntValue();
+				PatternSetupConfigBlock* patternSetupConfigBlock = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+				patternSetupConfigBlock->setBeatSignature(numerator, denominator);
+			}
+		}
+        //[/UserComboBoxCode_m_keySignatureComboBox]
     }
 
     //[UsercomboBoxChanged_Post]
@@ -655,6 +792,8 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_viewAllPartsButton)
     {
         //[UserButtonCode_m_viewAllPartsButton] -- add your button handler code here..
+		m_viewSinglePartToggle->setToggleState(false, sendNotification);
+
 		m_viewNoPartsButton->setToggleState(false, dontSendNotification);
 		m_viewAllPartsButton->setToggleState(false, dontSendNotification);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewPart1)->setValue(1, Parameter::Init);
@@ -730,8 +869,7 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     //[UserbuttonClicked_Post]
 	else if (buttonThatWasClicked == m_viewSinglePartToggle)
 	{
-		m_viewAllPartsButton->setEnabled(!m_viewSinglePartToggle->getToggleState());
-		//m_viewAllPartsButton->setVisible(!m_viewSinglePartToggle->getToggleState());
+		//m_viewAllPartsButton->setEnabled(!m_viewSinglePartToggle->getToggleState());
 	}
     //[/UserbuttonClicked_Post]
 }
@@ -771,6 +909,17 @@ void PatternEditorTab::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_m_PAftRangeUpperSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_PAftRangeUpperSlider]
     }
+    else if (sliderThatWasMoved == m_measuresSlider)
+    {
+        //[UserSliderCode_m_measuresSlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_measuresSlider]
+    }
+    else if (sliderThatWasMoved == m_tempoSlider)
+    {
+        //[UserSliderCode_m_tempoSlider] -- add your slider handling code here..
+		grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->setTempoBpm((float)m_tempoSlider->getValue());
+        //[/UserSliderCode_m_tempoSlider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -784,6 +933,22 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 	if (source == grooveboxMemory->getPatternBodyBlock())
 	{
 		m_patternEventTable->updateContent();
+	}
+	else if (Parameter* param = dynamic_cast<Parameter*>(source))
+	{
+		if (param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x10) ||
+			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x11))
+		{
+			BeatSignature sig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature();
+			m_keySignatureComboBox->setText(sig.toString());
+		}
+		else if (param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x13) ||
+			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x14) ||
+			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x15) ||
+			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x16))
+		{
+			m_tempoSlider->setValue(grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm(), dontSendNotification);
+		}
 	}
 }
 
@@ -802,7 +967,7 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="PatternEditorTab" componentName=""
                  parentClasses="public Component, public ChangeListener" constructorParams=""
                  variableInitialisers="" snapPixels="4" snapActive="1" snapShown="1"
-                 overlayOpacity="0.330" fixedSize="0" initialWidth="600" initialHeight="400">
+                 overlayOpacity="0.330" fixedSize="1" initialWidth="1024" initialHeight="400">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="" id="650b65151c744492" memberName="component3" virtualName=""
              explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/RectangleDark.cpp"
@@ -1061,6 +1226,45 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="SINGLE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
+  <LABEL name="patchNameLabel" id="2ec0efd8ffa587b" memberName="m_patchNameLabel"
+         virtualName="" explicitFocusOrder="0" pos="728 12 98 24" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="PATTERN NAME" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="33"/>
+  <TEXTEDITOR name="patternNameEditor" id="9686a2e1612f5756" memberName="m_patternNameEditor"
+              virtualName="ParameterTextEditor" explicitFocusOrder="0" pos="728 36 128 22"
+              textcol="ff000000" bkgcol="fff2f59b" outlinecol="ff808080" initialText=""
+              multiline="0" retKeyStartsLine="0" readonly="0" scrollbars="0"
+              caret="1" popupmenu="1"/>
+  <COMBOBOX name="keySignatureComboBox" id="e8c10ecedfc6fd9e" memberName="m_keySignatureComboBox"
+            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="732 84 60 18"
+            editable="0" layout="36" items="2/4&#10;3/4&#10;4/4&#10;5/4&#10;6/4&#10;7/4&#10;5/8&#10;6/8&#10;7/8&#10;9/8&#10;12/8&#10;9/16&#10;11/16&#10;13/16&#10;15/16&#10;17/16&#10;19/16"
+            textWhenNonSelected="4/4" textWhenNoItems="(no choices)"/>
+  <LABEL name="timeSignatureLabel" id="ebaeb767998e3a96" memberName="m_timeSignatureLabel"
+         virtualName="" explicitFocusOrder="0" pos="728 60 124 24" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="TIME SIGNATURE"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="33"/>
+  <LABEL name="measuresLabel" id="d10f06f6186af7d8" memberName="m_measuresLabel"
+         virtualName="" explicitFocusOrder="0" pos="728 108 124 24" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="MEASURES" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="33"/>
+  <SLIDER name="measuresSlider" id="e1f3179b8260be26" memberName="m_measuresSlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="732 132 48 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="1" max="32" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="tempoSlider" id="2a8599a78b9bce37" memberName="m_tempoSlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="732 176 48 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="20" max="240" int="0.10000000000000001"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="tempoLabel" id="49fd6aecaa8ba93e" memberName="m_tempoLabel"
+         virtualName="" explicitFocusOrder="0" pos="728 152 124 24" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="TEMPO" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

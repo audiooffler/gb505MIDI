@@ -154,8 +154,8 @@ BeatSignature PatternSetupConfigBlock::getBeatSignature()
 void PatternSetupConfigBlock::setBeatSignature(uint8 numerator, uint8 denominator)
 {
 	BeatSignature correctedSig = BeatSignature(numerator, denominator);
-	m_data[0x10] = correctedSig.getNumerator();
-	m_data[0x11] = correctedSig.getDenominator();
+	getParameter(0x10)->setValue(correctedSig.getNumerator(), Parameter::GuiWidget);
+	getParameter(0x11)->setValue(correctedSig.getDenominator(), Parameter::GuiWidget);
 }
 
 uint8 PatternSetupConfigBlock::getPatternLengthInMeasures()
@@ -178,10 +178,10 @@ void PatternSetupConfigBlock::setTempoBpm(float tempoInBpm)
 {
 	uint8 byte1, byte2, byte3, byte4;
 	convertTempoBpmIntoByteValues(tempoInBpm, byte1, byte2, byte3, byte4);
-	m_data[0x13] = byte1;
-	m_data[0x14] = byte2;
-	m_data[0x15] = byte3;
-	m_data[0x16] = byte4;
+	getParameter(0x13)->setValue(byte1, Parameter::GuiWidget);
+	getParameter(0x14)->setValue(byte1, Parameter::GuiWidget);
+	getParameter(0x15)->setValue(byte1, Parameter::GuiWidget);
+	getParameter(0x16)->setValue(byte1, Parameter::GuiWidget);
 }
 
 // checks mute state for part, returns true if muted

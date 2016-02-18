@@ -23,6 +23,8 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
 #include "ParameterWidgets/MicroParameterSlider.h"
+#include "ParameterWidgets/ParameterTextEditor.h"
+#include "ParameterWidgets/ParameterComboBox.h"
 //[/Headers]
 
 #include "GroupWidgets/RectangleDark.h"
@@ -132,6 +134,14 @@ private:
     ScopedPointer<TextButton> m_viewNoEventsButton;
     ScopedPointer<SmallGreenToggle> m_viewSinglePartToggle;
     ScopedPointer<Label> m_viewSinglePartLabel;
+    ScopedPointer<Label> m_patchNameLabel;
+    ScopedPointer<ParameterTextEditor> m_patternNameEditor;
+    ScopedPointer<ParameterComboBox> m_keySignatureComboBox;
+    ScopedPointer<Label> m_timeSignatureLabel;
+    ScopedPointer<Label> m_measuresLabel;
+    ScopedPointer<MicroParameterSlider> m_measuresSlider;
+    ScopedPointer<MicroParameterSlider> m_tempoSlider;
+    ScopedPointer<Label> m_tempoLabel;
 
 
     //==============================================================================

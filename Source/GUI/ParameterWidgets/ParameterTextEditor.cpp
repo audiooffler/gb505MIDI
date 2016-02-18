@@ -32,7 +32,7 @@ ParameterTextEditor::ParameterTextEditor (const String &componentName)
 {
 
     //[UserPreSize]
-	setInputRestrictions(12, " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}");
+	setInputRestrictions(m_params.size(), " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}");
 	setFont(Font(Font::getDefaultMonospacedFontName(),13.0f,Font::plain));
     //[/UserPreSize]
 
@@ -40,7 +40,7 @@ ParameterTextEditor::ParameterTextEditor (const String &componentName)
 
 
     //[Constructor] You can add your own custom stuff here..
-	for (int i = 0; i < 12; i++) m_params[i] = nullptr;
+	m_params.clear();
 	addListener(this);
     //[/Constructor]
 }
@@ -48,7 +48,7 @@ ParameterTextEditor::ParameterTextEditor (const String &componentName)
 ParameterTextEditor::~ParameterTextEditor()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-	for (int i = 0; i < 12; i++) if (m_params[i] != nullptr) m_params[i]->removeChangeListener(this);
+	for (int i = 0; i < m_params.size(); i++) if (m_params[i] != nullptr) m_params[i]->removeChangeListener(this);
     //[/Destructor_pre]
 
 
@@ -80,21 +80,35 @@ void ParameterTextEditor::resized()
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void ParameterTextEditor::setParameter1(Parameter* paramPtr1)
 {
-	m_params[0] = paramPtr1;
+	m_params.clear();
+	m_params.add(paramPtr1);
 
 	if (m_params[0] != nullptr)
 	{
 		setVisible(true);
 		setTooltip(TRANS("Press [Enter] to apply the new name."));
-		// register listener for first param of 12
+		// register listener for first characters parameter
 		m_params[0]->addChangeListener(this);
 		GrooveboxMemoryBlock* block = m_params[0]->getBlock();
+		bool findMoreCharacterParametersInARow = true;
 		// register listener for other 11 parameters
-		for (uint16 i = 1; i < 12; i++)
+		for (uint16 i = 1; findMoreCharacterParametersInARow==true; i++)
 		{
-			m_params[i] = block->getParameter(m_params[0]->getAddressOffset() + i);
-			m_params[i]->addChangeListener(this);
+			if (Parameter* paramPtrI = block->getParameter(m_params[0]->getAddressOffset() + i))
+			{
+				if (paramPtrI->getMin() == paramPtr1->getMin() && paramPtrI->getMax() == paramPtr1->getMax())
+				{
+					m_params.add(paramPtrI);
+					paramPtrI->addChangeListener(this);
+				}
+				else
+				{
+					findMoreCharacterParametersInARow = false;
+					break;
+				}
+			}
 		}
+		setInputRestrictions(m_params.size(), " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}");
 	}
 	else setVisible(false);
 }
@@ -108,7 +122,7 @@ void ParameterTextEditor::changeListenerCallback(ChangeBroadcaster *source)
 		String newText(String::empty);
 		int i = 0;
 		char c = 0;
-		for (i = 0; i < 12; i++)
+		for (i = 0; i < m_params.size(); i++)
 		{
 			c = m_params[i]->getValue();
 			if (((uint8)c>31 && (uint8)c < 126))
@@ -131,11 +145,11 @@ void ParameterTextEditor::textEditorTextChanged(TextEditor &textEditor)
 		if (text.isEmpty())
 		{
 			// eventually clear text with spaces
-			for (i = 0; i < 12; i++) /*if (m_params[i]->getValue() != 32)*/ m_params[i]->setValue(32, Parameter::GuiWidget);
+			for (i = 0; i < m_params.size(); i++) /*if (m_params[i]->getValue() != 32)*/ m_params[i]->setValue(32, Parameter::GuiWidget);
 		}
 		else
 		{
-			for (i = 0; i < 12; i++)
+			for (i = 0; i < m_params.size(); i++)
 			{
 				char rawChar = i < text.length() ? rawText[i] : 32;
 				uint8 rawCharValue = (uint8)rawChar;
