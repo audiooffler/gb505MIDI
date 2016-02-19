@@ -85,7 +85,7 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Reverb HF Damp", 0x2B, 0, 17, 13, hfFreqStrings, "Specifies the frequency at which the high frequency portions of the reverberation will be cut.\r\nLowering this setting will cause more of the upper frequency content to be cut, making the reverberation more muted. If 'BYPASS' is selected, the high frequency range will not be cut.");
 
 	setupParameter("Reserved", 0x2C, 0, 127, 0, StringArray(), "JV-2080 Performance Delay Feedback");
-	setupParameter("Reserved", 0x2D, 0, 255, 120, StringArray(), "JV-2080 Performance Tempo"); // (0x2D + 0x2E 2 bytes for 8 bit 000aaaa MSB | 000bbbb LSB)
+	setupParameter("Reserved", 0x2D, 0, 250, 120, StringArray(), "JV-2080 Performance Tempo"); // (0x2D + 0x2E 2 bytes for 8 bit 000aaaa MSB | 000bbbb LSB)
 	setupParameter("Reserved", 0x2F, 0, 1, 1, StringArray::fromTokens("OFF ON",false), "JV-2080 Performance Keyboard Range Switch");
 
 	setupParameter("Voice Reserve 1", 0x30, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 1 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");

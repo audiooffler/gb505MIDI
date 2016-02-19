@@ -14,6 +14,8 @@
 #include "GrooveboxMemoryBlock.h"
 #include "JuceHeader.h"
 
+class BeatSignature;
+
 class PatternBodyBlock : public GrooveboxMemoryBlock, public TableListBoxModel, public ChangeBroadcaster, public ChangeListener
 {
 public:
@@ -87,10 +89,11 @@ public:
 	struct PatternEventData
 	{
 		const static String NOTENAMES[];
-		const static unsigned int ticksPerQuarterNote;
+		//const static unsigned int ticksPerQuarterNote;
 		static unsigned long mostRecentAbsoluteTick;	// static, for all PatternEventData instances, increased by constructor of new instances by their relative tick increment
 		static uint8 lastRelativeTickIncrement; // set on instance construction by byte 1
-		static String getAbsoluteTickString(unsigned int absoluteTicks);	// MM-BB-TT. 4/4 measure. TODO: different measures, load from setup
+		// MM-BB-TT depends on beat signature. for gate times set asLength to true (conting beats and measures from 0 on instead beginning with number 1)
+		static String getAbsoluteTickString(unsigned int absoluteTicks, uint8 ticksPerBeat, uint8 beatsPerMeasure, bool asLength = false);
 		static String getPartString(PatternPart part);
 		static String getRhythmGroupString(RhythmGroup rhythmGroup);
 
@@ -129,7 +132,7 @@ public:
 		uint32 getSysExSize();
 		uint8* getSysExBytesPtr(); // pointer to last 4 bytes
 		void getSysExBytesCopyTo(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
-		String toDebugString();
+		String toDebugString(uint8 ticksPerBeat, uint8 beatsPerMeasure);
 		MidiMessage toMidiMessage();
 	};
 
@@ -168,7 +171,7 @@ public:
 			ViewSingeParts = 0x0F,
 			ViewNotes = 0x10,
 			ViewNotesMin = 0x11,
-			ViewNotesMax= 0x12,
+			ViewNotesMax = 0x12,
 			ViewPC = 0x13,
 			ViewCC = 0x14,
 			ViewCCMin = 0x15,
@@ -180,7 +183,9 @@ public:
 			ViewCAft = 0x1B,
 			ViewTempo = 0x1C,
 			ViewMute = 0x1D,
-			ViewSysEx = 0x1E
+			ViewSysEx = 0x1E,
+			ViewNotesOff = 0x1F,
+			ViewInc = 0x20
 		};
 		VirtualPatternTableFilterBlock();
 	private:
@@ -191,12 +196,20 @@ public:
 	// returns true, if event is to be shown according to VirtualPatternTableFilterBlock m_patternTableFilterParams
 	bool filter(PatternEventData* event) const;
 
+	bool isPatternEmpty(){ return m_sequenceBlocks.size() == 0; }
+
+	// to be called when beat signature in pattern setup is changed. updates the viewed table by sendChangeMessage() (for MM-BB-TT time display repaint)
+	void setBeatSignature(BeatSignature beatSignature);
+
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
 	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 	HashMap<int, String> m_midiCCNames;
+	uint8 m_ticksPerBeat = 96;
+	uint8 m_beatSigNumerator = 4; // = beats per measure
+	uint8 m_beatSigDenominator = 4;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternBodyBlock)
 };

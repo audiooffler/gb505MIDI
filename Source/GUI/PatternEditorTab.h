@@ -27,8 +27,7 @@
 #include "ParameterWidgets/ParameterComboBox.h"
 //[/Headers]
 
-#include "GroupWidgets/RectangleDark.h"
-#include "GroupWidgets/RectangleGrey.h"
+#include "GroupWidgets/PanelGroupGrey.h"
 #include "ParameterWidgets/BlackToggle.h"
 #include "ParameterWidgets/SmallGreenToggle.h"
 
@@ -43,6 +42,7 @@
 */
 class PatternEditorTab  : public Component,
                           public ChangeListener,
+                          public ApplicationCommandTarget,
                           public ComboBoxListener,
                           public ButtonListener,
                           public SliderListener
@@ -54,14 +54,35 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void changeListenerCallback (ChangeBroadcaster *source) override;
+
+	// handling some parameter changes in pattern setup and refreshed pattern table content
+	void changeListenerCallback (ChangeBroadcaster *source) override;
+
+	enum CommandIDs
+	{
+		fileOpenPatternSyxFile = 0x2101,
+		fileSavePatternSyxFile = 0x2102,
+		fileImportPatternSmfFile = 0x2111,
+		fileExportPatternSmfFile = 0x2112,
+		grooveBoxLoadPattern = 0x3101
+	};
+	// This must return the next target to try after this one.
+	ApplicationCommandTarget* getNextCommandTarget() override;
+	// This must return a complete list of commands that this target can handle.
+	void getAllCommands(Array< CommandID > &commands) override;
+	//This must provide details about one of the commands that this target can perform.
+	void getCommandInfo(CommandID commandID, ApplicationCommandInfo &result) override;
+	// This must actually perform the specified command.
+	bool perform(const InvocationInfo &info) override;
+
+	void loadSysExFile(const File &file);
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
-    void resized() override;
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
-    void buttonClicked (Button* buttonThatWasClicked) override;
-    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void paint (Graphics& g);
+    void resized();
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
+    void buttonClicked (Button* buttonThatWasClicked);
+    void sliderValueChanged (Slider* sliderThatWasMoved);
 
 
 
@@ -71,11 +92,11 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<RectangleDark> component3;
-    ScopedPointer<RectangleGrey> component4;
-    ScopedPointer<RectangleGrey> component2;
-    ScopedPointer<ComboBox> m_midiOutComboBox;
-    ScopedPointer<Label> m_midiOutLabel;
+    ScopedPointer<PanelGroupGrey> m_patternPanel;
+    ScopedPointer<PanelGroupGrey> m_viewEventTypesPanel;
+    ScopedPointer<PanelGroupGrey> m_viewPartsPanel;
+    ScopedPointer<PanelGroupGrey> m_midiOutPanel;
+    ScopedPointer<ParameterComboBox> m_midiOutComboBox;
     ScopedPointer<TextButton> m_panicButton;
     ScopedPointer<TableListBox> m_patternEventTable;
     ScopedPointer<MicroParameterSlider> m_noteRangeLowerSlider;
@@ -101,8 +122,6 @@ private:
     ScopedPointer<Label> m_viewPartLabel6;
     ScopedPointer<BlackToggle> m_viewPartToggleMuteCtl;
     ScopedPointer<Label> m_viewPartLabelMuteCtl;
-    ScopedPointer<Label> m_viewPartsLabel;
-    ScopedPointer<Label> m_viewEventsLabel2;
     ScopedPointer<BlackToggle> m_viewTypeToggleNote;
     ScopedPointer<Label> m_viewTypeNoteLabel;
     ScopedPointer<BlackToggle> m_viewTypeTogglePc;
@@ -142,6 +161,10 @@ private:
     ScopedPointer<MicroParameterSlider> m_measuresSlider;
     ScopedPointer<MicroParameterSlider> m_tempoSlider;
     ScopedPointer<Label> m_tempoLabel;
+    ScopedPointer<Label> m_viewTypeNoteOffLabel;
+    ScopedPointer<SmallGreenToggle> m_viewNoteOffToggle;
+    ScopedPointer<BlackToggle> m_viewTypeToggleInc;
+    ScopedPointer<Label> m_viewTypeIncLabel;
 
 
     //==============================================================================

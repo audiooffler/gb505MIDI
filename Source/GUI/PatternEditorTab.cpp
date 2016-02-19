@@ -56,27 +56,19 @@ PatternEditorTab::PatternEditorTab ()
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Value2], PatternBodyBlock::Col_Value2, 100);
     //[/Constructor_pre]
 
-    addAndMakeVisible (component3 = new RectangleDark());
-    addAndMakeVisible (component4 = new RectangleGrey());
-    addAndMakeVisible (component2 = new RectangleGrey());
-    addAndMakeVisible (m_midiOutComboBox = new ComboBox ("midiOutComboBox"));
+    addAndMakeVisible (m_patternPanel = new PanelGroupGrey ("patternPanel", "PATTERN"));
+    addAndMakeVisible (m_viewEventTypesPanel = new PanelGroupGrey ("viewEventTypesPanel", "VIEW EVENTS"));
+    addAndMakeVisible (m_viewPartsPanel = new PanelGroupGrey ("viewPartsPanel", "VIEW PARTS"));
+    addAndMakeVisible (m_midiOutPanel = new PanelGroupGrey ("midiOutPanel", "MIDI OUT"));
+    addAndMakeVisible (m_midiOutComboBox = new ParameterComboBox ("midiOutComboBox"));
     m_midiOutComboBox->setEditableText (false);
     m_midiOutComboBox->setJustificationType (Justification::centredLeft);
     m_midiOutComboBox->setTextWhenNothingSelected (String());
     m_midiOutComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_midiOutComboBox->addListener (this);
 
-    addAndMakeVisible (m_midiOutLabel = new Label ("midiOutLabel",
-                                                   TRANS("MIDI OUT:")));
-    m_midiOutLabel->setFont (Font (12.00f, Font::bold));
-    m_midiOutLabel->setJustificationType (Justification::centredRight);
-    m_midiOutLabel->setEditable (false, false, false);
-    m_midiOutLabel->setColour (Label::textColourId, Colours::white);
-    m_midiOutLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_midiOutLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (m_panicButton = new TextButton ("panicButton"));
-    m_panicButton->setButtonText (TRANS("MIDI Panic!"));
+    m_panicButton->setButtonText (TRANS("Panic!"));
     m_panicButton->addListener (this);
 
     addAndMakeVisible (m_patternEventTable = new TableListBox ("patternEventTable"));
@@ -141,7 +133,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabelR = new Label ("viewPartLabelR",
                                                      TRANS("R")));
     m_viewPartLabelR->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabelR->setJustificationType (Justification::centredRight);
+    m_viewPartLabelR->setJustificationType (Justification::centred);
     m_viewPartLabelR->setEditable (false, false, false);
     m_viewPartLabelR->setColour (Label::textColourId, Colours::black);
     m_viewPartLabelR->setColour (TextEditor::textColourId, Colours::black);
@@ -151,7 +143,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel1 = new Label ("viewPartLabel1",
                                                      TRANS("1")));
     m_viewPartLabel1->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel1->setJustificationType (Justification::centredRight);
+    m_viewPartLabel1->setJustificationType (Justification::centred);
     m_viewPartLabel1->setEditable (false, false, false);
     m_viewPartLabel1->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel1->setColour (TextEditor::textColourId, Colours::black);
@@ -161,7 +153,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel2 = new Label ("viewPartLabel2",
                                                      TRANS("2")));
     m_viewPartLabel2->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel2->setJustificationType (Justification::centredRight);
+    m_viewPartLabel2->setJustificationType (Justification::centred);
     m_viewPartLabel2->setEditable (false, false, false);
     m_viewPartLabel2->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel2->setColour (TextEditor::textColourId, Colours::black);
@@ -171,7 +163,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel3 = new Label ("viewPartLabel3",
                                                      TRANS("3")));
     m_viewPartLabel3->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel3->setJustificationType (Justification::centredRight);
+    m_viewPartLabel3->setJustificationType (Justification::centred);
     m_viewPartLabel3->setEditable (false, false, false);
     m_viewPartLabel3->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel3->setColour (TextEditor::textColourId, Colours::black);
@@ -181,7 +173,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel4 = new Label ("viewPartLabel4",
                                                      TRANS("4")));
     m_viewPartLabel4->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel4->setJustificationType (Justification::centredRight);
+    m_viewPartLabel4->setJustificationType (Justification::centred);
     m_viewPartLabel4->setEditable (false, false, false);
     m_viewPartLabel4->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel4->setColour (TextEditor::textColourId, Colours::black);
@@ -191,7 +183,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel5 = new Label ("viewPartLabel5",
                                                      TRANS("5")));
     m_viewPartLabel5->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel5->setJustificationType (Justification::centredRight);
+    m_viewPartLabel5->setJustificationType (Justification::centred);
     m_viewPartLabel5->setEditable (false, false, false);
     m_viewPartLabel5->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel5->setColour (TextEditor::textColourId, Colours::black);
@@ -201,7 +193,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel6 = new Label ("viewPartLabel6",
                                                      TRANS("6")));
     m_viewPartLabel6->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel6->setJustificationType (Justification::centredRight);
+    m_viewPartLabel6->setJustificationType (Justification::centred);
     m_viewPartLabel6->setEditable (false, false, false);
     m_viewPartLabel6->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel6->setColour (TextEditor::textColourId, Colours::black);
@@ -211,29 +203,11 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabelMuteCtl = new Label ("viewPartLabelMuteCtl",
                                                            TRANS("MUTE-CTL")));
     m_viewPartLabelMuteCtl->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabelMuteCtl->setJustificationType (Justification::centredRight);
+    m_viewPartLabelMuteCtl->setJustificationType (Justification::centred);
     m_viewPartLabelMuteCtl->setEditable (false, false, false);
     m_viewPartLabelMuteCtl->setColour (Label::textColourId, Colours::black);
     m_viewPartLabelMuteCtl->setColour (TextEditor::textColourId, Colours::black);
     m_viewPartLabelMuteCtl->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_viewPartsLabel = new Label ("viewPartsLabel",
-                                                     TRANS("VIEW PARTS:")));
-    m_viewPartsLabel->setFont (Font (12.00f, Font::bold));
-    m_viewPartsLabel->setJustificationType (Justification::centredLeft);
-    m_viewPartsLabel->setEditable (false, false, false);
-    m_viewPartsLabel->setColour (Label::textColourId, Colours::black);
-    m_viewPartsLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_viewPartsLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_viewEventsLabel2 = new Label ("viewEventsLabel",
-                                                       TRANS("VIEW EVENTS:")));
-    m_viewEventsLabel2->setFont (Font (12.00f, Font::bold));
-    m_viewEventsLabel2->setJustificationType (Justification::centredLeft);
-    m_viewEventsLabel2->setEditable (false, false, false);
-    m_viewEventsLabel2->setColour (Label::textColourId, Colours::black);
-    m_viewEventsLabel2->setColour (TextEditor::textColourId, Colours::black);
-    m_viewEventsLabel2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_viewTypeToggleNote = new BlackToggle());
     addAndMakeVisible (m_viewTypeNoteLabel = new Label ("viewTypeNoteLabel",
@@ -369,7 +343,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_viewPartLabel7 = new Label ("viewPartLabel7",
                                                      TRANS("7")));
     m_viewPartLabel7->setFont (Font (12.00f, Font::bold));
-    m_viewPartLabel7->setJustificationType (Justification::centredRight);
+    m_viewPartLabel7->setJustificationType (Justification::centred);
     m_viewPartLabel7->setEditable (false, false, false);
     m_viewPartLabel7->setColour (Label::textColourId, Colours::black);
     m_viewPartLabel7->setColour (TextEditor::textColourId, Colours::black);
@@ -404,7 +378,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_patchNameLabel = new Label ("patchNameLabel",
                                                      TRANS("PATTERN NAME")));
     m_patchNameLabel->setFont (Font (12.00f, Font::bold));
-    m_patchNameLabel->setJustificationType (Justification::centredLeft);
+    m_patchNameLabel->setJustificationType (Justification::centred);
     m_patchNameLabel->setEditable (false, false, false);
     m_patchNameLabel->setColour (Label::textColourId, Colours::black);
     m_patchNameLabel->setColour (TextEditor::textColourId, Colours::black);
@@ -449,7 +423,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_timeSignatureLabel = new Label ("timeSignatureLabel",
                                                          TRANS("TIME SIGNATURE")));
     m_timeSignatureLabel->setFont (Font (12.00f, Font::bold));
-    m_timeSignatureLabel->setJustificationType (Justification::centredLeft);
+    m_timeSignatureLabel->setJustificationType (Justification::centred);
     m_timeSignatureLabel->setEditable (false, false, false);
     m_timeSignatureLabel->setColour (Label::textColourId, Colours::black);
     m_timeSignatureLabel->setColour (TextEditor::textColourId, Colours::black);
@@ -458,7 +432,7 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_measuresLabel = new Label ("measuresLabel",
                                                     TRANS("MEASURES")));
     m_measuresLabel->setFont (Font (12.00f, Font::bold));
-    m_measuresLabel->setJustificationType (Justification::centredLeft);
+    m_measuresLabel->setJustificationType (Justification::centred);
     m_measuresLabel->setEditable (false, false, false);
     m_measuresLabel->setColour (Label::textColourId, Colours::black);
     m_measuresLabel->setColour (TextEditor::textColourId, Colours::black);
@@ -483,11 +457,31 @@ PatternEditorTab::PatternEditorTab ()
     addAndMakeVisible (m_tempoLabel = new Label ("tempoLabel",
                                                  TRANS("TEMPO")));
     m_tempoLabel->setFont (Font (12.00f, Font::bold));
-    m_tempoLabel->setJustificationType (Justification::centredLeft);
+    m_tempoLabel->setJustificationType (Justification::centred);
     m_tempoLabel->setEditable (false, false, false);
     m_tempoLabel->setColour (Label::textColourId, Colours::black);
     m_tempoLabel->setColour (TextEditor::textColourId, Colours::black);
     m_tempoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_viewTypeNoteOffLabel = new Label ("viewTypeNoteOffLabel",
+                                                           TRANS("NOTE-OFF")));
+    m_viewTypeNoteOffLabel->setFont (Font (12.00f, Font::bold));
+    m_viewTypeNoteOffLabel->setJustificationType (Justification::centredRight);
+    m_viewTypeNoteOffLabel->setEditable (false, false, false);
+    m_viewTypeNoteOffLabel->setColour (Label::textColourId, Colours::black);
+    m_viewTypeNoteOffLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_viewTypeNoteOffLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_viewNoteOffToggle = new SmallGreenToggle());
+    addAndMakeVisible (m_viewTypeToggleInc = new BlackToggle());
+    addAndMakeVisible (m_viewTypeIncLabel = new Label ("viewTypeIncLabel",
+                                                       TRANS("INC")));
+    m_viewTypeIncLabel->setFont (Font (12.00f, Font::bold));
+    m_viewTypeIncLabel->setJustificationType (Justification::centredRight);
+    m_viewTypeIncLabel->setEditable (false, false, false);
+    m_viewTypeIncLabel->setColour (Label::textColourId, Colours::black);
+    m_viewTypeIncLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_viewTypeIncLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
 
     //[UserPreSize]
@@ -509,7 +503,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_patternNameEditor->setParameter1(patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x00));
 	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x10)->addChangeListener(this);
 	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x11)->addChangeListener(this);
-	
+
 	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x13)->addChangeListener(this);
 	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x14)->addChangeListener(this);
 	patternSetupBlock->getPatternSetupConfigBlockPtr()->getParameter(0x15)->addChangeListener(this);
@@ -521,7 +515,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_keySignatureComboBox->setSelectedId(3, dontSendNotification);
     //[/UserPreSize]
 
-    setSize (1024, 400);
+    setSize (1060, 400);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -552,6 +546,8 @@ PatternEditorTab::PatternEditorTab ()
 	m_viewTypeToggleTempo->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1C));
 	m_viewTypeToggleMute->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1D));
 	m_viewTypeToggleSysEx->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1E));
+	m_viewNoteOffToggle->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x1F));
+	m_viewTypeToggleInc->setParameter(patternBodyBlock->getPatternTableFilterParams()->getParameter(0x20));
 
 	patternBodyBlock->refreshFilteredContent();
     //[/Constructor]
@@ -563,11 +559,11 @@ PatternEditorTab::~PatternEditorTab()
 	grooveboxMemory->getPatternBodyBlock()->removeChangeListener(this);
     //[/Destructor_pre]
 
-    component3 = nullptr;
-    component4 = nullptr;
-    component2 = nullptr;
+    m_patternPanel = nullptr;
+    m_viewEventTypesPanel = nullptr;
+    m_viewPartsPanel = nullptr;
+    m_midiOutPanel = nullptr;
     m_midiOutComboBox = nullptr;
-    m_midiOutLabel = nullptr;
     m_panicButton = nullptr;
     m_patternEventTable = nullptr;
     m_noteRangeLowerSlider = nullptr;
@@ -593,8 +589,6 @@ PatternEditorTab::~PatternEditorTab()
     m_viewPartLabel6 = nullptr;
     m_viewPartToggleMuteCtl = nullptr;
     m_viewPartLabelMuteCtl = nullptr;
-    m_viewPartsLabel = nullptr;
-    m_viewEventsLabel2 = nullptr;
     m_viewTypeToggleNote = nullptr;
     m_viewTypeNoteLabel = nullptr;
     m_viewTypeTogglePc = nullptr;
@@ -634,6 +628,10 @@ PatternEditorTab::~PatternEditorTab()
     m_measuresSlider = nullptr;
     m_tempoSlider = nullptr;
     m_tempoLabel = nullptr;
+    m_viewTypeNoteOffLabel = nullptr;
+    m_viewNoteOffToggle = nullptr;
+    m_viewTypeToggleInc = nullptr;
+    m_viewTypeIncLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -649,6 +647,8 @@ void PatternEditorTab::paint (Graphics& g)
 #endif
     //[/UserPrePaint]
 
+    g.fillAll (Colour (0xff303030));
+
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
@@ -658,77 +658,79 @@ void PatternEditorTab::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    component3->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
-    component4->setBounds (8, 72, 708, 80);
-    component2->setBounds (8, 36, 708, 32);
-    m_midiOutComboBox->setBounds (112, 8, 176, 20);
-    m_midiOutLabel->setBounds (8, 8, 88, 20);
-    m_panicButton->setBounds (296, 8, 150, 20);
-    m_patternEventTable->setBounds (8, 160, 708, getHeight() - 168);
-    m_noteRangeLowerSlider->setBounds (124, 104, 48, 16);
-    m_noteRangeUpperSlider->setBounds (124, 128, 48, 16);
-    m_fromLabel->setBounds (80, 104, 44, 16);
-    m_ccRangeLowerSlider->setBounds (244, 104, 40, 16);
-    m_ccRangeUpperSlider->setBounds (244, 128, 40, 16);
-    m_PAftRangeLowerSlider->setBounds (372, 104, 48, 16);
-    m_PAftRangeUpperSlider->setBounds (372, 128, 48, 16);
-    m_viewPartToggleR->setBounds (112, 44, 25, 17);
-    m_viewPartLabelR->setBounds (94, 44, 20, 16);
-    m_viewPartToggle1->setBounds (156, 44, 25, 17);
-    m_viewPartLabel1->setBounds (138, 44, 20, 16);
-    m_viewPartToggle2->setBounds (200, 44, 25, 17);
-    m_viewPartLabel2->setBounds (182, 44, 20, 16);
-    m_viewPartToggle3->setBounds (244, 44, 25, 17);
-    m_viewPartLabel3->setBounds (226, 44, 20, 16);
-    m_viewPartToggle4->setBounds (288, 44, 25, 17);
-    m_viewPartLabel4->setBounds (270, 44, 20, 16);
-    m_viewPartToggle5->setBounds (332, 44, 25, 17);
-    m_viewPartLabel5->setBounds (314, 44, 20, 16);
-    m_viewPartToggle6->setBounds (376, 44, 25, 17);
-    m_viewPartLabel6->setBounds (358, 44, 20, 16);
-    m_viewPartToggleMuteCtl->setBounds (508, 44, 25, 17);
-    m_viewPartLabelMuteCtl->setBounds (445, 44, 66, 16);
-    m_viewPartsLabel->setBounds (12, 44, 84, 16);
-    m_viewEventsLabel2->setBounds (12, 80, 92, 16);
-    m_viewTypeToggleNote->setBounds (144, 80, 25, 17);
-    m_viewTypeNoteLabel->setBounds (104, 80, 40, 16);
-    m_viewTypeTogglePc->setBounds (200, 80, 25, 17);
-    m_viewTypePcLabel->setBounds (176, 80, 24, 16);
-    m_viewTypeToggleCc->setBounds (256, 80, 25, 17);
-    m_viewTypeCcLabel->setBounds (232, 80, 24, 16);
-    m_viewTypeToggleBend->setBounds (320, 80, 25, 17);
-    m_viewTypeBendLabel->setBounds (280, 80, 42, 16);
-    m_viewTypeTogglePAft->setBounds (392, 80, 25, 17);
-    m_viewTypePAftLabel->setBounds (348, 80, 44, 16);
-    m_viewTypeToggleCAft->setBounds (464, 80, 25, 17);
-    m_viewTypeCAftLabel->setBounds (420, 80, 44, 16);
-    m_viewTypeToggleTempo->setBounds (540, 80, 25, 17);
-    m_viewTypeTempoLabel->setBounds (492, 80, 50, 16);
-    m_viewTypeToggleMute->setBounds (540, 104, 25, 17);
-    m_viewTypeMuteLabel->setBounds (492, 104, 50, 16);
-    m_viewTypeToggleSysEx->setBounds (540, 128, 25, 17);
-    m_viewTypeSysExLabel->setBounds (492, 128, 50, 16);
-    m_toLabel->setBounds (80, 128, 44, 16);
-    m_fromLabel2->setBounds (200, 104, 44, 16);
-    m_toLabel2->setBounds (200, 128, 44, 16);
-    m_fromLabel3->setBounds (328, 105, 44, 16);
-    m_toLabel3->setBounds (328, 128, 44, 16);
-    m_viewPartToggle7->setBounds (420, 44, 25, 17);
-    m_viewPartLabel7->setBounds (402, 44, 20, 16);
-    m_viewAllPartsButton->setBounds (604, 40, 52, 24);
-    m_viewNoPartsButton->setBounds (660, 40, 52, 24);
-    m_viewAllEventsButton->setBounds (604, 100, 52, 24);
-    m_viewNoEventsButton->setBounds (660, 100, 52, 24);
-    m_viewSinglePartToggle->setBounds (584, 46, 12, 12);
-    m_viewSinglePartLabel->setBounds (533, 44, 54, 16);
-    m_patchNameLabel->setBounds (728, 12, 98, 24);
-    m_patternNameEditor->setBounds (728, 36, 128, 22);
-    m_keySignatureComboBox->setBounds (732, 84, 60, 18);
-    m_timeSignatureLabel->setBounds (728, 60, 124, 24);
-    m_measuresLabel->setBounds (728, 108, 124, 24);
-    m_measuresSlider->setBounds (732, 132, 48, 16);
-    m_tempoSlider->setBounds (732, 176, 48, 16);
-    m_tempoLabel->setBounds (728, 152, 124, 24);
+    m_patternPanel->setBounds (4, 4, 716, getHeight() - 8);
+    m_viewEventTypesPanel->setBounds (724, 168, 332, 188);
+    m_viewPartsPanel->setBounds (724, 64, 332, 100);
+    m_midiOutPanel->setBounds (724, 4, 332, 56);
+    m_midiOutComboBox->setBounds (732, 24, 256, 22);
+    m_panicButton->setBounds (996, 24, 52, 22);
+    m_patternEventTable->setBounds (8, 68, 708, getHeight() - 76);
+    m_noteRangeLowerSlider->setBounds (848, 188, 48, 16);
+    m_noteRangeUpperSlider->setBounds (924, 188, 48, 16);
+    m_fromLabel->setBounds (808, 188, 44, 16);
+    m_ccRangeLowerSlider->setBounds (848, 216, 48, 16);
+    m_ccRangeUpperSlider->setBounds (924, 216, 48, 16);
+    m_PAftRangeLowerSlider->setBounds (848, 244, 48, 16);
+    m_PAftRangeUpperSlider->setBounds (924, 244, 48, 16);
+    m_viewPartToggleR->setBounds (732, 100, 25, 17);
+    m_viewPartLabelR->setBounds (732, 84, 25, 16);
+    m_viewPartToggle1->setBounds (772, 100, 25, 17);
+    m_viewPartLabel1->setBounds (772, 84, 25, 16);
+    m_viewPartToggle2->setBounds (804, 100, 25, 17);
+    m_viewPartLabel2->setBounds (804, 84, 25, 16);
+    m_viewPartToggle3->setBounds (836, 100, 25, 17);
+    m_viewPartLabel3->setBounds (836, 84, 25, 16);
+    m_viewPartToggle4->setBounds (868, 100, 25, 17);
+    m_viewPartLabel4->setBounds (868, 84, 25, 16);
+    m_viewPartToggle5->setBounds (900, 100, 25, 17);
+    m_viewPartLabel5->setBounds (900, 84, 25, 16);
+    m_viewPartToggle6->setBounds (932, 100, 25, 17);
+    m_viewPartLabel6->setBounds (932, 84, 25, 16);
+    m_viewPartToggleMuteCtl->setBounds (1008, 100, 25, 17);
+    m_viewPartLabelMuteCtl->setBounds (990, 84, 66, 16);
+    m_viewTypeToggleNote->setBounds (776, 188, 25, 17);
+    m_viewTypeNoteLabel->setBounds (732, 188, 44, 16);
+    m_viewTypeTogglePc->setBounds (850, 272, 25, 17);
+    m_viewTypePcLabel->setBounds (808, 272, 42, 16);
+    m_viewTypeToggleCc->setBounds (776, 216, 25, 17);
+    m_viewTypeCcLabel->setBounds (732, 216, 44, 16);
+    m_viewTypeToggleBend->setBounds (924, 272, 25, 17);
+    m_viewTypeBendLabel->setBounds (880, 272, 44, 16);
+    m_viewTypeTogglePAft->setBounds (776, 244, 25, 17);
+    m_viewTypePAftLabel->setBounds (732, 244, 44, 16);
+    m_viewTypeToggleCAft->setBounds (776, 272, 25, 17);
+    m_viewTypeCAftLabel->setBounds (730, 272, 46, 16);
+    m_viewTypeToggleTempo->setBounds (776, 300, 25, 17);
+    m_viewTypeTempoLabel->setBounds (726, 300, 50, 16);
+    m_viewTypeToggleMute->setBounds (850, 300, 25, 17);
+    m_viewTypeMuteLabel->setBounds (806, 300, 44, 16);
+    m_viewTypeToggleSysEx->setBounds (924, 300, 25, 17);
+    m_viewTypeSysExLabel->setBounds (874, 300, 50, 16);
+    m_toLabel->setBounds (900, 188, 28, 16);
+    m_fromLabel2->setBounds (808, 216, 44, 16);
+    m_toLabel2->setBounds (900, 216, 28, 16);
+    m_fromLabel3->setBounds (808, 245, 44, 16);
+    m_toLabel3->setBounds (900, 244, 28, 16);
+    m_viewPartToggle7->setBounds (964, 100, 25, 17);
+    m_viewPartLabel7->setBounds (964, 84, 25, 16);
+    m_viewAllPartsButton->setBounds (936, 136, 52, 20);
+    m_viewNoPartsButton->setBounds (996, 136, 52, 20);
+    m_viewAllEventsButton->setBounds (936, 328, 52, 20);
+    m_viewNoEventsButton->setBounds (996, 328, 52, 20);
+    m_viewSinglePartToggle->setBounds (852, 140, 12, 12);
+    m_viewSinglePartLabel->setBounds (797, 140, 55, 12);
+    m_patchNameLabel->setBounds (12, 24, 128, 16);
+    m_patternNameEditor->setBounds (12, 40, 128, 22);
+    m_keySignatureComboBox->setBounds (164, 40, 60, 22);
+    m_timeSignatureLabel->setBounds (136, 24, 116, 16);
+    m_measuresLabel->setBounds (244, 24, 76, 16);
+    m_measuresSlider->setBounds (264, 40, 36, 20);
+    m_tempoSlider->setBounds (324, 40, 56, 20);
+    m_tempoLabel->setBounds (324, 24, 56, 16);
+    m_viewTypeNoteOffLabel->setBounds (975, 188, 64, 16);
+    m_viewNoteOffToggle->setBounds (1036, 190, 12, 12);
+    m_viewTypeToggleInc->setBounds (998, 273, 25, 17);
+    m_viewTypeIncLabel->setBounds (966, 272, 32, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -761,6 +763,7 @@ void PatternEditorTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				uint8 denominator = (uint8)signatureStrings[1].getIntValue();
 				PatternSetupConfigBlock* patternSetupConfigBlock = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
 				patternSetupConfigBlock->setBeatSignature(numerator, denominator);
+				grooveboxMemory->getPatternBodyBlock()->setBeatSignature(BeatSignature(numerator, denominator));
 			}
 		}
         //[/UserComboBoxCode_m_keySignatureComboBox]
@@ -845,6 +848,7 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(1, Parameter::Init);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(1, Parameter::Init);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(1, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewInc)->setValue(1, Parameter::Init);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewAllEventsButton]
@@ -861,6 +865,7 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewTempo)->setValue(0, Parameter::Init);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewMute)->setValue(0, Parameter::Init);
 		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewSysEx)->setValue(0, Parameter::Init);
+		patternBodyBlock->getPatternTableFilterParams()->getParameter(PatternBodyBlock::VirtualPatternTableFilterBlock::ViewInc)->setValue(0, Parameter::Init);
 
 		patternBodyBlock->refreshFilteredContent();
         //[/UserButtonCode_m_viewNoEventsButton]
@@ -933,6 +938,7 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 	if (source == grooveboxMemory->getPatternBodyBlock())
 	{
 		m_patternEventTable->updateContent();
+		m_patternEventTable->repaint();
 	}
 	else if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
@@ -940,7 +946,10 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x11))
 		{
 			BeatSignature sig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature();
-			m_keySignatureComboBox->setText(sig.toString());
+			m_keySignatureComboBox->setText(sig.toString(),dontSendNotification);
+			grooveboxMemory->getPatternBodyBlock()->setBeatSignature(sig);
+			m_patternEventTable->updateContent();
+			m_patternEventTable->repaint();
 		}
 		else if (param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x13) ||
 			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x14) ||
@@ -948,6 +957,122 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 			param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x16))
 		{
 			m_tempoSlider->setValue(grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm(), dontSendNotification);
+		}
+	}
+}
+
+// This must return the next target to try after this one.
+ApplicationCommandTarget* PatternEditorTab::getNextCommandTarget()
+{
+	// this will return the next parent component that is an ApplicationCommandTarget (in this
+	// case, there probably isn't one, but it's best to use this method in your own apps).
+	return findFirstTargetParentComponent();
+}
+
+// This must return a complete list of commands that this target can handle.
+void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
+{
+	// this returns the set of all commands that this target can perform..
+	const CommandID ids[] = {
+		fileOpenPatternSyxFile,
+		fileSavePatternSyxFile,
+		/* ---------------------- */
+		fileImportPatternSmfFile,
+		fileExportPatternSmfFile,
+		/* ---------------------- */
+		grooveBoxLoadPattern
+	};
+	commands.addArray(ids, numElementsInArray(ids));
+}
+
+//This must provide details about one of the commands that this target can perform.
+void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo &result)
+{
+	const String category("Pattern");
+
+	switch (commandID)
+	{
+	case fileOpenPatternSyxFile:
+		result.setInfo("Open SysEx Pattern File...", "Opens a raw pattern file, either binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
+		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
+		break;
+	case fileImportPatternSmfFile:
+		result.setInfo("Import Pattern from MIDI File", "Tries to extract pattern data from a Standard MIDI File (.mid)", category, 0);
+		result.addDefaultKeypress('i', ModifierKeys::commandModifier);
+		result.setActive(true);
+		break;
+	case fileSavePatternSyxFile:
+		result.setInfo("Save Pattern as SysEx...", "Saves a pattern file as raw data, either binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
+		result.addDefaultKeypress('s', ModifierKeys::commandModifier);
+		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
+		break;
+	case fileExportPatternSmfFile:
+		result.setInfo("Export Pattern as MIDI...", "Converts pattern to Standard MIDI File (.mid)", category, 0);
+		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
+		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
+		break;
+	case grooveBoxLoadPattern:
+		result.setInfo("Send Pattern Request SysEx", "Request temporary pattern data from groovebox.", category, 0);
+		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
+		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
+	default:
+		break;
+	}
+}
+
+// This must actually perform the specified command.
+bool PatternEditorTab::perform(const InvocationInfo &info)
+{
+	FileChooser fileChooser("Open SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
+	switch (info.commandID)
+	{
+	case CommandIDs::fileOpenPatternSyxFile:
+		if (fileChooser.browseForFileToOpen())
+		{
+			loadSysExFile(fileChooser.getResult());
+		}
+		return true;
+	case CommandIDs::fileImportPatternSmfFile:
+		// TODO: import from midi (convert midi to groovebox sysex)
+		return true;
+	case CommandIDs::fileSavePatternSyxFile:
+		//saveAsSysExFile();
+		return true;
+	case CommandIDs::fileExportPatternSmfFile:
+		//exportAsMidiFile();
+		return true;
+	case CommandIDs::grooveBoxLoadPattern:
+		//loadFromGroovebox();
+		return true;
+	default:
+		return false;
+	}
+	return false;
+}
+
+void PatternEditorTab::loadSysExFile(const File &file)
+{
+	if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt")
+	{
+		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
+			String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive)\r\n" +
+			String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Text)");
+	}
+	else
+	{
+		bool loadedSucessfully(false);
+		if (file.getFileExtension().toLowerCase() == ".syx")
+		{
+			loadedSucessfully = grooveboxMemory->loadBinarySysExFile(file);
+		}
+		else if (file.getFileExtension().toLowerCase() == ".txt")
+		{
+			loadedSucessfully = grooveboxMemory->loadHexTxtSysExFile(file);
+		}
+		// load current pattern. if no success loading: show empty pattern
+		if (!loadedSucessfully)
+		{
+			AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error getting pattern data"), TRANS("No pattern or pattern data was retrieved."));
 		}
 	}
 }
@@ -965,306 +1090,311 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="PatternEditorTab" componentName=""
-                 parentClasses="public Component, public ChangeListener" constructorParams=""
-                 variableInitialisers="" snapPixels="4" snapActive="1" snapShown="1"
-                 overlayOpacity="0.330" fixedSize="1" initialWidth="1024" initialHeight="400">
-  <BACKGROUND backgroundColour="0"/>
-  <JUCERCOMP name="" id="650b65151c744492" memberName="component3" virtualName=""
-             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/RectangleDark.cpp"
-             constructorParams=""/>
-  <JUCERCOMP name="" id="40ad76072b7c1e81" memberName="component4" virtualName=""
-             explicitFocusOrder="0" pos="8 72 708 80" sourceFile="GroupWidgets/RectangleGrey.cpp"
-             constructorParams=""/>
-  <JUCERCOMP name="" id="aea56bab81242760" memberName="component2" virtualName=""
-             explicitFocusOrder="0" pos="8 36 708 32" sourceFile="GroupWidgets/RectangleGrey.cpp"
-             constructorParams=""/>
+                 parentClasses="public Component, public ChangeListener, public ApplicationCommandTarget"
+                 constructorParams="" variableInitialisers="" snapPixels="4" snapActive="1"
+                 snapShown="1" overlayOpacity="0.330" fixedSize="0" initialWidth="1060"
+                 initialHeight="400">
+  <BACKGROUND backgroundColour="ff303030"/>
+  <JUCERCOMP name="patternPanel" id="b3dca965d9e5cad6" memberName="m_patternPanel"
+             virtualName="" explicitFocusOrder="0" pos="4 4 716 8M" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             constructorParams="&quot;patternPanel&quot;, &quot;PATTERN&quot;"/>
+  <JUCERCOMP name="viewEventTypesPanel" id="b5b48c285ffdb1de" memberName="m_viewEventTypesPanel"
+             virtualName="" explicitFocusOrder="0" pos="724 168 332 188" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             constructorParams="&quot;viewEventTypesPanel&quot;, &quot;VIEW EVENTS&quot;"/>
+  <JUCERCOMP name="viewPartsPanel" id="5a83783acf8f7721" memberName="m_viewPartsPanel"
+             virtualName="" explicitFocusOrder="0" pos="724 64 332 100" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             constructorParams="&quot;viewPartsPanel&quot;, &quot;VIEW PARTS&quot;"/>
+  <JUCERCOMP name="midiOutPanel" id="60dfadf25f2b4251" memberName="m_midiOutPanel"
+             virtualName="" explicitFocusOrder="0" pos="724 4 332 56" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             constructorParams="&quot;midiOutPanel&quot;, &quot;MIDI OUT&quot;"/>
   <COMBOBOX name="midiOutComboBox" id="9b6d2ada3deafb58" memberName="m_midiOutComboBox"
-            virtualName="" explicitFocusOrder="0" pos="112 8 176 20" editable="0"
-            layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
-  <LABEL name="midiOutLabel" id="b10a8e943634f13a" memberName="m_midiOutLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 8 88 20" textCol="ffffffff"
-         edTextCol="ff000000" edBkgCol="0" labelText="MIDI OUT:" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="732 24 256 22"
+            editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <TEXTBUTTON name="panicButton" id="7514cd2cffbbc78c" memberName="m_panicButton"
-              virtualName="" explicitFocusOrder="0" pos="296 8 150 20" buttonText="MIDI Panic!"
+              virtualName="" explicitFocusOrder="0" pos="996 24 52 22" buttonText="Panic!"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <GENERICCOMPONENT name="" id="6aebf3e3738962bd" memberName="m_patternEventTable"
-                    virtualName="" explicitFocusOrder="0" pos="8 160 708 168M" class="TableListBox"
+                    virtualName="" explicitFocusOrder="0" pos="8 68 708 76M" class="TableListBox"
                     params="&quot;patternEventTable&quot;"/>
   <SLIDER name="noteRangeLowerSlider" id="b9d1900a1c3c44f7" memberName="m_noteRangeLowerSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="124 104 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="848 188 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="noteRangeUpperSlider" id="b55b7c90bb48008" memberName="m_noteRangeUpperSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="124 128 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="924 188 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="fromLabel" id="9056d8c316152585" memberName="m_fromLabel"
-         virtualName="" explicitFocusOrder="0" pos="80 104 44 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="808 188 44 16" edTextCol="ff000000"
          edBkgCol="0" labelText="FROM" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <SLIDER name="ccRangeLowerSlider" id="6eb2fec2472bcf65" memberName="m_ccRangeLowerSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="244 104 40 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="848 216 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="ccRangeUpperSlider" id="577e76cd8daa1c7" memberName="m_ccRangeUpperSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="244 128 40 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="924 216 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="PAftRangeLowerSlider" id="45a06c5048ed35ff" memberName="m_PAftRangeLowerSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="372 104 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="848 244 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="PAftRangeUpperSlider" id="797d73fef2e299f5" memberName="m_PAftRangeUpperSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="372 128 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="924 244 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <JUCERCOMP name="viewPartToggleR" id="1d7902cb6f52a8a2" memberName="m_viewPartToggleR"
-             virtualName="" explicitFocusOrder="0" pos="112 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="732 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabelR" id="bc5132eee7a0ee16" memberName="m_viewPartLabelR"
-         virtualName="" explicitFocusOrder="0" pos="94 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="732 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="R" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggle1" id="a18931839c0b8bc7" memberName="m_viewPartToggle1"
-             virtualName="" explicitFocusOrder="0" pos="156 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="772 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel1" id="ad4994c83a8227fe" memberName="m_viewPartLabel1"
-         virtualName="" explicitFocusOrder="0" pos="138 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="772 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="1" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggle2" id="cc67029767436e76" memberName="m_viewPartToggle2"
-             virtualName="" explicitFocusOrder="0" pos="200 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="804 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel2" id="40f4c0d942746fc2" memberName="m_viewPartLabel2"
-         virtualName="" explicitFocusOrder="0" pos="182 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="804 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="2" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggle3" id="f1d2259f5fdc632a" memberName="m_viewPartToggle3"
-             virtualName="" explicitFocusOrder="0" pos="244 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="836 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel3" id="c00f1c442319a709" memberName="m_viewPartLabel3"
-         virtualName="" explicitFocusOrder="0" pos="226 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="836 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="3" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggle4" id="19611dc9b01f2f43" memberName="m_viewPartToggle4"
-             virtualName="" explicitFocusOrder="0" pos="288 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="868 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel4" id="b2bba0a8be3d9218" memberName="m_viewPartLabel4"
-         virtualName="" explicitFocusOrder="0" pos="270 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="868 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="4" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggle5" id="78c5acd471a43391" memberName="m_viewPartToggle5"
-             virtualName="" explicitFocusOrder="0" pos="332 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="900 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel5" id="625a82943feb34fc" memberName="m_viewPartLabel5"
-         virtualName="" explicitFocusOrder="0" pos="314 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="900 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="5" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggle6" id="83663b51ab2a6441" memberName="m_viewPartToggle6"
-             virtualName="" explicitFocusOrder="0" pos="376 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="932 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel6" id="c5f2bc21f7910cd1" memberName="m_viewPartLabel6"
-         virtualName="" explicitFocusOrder="0" pos="358 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="932 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="6" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewPartToggleMuteCtl" id="c2ce082733354a5e" memberName="m_viewPartToggleMuteCtl"
-             virtualName="" explicitFocusOrder="0" pos="508 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="1008 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabelMuteCtl" id="ada9c424b62b9157" memberName="m_viewPartLabelMuteCtl"
-         virtualName="" explicitFocusOrder="0" pos="445 44 66 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="990 84 66 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="MUTE-CTL" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
-  <LABEL name="viewPartsLabel" id="e1554e2573094d42" memberName="m_viewPartsLabel"
-         virtualName="" explicitFocusOrder="0" pos="12 44 84 16" textCol="ff000000"
-         edTextCol="ff000000" edBkgCol="0" labelText="VIEW PARTS:" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
-  <LABEL name="viewEventsLabel" id="50edf174f403eee6" memberName="m_viewEventsLabel2"
-         virtualName="" explicitFocusOrder="0" pos="12 80 92 16" textCol="ff000000"
-         edTextCol="ff000000" edBkgCol="0" labelText="VIEW EVENTS:" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="viewTypeToggleNote" id="bda56df07703530" memberName="m_viewTypeToggleNote"
-             virtualName="" explicitFocusOrder="0" pos="144 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="776 188 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeNoteLabel" id="dec0e11bd8cac905" memberName="m_viewTypeNoteLabel"
-         virtualName="" explicitFocusOrder="0" pos="104 80 40 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="732 188 44 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="NOTE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeTogglePc" id="5e31f5d6526d433e" memberName="m_viewTypeTogglePc"
-             virtualName="" explicitFocusOrder="0" pos="200 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="850 272 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypePcLabel" id="8351602a43355d7b" memberName="m_viewTypePcLabel"
-         virtualName="" explicitFocusOrder="0" pos="176 80 24 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="808 272 42 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PC" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeToggleCc" id="39fa258dcb4cb708" memberName="m_viewTypeToggleCc"
-             virtualName="" explicitFocusOrder="0" pos="256 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="776 216 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeCcLabel" id="82515de101e4d876" memberName="m_viewTypeCcLabel"
-         virtualName="" explicitFocusOrder="0" pos="232 80 24 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="732 216 44 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="CC" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeToggleBend" id="36657f8d741a41be" memberName="m_viewTypeToggleBend"
-             virtualName="" explicitFocusOrder="0" pos="320 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="924 272 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeBendLabel" id="ab23ce03c4559ff7" memberName="m_viewTypeBendLabel"
-         virtualName="" explicitFocusOrder="0" pos="280 80 42 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="880 272 44 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="BEND" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeTogglePAft" id="f145639779123e00" memberName="m_viewTypeTogglePAft"
-             virtualName="" explicitFocusOrder="0" pos="392 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="776 244 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypePAftLabel" id="22549c0ebb305365" memberName="m_viewTypePAftLabel"
-         virtualName="" explicitFocusOrder="0" pos="348 80 44 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="732 244 44 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="P-AFT" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeToggleCAft" id="8c5125e59845414e" memberName="m_viewTypeToggleCAft"
-             virtualName="" explicitFocusOrder="0" pos="464 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="776 272 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeCAftLabel" id="59ab991b4d754058" memberName="m_viewTypeCAftLabel"
-         virtualName="" explicitFocusOrder="0" pos="420 80 44 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="730 272 46 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="C-AFT" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeToggleTempo" id="83c15bd47e82f57b" memberName="m_viewTypeToggleTempo"
-             virtualName="" explicitFocusOrder="0" pos="540 80 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="776 300 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeTempoLabel" id="abffb603f4cf52de" memberName="m_viewTypeTempoLabel"
-         virtualName="" explicitFocusOrder="0" pos="492 80 50 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="726 300 50 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="TEMPO" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeToggleMute" id="c215c676900cf2f" memberName="m_viewTypeToggleMute"
-             virtualName="" explicitFocusOrder="0" pos="540 104 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="850 300 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeMuteLabel" id="3729b7e77e15eff7" memberName="m_viewTypeMuteLabel"
-         virtualName="" explicitFocusOrder="0" pos="492 104 50 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="806 300 44 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="MUTE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewTypeToggleSysEx" id="48e8fca9153fa018" memberName="m_viewTypeToggleSysEx"
-             virtualName="" explicitFocusOrder="0" pos="540 128 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="924 300 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewTypeSysExLabel" id="6094cd3de2bc8cd4" memberName="m_viewTypeSysExLabel"
-         virtualName="" explicitFocusOrder="0" pos="492 128 50 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="874 300 50 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="SYSEX" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="toLabel" id="462c369b4cc8d9c9" memberName="m_toLabel" virtualName=""
-         explicitFocusOrder="0" pos="80 128 44 16" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="900 188 28 16" edTextCol="ff000000"
          edBkgCol="0" labelText="TO" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <LABEL name="fromLabel" id="27791d977542d319" memberName="m_fromLabel2"
-         virtualName="" explicitFocusOrder="0" pos="200 104 44 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="808 216 44 16" edTextCol="ff000000"
          edBkgCol="0" labelText="FROM" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <LABEL name="toLabel" id="efd1bbf0b7ad6fd" memberName="m_toLabel2" virtualName=""
-         explicitFocusOrder="0" pos="200 128 44 16" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="900 216 28 16" edTextCol="ff000000"
          edBkgCol="0" labelText="TO" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <LABEL name="fromLabel" id="b18cc35b97da47a7" memberName="m_fromLabel3"
-         virtualName="" explicitFocusOrder="0" pos="328 105 44 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="808 245 44 16" edTextCol="ff000000"
          edBkgCol="0" labelText="FROM" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <LABEL name="toLabel" id="d8b71279d35fe3a9" memberName="m_toLabel3"
-         virtualName="" explicitFocusOrder="0" pos="328 128 44 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="900 244 28 16" edTextCol="ff000000"
          edBkgCol="0" labelText="TO" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="viewPartToggle7" id="dedfac941a8fd441" memberName="m_viewPartToggle7"
-             virtualName="" explicitFocusOrder="0" pos="420 44 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="964 100 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewPartLabel7" id="1259e0a46cb4feda" memberName="m_viewPartLabel7"
-         virtualName="" explicitFocusOrder="0" pos="402 44 20 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="964 84 25 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="7" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <TEXTBUTTON name="viewAllPartsButton" id="b8166a68e7f63c09" memberName="m_viewAllPartsButton"
-              virtualName="" explicitFocusOrder="0" pos="604 40 52 24" buttonText="ALL"
+              virtualName="" explicitFocusOrder="0" pos="936 136 52 20" buttonText="ALL"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="viewNoPartsButton" id="ad02355735c6a9f1" memberName="m_viewNoPartsButton"
-              virtualName="" explicitFocusOrder="0" pos="660 40 52 24" buttonText="NONE"
+              virtualName="" explicitFocusOrder="0" pos="996 136 52 20" buttonText="NONE"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="viewAllEventsButton" id="51d716105f5b4021" memberName="m_viewAllEventsButton"
-              virtualName="" explicitFocusOrder="0" pos="604 100 52 24" buttonText="ALL"
+              virtualName="" explicitFocusOrder="0" pos="936 328 52 20" buttonText="ALL"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="viewNoEventsButton" id="e2a123523e69342" memberName="m_viewNoEventsButton"
-              virtualName="" explicitFocusOrder="0" pos="660 100 52 24" buttonText="NONE"
+              virtualName="" explicitFocusOrder="0" pos="996 328 52 20" buttonText="NONE"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <JUCERCOMP name="viewSinglePartToggle" id="71afd96cb7e4d50f" memberName="m_viewSinglePartToggle"
-             virtualName="" explicitFocusOrder="0" pos="584 46 12 12" sourceFile="ParameterWidgets/SmallGreenToggle.cpp"
+             virtualName="" explicitFocusOrder="0" pos="852 140 12 12" sourceFile="ParameterWidgets/SmallGreenToggle.cpp"
              constructorParams=""/>
   <LABEL name="viewSinglePartLabel" id="bedb99fb622fc099" memberName="m_viewSinglePartLabel"
-         virtualName="" explicitFocusOrder="0" pos="533 44 54 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="797 140 55 12" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="SINGLE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="patchNameLabel" id="2ec0efd8ffa587b" memberName="m_patchNameLabel"
-         virtualName="" explicitFocusOrder="0" pos="728 12 98 24" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="12 24 128 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PATTERN NAME" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <TEXTEDITOR name="patternNameEditor" id="9686a2e1612f5756" memberName="m_patternNameEditor"
-              virtualName="ParameterTextEditor" explicitFocusOrder="0" pos="728 36 128 22"
+              virtualName="ParameterTextEditor" explicitFocusOrder="0" pos="12 40 128 22"
               textcol="ff000000" bkgcol="fff2f59b" outlinecol="ff808080" initialText=""
               multiline="0" retKeyStartsLine="0" readonly="0" scrollbars="0"
               caret="1" popupmenu="1"/>
   <COMBOBOX name="keySignatureComboBox" id="e8c10ecedfc6fd9e" memberName="m_keySignatureComboBox"
-            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="732 84 60 18"
+            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="164 40 60 22"
             editable="0" layout="36" items="2/4&#10;3/4&#10;4/4&#10;5/4&#10;6/4&#10;7/4&#10;5/8&#10;6/8&#10;7/8&#10;9/8&#10;12/8&#10;9/16&#10;11/16&#10;13/16&#10;15/16&#10;17/16&#10;19/16"
             textWhenNonSelected="4/4" textWhenNoItems="(no choices)"/>
   <LABEL name="timeSignatureLabel" id="ebaeb767998e3a96" memberName="m_timeSignatureLabel"
-         virtualName="" explicitFocusOrder="0" pos="728 60 124 24" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="136 24 116 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="TIME SIGNATURE"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12" bold="1" italic="0" justification="33"/>
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="measuresLabel" id="d10f06f6186af7d8" memberName="m_measuresLabel"
-         virtualName="" explicitFocusOrder="0" pos="728 108 124 24" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="244 24 76 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="MEASURES" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="measuresSlider" id="e1f3179b8260be26" memberName="m_measuresSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="732 132 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="264 40 36 20"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="1" max="32" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="tempoSlider" id="2a8599a78b9bce37" memberName="m_tempoSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="732 176 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="324 40 56 20"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="20" max="240" int="0.10000000000000001"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="tempoLabel" id="49fd6aecaa8ba93e" memberName="m_tempoLabel"
-         virtualName="" explicitFocusOrder="0" pos="728 152 124 24" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="324 24 56 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="TEMPO" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
+         fontsize="12" bold="1" italic="0" justification="36"/>
+  <LABEL name="viewTypeNoteOffLabel" id="6dbe23427d97287f" memberName="m_viewTypeNoteOffLabel"
+         virtualName="" explicitFocusOrder="0" pos="975 188 64 16" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="NOTE-OFF" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
+  <JUCERCOMP name="viewNoteOffToggle" id="766f9a90956bc85" memberName="m_viewNoteOffToggle"
+             virtualName="" explicitFocusOrder="0" pos="1036 190 12 12" sourceFile="ParameterWidgets/SmallGreenToggle.cpp"
+             constructorParams=""/>
+  <JUCERCOMP name="viewTypeToggleInc" id="31a55b08317fd402" memberName="m_viewTypeToggleInc"
+             virtualName="" explicitFocusOrder="0" pos="998 273 25 17" sourceFile="ParameterWidgets/BlackToggle.cpp"
+             constructorParams=""/>
+  <LABEL name="viewTypeIncLabel" id="13ce0f7478d2cfa1" memberName="m_viewTypeIncLabel"
+         virtualName="" explicitFocusOrder="0" pos="966 272 32 16" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="INC" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

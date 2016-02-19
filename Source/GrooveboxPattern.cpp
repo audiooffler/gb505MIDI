@@ -200,9 +200,12 @@ bool GrooveboxPattern::loadBinarySysExFile(const File& file)
 bool GrooveboxPattern::loadHexTxtSysExFile(const File& file)
 {
 	MemoryBlock readBuffer;
-	readBuffer.loadFromHexString(file.loadFileAsString());
+	// fix ms excel import/export (interpreted hex to standard dez numbers)
+	String fileAsString = file.loadFileAsString().replace(" 0 ", " 00 ").replace(" 1 ", " 01 ").replace(" 2 ", " 02 ").replace(" 3 ", " 03 ").replace(" 4 ", " 04 ").replace(" 5 ", " 05 ").replace(" 6 ", " 06 ").replace(" 7 ", " 07 ").replace(" 8 ", " 08 ").replace(" 9 ", " 09 ");
+	readBuffer.loadFromHexString(fileAsString);
 	MemoryBlock currentSysExMessage(256, true);
 	OwnedArray<SyxMsg, CriticalSection> sysExMessageArray;
+
 	// process read readBuffer bytes
 	for (unsigned int i = 0; i < readBuffer.getSize(); i++)
 	{

@@ -99,10 +99,10 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 	setupParameter("Beat Signature Denominator", 0x11, 4, 16, 4);
 	setupParameter("Measures", 0x12, 0, 32, 4, StringArray(),"Pattern lenght as number of measures.");
 
-	// use convertTempoBpmIntoByteValues and convertTempoByteValuesIntoBPM on these
-	setupParameter("Tempo Byte 1", 0x13, 0, 0xF, 0x0, StringArray());
-	setupParameter("Tempo Byte 2", 0x14, 0, 0xF, 0x0, StringArray());
-	setupParameter("Tempo Byte 3", 0x15, 0, 0xF, 0x0, StringArray());
+	// use convertTempoBpmIntoByteValues and convertTempoByteValuesIntoBPM on these (default of 120.0f * 100 = 12000 = 0x2EE0) 
+	setupParameter("Tempo Byte 1", 0x13, 0, 0xF, 0x2, StringArray());
+	setupParameter("Tempo Byte 2", 0x14, 0, 0xF, 0xE, StringArray());
+	setupParameter("Tempo Byte 3", 0x15, 0, 0xF, 0xE, StringArray());
 	setupParameter("Tempo Byte 4", 0x16, 0, 0xF, 0x0, StringArray());
 
 	StringArray muteStateStringsParts567 = StringArray::fromTokens("5 ON, 6 ON, 7 ON;5 MT, 6 ON, 7 ON;5 ON, 6 MT, 7 ON;5 MT, 6 MT, 7 ON;5 ON, 6 ON, 7 MT;5 MT, 6 ON, 7 MT;5 ON, 6 MT, 7 MT;5 MT, 6 MT, 7 MT", ";", "");

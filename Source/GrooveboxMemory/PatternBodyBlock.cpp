@@ -9,7 +9,11 @@
 */
 
 #include "PatternBodyBlock.h"
+#include "PatternSetupBlock.h"
+#include "OverallMemoryBlock.h"
 #include "../GUI/GrooveboxLookAndFeel.h"
+
+extern OverallMemoryBlock* grooveboxMemory;
 
 PatternBodyBlock::PatternBodyBlock() :
 	GrooveboxMemoryBlock(0x40000000, "Pattern Body Data", "1-6", 0x00000000),
@@ -47,6 +51,8 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewTempo)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMute)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesOff)->addChangeListener(this);
+	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewInc)->addChangeListener(this);
 
 	m_midiCCNames.set(5, "PORTA TIME");
 	m_midiCCNames.set(7, "PART LEVEL");
@@ -140,7 +146,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 				}
 			}
 		}
-		/*DBG(newPatternEvent->toDebugString());*/
+		/*DBG(newPatternEvent->toDebugString(m_ticksPerBeat, m_beatSigNumerator));*/
 		/*
 		else if (c_eventType == GrooveboxPattern::Evt_TickInc)
 		{
@@ -254,17 +260,17 @@ const uint8* PatternBodyBlock::unpack7BitTo8BitData(const uint8* packed7BitData,
 
 const String PatternBodyBlock::PatternEventData::NOTENAMES[] = { "C -1","C#-1","D -1","D#-1","E -1","F -1","F#-1","G -1","G#-1","A -1","A#-1","B -1","C  0","C# 0","D  0","D# 0","E  0","F  0","F# 0","G  0","G# 0","A  0","A# 0","B  0","C  1","C# 1","D  1","D# 1","E  1","F  1","F# 1","G  1","G# 1","A  1","A# 1","B  1","C  2","C# 2","D  2","D# 2","E  2","F  2","F# 2","G  2","G# 2","A  2","A# 2","B  2","C  3","C# 3","D  3","D# 3","E  3","F  3","F# 3","G  3","G# 3","A  3","A# 3","B  3","C  4","C# 4","D  4","D# 4","E  4","F  4","F# 4","G  4","G# 4","A  4","A# 4","B  4","C  5","C# 5","D  5","D# 5","E  5","F  5","F# 5","G  5","G# 5","A  5","A# 5","B  5","C  6","C# 6","D  6","D# 6","E  6","F  6","F# 6","G  6","G# 6","A  6","A# 6","B  6","C  7","C# 7","D  7","D# 7","E  7","F  7","F# 7","G  7","G# 7","A  7","A# 7","B  7","C  8","C# 8","D  8","D# 8","E  8","F  8","F# 8","G  8","G# 8","A  8","A# 8","B  8","C  9","C# 9","D  9","D# 9","E  9","F  9","F# 9","G  9" };
 
-const unsigned int PatternBodyBlock::PatternEventData::ticksPerQuarterNote = 96;
+//const unsigned int PatternBodyBlock::PatternEventData::ticksPerQuarterNote = 96;
 unsigned long PatternBodyBlock::PatternEventData::mostRecentAbsoluteTick = 0;
 uint8 PatternBodyBlock::PatternEventData::lastRelativeTickIncrement = 0;
 
-String PatternBodyBlock::PatternEventData::getAbsoluteTickString(unsigned int absoluteTicks)
+String PatternBodyBlock::PatternEventData::getAbsoluteTickString(unsigned int absoluteTicks, uint8 ticksPerBeat, uint8 beatsPerMeasure, bool asLength/*=false*/)
 {
-	unsigned int ticksRest = (absoluteTicks % ticksPerQuarterNote);
-	unsigned int quarter = absoluteTicks / ticksPerQuarterNote;
-	unsigned int measure = quarter / 4;
-	quarter = quarter % 4;
-	return String(measure).paddedLeft('0', 2) + "-" + String(quarter).paddedLeft('0', 2) + "-" + String(ticksRest).paddedLeft('0', 2);
+	unsigned int ticksRest = (absoluteTicks % ticksPerBeat);
+	unsigned int beats = absoluteTicks / ticksPerBeat;
+	unsigned int measure = beats / beatsPerMeasure;
+	beats = beats % beatsPerMeasure;
+	return String(measure + (asLength ? 0 : 1)).paddedLeft('0', 2) + "-" + String(beats + (asLength ? 0 : 1)).paddedLeft('0', 2) + "-" + String(ticksRest).paddedLeft('0', 2);
 }
 
 String PatternBodyBlock::PatternEventData::getPartString(PatternBodyBlock::PatternPart part)
@@ -576,13 +582,13 @@ void PatternBodyBlock::PatternEventData::getSysExBytesCopyTo(uint8* fourBytes) /
 	}
 }
 
-String PatternBodyBlock::PatternEventData::toDebugString()
+String PatternBodyBlock::PatternEventData::toDebugString(uint8 ticksPerBeat, uint8 beatsPerMeasure)
 {
 	PatternEventType type = getType();
 	uint8 sysExData[4] = { 0, 0, 0, 0 };
 	if (type == Evt_SysExData) getSysExBytesCopyTo(sysExData);
 	String result = String::toHexString(bytes, 8, 1).toUpperCase() + "\t";
-	result += getAbsoluteTickString(absoluteTick) + "\t";
+	result += getAbsoluteTickString(absoluteTick, ticksPerBeat, beatsPerMeasure) + "\t";
 	result += String(getRelativeTickIncrement()) + "\t";
 	if (type != Evt_TickInc) result += getPartString(getPart()) + "\t";
 	result += getTypeString() + "\t";
@@ -591,7 +597,7 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 	{
 	case PatternBodyBlock::Evt_Note:
 		result += "v: " + String(getNoteVelocity()).paddedLeft('0', 3) + "\t";
-		result += getAbsoluteTickString(getNoteGateTicks()) + "\t";
+		result += getAbsoluteTickString(getNoteGateTicks(), ticksPerBeat, beatsPerMeasure, true) + "\t";
 		break;
 	case PatternBodyBlock::Evt_TickInc:
 		break;
@@ -705,40 +711,40 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 		switch ((PatternTableListColumnId)columnId)
 		{
 		case PatternBodyBlock::Col_Position:
-			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick);
+			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick, m_ticksPerBeat, m_beatSigNumerator);
 			break;
 		case PatternBodyBlock::Col_Raw0:
-			cellText = String::toHexString((int)event->bytes[0]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[0]).toUpperCase().paddedLeft('0',2);
 			break;
 		case PatternBodyBlock::Col_TicksInc:
 			cellText = String(event->getRelativeTickIncrement());
 			break;
 		case PatternBodyBlock::Col_Raw1:
-			cellText = String::toHexString((int)event->bytes[1]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[1]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_EventType:
 			cellText = event->getTypeString();
 			break;
 		case PatternBodyBlock::Col_Raw2:
-			cellText = String::toHexString((int)event->bytes[2]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[2]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_Raw3:
-			cellText = String::toHexString((int)event->bytes[3]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[3]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_Part:
 			cellText = PatternEventData::getPartString(event->getPart());
 			break;
 		case PatternBodyBlock::Col_Raw4:
-			cellText = String::toHexString((int)event->bytes[4]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[4]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_Raw5:
-			cellText = String::toHexString((int)event->bytes[5]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[5]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_Raw6:
-			cellText = String::toHexString((int)event->bytes[6]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[6]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_Raw7:
-			cellText = String::toHexString((int)event->bytes[7]).toUpperCase();
+			cellText = String::toHexString((int)event->bytes[7]).toUpperCase().paddedLeft('0', 2);
 			break;
 		case PatternBodyBlock::Col_Value1:
 			switch (event->getType())
@@ -784,7 +790,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 			switch (event->getType())
 			{
 			case PatternBodyBlock::Evt_Note:
-				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks());
+				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), m_ticksPerBeat, m_beatSigNumerator, true /*gate time counting measures and beats from 0*/);
 				break;
 			case PatternBodyBlock::Evt_PAft:
 				cellText = String(event->getPAftPressure());
@@ -839,7 +845,7 @@ void PatternBodyBlock::setTableSelectionMidiOutId(int id)
 }
 
 PatternBodyBlock::VirtualPatternTableFilterBlock::VirtualPatternTableFilterBlock() :
-	GrooveboxMemoryBlock(0xF0000000, "Pattern Table Filter Paramters","",0x20)
+	GrooveboxMemoryBlock(0xF0000000, "Pattern Table Filter Paramters","",0x21)
 {
 	m_name = "Pattern Filters";
 	setupParameter("View Part 1", ViewPart1, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Part 1");
@@ -855,7 +861,7 @@ PatternBodyBlock::VirtualPatternTableFilterBlock::VirtualPatternTableFilterBlock
 	setupParameter("View Single Parts", ViewSingeParts, 0, 1, 0, StringArray::fromTokens("Off On", false));
 
 	StringArray noteNames(StringArray::fromTokens("C -1;C#-1;D -1;D#-1;E -1;F -1;F#-1;G -1;G#-1;A -1;A#-1;B -1;C  0;C# 0;D  0;D# 0;E  0;F  0;F# 0;G  0;G# 0;A  0;A# 0;B  0;C  1;C# 1;D  1;D# 1;E  1;F  1;F# 1;G  1;G# 1;A  1;A# 1;B  1;C  2;C# 2;D  2;D# 2;E  2;F  2;F# 2;G  2;G# 2;A  2;A# 2;B  2;C  3;C# 3;D  3;D# 3;E  3;F  3;F# 3;G  3;G# 3;A  3;A# 3;B  3;C  4;C# 4;D  4;D# 4;E  4;F  4;F# 4;G  4;G# 4;A  4;A# 4;B  4;C  5;C# 5;D  5;D# 5;E  5;F  5;F# 5;G  5;G# 5;A  5;A# 5;B  5;C  6;C# 6;D  6;D# 6;E  6;F  6;F# 6;G  6;G# 6;A  6;A# 6;B  6;C  7;C# 7;D  7;D# 7;E  7;F  7;F# 7;G  7;G# 7;A  7;A# 7;B  7;C  8;C# 8;D  8;D# 8;E  8;F  8;F# 8;G  8;G# 8;A  8;A# 8;B  8;C  9;C# 9;D  9;D# 9;E  9;F  9;F# 9;G  9", ";", String::empty));
-	setupParameter("View Notes", ViewNotes, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Note Events");
+	setupParameter("View Notes", ViewNotes, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Note On Events");
 	setupParameter("View Notes Min", ViewNotesMin, 0, 127, 0, noteNames, "Note Key range lower limit");
 	setupParameter("View Notes Max", ViewNotesMax, 0, 127, 127, noteNames, "Note Key range upper limit");
 	setupParameter("View PC", ViewPC, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Program Change Events");
@@ -870,11 +876,13 @@ PatternBodyBlock::VirtualPatternTableFilterBlock::VirtualPatternTableFilterBlock
 	setupParameter("View Tempo", ViewTempo, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Tempo Change Events");
 	setupParameter("View Mute", ViewMute, 0, 1, 1, StringArray::fromTokens("Off On", false), "View Mute Events");
 	setupParameter("View SysEx", ViewSysEx, 0, 1, 1, StringArray::fromTokens("Off On", false), "View System Exclusive Events");
+	setupParameter("View Notes Off", ViewNotesOff, 0, 1, 0, StringArray::fromTokens("Off On", false), "View Note Off Events");
+	setupParameter("View Inc", ViewInc, 0, 1, 0, StringArray::fromTokens("Off On", false), "View Increment Events");
 }
 
 void PatternBodyBlock::refreshFilteredContent()
 {
-	m_filteredsequenceBlocks.clearQuick(true);
+	m_filteredsequenceBlocks.clear(true);
 	for (int i = 0; i < m_sequenceBlocks.size(); i++)
 	{
 		if (filter(m_sequenceBlocks[i]))
@@ -884,26 +892,29 @@ void PatternBodyBlock::refreshFilteredContent()
 		}
 	}
 	// produce note-offs
-	PatternEventData* currentNoteOnEventPtr = nullptr;
-	for (int e = 0; e < m_filteredsequenceBlocks.size(); e++)
+	if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesOff)->getValue() == 1)
 	{
-		currentNoteOnEventPtr = m_filteredsequenceBlocks[e];
-		if (currentNoteOnEventPtr->getType() != Evt_Note) continue;
-		unsigned long absNoteEndTick = currentNoteOnEventPtr->absoluteTick + currentNoteOnEventPtr->getNoteGateTicks();
-		PatternEventData* newNoteOffEvent = new PatternEventData(absNoteEndTick, (uint8)currentNoteOnEventPtr->getNoteNumber(), (uint8)currentNoteOnEventPtr->getPart());
-		for (int s = 0; s < m_filteredsequenceBlocks.size(); s++)
+		PatternEventData* currentNoteOnEventPtr = nullptr;
+		for (int e = 0; e < m_filteredsequenceBlocks.size(); e++)
 		{
-			if (m_filteredsequenceBlocks[s]->absoluteTick > absNoteEndTick)
+			currentNoteOnEventPtr = m_filteredsequenceBlocks[e];
+			if (currentNoteOnEventPtr->getType() != Evt_Note) continue;
+			unsigned long absNoteEndTick = currentNoteOnEventPtr->absoluteTick + currentNoteOnEventPtr->getNoteGateTicks();
+			PatternEventData* newNoteOffEvent = new PatternEventData(absNoteEndTick, (uint8)currentNoteOnEventPtr->getNoteNumber(), (uint8)currentNoteOnEventPtr->getPart());
+			for (int s = 0; s < m_filteredsequenceBlocks.size(); s++)
 			{
-				// sort before
-				m_filteredsequenceBlocks.insert(s, newNoteOffEvent);
-				break;
-			}
-			else if (s == m_filteredsequenceBlocks.size() - 1)
-			{
-				// add to end
-				m_filteredsequenceBlocks.add(newNoteOffEvent);
-				break;
+				if (m_filteredsequenceBlocks[s]->absoluteTick > absNoteEndTick)
+				{
+					// sort before
+					m_filteredsequenceBlocks.insert(s, newNoteOffEvent);
+					break;
+				}
+				else if (s == m_filteredsequenceBlocks.size() - 1)
+				{
+					// add to end
+					m_filteredsequenceBlocks.add(newNoteOffEvent);
+					break;
+				}
 			}
 		}
 	}
@@ -973,9 +984,20 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 	if (event->getPart() == Pattern_Part_7 && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart7)->getValue() == 0) return false;
 	if (event->getPart() == Pattern_Part_R && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->getValue() == 0) return false;
 	if (event->getPart() == Pattern_MuteCtrl && m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->getValue() == 0) return false;
-	if (event->getType() == PatternEventType::Evt_Note || event->getType() == PatternEventType::Evt_NoteOff)
+	if (event->getType() == PatternEventType::Evt_TickInc)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewInc)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_Note)
 	{
 		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotes)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_NoteOff)
+	{
+		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesOff)->getValue() == 0) return false;
+	}
+	if (event->getType() == PatternEventType::Evt_Note || event->getType() == PatternEventType::Evt_NoteOff)
+	{
 		if (event->getNoteNumber()<m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMin)->getValue()) return false;
 		if (event->getNoteNumber()>m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMax)->getValue()) return false;
 	}
@@ -1016,4 +1038,25 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->getValue() == 0) return false;
 	}
 	return true;
+}
+
+// to be called when beat signature in pattern setup is changed, only 96 (for signatures of N/4) 48 (N/8) or 24 (N/16) will be accepted, else defaulting to 96. updates the viewed table (for tick time display interpretation)
+void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature)
+{
+	m_beatSigNumerator = beatSignature.getNumerator();
+	m_beatSigDenominator = beatSignature.getDenominator();
+	switch (m_beatSigDenominator)
+	{
+	case 16:
+		m_ticksPerBeat = 24;
+		break;
+	case 8:
+		m_ticksPerBeat = 48;
+		break;
+	case 4:
+	default:
+		m_ticksPerBeat = 96;
+		break;
+	}
+	sendChangeMessage();
 }
