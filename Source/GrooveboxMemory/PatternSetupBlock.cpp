@@ -9,6 +9,11 @@
 */
 
 #include "PatternSetupBlock.h"
+
+#include "OverallMemoryBlock.h"
+
+extern OverallMemoryBlock* grooveboxMemory;
+
 /*static */const unsigned int BeatSignature::ALLOWED_FRACTIONS_SIZE = 17;
 /*static */const float BeatSignature::allowedFractions[ALLOWED_FRACTIONS_SIZE] = { 0.5f, 0.5625f, 0.625f, 0.6875f, 0.75f, 0.75f, 0.8125f, 0.875f, 0.9375f, 1.0f, 1.0625f, 1.125f, 1.1875f, 1.25f, 1.5f, 1.5f, 1.75f };
 /*static*/ const uint8 BeatSignature::allowedFractionNumerators[ALLOWED_FRACTIONS_SIZE] =   { 2,  9, 5, 11, 3, 6, 13, 7, 15, 4, 17, 9, 19, 5, 6, 12, 7 };
@@ -402,12 +407,13 @@ void PatternSetupConfigBlock::setSeqOut(PatternBodyBlock::PatternPart part, uint
 
 // === PatternSetupEffectsBlock: ==============================================
 
+/*static*/ const StringArray PatternSetupEffectsBlock::mFxTypeNameStrings = StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", "");
+
 PatternSetupEffectsBlock::PatternSetupEffectsBlock()
 	:GrooveboxMemoryBlock(0x30002000, "Pattern Setup Effect Settings","",0x24)
 {
 	m_name = "Pattern Setup Effects";
 	
-	StringArray mFxTypeNameStrings = StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", String::empty);
 	setupParameter("M-FX Type", 0x02, 00, 24, 00, mFxTypeNameStrings, "Multi-Effects Type");
 	setupParameter("M-FX Parameter 1", 0x03, 0, 127);
 	setupParameter("M-FX Parameter 2", 0x04, 0, 127);
@@ -440,6 +446,65 @@ PatternSetupEffectsBlock::PatternSetupEffectsBlock()
 	setupParameter("Delay Delay Output Assign", 0x22, 0, 2, 2, StringArray::fromTokens("LINE REV LINE+REV", false), "Allows you to select a destination for the sound after delay has been applied. Selecting LINE outputs the sound to the OUTPUT jacks on the rear panel; selecting REV outputs it to Reverb; or selecting LINE + REV outputs the sound to both the OUTPUT jacks and Reverb.");
 }
 
+MidiMessageSequence PatternSetupEffectsBlock::getM_FX_SetupMidiMessageSequence(uint8 deviceId)
+{
+	MidiMessageSequence result;
+	// addr 01 00 00 0D,	size 13 (type + 12 params)
+	uint8* dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x0D};
+	uint8* dt1_data = new uint8[13]{(uint8)m_data[0x02], (uint8)m_data[0x03], (uint8)m_data[0x04], (uint8)m_data[0x05], (uint8)m_data[0x06], (uint8)m_data[0x07], (uint8)m_data[0x08], (uint8)m_data[0x09], (uint8)m_data[0x1A], (uint8)m_data[0x1B], (uint8)m_data[0x1C], (uint8)m_data[0x1D], (uint8)m_data[0x1E]};
+	ScopedPointer<SyxMsg> mFXTypeAndParamsSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 13, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 13));
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Setup M-FX Type and 12 Parameters (" + mFxTypeNameStrings[m_data[0x02]] + ")"));
+	result.addEvent(mFXTypeAndParamsSysex->toMidiMessage());
+	delete[] dt1_address;
+	delete[] dt1_data;
+	return result;
+}
+
+MidiMessageSequence PatternSetupEffectsBlock::getReverbSetupMidiMessageSequence(uint8 deviceId)
+{
+	MidiMessageSequence result;
+	// addr 01 00 00 28,	size 04
+	uint8* dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x28};
+	uint8* dt1_data = new uint8[4]{(uint8)m_data[0x18], (uint8)m_data[0x19], (uint8)m_data[0x1A], (uint8)m_data[0x1B]};
+	ScopedPointer<SyxMsg> reverbParamsSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 4, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 4));
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Setup Reverb Parameters (Type, Level, Time, HF Damp)"));
+	result.addEvent(reverbParamsSysex->toMidiMessage());
+	delete[] dt1_address;
+	delete[] dt1_data;
+
+	dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x1D};
+	dt1_data = new uint8[1]{(uint8)m_data[0x12]};
+	ScopedPointer<SyxMsg> mFXSendReverbLevelSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 1, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 1));
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX to Reverb Send Level"));
+	result.addEvent(mFXSendReverbLevelSysex->toMidiMessage());
+	delete[] dt1_address;
+	delete[] dt1_data;
+
+	return result;
+}
+
+MidiMessageSequence PatternSetupEffectsBlock::getDelaySetupMidiMessageSequence(uint8 deviceId)
+{
+	MidiMessageSequence result;
+	// addr 01 00 00 22,	size 06
+	uint8* dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x22};
+	uint8* dt1_data = new uint8[6]{(uint8)m_data[0x1D], (uint8)m_data[0x1E], (uint8)m_data[0x20], (uint8)m_data[0x1F], (uint8)m_data[0x21], (uint8)m_data[0x22]};
+	ScopedPointer<SyxMsg> delayParamsSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 6, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 6));
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Setup Delay Parameters (Level, Type, HF Damp, Time, Feedback, Output Assign)"));
+	result.addEvent(delayParamsSysex->toMidiMessage());
+	delete[] dt1_address;
+	delete[] dt1_data;
+
+	dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x1C};
+	dt1_data = new uint8[1]{(uint8)m_data[0x11]};
+	ScopedPointer<SyxMsg> mFXSendDelayLevelSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 1, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 1));
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX to Delay Send Level"));
+	result.addEvent(mFXSendDelayLevelSysex->toMidiMessage());
+	delete[] dt1_address;
+	delete[] dt1_data;
+
+	return result;
+}
 // === PatternSetupPartBlock: =================================================
 
 PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
@@ -497,6 +562,133 @@ PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
 	setupParameter("Part " + partCharacter + " M-FX Switch", 0x08, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String::empty, 86, true);
 }
 
+String PatternSetupPartBlock::getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32)
+{
+	GrooveboxConnector::GrooveboxModel model = GrooveboxConnector::Model_MC_505;
+	if (GrooveboxConnector::GrooveBoxConnectionEntry* connection = grooveboxConnector->getActiveConnection())
+	{
+		model = connection->deviceFamilyNumberCode;
+	}
+
+	if (m_part == 9 && bankSelLSB32 == 0)
+	{
+		switch (bankSelMSB00)
+		{
+		case 81: return "Preset Rhyhthm Set Bank A";
+		case 82: return "Preset Rhyhthm Set Bank B JX - 305";
+		case 83: return "Preset Rhyhthm Set Bank B MC-307";
+		case 84: return "Preset Rhyhthm Set Bank B D2";
+		case 85: return "User Rhyhthm Set Bank";
+		case 86: return "Card Rhythm Set Bank";
+		}
+	}
+	else
+	{
+		switch (bankSelMSB00)
+		{
+		case 81:
+			switch (bankSelLSB32)
+			{
+			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks A,B JX-305" : "Preset Patch Bank A");
+			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks C,D JX-305" : "Preset Patch Bank B");
+			case 2: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks E,F JX-305" : "Preset Patch Bank C");
+			case 3: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks G,H JX-305" : "Preset Patch Bank D");
+			}
+			break;
+		case 82:
+			if (bankSelLSB32 == 0) return "Preset Patch Bank I,J JX-305";
+			break;
+		case 83:
+			switch (bankSelLSB32)
+			{
+			case 0: return "Preset Patch Banks E MC-307";
+			case 1: return "Preset Patch Banks F MC-307";
+			case 2: return "Preset Patch Banks G MC-307";
+			}
+			break;
+		case 84:
+			if (bankSelLSB32 == 0) return "Preset Patch Bank E D2";
+			break;
+		case 85:
+			switch (bankSelLSB32)
+			{
+			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "User Patch Banks A,B JX-305" : "User Patch Bank A");
+			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "User Patch Banks C,D JX-305" : "User Patch Bank B");
+			}
+			break;
+		case 86:
+			switch (bankSelLSB32)
+			{
+			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks A,B JX-305" : "Card Patch Bank A");
+			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks C,D JX-305" : "Card Patch Bank B");
+			case 2: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks E,F JX-305" : "Card Patch Bank C");
+			case 3: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks G,H JX-305" : "Card Patch Bank D");
+			}
+			break;
+		}
+	}
+	return "Unknown Patch Bank";
+}
+
+MidiMessage PatternSetupPartBlock::getPartMuteSysEx(uint8 deviceId)
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	uint8 quickSysExAddress[2]{0x70, 0x01};
+	uint8 quickSysExData[2]{(uint8)m_part, patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)m_part) ? 1 : 0};	// DataL: 0-6,9; DataE: none(0), mute(1)
+	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
+	return msg->toMidiMessage();
+}
+
+MidiMessage PatternSetupPartBlock::getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group)
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	uint8 quickSysExAddress[2]{0x70, 0x02};
+	uint8 quickSysExData[2]{(uint8)group, patternSetupConfigPtr->isRyhGroupMute(group) ? 1 : 0};	// DataL: 0-7; DataE: none(0), mute(1)
+	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
+	return msg->toMidiMessage();
+}
+
+MidiMessageSequence PatternSetupPartBlock::getSinglePartSetupMidiMessageSequence(uint8 deviceId)
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+
+	MidiMessageSequence messages;
+	// patch selection cascade (meta text, bank selection MSB, bank selection LSB, program change:
+	messages.addEvent(SyxMsg::createChannelPrefixMetaEvent((uint8)m_part));
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::ProgramName, "PART_" + (m_part == 9 ? "R" : String((int)m_part + 1)) + ": " + getBankName(getParameter(0x00)->getValue(), getParameter(0x01)->getValue()) + ", Program " + String(getParameter(0x02)->getValue() + 1).paddedLeft('0', 3)), 1.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 0, getParameter(0x00)->getValue()), 2.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 32, getParameter(0x01)->getValue()), 3.0);
+	messages.addEvent(MidiMessage::programChange(m_part + 1, getParameter(0x02)->getValue()), 4.0);
+	// mixer setup by controllers:
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Level"), 5.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 7, getParameter(0x03)->getValue()), 5.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Pan"), 5.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 10, getParameter(0x04)->getValue()), 5.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Key Shift"), 5.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 85, getParameter(0x05)->getValue()), 5.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Reverb"), 5.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 91, getParameter(0x07)->getValue()), 5.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Delay"), 5.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 94, getParameter(0x06)->getValue()), 5.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer M-FX Switch"), 5.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 86, getParameter(0x08)->getValue()), 5.0);
+	// mute initial state for part
+	String partName(m_part == 9 ? "R" : String((int)m_part + 1));
+	
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Part " + partName + " : " + (patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)m_part) ? "muted" : "on")), 7.0);
+	messages.addEvent(getPartMuteSysEx(deviceId), 7.0);
+	// mute initial state for rhythm groups
+	if (m_part == AllParts::PartR)
+		for (int i = 0x00; i < 0x08; i++)
+		{
+			PatternBodyBlock::RhythmGroup rhyGrp = (PatternBodyBlock::RhythmGroup)i;
+			String rhyGrpName(PatternBodyBlock::PatternEventData::getRhythmGroupString(rhyGrp));
+			messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Rhythm Group " + rhyGrpName + " : " + (patternSetupConfigPtr->isRyhGroupMute(rhyGrp) ? "muted" : "on")), 7.0);
+			messages.addEvent(getRhythmGroupMuteSysEx(deviceId, rhyGrp), 7.0);
+		}
+	return messages;
+}
+
 // === PatternSetupBlock: =====================================================
 
 PatternSetupBlock::PatternSetupBlock() :
@@ -539,4 +731,26 @@ PatternSetupPartBlock* PatternSetupBlock::getPatternSetupPartBlockPtr(AllParts p
 	case Part7: return dynamic_cast<PatternSetupPartBlock*>(getSubBlock(9));
 	default: return nullptr;
 	}
+}
+
+MidiMessageSequence PatternSetupBlock::getAllPartsSetupMidiMessageSequence(uint8 deviceId)
+{
+	MidiMessageSequence messages;
+	MidiMessageSequence partRsetupSeq = getPatternSetupPartBlockPtr(PartR)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part1setupSeq = getPatternSetupPartBlockPtr(Part1)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part2setupSeq = getPatternSetupPartBlockPtr(Part2)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part3setupSeq = getPatternSetupPartBlockPtr(Part3)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part4setupSeq = getPatternSetupPartBlockPtr(Part4)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part5setupSeq = getPatternSetupPartBlockPtr(Part5)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part6setupSeq = getPatternSetupPartBlockPtr(Part6)->getSinglePartSetupMidiMessageSequence(deviceId);
+	MidiMessageSequence part7setupSeq = getPatternSetupPartBlockPtr(Part7)->getSinglePartSetupMidiMessageSequence(deviceId);
+	messages.addSequence(partRsetupSeq, 0.0, 0.0, partRsetupSeq.getEndTime() + 96.0);
+	messages.addSequence(part1setupSeq, 0.0, 0.0, part1setupSeq.getEndTime() + 96.0);
+	messages.addSequence(part2setupSeq, 0.0, 0.0, part2setupSeq.getEndTime() + 96.0);
+	messages.addSequence(part3setupSeq, 0.0, 0.0, part3setupSeq.getEndTime() + 96.0);
+	messages.addSequence(part4setupSeq, 0.0, 0.0, part4setupSeq.getEndTime() + 96.0);
+	messages.addSequence(part5setupSeq, 0.0, 0.0, part5setupSeq.getEndTime() + 96.0);
+	messages.addSequence(part6setupSeq, 0.0, 0.0, part6setupSeq.getEndTime() + 96.0);
+	messages.addSequence(part7setupSeq, 0.0, 0.0, part7setupSeq.getEndTime() + 96.0);
+	return messages;
 }

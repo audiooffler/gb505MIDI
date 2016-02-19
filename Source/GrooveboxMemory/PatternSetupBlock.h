@@ -100,7 +100,11 @@ private:
 class PatternSetupEffectsBlock : public GrooveboxMemoryBlock
 {
 public:
+	static const StringArray PatternSetupEffectsBlock::mFxTypeNameStrings;
 	PatternSetupEffectsBlock();
+	MidiMessageSequence getM_FX_SetupMidiMessageSequence(uint8 deviceId);
+	MidiMessageSequence getReverbSetupMidiMessageSequence(uint8 deviceId);
+	MidiMessageSequence getDelaySetupMidiMessageSequence(uint8 deviceId);
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupEffectsBlock)
 };
@@ -110,6 +114,10 @@ class PatternSetupPartBlock : public GrooveboxMemoryBlock
 {
 public:
 	PatternSetupPartBlock(AllParts part);
+	String getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32);
+	MidiMessage getPartMuteSysEx(uint8 deviceId);
+	MidiMessage getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group);
+	MidiMessageSequence getSinglePartSetupMidiMessageSequence(uint8 deviceId);
 private:
 	AllParts m_part;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupPartBlock)
@@ -123,6 +131,7 @@ public:
 	PatternSetupConfigBlock* getPatternSetupConfigBlockPtr();
 	PatternSetupEffectsBlock* getPatternSetupEffectsBlockPtr();
 	PatternSetupPartBlock* getPatternSetupPartBlockPtr(AllParts part);
+	MidiMessageSequence getAllPartsSetupMidiMessageSequence(uint8 deviceId);
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupBlock)
 };

@@ -201,16 +201,19 @@ public:
 	// to be called when beat signature in pattern setup is changed. updates the viewed table by sendChangeMessage() (for MM-BB-TT time display repaint)
 	void setBeatSignature(BeatSignature beatSignature);
 
+	MidiFile* convertToMidiFile();
+
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
 	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 	HashMap<int, String> m_midiCCNames;
-	uint8 m_ticksPerBeat = 96;
 	uint8 m_beatSigNumerator = 4; // = beats per measure
 	uint8 m_beatSigDenominator = 4;
-
+	// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
+	MemoryBlock sysExBuilder;
+	unsigned int sysExBuilderByteIndex = 0;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternBodyBlock)
 };
 

@@ -1039,7 +1039,7 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 		//saveAsSysExFile();
 		return true;
 	case CommandIDs::fileExportPatternSmfFile:
-		//exportAsMidiFile();
+		exportAsMidiFile();
 		return true;
 	case CommandIDs::grooveBoxLoadPattern:
 		//loadFromGroovebox();
@@ -1074,6 +1074,22 @@ void PatternEditorTab::loadSysExFile(const File &file)
 		{
 			AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error getting pattern data"), TRANS("No pattern or pattern data was retrieved."));
 		}
+	}
+}
+
+void PatternEditorTab::exportAsMidiFile()
+{
+	File defaultFile = File(File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + File::separatorString + grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getPatternName().trim() + ".mid");
+	FileChooser myChooser(TRANS("Export as MIDI File"),
+		defaultFile,
+		"*.mid");
+	if (myChooser.browseForFileToSave(true))
+	{
+		File selectedFile(myChooser.getResult());
+		if (selectedFile.existsAsFile()) selectedFile.deleteFile();
+		ScopedPointer<OutputStream> saveStream = selectedFile.createOutputStream();
+		ScopedPointer<MidiFile> midiFile = grooveboxMemory->getPatternBodyBlock()->convertToMidiFile();
+		midiFile->writeTo(*saveStream);
 	}
 }
 

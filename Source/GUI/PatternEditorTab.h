@@ -76,6 +76,7 @@ public:
 	bool perform(const InvocationInfo &info) override;
 
 	void loadSysExFile(const File &file);
+	void exportAsMidiFile();
     //[/UserMethods]
 
     void paint (Graphics& g);

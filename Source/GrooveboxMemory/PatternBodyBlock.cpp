@@ -99,10 +99,6 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 	uint32 address = sysExMsg->get32BitAddress();
 	if (address < 0x40000000) return false;
 
-	// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
-	MemoryBlock sysExBuilder;
-	unsigned int sysExBuilderByteIndex(0);
-
 	// if first sysex of pattern body received --> clear
 	if (address == 0x40000000)
 	{
@@ -147,82 +143,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 			}
 		}
 		/*DBG(newPatternEvent->toDebugString(m_ticksPerBeat, m_beatSigNumerator));*/
-		/*
-		else if (c_eventType == GrooveboxPattern::Evt_TickInc)
-		{
-			// do nothing, just increments the currentTimestamp
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_PAft)
-		{
-			c_trackPointer->addEvent(MidiMessage::aftertouchChange(c_eventPart + 1, eventBlockPtr[5], eventBlockPtr[6]), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_Cc)
-		{
-			c_trackPointer->addEvent(MidiMessage::controllerEvent(c_eventPart + 1, eventBlockPtr[5], eventBlockPtr[6]), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_Pc)
-		{
-			c_trackPointer->addEvent(MidiMessage::programChange(c_eventPart + 1, eventBlockPtr[5]), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_CAft)
-		{
-			c_trackPointer->addEvent(MidiMessage::channelPressureChange(c_eventPart + 1, eventBlockPtr[5]), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_PBend)
-		{
-			c_trackPointer->addEvent(MidiMessage::pitchWheel(c_eventPart + 1, SyxMsg::getUnsigned14BitValueFrom7BitBytes(eventBlockPtr[5], eventBlockPtr[6])));
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_Tempo)
-		{
-			c_trackPointer->addEvent(MidiMessage::tempoMetaEvent((int)(6000000000 / ((uint16)eventBlockPtr[6] << 8 | (uint16)eventBlockPtr[7]))), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_PartMute)
-		{
-			uint8 quickSysExAddress[2]{0x70, 0x01};
-			uint8 quickSysExData[2]{eventBlockPtr[5], eventBlockPtr[7]};
-			ScopedPointer<SyxMsg> msg = new SyxMsg(SyxMsg::Type_DT1_Quick, m_deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
-			c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String((eventBlockPtr[7]) ? "Unmute " : "Mute ") + GrooveboxPatternSetup::getPartName((GrooveboxPatternSetup::PartSelector)eventBlockPtr[5])), currentTimestamp);
-			c_trackPointer->addEvent(msg->getAsMidiMessage(), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_RhyMute)
-		{
-			uint8 quickSysExAddress[2]{0x70, 0x02};
-			uint8 quickSysExData[2]{eventBlockPtr[5], eventBlockPtr[7]};
-			ScopedPointer<SyxMsg> msg = new SyxMsg(SyxMsg::Type_DT1_Quick, m_deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2));
-			c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String((eventBlockPtr[7]) ? "Unmute " : "Mute ") + GrooveboxPatternSetup::getRhythmGroupName((GrooveboxPatternSetup::RhythmGroupSelector)eventBlockPtr[5])), currentTimestamp);
-			c_trackPointer->addEvent(msg->getAsMidiMessage(), currentTimestamp);
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_SysExSize)
-		{
-			sysExBuilder.setSize((uint32)eventBlockPtr[4] << 24 | (uint32)eventBlockPtr[5] << 16 | (uint32)eventBlockPtr[6] << 8 | (uint32)eventBlockPtr[7]);
-			sysExBuilderByteIndex = 0;
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_SysExData)
-		{
-			for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
-			{
-				sysExBuilder[sysExBuilderByteIndex] = eventBlockPtr[b];
-				sysExBuilderByteIndex++;
-				if (eventBlockPtr[b] == 0xF7)	// SYSEX EOX --> create midi message
-				{
-					c_trackPointer->addEvent(MidiMessage::createSysExMessage(sysExBuilder.getData(), sysExBuilder.getSize()), currentTimestamp);
-					sysExBuilder.setSize(0);
-					sysExBuilderByteIndex = 0;
-					break;
-				}
-			}
-		}
-		else if (c_eventType == GrooveboxPattern::Evt_Unknown)
-		{
-			// ignore
-		}
-
-		// after finish processing current event: position timestamp for next event
-		*/
-		//currentTimestamp += c_tickIncrement/**m_tickLength*/;	// multiplicated with m_tickLength would be the timestamp in seconds
-		
 	}
-	// TODO: call TableListBox::updateContent();
 	refreshFilteredContent();
 	return true;
 }
@@ -329,7 +250,8 @@ String PatternBodyBlock::PatternEventData::getRhythmGroupString(RhythmGroup rhyt
 	}
 }
 
-PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength)
+PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength) :
+	m_joinedSysexData(nullptr)
 {
 	for (unsigned int j = 0; j < 8; j++) 
 	{
@@ -340,7 +262,8 @@ PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData,
 	PatternEventData::lastRelativeTickIncrement = getRelativeTickIncrement();
 }
 
-PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex)
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex) :
+	m_joinedSysexData (new MemoryBlock)
 {
 	for (unsigned int j = 0; j < 8; j++) { bytes[j] = 0; }
 	absoluteTick = absTick;
@@ -348,7 +271,8 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, Memo
 	m_joinedSysexData->copyFrom(joinedSysex->getData(), 0, joinedSysex->getSize());
 }
 
-PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8 key, uint8 part)
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8 key, uint8 part):
+	m_joinedSysexData(nullptr)
 {
 	bytes[0] = 0; // no valid tick inc for note-offs!
 	bytes[1] = key;
@@ -470,7 +394,9 @@ PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 		case 0x06:	return Pattern_Part_7;
 		case 0x09:	return Pattern_Part_R;
 		case 0x0E:	return Pattern_MuteCtrl;
-		default:	return Pattern_Part_Unknown;
+		default:	
+			if (getType() == Evt_SysExJoined) return Pattern_MuteCtrl;
+			else return Pattern_Part_Unknown;
 		}
 	}
 }
@@ -644,7 +570,11 @@ String PatternBodyBlock::PatternEventData::toDebugString(uint8 ticksPerBeat, uin
 
 MidiMessage PatternBodyBlock::PatternEventData::toMidiMessage()
 {
-	if (getType() == PatternBodyBlock::Evt_PartMute)
+	if (getType() == PatternBodyBlock::Evt_SysExJoined)
+	{
+		return MidiMessage::createSysExMessage((m_joinedSysexData->getData()), m_joinedSysexData->getSize());
+	}
+	else if (getType() == PatternBodyBlock::Evt_PartMute)
 	{
 		uint8 quickSysExAddress[2]{0x70, 0x01};
 		uint8 quickSysExData[2]{bytes[5], bytes[7]};
@@ -711,7 +641,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 		switch ((PatternTableListColumnId)columnId)
 		{
 		case PatternBodyBlock::Col_Position:
-			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick, m_ticksPerBeat, m_beatSigNumerator);
+			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick, (96 / (m_beatSigDenominator / 4)), m_beatSigNumerator);
 			break;
 		case PatternBodyBlock::Col_Raw0:
 			cellText = String::toHexString((int)event->bytes[0]).toUpperCase().paddedLeft('0',2);
@@ -790,7 +720,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 			switch (event->getType())
 			{
 			case PatternBodyBlock::Evt_Note:
-				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), m_ticksPerBeat, m_beatSigNumerator, true /*gate time counting measures and beats from 0*/);
+				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), (96 / (m_beatSigDenominator / 4)), m_beatSigNumerator, true /*gate time counting measures and beats from 0*/);
 				break;
 			case PatternBodyBlock::Evt_PAft:
 				cellText = String(event->getPAftPressure());
@@ -1045,18 +975,139 @@ void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature)
 {
 	m_beatSigNumerator = beatSignature.getNumerator();
 	m_beatSigDenominator = beatSignature.getDenominator();
-	switch (m_beatSigDenominator)
-	{
-	case 16:
-		m_ticksPerBeat = 24;
-		break;
-	case 8:
-		m_ticksPerBeat = 48;
-		break;
-	case 4:
-	default:
-		m_ticksPerBeat = 96;
-		break;
-	}
 	sendChangeMessage();
+}
+
+MidiFile* PatternBodyBlock::convertToMidiFile()
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	PatternSetupEffectsBlock* patternSetupEffectsPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupEffectsBlockPtr();
+
+	MidiFile* midiFile = new MidiFile();
+	midiFile->setTicksPerQuarterNote(96);
+
+	ScopedPointer<MidiMessageSequence> markerTrack = new MidiMessageSequence();
+	ScopedPointer<MidiMessageSequence> infoTrack = new MidiMessageSequence();
+	
+	infoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, patternSetupConfigPtr->getPatternName()));
+	infoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CopyrightNotice, "Converted with gbMIDI. (C) 2016 by Martin Spindler"));
+	infoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::DeviceName, "Roland groovebox MC-505 device family"));
+	// note: don't add TrackName meta event to very first track. might be just a reaper issue but reaper shows all meta (text) events of the first track in all other tracks too
+
+	// add 7 tracks (0..6: part 1 to 7; 7: rhythm part, 8: mute ctrl part (sysEx messages)), 
+	ScopedPointer<MidiMessageSequence> partRTrack = new MidiMessageSequence();
+	partRTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-R"));
+	partRTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getRhythmSetBlock()->getRhythmSetCommonBlockPtr()->getRhythmSetName()));
+
+	ScopedPointer<MidiMessageSequence> part1Track = new MidiMessageSequence();
+	part1Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-1"));
+	part1Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart1)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> part2Track = new MidiMessageSequence();
+	part2Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-2"));
+	part2Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart2)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> part3Track = new MidiMessageSequence();
+	part3Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-3"));
+	part3Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart3)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> part4Track = new MidiMessageSequence();
+	part4Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-4"));
+	part4Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart4)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> part5Track = new MidiMessageSequence();
+	part5Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-5"));
+	part5Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart5)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> part6Track = new MidiMessageSequence();
+	part6Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-6"));
+	part6Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart6)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> part7Track = new MidiMessageSequence();
+	part7Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-7"));
+	part7Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart7)->getPatchCommonBlockPtr()->getPatchName()));
+
+	ScopedPointer<MidiMessageSequence> muteCtrlTrack = new MidiMessageSequence();
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "MUTE-CTRL"));
+	muteCtrlTrack->addEvent(MidiMessage::timeSignatureMetaEvent(patternSetupConfigPtr->getBeatSignature().getNumerator(), patternSetupConfigPtr->getBeatSignature().getDenominator()));
+	muteCtrlTrack->addEvent(MidiMessage::tempoMetaEvent((int)(60000000.0 / patternSetupConfigPtr->getTempoBpm())));
+
+	ScopedPointer<MidiMessageSequence> setupTrack = new MidiMessageSequence();
+	setupTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "Setup (M-FX, REV, DLY, PARTS)"));
+
+	// effects setups
+	uint8 deviceId = jmax<uint8>(grooveboxConnector->getActiveDeviceId(),0x10);
+	MidiMessageSequence mFxSetup = patternSetupEffectsPtr->getM_FX_SetupMidiMessageSequence(deviceId);
+	setupTrack->addSequence(mFxSetup, 0.0, 0.0, mFxSetup.getEndTime() + 96.0);
+	MidiMessageSequence revSetup = patternSetupEffectsPtr->getReverbSetupMidiMessageSequence(deviceId);
+	setupTrack->addSequence(revSetup, 32.0, 0.0, revSetup.getEndTime() + 32.0 + 96.0);
+	MidiMessageSequence dlySetup = patternSetupEffectsPtr->getDelaySetupMidiMessageSequence(deviceId);
+	setupTrack->addSequence(dlySetup, 64.0, 0.0, dlySetup.getEndTime() + 64.0 + 96.0);
+	// parts setup
+	MidiMessageSequence partSetups = grooveboxMemory->getPatternSetupBlock()->getAllPartsSetupMidiMessageSequence(deviceId);
+	setupTrack->addSequence(partSetups, 96.0, 0.0, partSetups.getEndTime() + 96.0 + 96.0);
+	// offset for sequence data, first measure should just contain setup messages
+	double oneMeasure = (double)m_beatSigNumerator * 96.0 * 4.0 / (double)m_beatSigDenominator;
+
+	// offset 1 measure (use first measure for setup)
+	markerTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region Start", oneMeasure));
+	PatternEventData* event = nullptr;
+	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	{
+		event = m_sequenceBlocks[i];
+		MidiMessageSequence* c_trackPointer = nullptr;
+		switch (event->getPart())
+		{
+		case Pattern_Part_1:	c_trackPointer = part1Track; break;
+		case Pattern_Part_2:	c_trackPointer = part2Track; break;
+		case Pattern_Part_3:	c_trackPointer = part3Track; break;
+		case Pattern_Part_4:	c_trackPointer = part4Track; break;
+		case Pattern_Part_5:	c_trackPointer = part5Track; break;
+		case Pattern_Part_6:	c_trackPointer = part6Track; break;
+		case Pattern_Part_7:	c_trackPointer = part7Track; break;
+		case Pattern_Part_R:	c_trackPointer = partRTrack; break;
+		case Pattern_MuteCtrl:	c_trackPointer = muteCtrlTrack; break;
+		default: break;
+		}
+
+		// create midi events
+		if (c_trackPointer != nullptr)
+		{
+			if (event->getType() == Evt_Note)
+			{
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+				c_trackPointer->addEvent(MidiMessage::noteOff(event->getMidiChannel(), event->getNoteNumber()), event->absoluteTick + oneMeasure + event->getNoteGateTicks());
+			}
+			else if (event->getType() == Evt_PAft || event->getType() == Evt_Cc || event->getType() == Evt_Pc || event->getType() == Evt_CAft || event->getType() == Evt_PBend || event->getType() == Evt_Tempo || event->getType() == Evt_SysExJoined)
+			{
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+			}
+			else if (event->getType() == Evt_PartMute)
+			{
+				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Unmute " : "Mute ") + event->getPartString(event->getPart()), event->absoluteTick + oneMeasure));
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+			}
+			else if (event->getType() == Evt_RhyMute)
+			{
+				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Unmute " : "Mute ") + event->getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+			}
+			// igonore Evt_SysExSize, Evt_SysExData, Evt_TickInc, Evt_Unknown
+		}
+	}
+	if (event!=nullptr)
+	markerTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region End", event->absoluteTick + oneMeasure));
+	midiFile->addTrack(*infoTrack);
+	midiFile->addTrack(*markerTrack);
+	midiFile->addTrack(*partRTrack);
+	midiFile->addTrack(*part1Track);
+	midiFile->addTrack(*part2Track);
+	midiFile->addTrack(*part3Track);
+	midiFile->addTrack(*part4Track);
+	midiFile->addTrack(*part5Track);
+	midiFile->addTrack(*part6Track);
+	midiFile->addTrack(*part7Track);
+	midiFile->addTrack(*muteCtrlTrack);
+	midiFile->addTrack(*setupTrack);
+	return midiFile;
 }
