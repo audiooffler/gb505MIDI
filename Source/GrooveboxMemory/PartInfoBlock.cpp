@@ -18,6 +18,26 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	m_EffectDescription(String::empty)
 {
 	m_name = "Part Info Common";
+	
+	StringArray asciiCharacters;
+	asciiCharacters.add(" ");
+	asciiCharacters.addTokens("! \" # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | }", false);
+	setupParameter("Reserved", 0x00, 32, 125, 'S', asciiCharacters, "JV-2080 Performance Name 1");
+	setupParameter("Reserved", 0x01, 32, 125, 'e', asciiCharacters, "JV-2080 Performance Name 2");
+	setupParameter("Reserved", 0x02, 32, 125, 'q', asciiCharacters, "JV-2080 Performance Name 3");
+	setupParameter("Reserved", 0x03, 32, 125, ':', asciiCharacters, "JV-2080 Performance Name 4");
+	setupParameter("Reserved", 0x04, 32, 125, 'T', asciiCharacters, "JV-2080 Performance Name 5");
+	setupParameter("Reserved", 0x05, 32, 125, 'e', asciiCharacters, "JV-2080 Performance Name 6");
+	setupParameter("Reserved", 0x06, 32, 125, 'm', asciiCharacters, "JV-2080 Performance Name 7");
+	setupParameter("Reserved", 0x07, 32, 125, 'p', asciiCharacters, "JV-2080 Performance Name 8");
+	setupParameter("Reserved", 0x08, 32, 125, 'l', asciiCharacters, "JV-2080 Performance Name 9");
+	setupParameter("Reserved", 0x09, 32, 125, 'a', asciiCharacters, "JV-2080 Performance Name 10");
+	setupParameter("Reserved", 0x0A, 32, 125, 't', asciiCharacters, "JV-2080 Performance Name 11");
+	setupParameter("Reserved", 0x0B, 32, 125, 'e', asciiCharacters, "JV-2080 Performance Name 12");
+
+	StringArray jv2080EfxSources = StringArray::fromTokens("PERFORM	1 2 3 4 5 6 7 8 9 11 12 13 14 15 16", false);
+	setupParameter("Reserved", 0x0C, 0, 15, 0, jv2080EfxSources, "JV-2080 Performance EFX-A Source");
+
 	StringArray mFxTypeNameStrings(StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", String::empty));
 	setupParameter("M-FX Type", 0x0D, 0, 24, 0, mFxTypeNameStrings, "Multi-Effects Type");
 	setupParameter("M-FX Parameter 1", 0x0E, 0, 127, 0);	// set by refreshParametersForMFXTypeValue
@@ -33,8 +53,22 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("M-FX Parameter 11", 0x18, 0, 127, 127);
 	setupParameter("M-FX Parameter 12", 0x19, 0, 127);
 
+	setupParameter("Reserved", 0x1A, 0, 2, 0, StringArray::fromTokens("MIX DIR1 DIR2", false), "JV-2080 Performance EFX Output Assign");
+	setupParameter("Reserved", 0x1B, 0, 127, 127, StringArray(), "JV-2080 Performance EFX Mix Out Send Level");
+
 	setupParameter("M-FX Delay Send Level", 0x1C, 0, 127, 20, StringArray(), "Applies the Delay equally to each of the parts with Multieffects set at ON regardless of the Part Delay Level for each part.");
 	setupParameter("M-FX Reverb Send Level", 0x1D, 0, 127, 20, StringArray(), "Applies reverb equally to each of the parts with Multi-effects set at ON regardless of the Part Reverb Level for each part.");
+
+	StringArray modulationDepthStrings; for (int i = -63; i <= 63; i++)
+	{
+		if (i<0) modulationDepthStrings.add("-" + String(-i));
+		else if (i == 0) modulationDepthStrings.add(String(i));
+		else if (i>0) modulationDepthStrings.add("+" + String(i));
+	}
+	setupParameter("Reserved", 0x1E, 0, 10, 0, StringArray::fromTokens("OFF SYS-CTRL1 SYS-CTRL2 MODULATION BREATH FOOT VOLUME PAN EXPRESSION PITCHBEND AFTERTOUCH", false), "JV-2080 Performance EFX Control Source 1");
+	setupParameter("Reserved", 0x1F, 0, 126, 63, modulationDepthStrings, "JV-2080 Performance EFX Control Depth 1");
+	setupParameter("Reserved", 0x20, 0, 10, 0, StringArray::fromTokens("OFF SYS-CTRL1 SYS-CTRL2 MODULATION BREATH FOOT VOLUME PAN EXPRESSION PITCHBEND AFTERTOUCH", false), "JV-2080 Performance EFX Control Source 2");
+	setupParameter("Reserved", 0x21, 0, 126, 63, modulationDepthStrings, "JV-2080 Performance EFX Control Depth 2");
 
 	StringArray hfFreqStrings(StringArray::fromTokens("200 Hz, 250 Hz, 315 Hz, 400 Hz, 500 Hz, 630 Hz, 800 Hz, 1000 Hz, 1250 Hz, 1600 Hz, 2000 Hz, 2500 Hz, 3150 Hz, 4000 Hz, 5000 Hz, 6300 Hz, 8000 Hz, BYPASS", ",", ""));
 	StringArray feedbackPercentageStrings(StringArray::fromTokens("0% +1% +2% +3% +4% +5% +6% +7% +8% +9% +10% +11% +12% +13% +14% +15% +16% +17% +18% +19% +20% +21% +22% +23% +24% +25% +26% +27% +28% +29% +30% +31% +32% +33% +34% +35% +36% +37% +38% +39% +40% +41% +42% +43% +44% +45% +46% +47% +48% +49% +50% +51% +52% +53% +54% +55% +56% +57% +58% +59% +60% +61% +62% +63% +64% +65% +66% +67% +68% +69% +70% +71% +72% +73% +74% +75% +76% +77% +78% +79% +80% +81% +82% +83% +84% +85% +86% +87% +88% +89% +90% +91% +92% +93% +94% +95% +96% +97% +98%", false));
@@ -50,14 +84,31 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Reverb Time", 0x2A, 0, 127, 90, StringArray(), "You can adjust the time over which the reverberation will continue.");
 	setupParameter("Reverb HF Damp", 0x2B, 0, 17, 13, hfFreqStrings, "Specifies the frequency at which the high frequency portions of the reverberation will be cut.\r\nLowering this setting will cause more of the upper frequency content to be cut, making the reverberation more muted. If 'BYPASS' is selected, the high frequency range will not be cut.");
 
+	setupParameter("Reserved", 0x2C, 0, 127, 0, StringArray(), "JV-2080 Performance Delay Feedback");
+	setupParameter("Reserved", 0x2D, 0, 255, 120, StringArray(), "JV-2080 Performance Tempo"); // (0x2D + 0x2E 2 bytes for 8 bit 000aaaa MSB | 000bbbb LSB)
+	setupParameter("Reserved", 0x2F, 0, 1, 1, StringArray::fromTokens("OFF ON",false), "JV-2080 Performance Keyboard Range Switch");
+
 	setupParameter("Voice Reserve 1", 0x30, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 1 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
 	setupParameter("Voice Reserve 2", 0x31, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 2 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
 	setupParameter("Voice Reserve 3", 0x32, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 3 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
 	setupParameter("Voice Reserve 4", 0x33, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 4 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
-	setupParameter("Voice Reserve 4", 0x34, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 5 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
-	setupParameter("Voice Reserve 5", 0x35, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 6 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
-	setupParameter("Voice Reserve 6", 0x36, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 7 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
+	setupParameter("Voice Reserve 5", 0x34, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 5 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
+	setupParameter("Voice Reserve 6", 0x35, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 6 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
+	setupParameter("Voice Reserve 7", 0x36, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part 7 when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
+	setupParameter("Reserved", 0x37, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 8");
+	setupParameter("Reserved", 0x38, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 9");
 	setupParameter("Voice Reserve R", 0x39, 0, 64, 4, StringArray(), "Specifies the number of notes that will be reserved for part R when the total number of requested notes exceeds 64. Voice Reserve settings can be made up to a total of 64 notes for all parts.");
+	setupParameter("Reserved", 0x3A, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 11");
+	setupParameter("Reserved", 0x3B, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 12");
+	setupParameter("Reserved", 0x3C, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 13");
+	setupParameter("Reserved", 0x3D, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 14");
+	setupParameter("Reserved", 0x3E, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 15");
+	setupParameter("Reserved", 0x3F, 0, 64, 4, StringArray(), "JV-2080 Performance Voice Reserve 16");
+	
+	setupParameter("Reserved", 0x40, 0, 1, 0, StringArray::fromTokens("LAYER SINGLE",false), "JV-2080 Performance Keyboard Mode");
+	setupParameter("Reserved", 0x41, 0, 1, 1, StringArray::fromTokens("PERFORMANCE SYSTEM", false), "JV-2080 Performance Clock Source");
+	setupParameter("Reserved", 0x42, 0, 15, 0, jv2080EfxSources, "JV-2080 Performance EFX-B Source");
+	setupParameter("Reserved", 0x43, 0, 15, 3, jv2080EfxSources, "JV-2080 Performance EFX-C Source");
 }
 
 // typeIndex must by of 0..24
