@@ -94,6 +94,11 @@ PatternBodyBlock::PatternBodyBlock() :
 
 }
 
+PatternBodyBlock::~PatternBodyBlock()
+{
+	sysExBuilder.reset();
+}
+
 bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 {
 	uint32 address = sysExMsg->get32BitAddress();
@@ -284,6 +289,11 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8
 	bytes[7] = 0;
 	isNoteOff = true;
 	absoluteTick = absTick;
+}
+
+PatternBodyBlock::PatternEventData::~PatternEventData()
+{
+	if (m_joinedSysexData != nullptr)m_joinedSysexData->reset();
 }
 
 uint8 PatternBodyBlock::PatternEventData::getRelativeTickIncrement()
@@ -1096,7 +1106,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 		}
 	}
 	if (event!=nullptr)
-	markerTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region End", event->absoluteTick + oneMeasure));
+		markerTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region End", oneMeasure + (oneMeasure*patternSetupConfigPtr->getPatternLengthInMeasures())));
 	midiFile->addTrack(*infoTrack);
 	midiFile->addTrack(*markerTrack);
 	midiFile->addTrack(*partRTrack);

@@ -103,6 +103,8 @@ public:
 		// constructor for note off
 		PatternEventData(unsigned long absTick, int8 key, uint8 part);
 
+		~PatternEventData();
+
 		uint8 bytes[8];
 		unsigned long absoluteTick;	// set on construction by mostRecentAbsoluteTick + lastRelativeTickIncrement
 		ScopedPointer<MemoryBlock> m_joinedSysexData;
@@ -137,6 +139,7 @@ public:
 	};
 
 	PatternBodyBlock();
+	~PatternBodyBlock();
 
 	bool handleSysEx(SyxMsg* sysExMsg) override;
 
