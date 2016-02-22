@@ -829,11 +829,11 @@ void PartInfoPartBlock::getGroupFromBankSelMSB_LSB(uint8 msb, uint8 lsb, uint8 &
 			break;
 		case 84:
 			if (lsb == 0) { patchGroupType = 0; patchGroupId = 7; }break; // D2: Preset E
-		case 85:break;
+		case 85:
 			switch (lsb)
 			{
-			case 0:break; patchGroupType = 3; patchGroupId = 1; // User A
-			case 1:break; patchGroupType = 3; patchGroupId = 2; // User B
+			case 0: patchGroupType = 3; patchGroupId = 1; break; // User A
+			case 1: patchGroupType = 3; patchGroupId = 2; break;// User B
 			}
 			break;
 		case 86:
