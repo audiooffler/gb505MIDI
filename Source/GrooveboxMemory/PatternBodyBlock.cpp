@@ -996,71 +996,82 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	MidiFile* midiFile = new MidiFile();
 	midiFile->setTicksPerQuarterNote(96);
 
-	ScopedPointer<MidiMessageSequence> markerTrack = new MidiMessageSequence();
-	ScopedPointer<MidiMessageSequence> infoTrack = new MidiMessageSequence();
-	
-	infoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, patternSetupConfigPtr->getPatternName()));
-	infoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CopyrightNotice, "Converted with gbMIDI. (C) 2016 by Martin Spindler"));
-	infoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::DeviceName, "Roland groovebox MC-505 device family"));
-	// note: don't add TrackName meta event to very first track. might be just a reaper issue but reaper shows all meta (text) events of the first track in all other tracks too
+	uint8 deviceId = jmax<uint8>(grooveboxConnector->getActiveDeviceId(), 0x10);
 
+	double oneMeasure = (double)m_beatSigNumerator * 96.0 * 4.0 / (double)m_beatSigDenominator;
+
+	//ScopedPointer<MidiMessageSequence> markerTrack = new MidiMessageSequence();
+	//ScopedPointer<MidiMessageSequence> infoTrack = new MidiMessageSequence();
+	
 	// add 7 tracks (0..6: part 1 to 7; 7: rhythm part, 8: mute ctrl part (sysEx messages)), 
 	ScopedPointer<MidiMessageSequence> partRTrack = new MidiMessageSequence();
 	partRTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-R"));
 	partRTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getRhythmSetBlock()->getRhythmSetCommonBlockPtr()->getRhythmSetName()));
+	partRTrack->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::PartR)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part1Track = new MidiMessageSequence();
 	part1Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-1"));
 	part1Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart1)->getPatchCommonBlockPtr()->getPatchName()));
+	part1Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part1)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part2Track = new MidiMessageSequence();
 	part2Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-2"));
 	part2Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart2)->getPatchCommonBlockPtr()->getPatchName()));
+	part2Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part2)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part3Track = new MidiMessageSequence();
 	part3Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-3"));
 	part3Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart3)->getPatchCommonBlockPtr()->getPatchName()));
+	part3Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part3)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part4Track = new MidiMessageSequence();
 	part4Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-4"));
 	part4Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart4)->getPatchCommonBlockPtr()->getPatchName()));
+	part4Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part4)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part5Track = new MidiMessageSequence();
 	part5Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-5"));
 	part5Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart5)->getPatchCommonBlockPtr()->getPatchName()));
+	part5Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part5)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part6Track = new MidiMessageSequence();
 	part6Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-6"));
 	part6Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart6)->getPatchCommonBlockPtr()->getPatchName()));
+	part6Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part6)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part7Track = new MidiMessageSequence();
 	part7Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "PART-7"));
 	part7Track->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr(SynthPart7)->getPatchCommonBlockPtr()->getPatchName()));
+	part7Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part7)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> muteCtrlTrack = new MidiMessageSequence();
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, patternSetupConfigPtr->getPatternName()));
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CopyrightNotice, "Converted with gbMIDI. (C) 2016 by Martin Spindler"));
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::DeviceName, "Roland groovebox MC-505 device family"));
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "MUTE-CTRL"));
 	muteCtrlTrack->addEvent(MidiMessage::timeSignatureMetaEvent(patternSetupConfigPtr->getBeatSignature().getNumerator(), patternSetupConfigPtr->getBeatSignature().getDenominator()));
 	muteCtrlTrack->addEvent(MidiMessage::tempoMetaEvent((int)(60000000.0 / patternSetupConfigPtr->getTempoBpm())));
 
-	ScopedPointer<MidiMessageSequence> setupTrack = new MidiMessageSequence();
-	setupTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "Setup (M-FX, REV, DLY, PARTS)"));
+	// note: don't add TrackName meta event to very first track. might be just a reaper issue but reaper shows all meta (text) events of the first track in all other tracks too
+
+	//ScopedPointer<MidiMessageSequence> setupTrack = new MidiMessageSequence();
 
 	// effects setups
-	uint8 deviceId = jmax<uint8>(grooveboxConnector->getActiveDeviceId(),0x10);
 	MidiMessageSequence mFxSetup = patternSetupEffectsPtr->getM_FX_SetupMidiMessageSequence(deviceId);
-	setupTrack->addSequence(mFxSetup, 0.0, 0.0, mFxSetup.getEndTime() + 96.0);
+	muteCtrlTrack->addSequence(mFxSetup, 0.0, 0.0, mFxSetup.getEndTime() + 96.0);
 	MidiMessageSequence revSetup = patternSetupEffectsPtr->getReverbSetupMidiMessageSequence(deviceId);
-	setupTrack->addSequence(revSetup, 32.0, 0.0, revSetup.getEndTime() + 32.0 + 96.0);
+	muteCtrlTrack->addSequence(revSetup, 32.0, 0.0, revSetup.getEndTime() + 32.0 + 96.0);
 	MidiMessageSequence dlySetup = patternSetupEffectsPtr->getDelaySetupMidiMessageSequence(deviceId);
-	setupTrack->addSequence(dlySetup, 64.0, 0.0, dlySetup.getEndTime() + 64.0 + 96.0);
+	muteCtrlTrack->addSequence(dlySetup, 64.0, 0.0, dlySetup.getEndTime() + 64.0 + 96.0);
 	// parts setup
-	MidiMessageSequence partSetups = grooveboxMemory->getPatternSetupBlock()->getAllPartsSetupMidiMessageSequence(deviceId);
-	setupTrack->addSequence(partSetups, 96.0, 0.0, partSetups.getEndTime() + 96.0 + 96.0);
+	//MidiMessageSequence partSetups = grooveboxMemory->getPatternSetupBlock()->getAllPartsSetupMidiMessageSequence(deviceId);
+	muteCtrlTrack->addSequence(patternSetupConfigPtr->getInitalMuteStates(deviceId),0,0,oneMeasure);
+	
+	//muteCtrlTrack->addSequence(partSetups, 96.0, 0.0, partSetups.getEndTime() + 96.0 + 96.0);
 	// offset for sequence data, first measure should just contain setup messages
-	double oneMeasure = (double)m_beatSigNumerator * 96.0 * 4.0 / (double)m_beatSigDenominator;
 
 	// offset 1 measure (use first measure for setup)
-	markerTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region Start", oneMeasure));
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region Start", oneMeasure));
 	PatternEventData* event = nullptr;
 	for (int i = 0; i < m_sequenceBlocks.size(); i++)
 	{
@@ -1106,9 +1117,9 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 		}
 	}
 	if (event!=nullptr)
-		markerTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region End", oneMeasure + (oneMeasure*patternSetupConfigPtr->getPatternLengthInMeasures())));
-	midiFile->addTrack(*infoTrack);
-	midiFile->addTrack(*markerTrack);
+		muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CuePoint, "Pattern Loop Region End", oneMeasure + (oneMeasure*patternSetupConfigPtr->getPatternLengthInMeasures())));
+	//midiFile->addTrack(*infoTrack);
+	//midiFile->addTrack(*markerTrack);
 	midiFile->addTrack(*partRTrack);
 	midiFile->addTrack(*part1Track);
 	midiFile->addTrack(*part2Track);
@@ -1118,6 +1129,6 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	midiFile->addTrack(*part6Track);
 	midiFile->addTrack(*part7Track);
 	midiFile->addTrack(*muteCtrlTrack);
-	midiFile->addTrack(*setupTrack);
+	//midiFile->addTrack(*setupTrack);
 	return midiFile;
 }

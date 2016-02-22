@@ -656,13 +656,42 @@ PartInfoPartBlock::PartInfoPartBlock(AllParts part) :
 	setupParameter("Reverb Send Level", 0x0D, 0, 127, 0, StringArray(), String::empty, 91, false);
 }
 
+/*
+						BankSelect	0=PRESET, 3=USR&CRD	1-9
+SynthPatch Group Name	MSB	LSB		Patch Group Type	Patch Group ID
+Preset A (JX-305 A&B)	81	0		0					3
+Preset B (JX-305 C&D)	81	1		0					4
+Preset C (JX-305 E&F)	81	2		0					5
+Preset D (JX-305 G&H)	81	3		0					6
+Preset I&J (JX-305)		82	0		0					7
+Preset E MC-307			83	0		0					7
+Preset F MC-307			83	1		0					8
+Preset G MC-307			83	2		0					9
+Preset E (D2)			84	0		0					7
+User A					85	0		3					1
+User B					85	1		3					2
+Card A					86	0		3					3	guessed
+Card B					86	1		3					4	guessed
+Card C					86	2		3					5	guessed
+Card D					86	3		3					6	guessed
+
+RhySet Group Name
+Preset A				81	0		0					3
+Preset B JX-305			82	0		0					4
+Preset B MC-307			83	0		0					4
+Preset B D2				84	0		0					4
+User					85	0		3					1
+Card					86	0		3					2	guessed
+*/
+
 String PartInfoPartBlock::getPatchGroupNameByTypeAndID(uint8 patchGroupType, uint8 patchGroupId)
 {
 	if (m_part == PartR)
 	{
 		if (patchGroupType == 0 && patchGroupId == 3) return "Preset A";
 		else if (patchGroupType == 0 && patchGroupId == 4) return "Preset B";
-		else if (patchGroupType == 3 && patchGroupId == 1) return "User A";
+		else if (patchGroupType == 3 && patchGroupId == 1) return "User";
+		else if (patchGroupType == 3 && patchGroupId == 2) return "Card"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
 	}
 	else
 	{
@@ -675,75 +704,148 @@ String PartInfoPartBlock::getPatchGroupNameByTypeAndID(uint8 patchGroupType, uin
 		else if (patchGroupType == 0 && patchGroupId == 9) return "Preset G";
 		else if (patchGroupType == 3 && patchGroupId == 1) return "User A";
 		else if (patchGroupType == 3 && patchGroupId == 2) return "User B";
+		else if (patchGroupType == 3 && patchGroupId == 3) return "Card A"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+		else if (patchGroupType == 3 && patchGroupId == 4) return "Card B"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+		else if (patchGroupType == 3 && patchGroupId == 5) return "Card C"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+		else if (patchGroupType == 3 && patchGroupId == 6) return "Card D"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
 	}
 
 	return String::empty;
 }
 
-uint8 PartInfoPartBlock::getNumPatchesInGroup(uint8 patchGroupType, uint8 patchGroupId)
+void PartInfoPartBlock::getBankSelMSB_LSBforGroup(uint8 patchGroupType, uint8 patchGroupId, uint8& msb, uint8& lsb, GrooveboxConnector::GrooveboxModel model /*= GrooveboxConnector::Model_MC_307*/)
 {
-	if (m_part == PartR)
-	{
-		if (patchGroupType == 0 && patchGroupId == 3) return 25;
-		else if (patchGroupType == 0 && patchGroupId == 4) return 13;
-		else if (patchGroupType == 3 && patchGroupId == 1) return 19;
-	}
-	else
-	{
-		if (patchGroupType == 0 && patchGroupId == 3) return 128;
-		else if (patchGroupType == 0 && patchGroupId == 4) return 128;
-		else if (patchGroupType == 0 && patchGroupId == 5) return 128;
-		else if (patchGroupType == 0 && patchGroupId == 6) return 128;
-		else if (patchGroupType == 0 && patchGroupId == 7) return 128;
-		else if (patchGroupType == 0 && patchGroupId == 8) return 128;
-		else if (patchGroupType == 0 && patchGroupId == 9) return 32;
-		else if (patchGroupType == 3 && patchGroupId == 1) return 128;
-		else if (patchGroupType == 3 && patchGroupId == 2) return 128;
-	}
-	return 0;
-}
+	// dafaults:
+	msb = 0;
+	lsb = 0;
 
-void PartInfoPartBlock::getBankSelMSB_LSBforGroup(uint8 patchGroupType, uint8 patchGroupId, uint8& msb, uint8& lsb)
-{
+	// rhythm set patches
 	if (m_part == PartR)
 	{
-		if (patchGroupType == 0 && patchGroupId == 3) { msb = 81; lsb = 0; }
-		else if (patchGroupType == 0 && patchGroupId == 4) { msb = 83; lsb = 0; }
-		else if (patchGroupType == 3 && patchGroupId == 1) { msb = 85; lsb = 0; }
+		if (patchGroupType==0)
+		{
+			if (patchGroupId==3) msb = 81;
+			else if (patchGroupId == 4)
+			{
+				if (model == GrooveboxConnector::Model_JX_305) msb = 82;
+				else if (model == GrooveboxConnector::Model_D2) msb = 84;
+				else msb = 83;
+			}
+		}
+		else if (patchGroupType == 3)
+		{
+			if (patchGroupId == 1)
+			{
+				msb = 85;
+			}
+			else if (patchGroupId == 2) // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+			{
+				msb = 86;
+			}
+		}	
 	}
+	// synth patches
 	else
 	{
-		if (patchGroupType == 0 && patchGroupId == 3) { msb = 81; lsb = 0; }
-		else if (patchGroupType == 0 && patchGroupId == 4) { msb = 81; lsb = 1; }
-		else if (patchGroupType == 0 && patchGroupId == 5) { msb = 81; lsb = 2; }
-		else if (patchGroupType == 0 && patchGroupId == 6) { msb = 81; lsb = 3; }
-		else if (patchGroupType == 0 && patchGroupId == 7) { msb = 83; lsb = 0; }
-		else if (patchGroupType == 0 && patchGroupId == 8) { msb = 83; lsb = 1; }
-		else if (patchGroupType == 0 && patchGroupId == 9) { msb = 83; lsb = 2; }
-		else if (patchGroupType == 3 && patchGroupId == 1) { msb = 85; lsb = 0; }
-		else if (patchGroupType == 3 && patchGroupId == 2) { msb = 85; lsb = 1; }
+		if (patchGroupType == 0) // Preset
+		{
+			switch (patchGroupId)
+			{
+			case 3: msb = 81; lsb = 0; break;	// Preset A (JX-305 A&B)
+			case 4: msb = 81; lsb = 1; break;	// Preset B (JX-305 C&D)
+			case 5: msb = 81; lsb = 2; break;	// Preset C (JX-305 E&F)
+			case 6: msb = 81; lsb = 3; break;	// Preset D (JX-305 G&H)
+			case 7:
+				if (model == GrooveboxConnector::Model_JX_305) { msb = 82; lsb = 0; }	// JX-305: Preset I&J
+				else if (model == GrooveboxConnector::Model_D2) { msb = 84; lsb = 0; }  // D2: Preset E
+				else { msb = 83; lsb = 0; }												// MX-307: Preset E
+				break;
+			case 8: msb = 83; lsb = 1; break; // MX-307: Preset F
+			case 9: msb = 83; lsb = 2; break; // MX-307: Preset G
+			}
+		}
+		else if (patchGroupType == 3) // User/Card
+		{
+			if (patchGroupId == 1){ } 
+			else if (patchGroupId == 2){ msb = 85; lsb = 1; } // User B
+			switch (patchGroupId)
+			{
+			case 1: msb = 85; lsb = 0; break;// User A
+			case 2: msb = 85; lsb = 1; break;// User B
+			case 3: msb = 86; lsb = 0; break;// Card A: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 4: msb = 86; lsb = 1; break;// Card B: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 5: msb = 86; lsb = 2; break;// Card C: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 6: msb = 86; lsb = 3; break;// Card D: guessed id value! no documentation found about MC-505/JX-305 group ids
+			}
+		}
 	}
 }
 
 void PartInfoPartBlock::getGroupFromBankSelMSB_LSB(uint8 msb, uint8 lsb, uint8 &patchGroupType, uint8 &patchGroupId)
 {
+	// defaults:
+	patchGroupType = 0;
+	patchGroupId = 0;
+
+	// rhythm set patches
 	if (m_part == PartR)
 	{
-		if (msb == 81 && lsb == 0) { patchGroupType = 0; patchGroupId = 3; }
-		else if (msb == 83 && lsb == 0) { patchGroupType = 0; patchGroupId = 4; }
-		else if (msb == 85 && lsb == 0) { patchGroupType = 3; patchGroupId = 1; }
+		if (lsb == 0)
+		{
+			switch (msb)
+			{
+			case 81: patchGroupType = 0; patchGroupId = 3; break; // Preset A
+			case 82: patchGroupType = 0; patchGroupId = 4; break; // Preset B JX-305
+			case 83: patchGroupType = 0; patchGroupId = 4; break; // Preset B MC-307
+			case 84: patchGroupType = 0; patchGroupId = 4; break; // Preset B D2
+			case 85: patchGroupType = 3; patchGroupId = 1; break; // User
+			case 86: patchGroupType = 3; patchGroupId = 2; break; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+			}
+		}
 	}
+	// synth patches
 	else
 	{
-		if (msb == 81 && lsb == 0) { patchGroupType = 0; patchGroupId = 3; }
-		else if (msb == 81 && lsb == 1) { patchGroupType = 0; patchGroupId = 5; }
-		else if (msb == 81 && lsb == 2) { patchGroupType = 0; patchGroupId = 5; }
-		else if (msb == 81 && lsb == 3) { patchGroupType = 0; patchGroupId = 6; }
-		else if (msb == 83 && lsb == 0) { patchGroupType = 0; patchGroupId = 7; }
-		else if (msb == 83 && lsb == 1) { patchGroupType = 0; patchGroupId = 8; }
-		else if (msb == 83 && lsb == 2) { patchGroupType = 0; patchGroupId = 9; }
-		else if (msb == 85 && lsb == 0) { patchGroupType = 3; patchGroupId = 1; }
-		else if (msb == 85 && lsb == 1) { patchGroupType = 3; patchGroupId = 2; }
+		switch (msb)
+		{
+		case 81:
+			switch (lsb)
+			{
+			case 0: patchGroupType = 0; patchGroupId = 3; break; // Preset A (JX-305: Preset A&B)
+			case 1: patchGroupType = 0; patchGroupId = 4; break; // Preset B (JX-305: Preset C&D)
+			case 2: patchGroupType = 0; patchGroupId = 5; break; // Preset C (JX-305: Preset E&F)
+			case 3: patchGroupType = 0; patchGroupId = 6; break; // Preset D (JX-305: Preset G&H)
+			}
+			break;
+		case 82:
+			if (lsb == 0){ patchGroupType = 0; patchGroupId = 7; } break; // JX-305: Preset I&J
+		case 83:
+			switch (lsb)
+			{
+			case 0: patchGroupType = 0; patchGroupId = 7; break; // MC-307: Preset E
+			case 1: patchGroupType = 0; patchGroupId = 8; break; // MC-307: Preset F
+			case 2: patchGroupType = 0; patchGroupId = 9; break; // MC-307: PresetG
+			}
+			break;
+		case 84:
+			if (lsb == 0) { patchGroupType = 0; patchGroupId = 7; }break; // D2: Preset E
+		case 85:break;
+			switch (lsb)
+			{
+			case 0:break; patchGroupType = 3; patchGroupId = 1; // User A
+			case 1:break; patchGroupType = 3; patchGroupId = 2; // User B
+			}
+			break;
+		case 86:
+			switch (lsb)
+			{
+			case 0: patchGroupType = 3; patchGroupId = 3; break; // Card A: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 1: patchGroupType = 3; patchGroupId = 4; break; // Card B: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 2: patchGroupType = 3; patchGroupId = 5; break; // Card C: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 3: patchGroupType = 3; patchGroupId = 6; break; // Card D: guessed id value! no documentation found about MC-505/JX-305 group ids
+			}
+			break;
+		}
 	}
 }
 
@@ -751,14 +853,38 @@ void PartInfoPartBlock::handleCC(uint8 channel, uint8 controllerType, uint8 valu
 {
 	if (m_part == (uint8)channel)
 	{
-		switch (controllerType)
+		if (controllerType == 00)
 		{
-		case 07: m_data[0x06] = uint8(value); break;
-		case 10: m_data[0x07] = uint8(value); break;
-		case 85: m_data[0x08] = uint8(value); break;
-		case 91: m_data[0x0D] = uint8(value); break;
-		case 94: m_data[0x0C] = uint8(value); break;
-		case 86: m_data[0x0A] = uint8(value); break;
+			uint8 groupType = 0;
+			uint8 groupId = 0;
+			lastCC00BankMsbVal = value;
+			getGroupFromBankSelMSB_LSB(lastCC00BankMsbVal, lastCC32BankLsbVal, groupType, groupId);
+			if (groupId != 0)
+			{
+				getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::Init);
+				getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::Init);
+			}
+		}
+		else if (controllerType == 32)
+		{
+			uint8 groupType = 0;
+			uint8 groupId = 0;
+			lastCC32BankLsbVal = value;
+			getGroupFromBankSelMSB_LSB(lastCC00BankMsbVal, lastCC32BankLsbVal, groupType, groupId);
+			if (groupId != 0)
+			{
+				getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::Init);
+				getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::Init);
+			}
+		}
+		else switch (controllerType)
+		{
+		case 07: m_data[0x06] = uint8(value); break;	// vol
+		case 10: m_data[0x07] = uint8(value); break;	// pan
+		case 85: m_data[0x08] = uint8(value); break;	// key shift
+		case 91: m_data[0x0D] = uint8(value); break;	// rev
+		case 94: m_data[0x0C] = uint8(value); break;	// dly
+		case 86: m_data[0x0A] = uint8(value); break;	// mfx on
 		default:break;
 		}
 		// TODO: if not coming from midi in port that is part of active connection to groovebox, send to midiout (should be handled outside this, in mini in handler or so...)

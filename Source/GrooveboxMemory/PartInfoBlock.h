@@ -50,10 +50,7 @@ public:
 	// patchGroupType may be 0 or 3, patchGroupId may be 1..9 for Part 1..7 or 1 | 3 |4 for Part R
 	String getPatchGroupNameByTypeAndID(uint8 patchGroupType, uint8 patchGroupId);
 
-	// patchGroupType may be 0 or 3, patchGroupId may be 1..9 for Part 1..7 or 1 | 3 |4 for Part R
-	uint8 getNumPatchesInGroup(uint8 patchGroupType, uint8 patchGroupId);
-
-	void getBankSelMSB_LSBforGroup(uint8 patchGroupType, uint8 patchGroupId, uint8& msb, uint8& lsb);
+	void getBankSelMSB_LSBforGroup(uint8 patchGroupType, uint8 patchGroupId, uint8& msb, uint8& lsb, GrooveboxConnector::GrooveboxModel model = GrooveboxConnector::Model_MC_307);
 
 	void getGroupFromBankSelMSB_LSB(uint8 msb, uint8 lsb, uint8 &patchGroupType, uint8 &patchGroupId);
 
@@ -61,6 +58,8 @@ public:
 
 private:
 	AllParts m_part;
+	uint8 lastCC00BankMsbVal = 0;
+	uint8 lastCC32BankLsbVal = 0;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PartInfoPartBlock)
 };
 

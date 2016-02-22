@@ -21,7 +21,49 @@ public:
 		m_part(part)
 	{
 		m_name = "Quick SysEx Part " + String(part + 1);
-		// TODO: setup Parameters
+		
+		StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String::empty));
+		String lfoWaveformDescription(String("Select the LFO output waveform. The sound will be modulated in the same shape as the selected waveform.\r\n") +
+			"Available Settings :\r\n" +
+			"- TRI(triangle) : The sound will be modulated continuously.This is a frequently - used waveform, and is suited for effects such as vibrato.\r\n" +
+			"- SIN(sine wave) : The sound will be modulated smoothly.\r\n" +
+			"- SAW(sawtooth wave) : When the sound reaches the upper value, it will return to the original position and begin rising again.\r\n"
+			"- SQR(square wave) : The sound will be modulated as if it were being switched between two positions.\r\n"
+			"- TRP(trapezoid wave) : The sound will be modulated as if it were being switched between two positions.The curve at the transitions differs from square wave.\r\n" +
+			"- S&H(sample & hold) : This setting causes the sound to change unpredictably, and is suitable for creating sound effects.\r\n" +
+			"- RND(random) : This setting causes the sound to change unpredictably, and is suitable for creating sound effects. The LFO rate setting will be ignored.\r\n" +
+			"- CHS(chaos) : This setting causes the sound to change unpredictably without regard to frequency, and is suitable for creating sound effects. The LFO rate setting will be ignored.");
+		String lfoFadeTimeDescription(String("Specifies the time over which the LFO amplitude will reach the maximum (minimum) after the Delay TIME has elapsed.\r\n") +
+			"Higher settings will produce longer times.");
+		StringArray coarseTuneStrings; for (int i = -48; i <= 48; i++)
+		{
+			if (i<0) coarseTuneStrings.add("-" + String(-i));
+			else if (i == 0) coarseTuneStrings.add(String(i));
+			else if (i>0) coarseTuneStrings.add("+" + String(i));
+		}
+		StringArray pitchEnvelopeDepthStrings; for (int i = -12; i <= 12; i++)
+		{
+			if (i<0) pitchEnvelopeDepthStrings.add("-" + String(-i));
+			else if (i == 0) pitchEnvelopeDepthStrings.add(String(i));
+			else if (i>0) pitchEnvelopeDepthStrings.add("+" + String(i));
+		}
+		setupParameter("LFO1 Wave Form", 0x0F, 0, 7, 0, lfoWaveforms, lfoWaveformDescription);
+		setupParameter("LFO1 Fade Time", 0x14, 0, 127, 0, StringArray(), lfoFadeTimeDescription);
+		setupParameter("Coarse Tune",	 0x15, 16, 112, 64, coarseTuneStrings, "Adjust the pitch of each tone in semitone steps. Higher settings will raise the pitch. Lower settings will lower the pitch.");
+		setupParameter("Pitch Env Depth", 0x19, 52, 76, 64, pitchEnvelopeDepthStrings, "Here's how you can adjust the depth of the Pitch Envelope. Increasingly positive (+) settings will produce a greater width of pitch change. Negative (-) settings will invert the shape of the envelope, causing the pitch to change in the opposite direction.");
+		setupParameter("Pitch Env Attack", 0x1A, 0, 127, 0, StringArray(), "Specifies the time until the next pitch level is reached.\r\nHigher settings will result in a longer time until the next pitch level is reached.");
+		setupParameter("Pitch Env Decay", 0x1B, 0, 127, 0, StringArray(), "Specifies the time until the next pitch level is reached.\r\nHigher settings will result in a longer time until the next pitch level is reached.");
+		setupParameter("Filter Env Sustain", 0x1C, 1, 127, 64, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+		setupParameter("Filter Env Release", 0x1D, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
+		//setupParameter("Amp Env Sustain",	0x1F,0,127
+		//setupParameter("Filter Type",		0x22,0,4
+		//setupParameter("Tone Pan",			0x23,0,127
+		//setupParameter("Tone Level",		0x24,0,127
+		//setupParameter("Random Pan Switch",	0x25,0,63
+		//setupParameter("Pitch Env Sustain",	0x27,1,127
+		//setupParameter("Pitch Env Release",	0x28,0,127
+		//setupParameter("Part Key Shift",	0x55,16,112
+		//setupParameter("Part M - FX Switch",0x56,0,3
 	}
 
 	SynthParts getPart(){ return m_part; }

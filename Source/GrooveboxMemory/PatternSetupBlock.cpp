@@ -405,6 +405,54 @@ void PatternSetupConfigBlock::setSeqOut(PatternBodyBlock::PatternPart part, uint
 	}
 }
 
+MidiMessage PatternSetupConfigBlock::getPartMuteSysEx(uint8 deviceId, AllParts part)
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	uint8 quickSysExAddress[2]{0x70, 0x01};
+	uint8 quickSysExData[2]{(uint8)part, patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)part) ? 1 : 0};	// DataL: 0-6,9; DataE: none(0), mute(1)
+	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
+	return msg->toMidiMessage();
+}
+
+MidiMessage PatternSetupConfigBlock::getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group)
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	uint8 quickSysExAddress[2]{0x70, 0x02};
+	uint8 quickSysExData[2]{(uint8)group, patternSetupConfigPtr->isRyhGroupMute(group) ? 1 : 0};	// DataL: 0-7; DataE: none(0), mute(1)
+	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
+	return msg->toMidiMessage();
+}
+
+MidiMessageSequence PatternSetupConfigBlock::getInitalMuteStates(uint8 deviceId)
+{
+	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+
+	MidiMessageSequence messages;
+
+	for (int i = 0; i < 8; i++)
+	{
+		PatternBodyBlock::PatternPart pattern_part = (PatternBodyBlock::PatternPart)i;
+		AllParts part = (AllParts)i;
+		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Part " + String(i + 1) + ": " + (patternSetupConfigPtr->isPartMute(pattern_part) ? "muted" : "on")), 7.0);
+		messages.addEvent(getPartMuteSysEx(deviceId, part), 7.0);
+	}
+	PatternBodyBlock::PatternPart pattern_part = PatternBodyBlock::Pattern_Part_R;
+	AllParts part = PartR;
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String("Initial state of Part R: ") + (patternSetupConfigPtr->isPartMute(pattern_part) ? "muted" : "on")), 7.0);
+	messages.addEvent(getPartMuteSysEx(deviceId, part), 7.0);
+
+	// mute initial state for rhythm groups
+	for (int i = 0x00; i < 0x08; i++)
+	{
+		PatternBodyBlock::RhythmGroup rhyGrp = (PatternBodyBlock::RhythmGroup)i;
+		String rhyGrpName(PatternBodyBlock::PatternEventData::getRhythmGroupString(rhyGrp));
+		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Rhythm Group " + rhyGrpName + ": " + (patternSetupConfigPtr->isRyhGroupMute(rhyGrp) ? "muted" : "on")), 7.0);
+		messages.addEvent(getRhythmGroupMuteSysEx(deviceId, rhyGrp), 7.0);
+	}
+
+	return messages;
+}
+
 // === PatternSetupEffectsBlock: ==============================================
 
 /*static*/ const StringArray PatternSetupEffectsBlock::mFxTypeNameStrings = StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", "");
@@ -630,28 +678,8 @@ String PatternSetupPartBlock::getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32
 	return "Unknown Patch Bank";
 }
 
-MidiMessage PatternSetupPartBlock::getPartMuteSysEx(uint8 deviceId)
+MidiMessageSequence PatternSetupPartBlock::getSinglePartSetupMidiMessageSequence()
 {
-	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
-	uint8 quickSysExAddress[2]{0x70, 0x01};
-	uint8 quickSysExData[2]{(uint8)m_part, patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)m_part) ? 1 : 0};	// DataL: 0-6,9; DataE: none(0), mute(1)
-	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
-	return msg->toMidiMessage();
-}
-
-MidiMessage PatternSetupPartBlock::getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group)
-{
-	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
-	uint8 quickSysExAddress[2]{0x70, 0x02};
-	uint8 quickSysExData[2]{(uint8)group, patternSetupConfigPtr->isRyhGroupMute(group) ? 1 : 0};	// DataL: 0-7; DataE: none(0), mute(1)
-	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
-	return msg->toMidiMessage();
-}
-
-MidiMessageSequence PatternSetupPartBlock::getSinglePartSetupMidiMessageSequence(uint8 deviceId)
-{
-	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
-
 	MidiMessageSequence messages;
 	// patch selection cascade (meta text, bank selection MSB, bank selection LSB, program change:
 	messages.addEvent(SyxMsg::createChannelPrefixMetaEvent((uint8)m_part));
@@ -672,20 +700,7 @@ MidiMessageSequence PatternSetupPartBlock::getSinglePartSetupMidiMessageSequence
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 94, getParameter(0x06)->getValue()), 5.0);
 	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer M-FX Switch"), 5.0);
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 86, getParameter(0x08)->getValue()), 5.0);
-	// mute initial state for part
-	String partName(m_part == 9 ? "R" : String((int)m_part + 1));
 	
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Part " + partName + " : " + (patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)m_part) ? "muted" : "on")), 7.0);
-	messages.addEvent(getPartMuteSysEx(deviceId), 7.0);
-	// mute initial state for rhythm groups
-	if (m_part == AllParts::PartR)
-		for (int i = 0x00; i < 0x08; i++)
-		{
-			PatternBodyBlock::RhythmGroup rhyGrp = (PatternBodyBlock::RhythmGroup)i;
-			String rhyGrpName(PatternBodyBlock::PatternEventData::getRhythmGroupString(rhyGrp));
-			messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Rhythm Group " + rhyGrpName + " : " + (patternSetupConfigPtr->isRyhGroupMute(rhyGrp) ? "muted" : "on")), 7.0);
-			messages.addEvent(getRhythmGroupMuteSysEx(deviceId, rhyGrp), 7.0);
-		}
 	return messages;
 }
 
@@ -731,26 +746,4 @@ PatternSetupPartBlock* PatternSetupBlock::getPatternSetupPartBlockPtr(AllParts p
 	case Part7: return dynamic_cast<PatternSetupPartBlock*>(getSubBlock(9));
 	default: return nullptr;
 	}
-}
-
-MidiMessageSequence PatternSetupBlock::getAllPartsSetupMidiMessageSequence(uint8 deviceId)
-{
-	MidiMessageSequence messages;
-	MidiMessageSequence partRsetupSeq = getPatternSetupPartBlockPtr(PartR)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part1setupSeq = getPatternSetupPartBlockPtr(Part1)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part2setupSeq = getPatternSetupPartBlockPtr(Part2)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part3setupSeq = getPatternSetupPartBlockPtr(Part3)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part4setupSeq = getPatternSetupPartBlockPtr(Part4)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part5setupSeq = getPatternSetupPartBlockPtr(Part5)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part6setupSeq = getPatternSetupPartBlockPtr(Part6)->getSinglePartSetupMidiMessageSequence(deviceId);
-	MidiMessageSequence part7setupSeq = getPatternSetupPartBlockPtr(Part7)->getSinglePartSetupMidiMessageSequence(deviceId);
-	messages.addSequence(partRsetupSeq, 0.0, 0.0, partRsetupSeq.getEndTime() + 96.0);
-	messages.addSequence(part1setupSeq, 0.0, 0.0, part1setupSeq.getEndTime() + 96.0);
-	messages.addSequence(part2setupSeq, 0.0, 0.0, part2setupSeq.getEndTime() + 96.0);
-	messages.addSequence(part3setupSeq, 0.0, 0.0, part3setupSeq.getEndTime() + 96.0);
-	messages.addSequence(part4setupSeq, 0.0, 0.0, part4setupSeq.getEndTime() + 96.0);
-	messages.addSequence(part5setupSeq, 0.0, 0.0, part5setupSeq.getEndTime() + 96.0);
-	messages.addSequence(part6setupSeq, 0.0, 0.0, part6setupSeq.getEndTime() + 96.0);
-	messages.addSequence(part7setupSeq, 0.0, 0.0, part7setupSeq.getEndTime() + 96.0);
-	return messages;
 }
