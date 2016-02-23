@@ -100,6 +100,8 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 	setupParameter("Pattern Name 14", 0x0D, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
 	setupParameter("Pattern Name 15", 0x0E, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
 
+	setupParameter("???", 0x0F, 0, 127, 0, StringArray(), "???");
+
 	setupParameter("Beat Signature Numerator", 0x10, 2, 19, 4);
 	setupParameter("Beat Signature Denominator", 0x11, 4, 16, 4);
 	setupParameter("Measures", 0x12, 0, 32, 4, StringArray(),"Pattern lenght as number of measures.");
@@ -110,6 +112,15 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 	setupParameter("Tempo Byte 3", 0x15, 0, 0xF, 0xE, StringArray());
 	setupParameter("Tempo Byte 4", 0x16, 0, 0xF, 0x0, StringArray());
 
+	setupParameter("???", 0x17, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x18, 0, 127, 0x0F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x19, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x1A, 0, 127, 0x02, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x1B, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x1C, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x1D, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x1E, 0, 127, 0, StringArray(), "???");
+
 	StringArray muteStateStringsParts567 = StringArray::fromTokens("5 ON, 6 ON, 7 ON;5 MT, 6 ON, 7 ON;5 ON, 6 MT, 7 ON;5 MT, 6 MT, 7 ON;5 ON, 6 ON, 7 MT;5 MT, 6 ON, 7 MT;5 ON, 6 MT, 7 MT;5 MT, 6 MT, 7 MT", ";", "");
 	setupParameter("Mute Parts 5, 6, 7", 0x1F, 0, 7, 0, muteStateStringsParts567, "Flags for muting Parts 5, 6 and 7");
 	StringArray muteStateStringsParts4321 = StringArray::fromTokens("1 ON, 2 ON, 3 ON, 4 ON;1 MT, 2 ON, 3 ON, 4 ON;1 ON, 2 MT, 3 ON, 4 ON;1 MT, 2 MT, 3 ON, 4 ON;1 ON, 2 ON, 3 MT, 4 ON;1 MT, 2 ON, 3 MT, 4 ON;1 ON, 2 MT, 3 MT, 4 ON;1 MT, 2 MT, 3 MT, 4 ON;1 ON, 2 ON, 3 ON, 4 MT;1 MT, 2 ON, 3 ON, 4 MT;1 ON, 2 MT, 3 ON, 4 MT;1 MT, 2 MT, 3 ON, 4 MT;1 ON, 2 ON, 3 MT, 4 MT;1 MT, 2 ON, 3 MT, 4 MT;1 ON, 2 MT, 3 MT, 4 MT;1 MT, 2 MT, 3 MT, 4 MT", ";", "");
@@ -117,20 +128,98 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 	setupParameter("Mute MUTE CTRL", 0x21, 0, 4, 0, StringArray::fromTokens("MUTE-CTRL ON; MUTE-CTRL ON; MUTE-CTRL ON; MUTE-CTRL ON; MUTE-CTRL MT;", ";", ""), "Flag for muting the MUTE CTRL part");
 	
 	setupParameter("Mute Part R", 0x22, 0, 2, 0, StringArray::fromTokens("R ON; R ON; R MT", ";", ""), "Flag for muting Part R");
+
+	setupParameter("???", 0x23, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x24, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x25, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x26, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x27, 0, 127, 0x02, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x28, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x29, 0, 127, 0x0F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x2A, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x2B, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x2C, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x2D, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x2E, 0, 127, 0, StringArray(), "???");
+
 	StringArray muteStateStringsRhyGrp8765 = StringArray::fromTokens("CYM ON, TOM/PERC ON, HIT ON, OTHERS ON;CYM MT, TOM/PERC ON, HIT ON, OTHERS ON;CYM ON, TOM/PERC MT, HIT ON, OTHERS ON;CYM MT, TOM/PERC MT, HIT ON, OTHERS ON;CYM ON, TOM/PERC ON, HIT MT, OTHERS ON;CYM MT, TOM/PERC ON, HIT MT, OTHERS ON;CYM ON, TOM/PERC MT, HIT MT, OTHERS ON;CYM MT, TOM/PERC MT, HIT MT, OTHERS ON;CYM ON, TOM/PERC ON, HIT ON, OTHERS MT;CYM MT, TOM/PERC ON, HIT ON, OTHERS MT;CYM ON, TOM/PERC MT, HIT ON, OTHERS MT;CYM MT, TOM/PERC MT, HIT ON, OTHERS MT;CYM ON, TOM/PERC ON, HIT MT, OTHERS MT;CYM MT, TOM/PERC ON, HIT MT, OTHERS MT;CYM ON, TOM/PERC MT, HIT MT, OTHERS MT;CYM MT, TOM/PERC MT, HIT MT, OTHERS MT", ";","");
 	setupParameter("Mute CYM, TOM/PERC, HIT, OTHERS", 0x2F, 0, 15, 0, muteStateStringsRhyGrp8765, "Flags for muting rhythm groups CYM, TOM/PERC, HIT and OTHERS");
 	StringArray muteStateStringsRhyGrp4321 = StringArray::fromTokens("BD ON, SD ON, HH ON, CLP ON;BD MT, SD ON, HH ON, CLP ON;BD ON, SD MT, HH ON, CLP ON;BD MT, SD MT, HH ON, CLP ON;BD ON, SD ON, HH MT, CLP ON;BD MT, SD ON, HH MT, CLP ON;BD ON, SD MT, HH MT, CLP ON;BD MT, SD MT, HH MT, CLP ON;BD ON, SD ON, HH ON, CLP MT;BD MT, SD ON, HH ON, CLP MT;BD ON, SD MT, HH ON, CLP MT;BD MT, SD MT, HH ON, CLP MT;BD ON, SD ON, HH MT, CLP MT;BD MT, SD ON, HH MT, CLP MT;BD ON, SD MT, HH MT, CLP MT;BD MT, SD MT, HH MT, CLP MT", ";", "");
 	setupParameter("Mute BD, SD, HH, CLP", 0x30, 0, 15, 0, muteStateStringsRhyGrp4321, "Flags for muting rhythm groups BD, SD, HH and CLP");
 
+	setupParameter("???", 0x31, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x32, 0, 127, 0x01, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x33, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x34, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x35, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x36, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x37, 0, 127, 0, StringArray(), "???");
+
 	StringArray seqOutStrings = StringArray::fromTokens("INT OUT BOTH",false);
 	setupParameter("Sequencer Out Part 1", 0x38, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x39, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part 2", 0x3A, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x3B, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part 3", 0x3C, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x3D, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part 4", 0x3E, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x3F, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part 5", 0x40, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x41, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part 6", 0x42, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x43, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part 7", 0x44, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x45, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x46, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x47, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x48, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x49, 0, 127, 0, StringArray(), "???");
 	setupParameter("Sequencer Out Part R", 0x4A, 0, 2, 2, seqOutStrings);
+	setupParameter("???", 0x4B, 0, 127, 0, StringArray(), "???");
+
+	setupParameter("???", 0x4C, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x4D, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x4E, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x4F, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x50, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x51, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x52, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x53, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x54, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x55, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x56, 0, 127, 0x02, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x57, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x58, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x59, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x5A, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x5B, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x5C, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x5D, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x5E, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x5F, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x60, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x61, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x62, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x63, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x64, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x65, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x66, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x67, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x68, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x69, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x6A, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x6B, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x6C, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x6D, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x6E, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x6F, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x70, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x71, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x72, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x73, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x74, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x75, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x76, 0, 127, 0, StringArray(), "???");
 }
 
 // returns the pattern name
@@ -463,6 +552,9 @@ PatternSetupEffectsBlock::PatternSetupEffectsBlock()
 {
 	m_name = "Pattern Setup Effects";
 	
+	setupParameter("???", 0x00, 0, 127, 0x0C, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x01, 0, 127, 0, StringArray(), "???");
+
 	setupParameter("M-FX Type", 0x02, 00, 24, 00, mFxTypeNameStrings, "Multi-Effects Type");
 	setupParameter("M-FX Parameter 1", 0x03, 0, 127);
 	setupParameter("M-FX Parameter 2", 0x04, 0, 127);
@@ -477,14 +569,25 @@ PatternSetupEffectsBlock::PatternSetupEffectsBlock()
 	setupParameter("M-FX Parameter 11", 0x0D, 0, 127);
 	setupParameter("M-FX Parameter 12", 0x0E, 0, 127);
 
+	setupParameter("???", 0x0F, 0, 127, 0, StringArray(), "???");
+	setupParameter("???", 0x10, 0, 127, 0x7F, StringArray(), "???"); // default found in pattern "Inspired"
+
 	setupParameter("M-FX Delay Send Level", 0x11, 0, 127, 20, StringArray(), "Applies the Delay equally to each of the parts with Multi-effects set at ON regardless of the Part Delay Level for each part.");
 	setupParameter("M-FX Reverb Send Level", 0x12, 0, 127, 20, StringArray(), "Applies reverb equally to each of the parts with Multi-effects set at ON regardless of the Part Reverb Level for each part.");
+
+	setupParameter("???", 0x13, 0, 127, 0x7F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x14, 0, 127, 0x7F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x15, 0, 127, 0x7F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x16, 0, 127, 0x7F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x17, 0, 127, 0x01, StringArray(), "???"); // default found in pattern "Inspired"
 
 	StringArray hfFreqStrings(StringArray::fromTokens("200 Hz, 250 Hz, 315 Hz, 400 Hz, 500 Hz, 630 Hz, 800 Hz, 1000 Hz, 1250 Hz, 1600 Hz, 2000 Hz, 2500 Hz, 3150 Hz, 4000 Hz, 5000 Hz, 6300 Hz, 8000 Hz, BYPASS", ",", ""));
 	setupParameter("Reverb Type", 0x18, 0, 7, 2, StringArray::fromTokens("ROOM1 ROOM2 STAGE1 STAGE2 HALL1 HALL2", false), "- ROOM1: Reverb with short decay and high density.\r\n- ROOM2: Reverb with short decay and low density.\r\n- STAGE1: Reverb with much lingering reverberation.\r\n- STAGE2: Reverb with strong early reflections.\r\n- HALL1: Clear-sounding reverb.\r\n- HALL2: Rich-sounding reverb.\r\n");
 	setupParameter("Reverb Master Level", 0x19, 0, 127, 127, StringArray(), "You can adjust the overall volume of reverb for the eight parts(rhythm part and parts 1-7).");
 	setupParameter("Reverb Time", 0x1A, 0, 127, 90, StringArray(), "You can adjust the time over which the reverberation will continue.");
 	setupParameter("Reverb HF Damp", 0x1B, 0, 17, 13, hfFreqStrings, "Specifies the frequency at which the high frequency portions of the reverberation will be cut.\r\nLowering this setting will cause more of the upper frequency content to be cut, making the reverberation more muted. If 'BYPASS' is selected, the high frequency range will not be cut.");
+
+	setupParameter("???", 0x1C, 0, 127, 0x01, StringArray(), "???"); // default found in pattern "Inspired"
 
 	StringArray feedbackPercentageStrings(StringArray::fromTokens("0% +1% +2% +3% +4% +5% +6% +7% +8% +9% +10% +11% +12% +13% +14% +15% +16% +17% +18% +19% +20% +21% +22% +23% +24% +25% +26% +27% +28% +29% +30% +31% +32% +33% +34% +35% +36% +37% +38% +39% +40% +41% +42% +43% +44% +45% +46% +47% +48% +49% +50% +51% +52% +53% +54% +55% +56% +57% +58% +59% +60% +61% +62% +63% +64% +65% +66% +67% +68% +69% +70% +71% +72% +73% +74% +75% +76% +77% +78% +79% +80% +81% +82% +83% +84% +85% +86% +87% +88% +89% +90% +91% +92% +93% +94% +95% +96% +97% +98%", false));
 	setupParameter("Delay Master Level", 0x1D, 0, 127, 127, StringArray(), "This adjusts the volume of the delay sound for all eight parts (the rhythm part and parts 1-7).");
@@ -493,6 +596,8 @@ PatternSetupEffectsBlock::PatternSetupEffectsBlock()
 	setupParameter("Delay HF Damp", 0x20, 0, 17, 17, hfFreqStrings, "Specifies the frequency at which the high frequency portions of the delay will be cut.Lowering this setting will cause more of the upper frequency content to be cut, making the delay more muted in tone. If 'BYPASS' is selected, the high frequency range will not be cut.");
 	setupParameter("Delay Feedback Level", 0x21, 0, 98, 50, feedbackPercentageStrings, "Sets the amount of delayed sound to be repeated, as a proportion of the original sound.");
 	setupParameter("Delay Delay Output Assign", 0x22, 0, 2, 2, StringArray::fromTokens("LINE REV LINE+REV", false), "Allows you to select a destination for the sound after delay has been applied. Selecting LINE outputs the sound to the OUTPUT jacks on the rear panel; selecting REV outputs it to Reverb; or selecting LINE + REV outputs the sound to both the OUTPUT jacks and Reverb.");
+
+	setupParameter("???", 0x23, 0, 127, 0x01, StringArray(), "???"); // default found in pattern "Inspired"
 }
 
 MidiMessageSequence PatternSetupEffectsBlock::getM_FX_SetupMidiMessageSequence(uint8 deviceId)
