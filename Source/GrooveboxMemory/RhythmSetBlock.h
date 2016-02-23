@@ -61,9 +61,9 @@ private:
 class RhythmNoteBlock : public GrooveboxMemoryBlock
 {
 public:
-	// key must be of 35..98 (64 keys)
+	// key must be of 35=0x23..98=0x62 (64 keys)
 	RhythmNoteBlock(uint8 key) :
-		GrooveboxMemoryBlock(0x02090000 | key, "Rhythm Note for Key " + String(key), "1-4-2",0x3a),
+		GrooveboxMemoryBlock(0x02090000 | (key << 8), "Rhythm Note for Key " + String(key), "1-4-2",0x3a),
 		m_key(key)
 	{
 		m_name = "Rhythm Note";
@@ -234,7 +234,7 @@ public:
 		m_name = "Rhythm Setup";
 		addSubBlock(new RhythmCommonBlock());
 		// add address blocks for 64 keys
-		for (uint8 i = 35; i <= 98; i++)
+		for (uint8 i = 0x23; i <= 0x62; i++)
 		{
 			addSubBlock(new RhythmNoteBlock(i));
 		}
@@ -243,7 +243,7 @@ public:
 	// key must be of 35..98 (64 keys)
 	RhythmNoteBlock* getRhythmNoteBlockPtr(uint8 key)
 	{
-		return dynamic_cast<RhythmNoteBlock*>(getSubBlock(key - 24)); // (map 35 --> 1 : -24)
+		return dynamic_cast<RhythmNoteBlock*>(getSubBlock(key - 0x23));
 	}
 	
 	RhythmCommonBlock* getRhythmSetCommonBlockPtr()
