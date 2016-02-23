@@ -89,9 +89,10 @@ public:
 			"SUSTAIN: The sound will continue as long as the keyboard pad is pressed\r\n"
 			"If a waveform with a long decay (one-shot waveform) is selected, setting this parameter to SUSTAIN will have no effect.");
 
-		//setupParameter("Reserved", 0x09...
-		//setupParameter("Reserved", 0x0A...
-		//setupParameter("Reserved", 0x0B...
+		setupParameter("Reserved", 0x09, 0, 1, 1, StringArray(), "JV-2080 Rhythm Note Volume Control Switch");
+		setupParameter("Reserved", 0x0A, 0, 1, 1, StringArray(), "JV-2080 Rhythm Note Hold-1 Control Switch");
+		setupParameter("Reserved", 0x0B, 0, 2, 1, StringArray(), "JV-2080 Rhythm Note Pan Control Switch");
+
 		StringArray coarseTuneStrings; for (int i = -60; i <= 60; i++)
 		{
 			if (i<0) coarseTuneStrings.add("-" + String(-i));
@@ -209,9 +210,10 @@ public:
 			"ON: Sounds are output from the OUTPUT jacks with M-FX effects applied.\r\n"
 			"The RHYTHM TONE M-FX switch can only be activated when the PART M-FX switch for the rhythm part is set to \"RHY.\"\r\n"
 			"If the PART M-FX switch for the rhythm part is set to ON, M-FX effects are applied to all rhythm tones regardless of the setting of the RHYTHM TONE M-FX switch.");
-		//setupParameter("Reserved", 0x37...
+		
+		setupParameter("Reserved", 0x37, 0, 127, 127, StringArray(), "JV-2080 Rhythm Note Mix/EFX Send Level");
 
-		setupParameter("Delay Send Level", 0x38, 0, 127, 0,StringArray(), "Specifies the reverb volume for each rhythm tone. Higher settings will increase the reverb volume.\r\n"
+		setupParameter("Delay Send Level", 0x38, 0, 127, 0, StringArray(), "Specifies the reverb volume for each rhythm tone. Higher settings will increase the reverb volume.\r\n"
 			"The Rhythm Tone Reverb Level setting is valid only if the Part M-FX SW setting of the rhythm part is set to \"RHY\".Also in this case, if the Reverb Level and the Part Reverb Level setting of the rhythm part are low, there will be no reverb even if the Rhythm Tone Reverb Level is raised.");
 		setupParameter("Reverb Send Level", 0x39, 0, 127, 0, StringArray(), "Specifies the amount of delay for each rhythm tone. Higher settings will increase the delay volume.\r\n"
 			"The Rhythm Tone Delay Level setting is valid only when the Part M-FX SW setting of the rhythm part is set to \"RHY\". Also in this case, if the Delay Level and the Part Delay Level setting of the rhythm part are low, there will be no delay even if the Rhythm Tone Delay Level is raised.");
