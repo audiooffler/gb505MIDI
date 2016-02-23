@@ -208,7 +208,7 @@ public:
 	MidiFile* convertToMidiFile();
 
 	// get data request messages from this block and its sub blocks, the result is added to the array specified in the parameter, overridden for serializing pattern data
-	void createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr) override;
+	void createBlockSendMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr) override;
 
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each

@@ -1112,7 +1112,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	return midiFile;
 }
 
-void PatternBodyBlock::createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr)/* override*/
+void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr)/* override*/
 {
 	// concatenate all 8-bit events
 	MemoryBlock allEventsAs8Bit;
@@ -1127,8 +1127,38 @@ void PatternBodyBlock::createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSec
 
 	// encode every 7 bytes into 8x 7-bit MIDI data bytes
 	MemoryBlock allEventsAs7Bit;
-	for (unsigned int i = 0; i < allEventsAs8Bit.getSize(); i++)
+	uint8 encodedBlock[8] = { 0, 0, 0, 0, 0, 0, 0, 0 }; // current 8x 7Bit-Bytes Block, made from 7x 8Bit-Bytes
+	uint8 originalBlock[7] = { 0, 0, 0, 0, 0, 0, 0};
+	for (unsigned int i = 0; i < allEventsAs8Bit.getSize(); i+=7)
 	{
+		// get original block of 7 8-bit-bytes
+		for (int j = 0; j < 7; j++) { originalBlock[0] = (i + j) < allEventsAs8Bit.getSize() ? allEventsAs8Bit[i + j] : 0; }
+		
+		// set encoded block of 8 7-bit-midi-bytes
+		encodedBlock[0] =                                     originalBlock[0] >> 1; //                                           7 most significant bits from 1st byte
+		encodedBlock[1] = ((originalBlock[0] & 0x01) << 6) | (originalBlock[1] >> 2); // 1 least significant bit  from 1st byte + 6 most significant bits from 2nd byte
+		encodedBlock[2] = ((originalBlock[1] & 0x03) << 5) | (originalBlock[2] >> 3); // 2 least significant bits from 2nd byte + 5 most significant bits from 3rd byte
+		encodedBlock[3] = ((originalBlock[2] & 0x07) << 4) | (originalBlock[3] >> 4); // 3 least significant bits from 3rd byte + 4 most significant bits from 4th byte
+		encodedBlock[4] = ((originalBlock[3] & 0x0F) << 3) | (originalBlock[4] >> 5); // 4 least significant bits from 4th byte + 3 most significant bits from 5th byte
+		encodedBlock[5] = ((originalBlock[4] & 0x1F) << 2) | (originalBlock[5] >> 6); // 5 least significant bits from 5th byte + 2 most significant bits from 6th byte
+		encodedBlock[6] = ((originalBlock[5] & 0x3F) << 1) | (originalBlock[6] >> 7); // 6 least significant bits from 6th byte + 1 most significant bit  from least byte 
+		encodedBlock[7] =  (originalBlock[6] & 0x7F);                                 // 7 least significant bits from last byte
 
+		allEventsAs7Bit.append(encodedBlock, 8);
+	}
+
+	// output encoded bytes as sysex
+	uint8 deviceId((grooveboxConnector != nullptr) ? grooveboxConnector->getActiveDeviceId() : 0x10);
+	uint8 address[4] = { 0x40, 00, 00, 00 };
+	uint8 addressOffset = 0;
+	for (unsigned i = 0 ; i < allEventsAs7Bit.getSize(); i += 128)
+	{
+		unsigned int dataLength = (i + 128) > allEventsAs7Bit.getSize() ? (allEventsAs7Bit.getSize() - i) : 128;
+		uint8* data;
+		data = new uint8[dataLength];
+		allEventsAs7Bit.copyTo(data, i, dataLength);
+		address[2] = addressOffset;
+		syxMsgArrayPtr->add(new SyxMsg(SyxMsg::Type_DT1, deviceId, address, data, dataLength));
+		addressOffset++;
 	}
 }

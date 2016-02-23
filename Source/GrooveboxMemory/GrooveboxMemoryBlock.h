@@ -74,7 +74,7 @@ public:
 
 	// get data request messages from this block and its sub blocks,
 	// the result is added to the array specified in the parameter
-	virtual void createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr);
+	void createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr);
 
 	// Create a sysex send message for setting a parameter. Sets 1 byte by default, but more in a row can be sent (e.g. for setting name Patch Name parameters in one row: 12)
 	// TODO: override for some parameters to create quick sysex send or for scale tunes create gs (by default DT1 sysex is created)
@@ -82,7 +82,7 @@ public:
 
 	// create sysex message for sending block data of this block and all sub blocks,
 	// the result is added to the array specified in the parameter
-	void createBlockSendMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr);
+	virtual void createBlockSendMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr);
 
 	// added SubBlock will be owned and deleted by this class
 	void addSubBlock(GrooveboxMemoryBlock* subBlock);
