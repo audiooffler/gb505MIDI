@@ -243,6 +243,12 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	setupParameter("Keyboard Range Lower", 0x0E, 0, 127, 0, noteNames, "Specifies the lowest note that the tone will sound.\r\nIf a note below this setting is played, it will not sound.");
 	setupParameter("Keyboard Range Upper", 0x0F, 0, 127, 127, noteNames, "Specifies the highest note that the tone will sound.\r\nIf a note above this setting is played, it will not sound.");
 
+	setupParameter("Reserved", 0x10, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Redamper Control Switch");
+	setupParameter("Reserved", 0x11, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Volume Control Switch");
+	setupParameter("Reserved", 0x12, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Hold-1 Control Switch");
+	setupParameter("Reserved", 0x13, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Pitch Bend Control Switch");
+	setupParameter("Reserved", 0x14, 0, 1, 0, StringArray(), "JV-2080 Patch Tone Pan Control Switch");
+
 	setupParameter("Modulation Destination 1", 0x15, 0, 15, 0, controlDestinations, "Parameter 1 that will be controlled temporarily when the modulation controller of the external MIDI device is operated.");
 	setupParameter("Modulation Depth 1", 0x16, 0, 126, 63, modulationDepthStrings, "Specifies the amount of change that will occur for Parameter 1.\r\nWith positive (+) settings, higher values will allow greater control. With negative (-) settings, the direction of the change will be inverted.");
 	setupParameter("Modulation Destination 2", 0x17, 0, 15, 0, controlDestinations, "Parameter 2 that will be controlled temporarily when the modulation controller of the external MIDI device is operated.");
@@ -405,6 +411,11 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 		"By using two tones and setting the Alternate Pan Depth of one to \"L63\" and of the other to \"R63\", you can make the two tones switch places alternately.");
 	setupParameter("Pan LFO1 Depth", 0x7B, 0, 126, 63, modulationDepthStrings, "Adjusts the effect that the LFO will have on pan (stereo location).\r\n As this value is increased in the positive(+) direction, the LFO will have a greater effect on pan.Negative(-) settings will invert the LFO waveform, causing the pan to change in the opposite direction.");
 	setupParameter("Pan LFO2 Depth", 0x7C, 0, 126, 63, modulationDepthStrings, "Adjusts the effect that the LFO will have on pan (stereo location).\r\n As this value is increased in the positive(+) direction, the LFO will have a greater effect on pan.Negative(-) settings will invert the LFO waveform, causing the pan to change in the opposite direction.");
+
+	setupParameter("Reserved", 0x7D, 0, 3, 0, StringArray(), "JV-2080 Patch Tone Output Assign");
+	setupParameter("Reserved", 0x7E, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Tone Mix/EFX Send Level");
+	setupParameter("Reserved", 0x7F, 0, 127, 0x40, StringArray(), "JV-2080 Patch Tone Chorus Send Level");
+	setupParameter("Reserved", 0x80, 0, 127, 0x40, StringArray(), "JV-2080 Patch Tone Reverb Send Level");
 }
 
 // ----------------------------------------------------------------------------
