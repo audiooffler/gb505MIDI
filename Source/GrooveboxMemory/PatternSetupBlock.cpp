@@ -134,8 +134,8 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 	setupParameter("???", 0x25, 0, 127, 0, StringArray(), "???");
 	setupParameter("???", 0x26, 0, 127, 0, StringArray(), "???");
 	setupParameter("???", 0x27, 0, 127, 0x02, StringArray(), "???"); // default found in pattern "Inspired"
-	setupParameter("???", 0x28, 0, 127, 0, StringArray(), "???");
-	setupParameter("???", 0x29, 0, 127, 0x0F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x28, 0, 127, 0x0F, StringArray(), "???"); // default found in pattern "Inspired"
+	setupParameter("???", 0x29, 0, 127, 0, StringArray(), "???"); 
 	setupParameter("???", 0x2A, 0, 127, 0, StringArray(), "???");
 	setupParameter("???", 0x2B, 0, 127, 0, StringArray(), "???");
 	setupParameter("???", 0x2C, 0, 127, 0, StringArray(), "???");

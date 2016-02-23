@@ -1111,3 +1111,24 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	midiFile->addTrack(*muteCtrlTrack);
 	return midiFile;
 }
+
+void PatternBodyBlock::createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr)/* override*/
+{
+	// concatenate all 8-bit events
+	MemoryBlock allEventsAs8Bit;
+	PatternEventData* event = nullptr;
+	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	{
+		event = m_sequenceBlocks[i];
+		// skip events that were built after loading
+		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
+		allEventsAs8Bit.append(event->bytes,8);
+	}
+
+	// encode every 7 bytes into 8x 7-bit MIDI data bytes
+	MemoryBlock allEventsAs7Bit;
+	for (unsigned int i = 0; i < allEventsAs8Bit.getSize(); i++)
+	{
+
+	}
+}

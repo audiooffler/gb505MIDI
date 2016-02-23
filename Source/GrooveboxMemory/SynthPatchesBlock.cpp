@@ -49,12 +49,12 @@ PatchCommonBlock::PatchCommonBlock(SynthParts part) :
 	setupParameter("Reserved", 0x14, 0, 127, 0x07, StringArray(), "JV-2080 Patch Common EFX Parameter 8");
 	setupParameter("Reserved", 0x15, 0, 127, 0x01, StringArray(), "JV-2080 Patch Common EFX Parameter 9");
 	setupParameter("Reserved", 0x16, 0, 127, 0x0F, StringArray(), "JV-2080 Patch Common EFX Parameter 10");
-	setupParameter("Reserved", 0x17, 0, 127, 0x0F, StringArray(), "JV-2080 Patch Common EFX Parameter 11");
+	setupParameter("Reserved", 0x17, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common EFX Parameter 11");
 	setupParameter("Reserved", 0x18, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common EFX Parameter 12");
 	setupParameter("Reserved", 0x19, 0, 2, 0x00, StringArray::fromTokens("MIX DIR1 DIR2",false), "JV-2080 Patch Common EFX Output Assign");
 	setupParameter("Reserved", 0x1A, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common EFX Mix Out Send Level");
-	setupParameter("Reserved", 0x1B, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common EFX Chorus Send Level");
-	setupParameter("Reserved", 0x1C, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common EFX Reverb Send Level");
+	setupParameter("Reserved", 0x1B, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common EFX Chorus Send Level");
+	setupParameter("Reserved", 0x1C, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common EFX Reverb Send Level");
 	setupParameter("Reserved", 0x1D, 0, 10, 0x00, StringArray(), "JV-2080 Patch Common EFX Control Source 1");
 	setupParameter("Reserved", 0x1E, 0, 126, 0x3F, StringArray(), "JV-2080 Patch Common EFX Control Depth 1");
 	setupParameter("Reserved", 0x1F, 0, 10, 0x00, StringArray(), "JV-2080 Patch Common EFX Control Source 2");
@@ -62,12 +62,12 @@ PatchCommonBlock::PatchCommonBlock(SynthParts part) :
 	setupParameter("Reserved", 0x21, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common Chorus Level");
 	setupParameter("Reserved", 0x22, 0, 127, 0x01, StringArray(), "JV-2080 Patch Common Chorus Rate");
 	setupParameter("Reserved", 0x23, 0, 127, 0x11, StringArray(), "JV-2080 Patch Common Chorus Depth");
-	setupParameter("Reserved", 0x24, 0, 127, 0x45, StringArray(), "JV-2080 Patch Common Chorus Pre-Delay");
+	setupParameter("Reserved", 0x24, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common Chorus Pre-Delay");
 	setupParameter("Reserved", 0x25, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common Chorus Feedback");
 	setupParameter("Reserved", 0x26, 0, 2, 0x00, StringArray(), "JV-2080 Patch Common Chorus Output");
-	setupParameter("Reserved", 0x27, 0, 7, 0x03, StringArray(), "JV-2080 Patch Common Reverb Type");
+	setupParameter("Reserved", 0x27, 0, 7, 0x02, StringArray(), "JV-2080 Patch Common Reverb Type");
 	setupParameter("Reserved", 0x28, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common Reverb Level");
-	setupParameter("Reserved", 0x29, 0, 127, 0x4B, StringArray(), "JV-2080 Patch Common Reverb Time");
+	setupParameter("Reserved", 0x29, 0, 127, 0x5A, StringArray(), "JV-2080 Patch Common Reverb Time");
 	setupParameter("Reserved", 0x2A, 0, 17, 0x0D, StringArray(), "JV-2080 Patch Common Reverb HF Damp");
 	setupParameter("Reserved", 0x2B, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common Delay Feedback");
 
@@ -76,7 +76,7 @@ PatchCommonBlock::PatchCommonBlock(SynthParts part) :
 	setupParameter("Reserved LS Nibble", 0x2D, 0, 0xF);*/
 	setupParameter("Reserved", 0x2E, 0, 127, 0x7F, StringArray(), "JV-2080 Patch Common Patch Level");
 	setupParameter("Reserved", 0x2F, 0, 127, 0x40, StringArray(), "JV-2080 Patch Common Patch Pan");
-	setupParameter("Reserved", 0x30, 0, 127, 0x40, StringArray(), "JV-2080 Patch Common Analog Feel");
+	setupParameter("Reserved", 0x30, 0, 127, 0x00, StringArray(), "JV-2080 Patch Common Analog Feel");
 
 	setupParameter("Bend Range Up", 0x31, 0, 12, 12, StringArray::fromTokens("0 +1 +2 +3 +4 +5 +6 +7 +8 +9 +10 +11 +12", false), "Amount of pitch change(in semitone units) that will occur when the pitch bend lever of an external MIDI device is raising.");
 	setupParameter("Bend Range Down", 0x32, 0, 48, 12, StringArray::fromTokens("0 -1 -2 -3 -4 -5 -6 -7 -8 -9 -10 -11 -12 -13 -14 -15 -16 -17 -18 -19 -20 -21 -22 -23 -24 -25 -26 -27 -28 -29 -30 -31 -32 -33 -34 -35 -36 -37 -38 -39 -40 -41 -42 -43 -44 -45 -46 -47 -48", false), "Amount of pitch change (in semitone units) that will occur when the pitch bend lever of an external MIDI device is lowering.");
@@ -106,7 +106,7 @@ PatchCommonBlock::PatchCommonBlock(SynthParts part) :
 	setupParameter("Structure Type 3 and 4", 0x46, 0, 9, 0, StringArray::fromTokens("1 2 3 4 5 6 7 8 9 10", false), "Specifies how tones 3 and 4 will be combined.\r\nWith TYPE 2-10 selected, turning off one of the paired tones will cause the other tone to sound as TYPE 1");
 	setupParameter("Booster 3 and 4", 0x47, 0, 3, 0, boosterGain, "When a Structure Type of \"TYPE3\" or \"TYPE4\" is selected, you can adjust the depth of the booster. The Booster is a function that increases the input signal in order to distort it. Higher settings will produce greater distortion.\r\nIn addition to using this for distortion, you can use the waveform of one of the tones as an LFO to shift the other waveform up and down, producing an effect similar to PWM(Pulse Width Modulation).This is even more effective when used in conjunction with the Wave Gain of the WAVE/FXM.");
 
-	setupParameter("Reserved", 0x48, 0, 1, 0, StringArray(), "JV-2080 Patch Common Clock Source");
+	setupParameter("Reserved", 0x48, 0, 1, 1, StringArray(), "JV-2080 Patch Common Clock Source");
 	setupParameter("Reserved", 0x49, 0, 127, 0, StringArray(), "JV-2080 Patch Common Patch Category");
 }
 
@@ -247,7 +247,7 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	setupParameter("Reserved", 0x11, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Volume Control Switch");
 	setupParameter("Reserved", 0x12, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Hold-1 Control Switch");
 	setupParameter("Reserved", 0x13, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Pitch Bend Control Switch");
-	setupParameter("Reserved", 0x14, 0, 1, 0, StringArray(), "JV-2080 Patch Tone Pan Control Switch");
+	setupParameter("Reserved", 0x14, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Pan Control Switch");
 
 	setupParameter("Modulation Destination 1", 0x15, 0, 15, 0, controlDestinations, "Parameter 1 that will be controlled temporarily when the modulation controller of the external MIDI device is operated.");
 	setupParameter("Modulation Depth 1", 0x16, 0, 126, 63, modulationDepthStrings, "Specifies the amount of change that will occur for Parameter 1.\r\nWith positive (+) settings, higher values will allow greater control. With negative (-) settings, the direction of the change will be inverted.");

@@ -109,10 +109,28 @@ void Parameter::setValue(uint8 value, ChangeSource source)
 	{
 		m_parentBlockPtr->m_data[m_addressOffset] = value >> 4;			// MS nibble
 		m_parentBlockPtr->m_data[m_addressOffset + 1] = value & 0xF;	// LS nibble
+
+		// debug message for changed unknown parameters 
+		if (m_name == "???")
+		{
+			DBG("parameter change for \"" + m_name + "\"" + " [" +
+				String::toHexString(m_addressOffset).paddedLeft('0', 2).toUpperCase() +
+				"] in " + getBlock()->getBlockName() + " (" + getBlock()->getDescription() + ") to value " +
+				String::toHexString(value).paddedLeft('0', 2).toUpperCase());
+		}
 	}
 	else			 // single 7bit value
 	{
 		m_parentBlockPtr->m_data[m_addressOffset] = value;
+
+		// debug message for changed unknown parameters 
+		if (m_name == "???")
+		{
+			DBG("parameter change for \"" + m_name + "\"" + " [" + 
+				String::toHexString(m_addressOffset).paddedLeft('0',2).toUpperCase()+
+				"] in " + getBlock()->getBlockName() + " (" + getBlock()->getDescription()+") to value "+
+				String::toHexString(value).paddedLeft('0', 2).toUpperCase());
+		}
 	}
 
 	// secial treating some parameters that change the desctription of other params in M-FX, Delay, and LFO (Rate by Tempo Sync Switch)

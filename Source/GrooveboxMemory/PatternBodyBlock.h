@@ -207,6 +207,9 @@ public:
 	// creates a new MidiFile
 	MidiFile* convertToMidiFile();
 
+	// get data request messages from this block and its sub blocks, the result is added to the array specified in the parameter, overridden for serializing pattern data
+	void createBlockRequestMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr) override;
+
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
 	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
