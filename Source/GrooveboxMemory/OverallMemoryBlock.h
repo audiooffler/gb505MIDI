@@ -38,6 +38,8 @@ public:
 	bool loadBinarySysExFile(const File& file);
 	bool loadHexTxtSysExFile(const File& file);
 	bool loadStandardMidiFile(const File& file);
+	bool saveBinarySysExFile(const File& file);
+	bool saveHexTextSysExFile(const File&file);
 
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OverallMemoryBlock);

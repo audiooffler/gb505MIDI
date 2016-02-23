@@ -75,7 +75,8 @@ public:
 	// This must actually perform the specified command.
 	bool perform(const InvocationInfo &info) override;
 
-	void loadSysExFile(const File &file);
+	void loadSysExFile();
+	void saveSysExFile();
 	void exportAsMidiFile();
     //[/UserMethods]
 

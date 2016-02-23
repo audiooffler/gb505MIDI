@@ -1023,20 +1023,16 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 // This must actually perform the specified command.
 bool PatternEditorTab::perform(const InvocationInfo &info)
 {
-	FileChooser fileChooser("Open SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
 	switch (info.commandID)
 	{
 	case CommandIDs::fileOpenPatternSyxFile:
-		if (fileChooser.browseForFileToOpen())
-		{
-			loadSysExFile(fileChooser.getResult());
-		}
+			loadSysExFile();
 		return true;
 	case CommandIDs::fileImportPatternSmfFile:
 		// TODO: import from midi (convert midi to groovebox sysex)
 		return true;
 	case CommandIDs::fileSavePatternSyxFile:
-		//saveAsSysExFile();
+		saveSysExFile();
 		return true;
 	case CommandIDs::fileExportPatternSmfFile:
 		exportAsMidiFile();
@@ -1047,32 +1043,68 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 	default:
 		return false;
 	}
-	return false;
 }
 
-void PatternEditorTab::loadSysExFile(const File &file)
+void PatternEditorTab::loadSysExFile()
 {
-	if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt")
+	FileChooser fileChooser("Open SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
+	if (fileChooser.browseForFileToOpen())
 	{
-		AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
-			String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive)\r\n" +
-			String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Text)");
+		File file = fileChooser.getResult();
+		if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt")
+		{
+			AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive)\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Text)");
+		}
+		else
+		{
+			bool loadedSucessfully(false);
+			if (file.getFileExtension().toLowerCase() == ".syx")
+			{
+				loadedSucessfully = grooveboxMemory->loadBinarySysExFile(file);
+			}
+			else if (file.getFileExtension().toLowerCase() == ".txt")
+			{
+				loadedSucessfully = grooveboxMemory->loadHexTxtSysExFile(file);
+			}
+			// load current pattern. if no success loading: show empty pattern
+			if (!loadedSucessfully)
+			{
+				AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error getting pattern data"), TRANS("No pattern or pattern data was retrieved."));
+			}
+		}
 	}
-	else
+}
+
+void PatternEditorTab::saveSysExFile()
+{
+	FileChooser fileChooser("Save SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
+	if (fileChooser.browseForFileToSave(true))
 	{
-		bool loadedSucessfully(false);
-		if (file.getFileExtension().toLowerCase() == ".syx")
+		File file = fileChooser.getResult();
+		if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt")
 		{
-			loadedSucessfully = grooveboxMemory->loadBinarySysExFile(file);
+			AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive)\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Text)");
 		}
-		else if (file.getFileExtension().toLowerCase() == ".txt")
+		else
 		{
-			loadedSucessfully = grooveboxMemory->loadHexTxtSysExFile(file);
-		}
-		// load current pattern. if no success loading: show empty pattern
-		if (!loadedSucessfully)
-		{
-			AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error getting pattern data"), TRANS("No pattern or pattern data was retrieved."));
+			bool writtenSucessfully(false);
+			if (file.getFileExtension().toLowerCase() == ".syx")
+			{
+				writtenSucessfully = grooveboxMemory->saveBinarySysExFile(file);
+			}
+			else if (file.getFileExtension().toLowerCase() == ".txt")
+			{
+				writtenSucessfully = grooveboxMemory->saveHexTextSysExFile(file);
+			}
+			// load current pattern. if no success loading: show empty pattern
+			if (!writtenSucessfully)
+			{
+				AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error writing pattern data"), TRANS("No pattern or pattern data was written."));
+			}
 		}
 	}
 }

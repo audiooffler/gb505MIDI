@@ -639,6 +639,7 @@ PartInfoPartBlock::PartInfoPartBlock(AllParts part) :
 		else if (i>0) fineTuneStrings.add("+" + String(i));
 	}
 	setupParameter("Receive Switch", 0x00, 0, 1, 1, StringArray::fromTokens("OFF ON", false), "Specifies whether or not MIDI messages from MIDI IN will be received by Part " + String((part == PartR ? 'R' : (uint8)part + 1)) + ".\r\nIf this is 'OFF', the part " + String((part == PartR ? 'R' : (uint8)part + 1)) + " cannot be played from an external MIDI device.");
+	setupParameter("Reserved", 0x01, 0, 15, (uint8) part, StringArray(), "JV-2080 Performance Part MIDI Channel");
 	setupParameter("Patch Group Type", 0x02, 0, 3, 0);	// use getPatchGroupNameByTypeAndID for display
 	setupParameter("Patch Group ID", 0x03, 0, 127, 3);	// use getPatchGroupNameByTypeAndID for display
 	setupParameter("Patch Number", 0x04, 0, 254, 0);	// a 2 byte parameter, will automatically handled as ms / ls nibble, told by the maximum above 127
@@ -652,8 +653,25 @@ PartInfoPartBlock::PartInfoPartBlock(AllParts part) :
 	setupParameter("Part " + partCharacter + " Fine Tune", 0x09, 0, 100, 50, fineTuneStrings);
 	setupParameter("Part " + partCharacter + " M-FX Switch", 0x0A, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String::empty, 86, true);
 
+	setupParameter("Reserved", 0x0B, 0, 127, 127, StringArray(), "JV-2080 Performance Part Mix/EFX Send Level");
+
 	setupParameter("Delay Send Level", 0x0C, 0, 127, 0, StringArray(), String::empty, 94, false);
 	setupParameter("Reverb Send Level", 0x0D, 0, 127, 0, StringArray(), String::empty, 91, false);
+
+	setupParameter("Reserved", 0x0E, 0, 1, 1, StringArray(), "JV-2080 Performance Part Receive Program Change Switch");
+	setupParameter("Reserved", 0x0F, 0, 1, 1, StringArray(), "JV-2080 Performance Part Receive Volume Switch");
+	setupParameter("Reserved", 0x10, 0, 1, 1, StringArray(), "JV-2080 Performance Part Receive Hold-1 Switch");
+	setupParameter("Reserved", 0x11, 0, 127, 0, StringArray(), "JV-2080 Performance Part Keyboard Range Lower");
+	setupParameter("Reserved", 0x12, 0, 127, 127, StringArray(), "JV-2080 Performance Part Keyboard Range Upper");
+
+	setupParameter("Reserved", 0x13, 0, 6, 3, StringArray::fromTokens("-3 -2 -1 0 +1 +2 +3",false), "JV-2080 Performance Part Octave Shift");
+	setupParameter("Reserved", 0x14, 0, 1, 0, StringArray(), "JV-2080 Performance Part Local Switch");
+	setupParameter("Reserved", 0x15, 0, 1, 0, StringArray(), "JV-2080 Performance Part Transmit Switch");
+	setupParameter("Reserved", 0x16, 0, 7, 0, StringArray(), "JV-2080 Performance Part Transmit Bank Select Group");
+	setupParameter("Reserved", 0x17, 0, 128, 128, StringArray(), "JV-2080 Performance Part Transmit Volume"); // a 2 byte parameter, will automatically handled as ms / ls nibble, told by the maximum above 127
+	/*setupParameter("Reserved MS Nibble", 0x17, 0, 0xF);
+	setupParameter("Reserved LS Nibble", 0x18, 0, 0xF);*/
+	setupParameter("Reserved", 0x19, 0, 2, 0, StringArray::fromTokens("A B C",false), "JV-2080 Performance Part Output Select");
 }
 
 /*

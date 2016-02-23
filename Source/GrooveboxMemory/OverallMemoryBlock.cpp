@@ -151,6 +151,48 @@ bool OverallMemoryBlock::loadBinarySysExFile(const File& file)
 	return loadFromArray(sysExMessageArray);
 }
 
+bool OverallMemoryBlock::saveBinarySysExFile(const File&file)
+{
+	if (file.existsAsFile()) file.deleteFile();	// overwrite!
+	ScopedPointer<FileOutputStream> outputStream = file.createOutputStream();
+	OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
+	getPartInfoBlock()->createBlockSendMessages(&sysExCompilation);
+	getSynthPatchesBlock()->createBlockSendMessages(&sysExCompilation);
+	getRhythmSetBlock()->createBlockSendMessages(&sysExCompilation);
+	getPatternBodyBlock()->createBlockSendMessages(&sysExCompilation);
+	getPatternSetupBlock()->createBlockSendMessages(&sysExCompilation);
+	uint8* sysExMsgData;
+	unsigned int sysExMsgSize;
+	for (int i = 0; i < sysExCompilation.size(); i++)
+	{
+		sysExCompilation[i]->getAsSysExData(&sysExMsgData, sysExMsgSize);
+		outputStream->write(sysExMsgData, sysExMsgSize);
+	}
+	outputStream->flush();
+	return true;
+}
+
+bool OverallMemoryBlock::saveHexTextSysExFile(const File&file)
+{
+	if (file.existsAsFile()) file.deleteFile();	// overwrite!
+	ScopedPointer<FileOutputStream> outputStream = file.createOutputStream();
+	OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
+	getPartInfoBlock()->createBlockSendMessages(&sysExCompilation);
+	getSynthPatchesBlock()->createBlockSendMessages(&sysExCompilation);
+	getRhythmSetBlock()->createBlockSendMessages(&sysExCompilation);
+	getPatternBodyBlock()->createBlockSendMessages(&sysExCompilation);
+	getPatternSetupBlock()->createBlockSendMessages(&sysExCompilation);
+	uint8* sysExMsgData;
+	unsigned int sysExMsgSize;
+	for (int i = 0; i < sysExCompilation.size(); i++)
+	{
+		sysExCompilation[i]->getAsSysExData(&sysExMsgData, sysExMsgSize);
+		outputStream->writeText(String::toHexString(sysExMsgData, sysExMsgSize).toUpperCase() + (i < sysExCompilation.size() - 1 ? "\r\n" : ""), false, false);
+	}
+	outputStream->flush();
+	return true;
+}
+
 bool OverallMemoryBlock::loadHexTxtSysExFile(const File& file)
 {
 	MemoryBlock readBuffer;

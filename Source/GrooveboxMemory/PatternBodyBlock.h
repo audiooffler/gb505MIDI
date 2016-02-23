@@ -204,6 +204,7 @@ public:
 	// to be called when beat signature in pattern setup is changed. updates the viewed table by sendChangeMessage() (for MM-BB-TT time display repaint)
 	void setBeatSignature(BeatSignature beatSignature);
 
+	// creates a new MidiFile
 	MidiFile* convertToMidiFile();
 
 private:

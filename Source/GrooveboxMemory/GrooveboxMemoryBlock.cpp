@@ -340,7 +340,7 @@ void GrooveboxMemoryBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSe
 		for (int i = 0; i < m_subBlocks.size(); i++)
 		{
 			// add from subBlocks
-			m_subBlocks[i]->createBlockRequestMessages(syxMsgArrayPtr);
+			m_subBlocks[i]->createBlockSendMessages(syxMsgArrayPtr);
 		}
 	}
 }
