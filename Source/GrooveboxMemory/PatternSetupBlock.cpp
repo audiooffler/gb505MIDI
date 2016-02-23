@@ -429,25 +429,26 @@ MidiMessageSequence PatternSetupConfigBlock::getInitalMuteStates(uint8 deviceId)
 
 	MidiMessageSequence messages;
 
-	for (int i = 0; i < 8; i++)
-	{
-		PatternBodyBlock::PatternPart pattern_part = (PatternBodyBlock::PatternPart)i;
-		AllParts part = (AllParts)i;
-		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Part " + String(i + 1) + ": " + (patternSetupConfigPtr->isPartMute(pattern_part) ? "muted" : "on")), 7.0);
-		messages.addEvent(getPartMuteSysEx(deviceId, part), 7.0);
-	}
 	PatternBodyBlock::PatternPart pattern_part = PatternBodyBlock::Pattern_Part_R;
 	AllParts part = PartR;
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String("Initial state of Part R: ") + (patternSetupConfigPtr->isPartMute(pattern_part) ? "muted" : "on")), 7.0);
-	messages.addEvent(getPartMuteSysEx(deviceId, part), 7.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String("PART R: ") + (patternSetupConfigPtr->isPartMute(pattern_part) ? "MUTED" : "ON")), 0.0);
+	messages.addEvent(getPartMuteSysEx(deviceId, part), 0.0);
+
+	for (int i = 0; i < 8; i++)
+	{
+		pattern_part = (PatternBodyBlock::PatternPart)i;
+		part = (AllParts)i;
+		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "PART " + String(i + 1) + ": " + (patternSetupConfigPtr->isPartMute(pattern_part) ? "MUTED" : "ON")),(double)i+1);
+		messages.addEvent(getPartMuteSysEx(deviceId, part), (double)i + 1);
+	}
 
 	// mute initial state for rhythm groups
 	for (int i = 0x00; i < 0x08; i++)
 	{
 		PatternBodyBlock::RhythmGroup rhyGrp = (PatternBodyBlock::RhythmGroup)i;
 		String rhyGrpName(PatternBodyBlock::PatternEventData::getRhythmGroupString(rhyGrp));
-		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Initial state of Rhythm Group " + rhyGrpName + ": " + (patternSetupConfigPtr->isRyhGroupMute(rhyGrp) ? "muted" : "on")), 7.0);
-		messages.addEvent(getRhythmGroupMuteSysEx(deviceId, rhyGrp), 7.0);
+		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, rhyGrpName + ": " + (patternSetupConfigPtr->isRyhGroupMute(rhyGrp) ? "MUTED" : "ON")), (double)i+9);
+		messages.addEvent(getRhythmGroupMuteSysEx(deviceId, rhyGrp), (double)i + 9);
 	}
 
 	return messages;
@@ -523,8 +524,8 @@ MidiMessageSequence PatternSetupEffectsBlock::getReverbSetupMidiMessageSequence(
 	dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x1D};
 	dt1_data = new uint8[1]{(uint8)m_data[0x12]};
 	ScopedPointer<SyxMsg> mFXSendReverbLevelSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 1, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 1));
-	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX to Reverb Send Level"));
-	result.addEvent(mFXSendReverbLevelSysex->toMidiMessage());
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX to Reverb Send Level"), 1.0);
+	result.addEvent(mFXSendReverbLevelSysex->toMidiMessage(), 1.0);
 	delete[] dt1_address;
 	delete[] dt1_data;
 
@@ -546,8 +547,8 @@ MidiMessageSequence PatternSetupEffectsBlock::getDelaySetupMidiMessageSequence(u
 	dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x1C};
 	dt1_data = new uint8[1]{(uint8)m_data[0x11]};
 	ScopedPointer<SyxMsg> mFXSendDelayLevelSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 1, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 1));
-	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX to Delay Send Level"));
-	result.addEvent(mFXSendDelayLevelSysex->toMidiMessage());
+	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX to Delay Send Level"), 1.0);
+	result.addEvent(mFXSendDelayLevelSysex->toMidiMessage(), 1.0);
 	delete[] dt1_address;
 	delete[] dt1_data;
 
@@ -584,7 +585,7 @@ PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
 		}
 		else if (i == 0)
 		{
-			panPosStrings.add("0");
+			panPosStrings.add("center");
 		}
 		else if (i > 0)
 		{
@@ -593,7 +594,7 @@ PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
 			panPosStrings.add(s2);
 		}
 	}
-	StringArray keyShiftStrings; for (int i = -48; i <= 48; i++)
+	StringArray keyShiftStrings; for (int i = -64; i <= 48; i++)
 	{
 		if (i <= 0) keyShiftStrings.add(String(i));
 		else keyShiftStrings.add("+" + String(i));
@@ -604,7 +605,7 @@ PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
 	setupParameter("Part " + partCharacter + " Progam Change PC", 0x02, 0x00, 0x7F, 0);
 	setupParameter("Part " + partCharacter + " Level", 0x03, 0, 127, 115, StringArray(), String::empty, 7, false);
 	setupParameter("Part " + partCharacter + " Pan", 0x04, 0, 127, 64, panPosStrings, String::empty, 10, false);
-	setupParameter("Part " + partCharacter + " Key Shift", 0x05, 0, 96, 48, keyShiftStrings, String::empty, 85, true);
+	setupParameter("Part " + partCharacter + " Key Shift", 0x05, 16, 112, 64, keyShiftStrings, String::empty, 85, true);
 	setupParameter("Part " + partCharacter + " Delay Send Level", 0x06, 0, 127, 0, StringArray(), String::empty, 94, false);
 	setupParameter("Part " + partCharacter + " Reverb Send Level", 0x07, 0, 127, 0, StringArray(), String::empty, 91, false);
 	setupParameter("Part " + partCharacter + " M-FX Switch", 0x08, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String::empty, 86, true);
@@ -622,12 +623,12 @@ String PatternSetupPartBlock::getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32
 	{
 		switch (bankSelMSB00)
 		{
-		case 81: return "Preset Rhyhthm Set Bank A";
-		case 82: return "Preset Rhyhthm Set Bank B JX - 305";
-		case 83: return "Preset Rhyhthm Set Bank B MC-307";
-		case 84: return "Preset Rhyhthm Set Bank B D2";
-		case 85: return "User Rhyhthm Set Bank";
-		case 86: return "Card Rhythm Set Bank";
+		case 81: return "P:A"; // Preset Rhyhthm Set Bank A
+		case 82: return "P:B"; // Preset Rhyhthm Set Bank B JX - 305
+		case 83: return "P:B"; // Preset Rhyhthm Set Bank B MC-307
+		case 84: return "P:B"; // Preset Rhyhthm Set Bank B D2
+		case 85: return "U:"; // User Rhyhthm Set Bank
+		case 86: return "C:"; // Card Rhythm Set Bank
 		}
 	}
 	else
@@ -637,70 +638,78 @@ String PatternSetupPartBlock::getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32
 		case 81:
 			switch (bankSelLSB32)
 			{
-			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks A,B JX-305" : "Preset Patch Bank A");
-			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks C,D JX-305" : "Preset Patch Bank B");
-			case 2: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks E,F JX-305" : "Preset Patch Bank C");
-			case 3: return (model == GrooveboxConnector::Model_JX_305 ? "Preset Patch Banks G,H JX-305" : "Preset Patch Bank D");
+			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "P:A/B" : "P:A"); // Preset Patch Bank A | Preset Patch Banks A, B JX - 305
+			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "P:C/D" : "P:B"); // Preset Patch Bank B | Preset Patch Banks C, D JX - 305
+			case 2: return (model == GrooveboxConnector::Model_JX_305 ? "P:E/F" : "P:C"); // Preset Patch Bank C | Preset Patch Banks E, F JX - 305
+			case 3: return (model == GrooveboxConnector::Model_JX_305 ? "P:G/H" : "P:D"); // Preset Patch Bank D | Preset Patch Banks G, H JX - 305
 			}
 			break;
 		case 82:
-			if (bankSelLSB32 == 0) return "Preset Patch Bank I,J JX-305";
+			if (bankSelLSB32 == 0) return "P:I/J"; // Preset Patch Bank I,J JX-305
 			break;
 		case 83:
 			switch (bankSelLSB32)
 			{
-			case 0: return "Preset Patch Banks E MC-307";
-			case 1: return "Preset Patch Banks F MC-307";
-			case 2: return "Preset Patch Banks G MC-307";
+			case 0: return "P:E"; // Preset Patch Banks E MC-307
+			case 1: return "P:F"; // Preset Patch Banks F MC-307
+			case 2: return "P:G"; // Preset Patch Banks G MC-307
 			}
 			break;
 		case 84:
-			if (bankSelLSB32 == 0) return "Preset Patch Bank E D2";
+			if (bankSelLSB32 == 0) return "P:E"; // Preset Patch Bank E D2
 			break;
 		case 85:
 			switch (bankSelLSB32)
 			{
-			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "User Patch Banks A,B JX-305" : "User Patch Bank A");
-			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "User Patch Banks C,D JX-305" : "User Patch Bank B");
+			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "U:A/B" : "U:A"); // User Patch Bank A | User Patch Banks A,B JX-305
+			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "U:C/D" : "U:B"); // User Patch Bank B | User Patch Banks C,D JX-305
 			}
 			break;
 		case 86:
 			switch (bankSelLSB32)
 			{
-			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks A,B JX-305" : "Card Patch Bank A");
-			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks C,D JX-305" : "Card Patch Bank B");
-			case 2: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks E,F JX-305" : "Card Patch Bank C");
-			case 3: return (model == GrooveboxConnector::Model_JX_305 ? "Card Patch Banks G,H JX-305" : "Card Patch Bank D");
+			case 0: return (model == GrooveboxConnector::Model_JX_305 ? "C:A/B" : "C:A"); // Card Patch Bank A | Card Patch Banks A,B JX-305
+			case 1: return (model == GrooveboxConnector::Model_JX_305 ? "C:C/D" : "C:B"); // Card Patch Bank B | Card Patch Banks C,D JX-305
+			case 2: return (model == GrooveboxConnector::Model_JX_305 ? "C:E/F" : "C:C"); // Card Patch Bank C | Card Patch Banks E,F JX-305
+			case 3: return (model == GrooveboxConnector::Model_JX_305 ? "C:G/H" : "C:D"); // Card Patch Bank D | Card Patch Banks G,H JX-305
 			}
 			break;
 		}
 	}
-	return "Unknown Patch Bank";
+	return "?:??"; // Unknown Patch Bank
 }
 
 MidiMessageSequence PatternSetupPartBlock::getSinglePartSetupMidiMessageSequence()
 {
 	MidiMessageSequence messages;
-	// patch selection cascade (meta text, bank selection MSB, bank selection LSB, program change:
+
+	String programName(getBankName(getParameter(0x00)->getValue(), getParameter(0x01)->getValue()) + String(getParameter(0x02)->getValue() + 1).paddedLeft('0', (m_part == 9 ? 2 : 3)));
+	String instrumentName((m_part == 9 ? grooveboxMemory->getRhythmSetBlock()->getRhythmSetCommonBlockPtr()->getRhythmSetName().trim() : grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr((SynthParts)m_part)->getPatchCommonBlockPtr()->getPatchName().trim()));
+	String trackName("[" + (m_part == 9 ? "R" : String((int)m_part + 1))+"]");
 	messages.addEvent(SyxMsg::createChannelPrefixMetaEvent((uint8)m_part));
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::ProgramName, "PART_" + (m_part == 9 ? "R" : String((int)m_part + 1)) + ": " + getBankName(getParameter(0x00)->getValue(), getParameter(0x01)->getValue()) + ", Program " + String(getParameter(0x02)->getValue() + 1).paddedLeft('0', 3)), 1.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, trackName + " " + programName+" "+instrumentName),1.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- SETUP --------------------------------------"), 1.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::ProgramName, programName), 1.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::InstrumentName, instrumentName,1.0));
+
+	// patch selection cascade (meta text, bank selection MSB, bank selection LSB, program change:	
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 0, getParameter(0x00)->getValue()), 2.0);
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 32, getParameter(0x01)->getValue()), 3.0);
 	messages.addEvent(MidiMessage::programChange(m_part + 1, getParameter(0x02)->getValue()), 4.0);
 	// mixer setup by controllers:
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Level"), 5.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Volume Level: " + getParameter(0x03)->getDisplayedValue()), 5.0);
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 7, getParameter(0x03)->getValue()), 5.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Pan"), 5.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 10, getParameter(0x04)->getValue()), 5.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Key Shift"), 5.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 85, getParameter(0x05)->getValue()), 5.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Reverb"), 5.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 91, getParameter(0x07)->getValue()), 5.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer Delay"), 5.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 94, getParameter(0x06)->getValue()), 5.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Mixer M-FX Switch"), 5.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 86, getParameter(0x08)->getValue()), 5.0);
-	
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Pan Position: " + getParameter(0x04)->getDisplayedValue()), 6.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 10, getParameter(0x04)->getValue()), 6.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Key Shift: " + getParameter(0x05)->getDisplayedValue()), 7.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 85, getParameter(0x05)->getValue()), 7.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Reverb Send Level: " + getParameter(0x07)->getDisplayedValue()), 8.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 91, getParameter(0x07)->getValue()), 8.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Delay Send Level: " + getParameter(0x06)->getDisplayedValue()), 9.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 94, getParameter(0x06)->getValue()), 9.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX: " + getParameter(0x08)->getDisplayedValue()), 10.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 86, getParameter(0x08)->getValue()), 10.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- END OF SETUP -------------------------------"),23.0);
 	return messages;
 }
 

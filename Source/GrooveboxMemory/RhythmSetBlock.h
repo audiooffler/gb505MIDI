@@ -189,8 +189,8 @@ public:
 		setupParameter("Amp Envelope Velocity Sens", 0x2A, 0, 125, 0, veloSensFactors, "Specifies how the depth of the amplifier envelope will be affected by the strength of your playing velocity.\r\n"
 			"If velocity sensitivity is set to a positive (+) value, the volume will be loud when you play strongly and soft when you play softly. As this value is increased, the volume difference between strongly played and softly played notes will gradually increase.\r\n"
 			"With positive (+) settings, the volume will increase as you play more strongly on the keyboard. With negative (-) settings, the volume will decrease as you play more strongly on the keyboard. If this is set to \"0\", the volume will not be affected by the strength of your playing on the keyboard.");
-		setupParameter("Amp Envelope Velocity Time", 0x2B, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "Specifies how the dynamics of your playing will affect TIME1–4.\r\n"
-			"Specifies the time until the next level is reached. You can make settings for the four parameters TIME 1–4."
+		setupParameter("Amp Envelope Velocity Time", 0x2B, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "Specifies how the dynamics of your playing will affect TIME1-4.\r\n"
+			"Specifies the time until the next level is reached. You can make settings for the four parameters TIME 1-4."
 			"With positive (+) settings, time will become faster as you play the keyboard more strongly. With negative (-) settings, time will become slower as you play the keyboard more strongly.");
 		setupParameter("Amp Envelope Time 1", 0x2C, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
 		setupParameter("Amp Envelope Time 2", 0x2D, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
