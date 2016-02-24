@@ -493,9 +493,9 @@ bool PatternBodyBlock::PatternEventData::getMuteState()	// false=Mute, true=On
 	return bytes[7]!=0;
 }
 
-uint16 PatternBodyBlock::PatternEventData::getTempoValue()
+float PatternBodyBlock::PatternEventData::getTempoValue()
 {
-	return ((uint16)bytes[6] << 8 | (uint16)bytes[7]) / (uint16)1000;
+	return (float)((uint16)bytes[6] << 8 | (uint16)bytes[7]) / 100.0f;
 }
 
 uint32 PatternBodyBlock::PatternEventData::getSysExSize()

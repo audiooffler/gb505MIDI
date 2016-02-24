@@ -130,7 +130,7 @@ public:
 		PatternPart getMutePart();
 		RhythmGroup getMuteRhythmGroup();
 		bool getMuteState();	// false=Mute, true=On
-		uint16 getTempoValue();
+		float getTempoValue();
 		uint32 getSysExSize();
 		uint8* getSysExBytesPtr(); // pointer to last 4 bytes
 		void getSysExBytesCopyTo(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
