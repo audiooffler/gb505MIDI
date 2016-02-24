@@ -118,10 +118,12 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 	const uint8* patternDataBlock;
 	int patternDataBlockSize;
 	patternDataBlock = unpack7BitTo8BitData(sysExDataPtr, sysExDataSize, patternDataBlockSize);
-	/*DBG("address: 0x" + String::toHexString((int)sysExMsg->get32BitAddress()).paddedLeft('0', 8) + ", SysEx size: " + String(sysExDataSize)+
-		", Pattern Block size: " + String(patternDataBlockSize));*/
+
 	for (int i = 0; i < patternDataBlockSize; i += 8)
 	{
+		// skip last bytes if incomplete
+		if (i + 7 > patternDataBlockSize) continue;
+
 		PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
 		m_sequenceBlocks.add(newPatternEvent);
 
@@ -147,7 +149,6 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 				}
 			}
 		}
-		/*DBG(newPatternEvent->toDebugString(m_ticksPerBeat, m_beatSigNumerator));*/
 	}
 	refreshFilteredContent();
 	return true;
@@ -157,7 +158,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 const uint8* PatternBodyBlock::unpack7BitTo8BitData(const uint8* packed7BitData, int packed7BitDataSize, int &unpackedDataSize)
 {
 	// following declarations will be function paramers, last one by refrence
-	unpackedDataSize = packed7BitDataSize - (packed7BitDataSize / 8);
+	unpackedDataSize = (packed7BitDataSize - (packed7BitDataSize / 8))/8*8;
 	uint8 *unpackedData = new uint8[unpackedDataSize] {};	// initialized with zeroes
 
 	uint8 currentPacked7Bit(0);
@@ -180,7 +181,6 @@ const uint8* PatternBodyBlock::unpack7BitTo8BitData(const uint8* packed7BitData,
 			j++;
 		}
 	}
-	//DBG(String::toHexString(unpackedData,unpackedDataSize,1));
 	return unpackedData;
 }
 
@@ -1122,8 +1122,10 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 		event = m_sequenceBlocks[i];
 		// skip events that were built after loading
 		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
-		allEventsAs8Bit.append(event->bytes,8);
+		allEventsAs8Bit.append(event->bytes, 8);
 	}
+
+	DBG("unpacked data: " + String::toHexString(allEventsAs8Bit.getData(), allEventsAs8Bit.getSize()));
 
 	// encode every 7 bytes into 8x 7-bit MIDI data bytes
 	MemoryBlock allEventsAs7Bit;
@@ -1132,7 +1134,7 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 	for (unsigned int i = 0; i < allEventsAs8Bit.getSize(); i+=7)
 	{
 		// get original block of 7 8-bit-bytes
-		for (int j = 0; j < 7; j++) { originalBlock[0] = (i + j) < allEventsAs8Bit.getSize() ? allEventsAs8Bit[i + j] : 0; }
+		for (int j = 0; j < 7; j++)  {  originalBlock[j] = (i + j) < allEventsAs8Bit.getSize() ? allEventsAs8Bit[i + j] : 0; }
 		
 		// set encoded block of 8 7-bit-midi-bytes
 		encodedBlock[0] =                                     originalBlock[0] >> 1; //                                           7 most significant bits from 1st byte
@@ -1146,9 +1148,12 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 
 		allEventsAs7Bit.append(encodedBlock, 8);
 	}
+	allEventsAs7Bit.setSize(ceilf((float)allEventsAs8Bit.getSize()*8.0f / 7.0f));
+	DBG("encoded data: " + String::toHexString(allEventsAs7Bit.getData(), allEventsAs7Bit.getSize()));
 
 	// output encoded bytes as sysex
-	uint8 deviceId((grooveboxConnector != nullptr) ? grooveboxConnector->getActiveDeviceId() : 0x10);
+	uint8 deviceId((grooveboxConnector != nullptr && grooveboxConnector->getActiveConnection()!=nullptr) ? 
+		grooveboxConnector->getActiveDeviceId() : 0x10);
 	uint8 address[4] = { 0x40, 00, 00, 00 };
 	uint8 addressOffset = 0;
 	for (unsigned i = 0 ; i < allEventsAs7Bit.getSize(); i += 128)
