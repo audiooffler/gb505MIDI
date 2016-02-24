@@ -381,7 +381,7 @@ String PatternBodyBlock::PatternEventData::getTypeString()
 PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 {
 	// BYTE 2: get part/channel for event
-	switch (bytes[3])
+	switch (bytes[2])
 	{
 	case 0x00:	return Pattern_Part_1;
 	case 0x01:	return Pattern_Part_2;
@@ -393,8 +393,8 @@ PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 	case 0x09:	return Pattern_Part_R;
 	case 0x0E:	return Pattern_MuteCtrl;
 	default: 
-		// fallback to byte 2
-		switch (bytes[2])
+		// fallback to byte 3
+		switch (bytes[3])
 		{
 		case 0x00:	return Pattern_Part_1;
 		case 0x01:	return Pattern_Part_2;
