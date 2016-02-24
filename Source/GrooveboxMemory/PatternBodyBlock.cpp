@@ -1148,7 +1148,7 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 
 		allEventsAs7Bit.append(encodedBlock, 8);
 	}
-	allEventsAs7Bit.setSize(ceilf((float)allEventsAs8Bit.getSize()*8.0f / 7.0f));
+	allEventsAs7Bit.setSize((unsigned int)ceilf((float)allEventsAs8Bit.getSize()*8.0f / 7.0f));
 	DBG("encoded data: " + String::toHexString(allEventsAs7Bit.getData(), allEventsAs7Bit.getSize()));
 
 	// output encoded bytes as sysex
