@@ -1094,7 +1094,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	double oneMeasure = (double)m_beatSigNumerator * oneBeat;
 	
 	ScopedPointer<MidiMessageSequence> muteCtrlTrack = new MidiMessageSequence();
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, patternSetupConfigPtr->getPatternName()));
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, patternSetupConfigPtr->getPatternName()));
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CopyrightNotice, "Converted with gbMIDI. (C) 2016 by Martin Spindler"));
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::DeviceName, "Roland groovebox MC-505 device family"));
 	muteCtrlTrack->addEvent(MidiMessage::timeSignatureMetaEvent(patternSetupConfigPtr->getBeatSignature().getNumerator(), patternSetupConfigPtr->getBeatSignature().getDenominator()));

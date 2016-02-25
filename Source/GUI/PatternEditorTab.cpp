@@ -1039,7 +1039,7 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 		loadSysExFile();
 		return true;
 	case CommandIDs::fileImportPatternSmfFile:
-		// TODO: import from midi (convert midi to groovebox sysex)
+		importMidiFile();
 		return true;
 	case CommandIDs::fileSavePatternSyxFile:
 		saveSysExFile();
@@ -1132,6 +1132,112 @@ void PatternEditorTab::exportAsMidiFile()
 		ScopedPointer<OutputStream> saveStream = selectedFile.createOutputStream();
 		ScopedPointer<MidiFile> midiFile = grooveboxMemory->getPatternBodyBlock()->convertToMidiFile();
 		midiFile->writeTo(*saveStream);
+	}
+}
+
+unsigned int PatternEditorTab::convertTicksTo96TPQN(const double time, const MidiMessageSequence& tempoEvents, const int timeFormat)
+{
+	double ticksPerSecondAtPpq96 = 96 / (tempoEvents.getNumEvents()>0 ? tempoEvents.getEventPointer(0)->message.getTempoSecondsPerQuarterNote() : 0.5);
+	if (timeFormat < 0)
+	{
+		double timeInSeconds = time / (-(timeFormat >> 8) * (timeFormat & 0xff));
+		return (unsigned int)(timeInSeconds * ticksPerSecondAtPpq96);
+	}
+
+	double lastTime = 0.0, correctedTime = 0.0;
+	const double tickLen = 1.0 / (timeFormat & 0x7fff); // ticks per quarter
+	double secsPerTick = 0.5 * tickLen;
+	const int numTempoEvents = tempoEvents.getNumEvents();
+
+	for (int i = 0; i < numTempoEvents; ++i)
+	{
+		const MidiMessage& m = tempoEvents.getEventPointer(i)->message;
+		const double eventTime = m.getTimeStamp();
+
+		if (eventTime >= time)
+			break;
+
+		correctedTime += (eventTime - lastTime) * secsPerTick;
+		lastTime = eventTime;
+
+		if (m.isTempoMetaEvent())
+		{
+			secsPerTick = tickLen * m.getTempoSecondsPerQuarterNote();
+			ticksPerSecondAtPpq96 = 96 / (tempoEvents.getNumEvents()>0 ? m.getTempoSecondsPerQuarterNote() : 0.5);
+		}
+		while (i + 1 < numTempoEvents)
+		{
+			const MidiMessage& m2 = tempoEvents.getEventPointer(i + 1)->message;
+
+			if (m2.getTimeStamp() != eventTime)
+				break;
+
+			if (m2.isTempoMetaEvent())
+			{
+				secsPerTick = tickLen * m2.getTempoSecondsPerQuarterNote();
+				ticksPerSecondAtPpq96 = 96 / (tempoEvents.getNumEvents()>0 ? m2.getTempoSecondsPerQuarterNote() : 0.5);
+			}
+			++i;
+		}
+	}
+
+	double timeInSeconds = correctedTime + (time - lastTime) * secsPerTick;
+	return (unsigned int)(timeInSeconds * ticksPerSecondAtPpq96);
+}
+
+void PatternEditorTab::importMidiFile()
+{
+	//File defaultFile = File(File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + File::separatorString);
+	FileChooser myChooser(TRANS("Export as MIDI File"),
+		File::nonexistent,
+		"*.mid");
+	if (myChooser.browseForFileToOpen())
+	{
+		File selectedFile(myChooser.getResult());
+		ScopedPointer<InputStream> loadStream = selectedFile.createInputStream();
+		MidiFile midiFileOrig, midiFile;
+		midiFile.readFrom(*loadStream);
+		
+		MidiMessageSequence tempoEvents, timeSigEvents;
+		midiFile.findAllTempoEvents(tempoEvents);
+		midiFile.findAllTimeSigEvents(tempoEvents); // might also contain tempo
+		midiFile.findAllTimeSigEvents(timeSigEvents);
+		
+		// convert to 96 TPQN
+		for (int i = 0; i < midiFile.getNumTracks(); ++i)
+		{
+			const MidiMessageSequence& ms = *midiFile.getTrack(i);
+			for (int j = ms.getNumEvents(); --j >= 0;)
+			{
+				MidiMessage& m = ms.getEventPointer(j)->message;
+				m.setTimeStamp(convertTicksTo96TPQN(m.getTimeStamp(), tempoEvents, midiFile.getTimeFormat()));
+			}
+		}
+
+		// load setup bpm and beat time signature
+		PatternSetupConfigBlock* setupConfig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+
+		double bpm = (tempoEvents.getNumEvents()>0?60.0 / tempoEvents.getEventPointer(0)->message.getTempoSecondsPerQuarterNote():120);
+		setupConfig->setTempoBpm((float)bpm);
+		int numerator = 4, denominator = 4;
+		if (timeSigEvents.getNumEvents() > 0){ timeSigEvents.getEventPointer(0)->message.getTimeSignatureInfo(numerator, denominator); }
+		setupConfig->setBeatSignature((uint8)numerator, (uint8)denominator);
+
+		// merge into one sequence
+		MidiMessageSequence mergedSequence;
+		for (int i = 0; i < midiFile.getNumTracks(); i++) mergedSequence.addSequence(*midiFile.getTrack(i), 0.0, 0.0, midiFile.getLastTimestamp());
+		mergedSequence.updateMatchedPairs();
+
+		MidiMessageSequence::MidiEventHolder* current;
+		for (int i = 0; i < mergedSequence.getNumEvents(); i++)
+		{
+			current = mergedSequence.getEventPointer(i);
+			if (current == nullptr) continue;
+			if (current->message.isNoteOn())
+			{
+				
+			}
+		}
 	}
 }
 

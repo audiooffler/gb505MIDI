@@ -273,9 +273,9 @@ void PatternSetupConfigBlock::setTempoBpm(float tempoInBpm)
 	uint8 byte1, byte2, byte3, byte4;
 	convertTempoBpmIntoByteValues(tempoInBpm, byte1, byte2, byte3, byte4);
 	getParameter(0x13)->setValue(byte1, Parameter::GuiWidget);
-	getParameter(0x14)->setValue(byte1, Parameter::GuiWidget);
-	getParameter(0x15)->setValue(byte1, Parameter::GuiWidget);
-	getParameter(0x16)->setValue(byte1, Parameter::GuiWidget);
+	getParameter(0x14)->setValue(byte2, Parameter::GuiWidget);
+	getParameter(0x15)->setValue(byte3, Parameter::GuiWidget);
+	getParameter(0x16)->setValue(byte4, Parameter::GuiWidget);
 }
 
 // checks mute state for part, returns true if muted

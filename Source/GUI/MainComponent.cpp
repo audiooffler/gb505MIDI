@@ -63,6 +63,8 @@ MainComponent::MainComponent ()
 	getMenuButton()->setTriggeredOnMouseDown(true);
 	getMenuButton()->addListener(this);
 
+	setCurrentTabIndex(2, false);
+
     //[/UserPreSize]
 
     setSize (640, 480);
