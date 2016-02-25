@@ -84,27 +84,27 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 	asciiCharacters.add(" ");
 	asciiCharacters.addTokens("! \" # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | }", false);
 	
-	setupParameter("Pattern Name  1", 0x00, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  2", 0x01, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  3", 0x02, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  4", 0x03, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  5", 0x04, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  6", 0x05, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  7", 0x06, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  8", 0x07, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name  9", 0x08, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name 10", 0x09, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name 11", 0x0A, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name 12", 0x0B, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name 13", 0x0C, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
-	setupParameter("Pattern Name 14", 0x0D, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  1", 0x00, 32, 125, 'E', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  2", 0x01, 32, 125, 'M', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  3", 0x02, 32, 125, 'P', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  4", 0x03, 32, 125, 'T', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  5", 0x04, 32, 125, 'Y', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  6", 0x05, 32, 125, ' ', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  7", 0x06, 32, 125, 'P', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  8", 0x07, 32, 125, 'A', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name  9", 0x08, 32, 125, 'T', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name 10", 0x09, 32, 125, 'T', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name 11", 0x0A, 32, 125, 'T', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name 12", 0x0B, 32, 125, 'E', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name 13", 0x0C, 32, 125, 'R', asciiCharacters, "Name assigned to the pattern.");
+	setupParameter("Pattern Name 14", 0x0D, 32, 125, 'N', asciiCharacters, "Name assigned to the pattern.");
 	setupParameter("Pattern Name 15", 0x0E, 32, 125, 32, asciiCharacters, "Name assigned to the pattern.");
 
 	setupParameter("???", 0x0F, 0, 127, 0, StringArray(), "???");
 
 	setupParameter("Beat Signature Numerator", 0x10, 2, 19, 4);
 	setupParameter("Beat Signature Denominator", 0x11, 4, 16, 4);
-	setupParameter("Measures", 0x12, 0, 32, 4, StringArray(),"Pattern lenght as number of measures.");
+	setupParameter("Measures", 0x12, 1, 32, 4, StringArray(),"Pattern lenght as number of measures.");
 
 	// use convertTempoBpmIntoByteValues and convertTempoByteValuesIntoBPM on these (default of 120.0f * 100 = 12000 = 0x2EE0) 
 	setupParameter("Tempo Byte 1", 0x13, 0, 0xF, 0x2, StringArray());

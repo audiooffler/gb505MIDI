@@ -91,6 +91,8 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_midiCCNames.set(94, "DELAY");
 	m_midiCCNames.set(126, "SOLO ON");
 	m_midiCCNames.set(127, "SOLO OFF");
+
+	clearPattern();
 }
 
 PatternBodyBlock::~PatternBodyBlock()
@@ -997,19 +999,15 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 // calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
 void PatternBodyBlock::refreshRelativeTickIncrements()
 {
-	PatternSetupConfigBlock* patternConfig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
-	BeatSignature beatSignature = patternConfig->getBeatSignature();
-	uint8 patternLengthInMeasures = patternConfig->getPatternLengthInMeasures();
-	uint8 beatsPerMeasure = beatSignature.getNumerator();
-
 	// delete all existing INC events (they might not be up-to-date)
 	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--) { if (m_sequenceBlocks[i]->getType() == Evt_TickInc) { m_sequenceBlocks.remove(i); } }
 
 	const unsigned long patternStart = 0;
-	const unsigned long patternEnd = patternLengthInMeasures * beatsPerMeasure * getTicksPerBeat();
+	const unsigned long patternEnd = m_lengthInMeasures * m_beatSigNumerator * getTicksPerBeat();
 	
 	unsigned long delta(0);
 	unsigned long currentAbsoluteTick = patternStart;
+
 	// if emty sequence
 	if (m_sequenceBlocks.size() == 0)
 	{
@@ -1027,13 +1025,14 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 		}
 	}
 	else
-	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+		for (int i = 0; i < m_sequenceBlocks.size(); i++)
 	{
 		
 		delta = ((i + 1) < m_sequenceBlocks.size() ? m_sequenceBlocks[i + 1]->absoluteTick : patternEnd) - currentAbsoluteTick;
 		for (unsigned int j = 0; j < (delta / 0xFF); j++)
 		{
 			m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
+			i++; // increment i, added inc-event would be handled in next itereation otherwise
 			currentAbsoluteTick += 0xFF;
 		}
 		uint8 rest = delta % 0xFF;
@@ -1042,6 +1041,7 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 			if (i + 1 >= m_sequenceBlocks.size()) // at end of pattern: add another inc til end
 			{
 				m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, rest, 0x80, 0x00));
+				i++; // increment i, added inc-event would be handled in next itereation otherwise
 			}
 			else
 			{

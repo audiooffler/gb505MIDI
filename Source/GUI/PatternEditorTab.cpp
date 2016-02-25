@@ -394,7 +394,7 @@ PatternEditorTab::PatternEditorTab ()
     m_patternNameEditor->setColour (TextEditor::textColourId, Colours::black);
     m_patternNameEditor->setColour (TextEditor::backgroundColourId, Colour (0xfff2f59b));
     m_patternNameEditor->setColour (TextEditor::outlineColourId, Colours::grey);
-    m_patternNameEditor->setText (String());
+    m_patternNameEditor->setText (TRANS("EMPTY PATTERN"));
 
     addAndMakeVisible (m_keySignatureComboBox = new ParameterComboBox ("keySignatureComboBox"));
     m_keySignatureComboBox->setEditableText (false);
@@ -1405,7 +1405,7 @@ BEGIN_JUCER_METADATA
          fontsize="12" bold="1" italic="0" justification="36"/>
   <TEXTEDITOR name="patternNameEditor" id="9686a2e1612f5756" memberName="m_patternNameEditor"
               virtualName="ParameterTextEditor" explicitFocusOrder="0" pos="12 40 128 22"
-              textcol="ff000000" bkgcol="fff2f59b" outlinecol="ff808080" initialText=""
+              textcol="ff000000" bkgcol="fff2f59b" outlinecol="ff808080" initialText="EMPTY PATTERN"
               multiline="0" retKeyStartsLine="0" readonly="0" scrollbars="0"
               caret="1" popupmenu="1"/>
   <COMBOBOX name="keySignatureComboBox" id="e8c10ecedfc6fd9e" memberName="m_keySignatureComboBox"
