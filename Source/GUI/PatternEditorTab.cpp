@@ -1235,7 +1235,7 @@ void PatternEditorTab::importMidiFile()
 			if (current == nullptr) continue;
 			if (current->message.isNoteOn())
 			{
-				
+				new PatternBodyBlock::PatternEventData(current->message.getTimeStamp(), current->message);
 			}
 		}
 	}

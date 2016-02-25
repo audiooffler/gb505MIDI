@@ -307,6 +307,12 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, cons
 	absoluteTick = absTick;
 }
 
+// constructor from midi event, relative tick will be null, just absolue tick set. so in PatternBodyBlock ticks must be refreshed after adding these
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MidiMessage &midiMessage)
+{
+
+}
+
 PatternBodyBlock::PatternEventData::~PatternEventData()
 {
 	if (m_joinedSysexData != nullptr)m_joinedSysexData->reset();

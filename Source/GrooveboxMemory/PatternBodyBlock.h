@@ -104,6 +104,8 @@ public:
 		PatternEventData(unsigned long absTick, int8 key, uint8 part);
 		// constructor for free data enty
 		PatternEventData(unsigned long absTick, const uint8 byte0, const uint8 byte1, const uint8 byte2, const uint8 byte3 = 0, const uint8 byte4 = 0, const uint8 byte5 = 0, const uint8 byte6 = 0, const uint8 byte7 = 0);
+		// constructor from midi event, relative tick will be null, just absolue tick set. so in PatternBodyBlock ticks must be refreshed after adding these
+		PatternEventData(unsigned long absTick, MidiMessage &midiMessage);
 
 		~PatternEventData();
 
