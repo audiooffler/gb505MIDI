@@ -102,6 +102,8 @@ public:
 		PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex);
 		// constructor for note off
 		PatternEventData(unsigned long absTick, int8 key, uint8 part);
+		// constructor for free data enty
+		PatternEventData(unsigned long absTick, const uint8 byte0, const uint8 byte1, const uint8 byte2, const uint8 byte3 = 0, const uint8 byte4 = 0, const uint8 byte5 = 0, const uint8 byte6 = 0, const uint8 byte7 = 0);
 
 		~PatternEventData();
 
@@ -201,8 +203,17 @@ public:
 
 	bool isPatternEmpty(){ return m_sequenceBlocks.size() == 0; }
 
+	// calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
+	void refreshRelativeTickIncrements();
+
+	// clears entries m_sequenceBlocks, calls refreshRelativeTickIncrements(), calls refreshFilteredContent()
+	void clearPattern();
+
 	// to be called when beat signature in pattern setup is changed. updates the viewed table by sendChangeMessage() (for MM-BB-TT time display repaint)
 	void setBeatSignature(BeatSignature beatSignature);
+	// ticks per beat = 96 / (denominator / 4) (e.g. for 11/16 beat --> 96 / (16/4) = 96/4 = 24)
+	uint8 getTicksPerBeat();
+	void setLengthInMeasures(uint8 measures);
 
 	// creates a new MidiFile
 	MidiFile* convertToMidiFile();
@@ -218,6 +229,7 @@ private:
 	HashMap<int, String> m_midiCCNames;
 	uint8 m_beatSigNumerator = 4; // = beats per measure
 	uint8 m_beatSigDenominator = 4;
+	uint8 m_lengthInMeasures = 4;
 	// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
 	MemoryBlock sysExBuilder;
 	unsigned int sysExBuilderByteIndex = 0;

@@ -60,6 +60,7 @@ public:
 
 	enum CommandIDs
 	{
+		createEmptyPattern = 0x20FF,
 		fileOpenPatternSyxFile = 0x2101,
 		fileSavePatternSyxFile = 0x2102,
 		fileImportPatternSmfFile = 0x2111,
@@ -80,11 +81,11 @@ public:
 	void exportAsMidiFile();
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
-    void buttonClicked (Button* buttonThatWasClicked);
-    void sliderValueChanged (Slider* sliderThatWasMoved);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
 
 

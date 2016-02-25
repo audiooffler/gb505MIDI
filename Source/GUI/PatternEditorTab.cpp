@@ -721,7 +721,7 @@ void PatternEditorTab::resized()
     m_viewSinglePartLabel->setBounds (797, 140, 55, 12);
     m_patchNameLabel->setBounds (12, 24, 128, 16);
     m_patternNameEditor->setBounds (12, 40, 128, 22);
-    m_keySignatureComboBox->setBounds (164, 40, 60, 22);
+    m_keySignatureComboBox->setBounds (164, 40, 64, 22);
     m_timeSignatureLabel->setBounds (136, 24, 116, 16);
     m_measuresLabel->setBounds (244, 24, 76, 16);
     m_measuresSlider->setBounds (264, 40, 36, 20);
@@ -755,7 +755,7 @@ void PatternEditorTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 		int selected = m_keySignatureComboBox->getSelectedId();
 		if (selected > 0)
 		{
-			String text = m_keySignatureComboBox->getItemText(selected);
+			String text = m_keySignatureComboBox->getItemText(m_keySignatureComboBox->getSelectedItemIndex());
 			StringArray signatureStrings = StringArray::fromTokens(text, "/", "");
 			if (signatureStrings.size() > 1)
 			{
@@ -917,6 +917,7 @@ void PatternEditorTab::sliderValueChanged (Slider* sliderThatWasMoved)
     else if (sliderThatWasMoved == m_measuresSlider)
     {
         //[UserSliderCode_m_measuresSlider] -- add your slider handling code here..
+		grooveboxMemory->getPatternBodyBlock()->setLengthInMeasures((uint8)m_measuresSlider->getValue());
         //[/UserSliderCode_m_measuresSlider]
     }
     else if (sliderThatWasMoved == m_tempoSlider)
@@ -974,6 +975,8 @@ void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
 {
 	// this returns the set of all commands that this target can perform..
 	const CommandID ids[] = {
+		createEmptyPattern,
+		/* ---------------------- */
 		fileOpenPatternSyxFile,
 		fileSavePatternSyxFile,
 		/* ---------------------- */
@@ -992,6 +995,10 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 
 	switch (commandID)
 	{
+	case createEmptyPattern:
+		result.setInfo("New empty pattern", "Clears the pattern data", category, 0);
+		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		break;
 	case fileOpenPatternSyxFile:
 		result.setInfo("Open SysEx Pattern File...", "Opens a raw pattern file, either binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
 		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
@@ -1008,7 +1015,7 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 		break;
 	case fileExportPatternSmfFile:
 		result.setInfo("Export Pattern as MIDI...", "Converts pattern to Standard MIDI File (.mid)", category, 0);
-		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
+		result.addDefaultKeypress('s', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
 	case grooveBoxLoadPattern:
@@ -1025,8 +1032,11 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 {
 	switch (info.commandID)
 	{
+	case CommandIDs::createEmptyPattern:
+		grooveboxMemory->getPatternBodyBlock()->clearPattern();
+		return true;
 	case CommandIDs::fileOpenPatternSyxFile:
-			loadSysExFile();
+		loadSysExFile();
 		return true;
 	case CommandIDs::fileImportPatternSmfFile:
 		// TODO: import from midi (convert midi to groovebox sysex)
@@ -1399,7 +1409,7 @@ BEGIN_JUCER_METADATA
               multiline="0" retKeyStartsLine="0" readonly="0" scrollbars="0"
               caret="1" popupmenu="1"/>
   <COMBOBOX name="keySignatureComboBox" id="e8c10ecedfc6fd9e" memberName="m_keySignatureComboBox"
-            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="164 40 60 22"
+            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="164 40 64 22"
             editable="0" layout="36" items="2/4&#10;3/4&#10;4/4&#10;5/4&#10;6/4&#10;7/4&#10;5/8&#10;6/8&#10;7/8&#10;9/8&#10;12/8&#10;9/16&#10;11/16&#10;13/16&#10;15/16&#10;17/16&#10;19/16"
             textWhenNonSelected="4/4" textWhenNoItems="(no choices)"/>
   <LABEL name="timeSignatureLabel" id="ebaeb767998e3a96" memberName="m_timeSignatureLabel"

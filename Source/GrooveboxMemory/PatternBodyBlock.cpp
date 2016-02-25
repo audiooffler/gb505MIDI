@@ -91,7 +91,6 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_midiCCNames.set(94, "DELAY");
 	m_midiCCNames.set(126, "SOLO ON");
 	m_midiCCNames.set(127, "SOLO OFF");
-
 }
 
 PatternBodyBlock::~PatternBodyBlock()
@@ -186,8 +185,6 @@ const uint8* PatternBodyBlock::unpack7BitTo8BitData(const uint8* packed7BitData,
 }
 
 const String PatternBodyBlock::PatternEventData::NOTENAMES[] = { "C -1","C#-1","D -1","D#-1","E -1","F -1","F#-1","G -1","G#-1","A -1","A#-1","B -1","C  0","C# 0","D  0","D# 0","E  0","F  0","F# 0","G  0","G# 0","A  0","A# 0","B  0","C  1","C# 1","D  1","D# 1","E  1","F  1","F# 1","G  1","G# 1","A  1","A# 1","B  1","C  2","C# 2","D  2","D# 2","E  2","F  2","F# 2","G  2","G# 2","A  2","A# 2","B  2","C  3","C# 3","D  3","D# 3","E  3","F  3","F# 3","G  3","G# 3","A  3","A# 3","B  3","C  4","C# 4","D  4","D# 4","E  4","F  4","F# 4","G  4","G# 4","A  4","A# 4","B  4","C  5","C# 5","D  5","D# 5","E  5","F  5","F# 5","G  5","G# 5","A  5","A# 5","B  5","C  6","C# 6","D  6","D# 6","E  6","F  6","F# 6","G  6","G# 6","A  6","A# 6","B  6","C  7","C# 7","D  7","D# 7","E  7","F  7","F# 7","G  7","G# 7","A  7","A# 7","B  7","C  8","C# 8","D  8","D# 8","E  8","F  8","F# 8","G  8","G# 8","A  8","A# 8","B  8","C  9","C# 9","D  9","D# 9","E  9","F  9","F# 9","G  9" };
-
-//const unsigned int PatternBodyBlock::PatternEventData::ticksPerQuarterNote = 96;
 unsigned long PatternBodyBlock::PatternEventData::mostRecentAbsoluteTick = 0;
 uint8 PatternBodyBlock::PatternEventData::lastRelativeTickIncrement = 0;
 
@@ -289,6 +286,22 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8
 	bytes[6] = 0;
 	bytes[7] = 0;
 	isNoteOff = true;
+	absoluteTick = absTick;
+}
+
+// constructor for free data enty
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, const uint8 byte0, const uint8 byte1, const uint8 byte2, const uint8 byte3 /*= 0*/, const uint8 byte4 /*= 0*/, const uint8 byte5 /*= 0*/, const uint8 byte6 /*= 0*/, const uint8 byte7 /*= 0*/) :
+	m_joinedSysexData(nullptr),
+	isNoteOff(false)
+{
+	bytes[0] = byte0;
+	bytes[1] = byte1;
+	bytes[2] = byte2;
+	bytes[3] = byte3;
+	bytes[4] = byte4;
+	bytes[5] = byte5;
+	bytes[6] = byte6;
+	bytes[7] = byte7;
 	absoluteTick = absTick;
 }
 
@@ -652,7 +665,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 		switch ((PatternTableListColumnId)columnId)
 		{
 		case PatternBodyBlock::Col_Position:
-			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick, (96 / (m_beatSigDenominator / 4)), m_beatSigNumerator);
+			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick, getTicksPerBeat(), m_beatSigNumerator);
 			break;
 		case PatternBodyBlock::Col_Raw0:
 			cellText = String::toHexString((int)event->bytes[0]).toUpperCase().paddedLeft('0',2);
@@ -731,7 +744,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 			switch (event->getType())
 			{
 			case PatternBodyBlock::Evt_Note:
-				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), (96 / (m_beatSigDenominator / 4)), m_beatSigNumerator, true /*gate time counting measures and beats from 0*/);
+				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), getTicksPerBeat(), m_beatSigNumerator, true /*gate time counting measures and beats from 0*/);
 				break;
 			case PatternBodyBlock::Evt_PAft:
 				cellText = String(event->getPAftPressure());
@@ -981,12 +994,90 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 	return true;
 }
 
+// calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
+void PatternBodyBlock::refreshRelativeTickIncrements()
+{
+	PatternSetupConfigBlock* patternConfig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	BeatSignature beatSignature = patternConfig->getBeatSignature();
+	uint8 patternLengthInMeasures = patternConfig->getPatternLengthInMeasures();
+	uint8 beatsPerMeasure = beatSignature.getNumerator();
+
+	// delete all existing INC events (they might not be up-to-date)
+	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--) { if (m_sequenceBlocks[i]->getType() == Evt_TickInc) { m_sequenceBlocks.remove(i); } }
+
+	const unsigned long patternStart = 0;
+	const unsigned long patternEnd = patternLengthInMeasures * beatsPerMeasure * getTicksPerBeat();
+	
+	unsigned long delta(0);
+	unsigned long currentAbsoluteTick = patternStart;
+	// if emty sequence
+	if (m_sequenceBlocks.size() == 0)
+	{
+		delta = patternEnd - currentAbsoluteTick;
+		for (unsigned int j = 0; j < (delta / 0xFF); j++)
+		{
+			m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
+			currentAbsoluteTick += 0xFF;
+		}
+		uint8 rest = delta % 0xFF;
+		if (rest > 0)
+		{
+			m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, rest, 0x80, 0x00));
+			currentAbsoluteTick += rest;
+		}
+	}
+	else
+	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	{
+		
+		delta = ((i + 1) < m_sequenceBlocks.size() ? m_sequenceBlocks[i + 1]->absoluteTick : patternEnd) - currentAbsoluteTick;
+		for (unsigned int j = 0; j < (delta / 0xFF); j++)
+		{
+			m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
+			currentAbsoluteTick += 0xFF;
+		}
+		uint8 rest = delta % 0xFF;
+		if (rest > 0)
+		{
+			if (i + 1 >= m_sequenceBlocks.size()) // at end of pattern: add another inc til end
+			{
+				m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, rest, 0x80, 0x00));
+			}
+			else
+			{
+				m_sequenceBlocks[i + 1]->bytes[0] = rest;
+			}
+			currentAbsoluteTick += rest;
+		}
+	}
+	refreshFilteredContent();
+}
+
+// clears entries m_sequenceBlocks, calls refreshRelativeTickIncrements(), calls refreshFilteredContent()
+void PatternBodyBlock::clearPattern()
+{
+	m_sequenceBlocks.clear();
+	refreshRelativeTickIncrements();
+}
+
 // to be called when beat signature in pattern setup is changed, only 96 (for signatures of N/4) 48 (N/8) or 24 (N/16) will be accepted, else defaulting to 96. updates the viewed table (for tick time display interpretation)
 void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature)
 {
 	m_beatSigNumerator = beatSignature.getNumerator();
 	m_beatSigDenominator = beatSignature.getDenominator();
-	sendChangeMessage();
+	refreshRelativeTickIncrements();
+}
+
+void PatternBodyBlock::setLengthInMeasures(uint8 measures)
+{
+	m_lengthInMeasures = measures;
+	refreshRelativeTickIncrements();
+}
+
+// ticks per beat = 96 / (denominator / 4) (e.g. for 11/16 beat --> 96 / (16/4) = 96/4 = 24)
+uint8 PatternBodyBlock::getTicksPerBeat()
+{
+	return 96 / (m_beatSigDenominator / 4);
 }
 
 MidiFile* PatternBodyBlock::convertToMidiFile()
@@ -999,7 +1090,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 
 	uint8 deviceId = jmax<uint8>(grooveboxConnector->getActiveDeviceId(), 0x10);
 
-	double oneBeat = ((double)m_beatSigDenominator / 4.0) * 96.0; // ticks per beat = 96 / (denominator / 4) (e.g. 11/16 beat --> 96 * 4 = 24)
+	double oneBeat = getTicksPerBeat();
 	double oneMeasure = (double)m_beatSigNumerator * oneBeat;
 	
 	ScopedPointer<MidiMessageSequence> muteCtrlTrack = new MidiMessageSequence();
@@ -1043,11 +1134,11 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 
 	// effects setups
 	MidiMessageSequence mFxSetup = patternSetupEffectsPtr->getM_FX_SetupMidiMessageSequence(deviceId);
-	muteCtrlTrack->addSequence(mFxSetup, 6.0, 0.0, mFxSetup.getEndTime() + 96.0);
+	muteCtrlTrack->addSequence(mFxSetup, 6.0, 0.0, oneMeasure);
 	MidiMessageSequence revSetup = patternSetupEffectsPtr->getReverbSetupMidiMessageSequence(deviceId);
-	muteCtrlTrack->addSequence(revSetup, 12.0, 0.0, revSetup.getEndTime() + 32.0 + 96.0);
+	muteCtrlTrack->addSequence(revSetup, 12.0, 0.0, oneMeasure);
 	MidiMessageSequence dlySetup = patternSetupEffectsPtr->getDelaySetupMidiMessageSequence(deviceId);
-	muteCtrlTrack->addSequence(dlySetup, 18.0, 0.0, dlySetup.getEndTime() + 64.0 + 96.0);
+	muteCtrlTrack->addSequence(dlySetup, 18.0, 0.0, oneMeasure);
 	// parts setup
 	muteCtrlTrack->addSequence(patternSetupConfigPtr->getInitalMuteStates(deviceId), oneBeat, 0, oneMeasure);
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- END OF SETUP -------------------------------"), oneBeat+oneBeat);

@@ -36,8 +36,8 @@ BeatSignature::BeatSignature(uint8 numerator, uint8 denominator) :
 		if (fraction == allowedFractions[i])
 		{
 			// for correction of 2/2 ==> 4/4 etc
-			m_numerator = allowedFractionNumerators[i];
-			m_denominator = allowedFractionDenominators[i];
+			m_numerator = numerator;
+			m_denominator = denominator;
 			// abort search no further correction needed
 			fractionIsOkay = true;
 			break;
