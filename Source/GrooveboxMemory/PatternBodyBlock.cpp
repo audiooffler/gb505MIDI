@@ -836,16 +836,34 @@ String PatternBodyBlock::getCellTooltip(int /*rowNumber*/, int /*columnId*/)
 	return String::empty;
 }
 
+void PatternBodyBlock::timerCallback()
+{
+	if (tableSelectionMidiOut != nullptr)
+	{
+		for (int i = 1; i < 17; i++) tableSelectionMidiOut->sendMessageNow(MidiMessage::allNotesOff(i));
+	}
+}
+
 void PatternBodyBlock::selectedRowsChanged(int lastRowSelected)
 {
 	if (lastRowSelected >= 0 && lastRowSelected < m_filteredsequenceBlocks.size() && tableSelectionMidiOut!=nullptr)
 	{
+		stopTimer();
 		for (int i = 1; i < 17; i++)
 		{
 			tableSelectionMidiOut->sendMessageNow(MidiMessage::allNotesOff(i));
 		}
 		if (m_filteredsequenceBlocks[lastRowSelected]->getMidiChannel() >= 1 && m_filteredsequenceBlocks[lastRowSelected]->getMidiChannel() <= 16)
-			tableSelectionMidiOut->sendMessageNow(m_filteredsequenceBlocks[lastRowSelected]->toMidiMessage());
+		{
+			MidiMessage midiMsg = m_filteredsequenceBlocks[lastRowSelected]->toMidiMessage();
+			if (midiMsg.isNoteOn())
+			{
+				double bpm = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm();
+				double noteGateTimeInSeconds = m_filteredsequenceBlocks[lastRowSelected]->getNoteGateTicks() * 60.0/(96.0*bpm);
+				startTimer((int)(noteGateTimeInSeconds * 1000.0));
+			}
+			tableSelectionMidiOut->sendMessageNow(midiMsg);
+		}
 	}
 }
 
@@ -1513,7 +1531,6 @@ void PatternBodyBlock::loadMidiFile(File &file)
 	this->setLengthInMeasures(numMeasures, false);
 
 	m_sequenceBlocks.clear();
-
 	// iterate and load messages into pattern setup and body, when loading body data decrease time stamp by offset of patternBodyStartTickInMidi
 	for (int i = 0; i < mergedSequence.getNumEvents(); i++)
 	{
@@ -1521,7 +1538,21 @@ void PatternBodyBlock::loadMidiFile(File &file)
 		if (current == nullptr) continue;
 
 		// body data
-		if ((unsigned long) current->message.getTimeStamp() >= patternBodyStartTickInMidi)
+		if ((unsigned long)current->message.getTimeStamp() < patternBodyStartTickInMidi)
+		{
+			if (current->message.isController())
+			{
+				grooveboxMemory->handleCCFromGroovebox((uint8)current->message.getChannel(), (uint8)current->message.getControllerNumber(), (uint8) current->message.getControllerValue());
+			}
+			else if (current->message.isSysEx())
+			{
+				int size = current->message.getSysExDataSize();
+				const uint8* data = current->message.getSysExData();
+				ScopedPointer<SyxMsg> msg = new SyxMsg(data, size, false);
+				grooveboxMemory->handleSysEx(msg);
+			}
+		}
+		else //if ((unsigned long) current->message.getTimeStamp() >= patternBodyStartTickInMidi)
 		{
 			
 			if (current->message.isNoteOn() || 
