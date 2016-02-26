@@ -308,9 +308,60 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, cons
 }
 
 // constructor from midi event, relative tick will be null, just absolue tick set. so in PatternBodyBlock ticks must be refreshed after adding these
-PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MidiMessage &midiMessage)
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MidiMessageSequence::MidiEventHolder* midiEventHolder):
+	m_joinedSysexData(nullptr),
+	isNoteOff(false)
 {
+	// init with zeroes
+	for (int i = 0; i < 8; i++)bytes[i] = 0;
 
+	// set channel bytes
+	bytes[2] = (uint8)midiEventHolder->message.getChannel()-1;
+	bytes[3] = bytes[2];
+
+	if (midiEventHolder->message.isNoteOn())
+	{
+		bytes[1] = (uint8)midiEventHolder->message.getNoteNumber();
+		bytes[4] = (uint8)midiEventHolder->message.getVelocity();
+
+		uint16 gateTime = 0;
+		if (MidiMessageSequence::MidiEventHolder* noteOffHolder = midiEventHolder->noteOffObject)
+		{
+			gateTime = (uint16)(noteOffHolder->message.getTimeStamp() - midiEventHolder->message.getTimeStamp());
+		}
+		bytes[6] = (uint8)(gateTime >> 8);
+		bytes[7] = (uint8)gateTime & 0xFF;
+	}
+	else if (midiEventHolder->message.isController())
+	{
+		bytes[1] = 0x8E;
+		bytes[5] = (uint8)midiEventHolder->message.getControllerNumber();
+		bytes[6] = (uint8)midiEventHolder->message.getControllerValue();
+	}
+	else if (midiEventHolder->message.isProgramChange())
+	{
+		bytes[1] = 0x8F;
+		bytes[5] = (uint8)midiEventHolder->message.getProgramChangeNumber();
+	}
+	else if (midiEventHolder->message.isAftertouch())
+	{
+		bytes[1] = 0x8D;
+		bytes[5] = (uint8)midiEventHolder->message.getNoteNumber();
+		bytes[6] = (uint8)midiEventHolder->message.getAfterTouchValue();
+	}
+	else if (midiEventHolder->message.isChannelPressure())
+	{
+		bytes[1] = 0x90;
+		bytes[5] = (uint8)midiEventHolder->message.getChannelPressureValue();
+	}
+	else if (midiEventHolder->message.isPitchWheel())
+	{
+		bytes[1] = 0x91;
+		int value = midiEventHolder->message.getPitchWheelValue();
+		bytes[5] = (uint8)(value >> 7);
+		bytes[6] = value & 0x7F;
+	}
+	absoluteTick = absTick;
 }
 
 PatternBodyBlock::PatternEventData::~PatternEventData()
@@ -1014,7 +1065,7 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 	unsigned long delta(0);
 	unsigned long currentAbsoluteTick = patternStart;
 
-	// if emty sequence
+	// if empty sequence: add INCs
 	if (m_sequenceBlocks.size() == 0)
 	{
 		delta = patternEnd - currentAbsoluteTick;
@@ -1030,30 +1081,67 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 			currentAbsoluteTick += rest;
 		}
 	}
-	else
-		for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	else // between sequence events set delta to next (or to patternEnd for last event)
 	{
-		
-		delta = ((i + 1) < m_sequenceBlocks.size() ? m_sequenceBlocks[i + 1]->absoluteTick : patternEnd) - currentAbsoluteTick;
-		for (unsigned int j = 0; j < (delta / 0xFF); j++)
+		for (int i = 0; i < m_sequenceBlocks.size(); i++)
 		{
-			m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
-			i++; // increment i, added inc-event would be handled in next itereation otherwise
-			currentAbsoluteTick += 0xFF;
-		}
-		uint8 rest = delta % 0xFF;
-		if (rest > 0)
-		{
-			if (i + 1 >= m_sequenceBlocks.size()) // at end of pattern: add another inc til end
+			if (i == 0) // at start, before first
 			{
-				m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, rest, 0x80, 0x00));
-				i++; // increment i, added inc-event would be handled in next itereation otherwise
+				delta = m_sequenceBlocks[0]->absoluteTick - patternStart;
+				for (unsigned int j = 0; j < (delta / 0xFF); j++)
+				{
+					m_sequenceBlocks.insert(i,new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
+					i++; // increment i, added inc-event would be handled in next itereation otherwise
+					currentAbsoluteTick += 0xFF;
+				}
+				uint8 rest = delta % 0xFF;
+				if (rest > 0 || i == 0) // always insert at least on INC at start (guessed, because that's what the MC-307 dumps always seem to have)
+				{
+					m_sequenceBlocks.insert(i,new PatternEventData(currentAbsoluteTick, rest, 0x80, 0x00));
+					i++; // increment i, added inc-event would be handled in next itereation otherwise
+					currentAbsoluteTick += rest;
+				}
+
 			}
-			else
+			// till next or end
+			delta = ((i + 1) < m_sequenceBlocks.size() ? m_sequenceBlocks[i + 1]->absoluteTick : patternEnd) - currentAbsoluteTick;
+			unsigned int num255s = delta / 0xFF;
+			unsigned int rest = delta % 0xFF;
+
+			if (num255s == 0)
 			{
-				m_sequenceBlocks[i + 1]->bytes[0] = rest;
+				if (rest > 0) // if just some rest
+				{
+					m_sequenceBlocks[i]->bytes[0] = (uint8)rest;
+					currentAbsoluteTick += rest;
+				}
 			}
-			currentAbsoluteTick += rest;
+			else 
+			{
+				// set first 255 inc to current
+				m_sequenceBlocks[i]->bytes[0] = 0xFF;
+				currentAbsoluteTick += 0xFF;
+				num255s--;
+				// if more add INCs
+				while (num255s > 0)
+				{
+					PatternEventData* inc = new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00);
+					if (i + 1 >= m_sequenceBlocks.size())  m_sequenceBlocks.add(inc);
+					else m_sequenceBlocks.insert(i + 1, inc);
+					i++; // increment i, added inc-event would be handled in next itereation otherwise
+					currentAbsoluteTick += 0xFF;
+					num255s--;
+				}
+				// add rest inc
+				if (rest > 0)
+				{
+					PatternEventData* inc = new PatternEventData(currentAbsoluteTick, (uint8)rest, 0x80, 0x00);
+					if (i + 1 >= m_sequenceBlocks.size())  m_sequenceBlocks.add(inc);
+					else m_sequenceBlocks.insert(i + 1, inc);
+					i++; // increment i, added inc-event would be handled in next itereation otherwise
+					currentAbsoluteTick += rest;
+				}
+			}
 		}
 	}
 	refreshFilteredContent();
@@ -1067,17 +1155,17 @@ void PatternBodyBlock::clearPattern()
 }
 
 // to be called when beat signature in pattern setup is changed, only 96 (for signatures of N/4) 48 (N/8) or 24 (N/16) will be accepted, else defaulting to 96. updates the viewed table (for tick time display interpretation)
-void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature)
+void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature, bool refreshTickIncrements /*= true*/)
 {
 	m_beatSigNumerator = beatSignature.getNumerator();
 	m_beatSigDenominator = beatSignature.getDenominator();
-	refreshRelativeTickIncrements();
+	if (refreshTickIncrements) refreshRelativeTickIncrements();
 }
 
-void PatternBodyBlock::setLengthInMeasures(uint8 measures)
+void PatternBodyBlock::setLengthInMeasures(uint8 measures, bool refreshTickIncrements /*= true*/)
 {
 	m_lengthInMeasures = measures;
-	refreshRelativeTickIncrements();
+	if (refreshTickIncrements) refreshRelativeTickIncrements();
 }
 
 // ticks per beat = 96 / (denominator / 4) (e.g. for 11/16 beat --> 96 / (16/4) = 96/4 = 24)
@@ -1100,12 +1188,13 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	double oneMeasure = (double)m_beatSigNumerator * oneBeat;
 	
 	ScopedPointer<MidiMessageSequence> muteCtrlTrack = new MidiMessageSequence();
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, patternSetupConfigPtr->getPatternName()));
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CopyrightNotice, "Converted with gbMIDI. (C) 2016 by Martin Spindler"));
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::DeviceName, "Roland groovebox MC-505 device family"));
-	muteCtrlTrack->addEvent(MidiMessage::timeSignatureMetaEvent(patternSetupConfigPtr->getBeatSignature().getNumerator(), patternSetupConfigPtr->getBeatSignature().getDenominator()));
-	muteCtrlTrack->addEvent(MidiMessage::tempoMetaEvent((int)(60000000.0 / patternSetupConfigPtr->getTempoBpm())));
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Setup"));
+	ScopedPointer<MidiMessageSequence> metaInfoTrack = new MidiMessageSequence();
+
+	metaInfoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, patternSetupConfigPtr->getPatternName()));
+	metaInfoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::CopyrightNotice, "Converted with gbMIDI. (C) 2016 by Martin Spindler"));
+	metaInfoTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::DeviceName, "Roland groovebox MC-505 device family"));
+	metaInfoTrack->addEvent(MidiMessage::timeSignatureMetaEvent(patternSetupConfigPtr->getBeatSignature().getNumerator(), patternSetupConfigPtr->getBeatSignature().getDenominator()));
+	metaInfoTrack->addEvent(MidiMessage::tempoMetaEvent((int)(60000000.0 / patternSetupConfigPtr->getTempoBpm())));
 
 	// add 7 tracks (0..6: part 1 to 7; 7: rhythm part, 8: mute ctrl part (sysEx messages)), 
 	ScopedPointer<MidiMessageSequence> partRTrack = new MidiMessageSequence();
@@ -1132,6 +1221,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	ScopedPointer<MidiMessageSequence> part7Track = new MidiMessageSequence();
 	part7Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part7)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
 
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Setup"));
 	muteCtrlTrack->addEvent(SyxMsg::createChannelPrefixMetaEvent(0x0E, 1.0));
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- SETUP --------------------------------------"), 1.0);
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TrackName, "[MUTE-CTRL]"),1.0);
@@ -1198,6 +1288,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 	if (event!=nullptr)
 		muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Pattern Loop Region End", oneMeasure + (oneMeasure*patternSetupConfigPtr->getPatternLengthInMeasures())));
 
+	midiFile->addTrack(*metaInfoTrack);
 	midiFile->addTrack(*partRTrack);
 	midiFile->addTrack(*part1Track);
 	midiFile->addTrack(*part2Track);
@@ -1264,4 +1355,184 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 		syxMsgArrayPtr->add(new SyxMsg(SyxMsg::Type_DT1, deviceId, address, data, dataLength));
 		addressOffset++;
 	}
+}
+
+/*static*/ unsigned int PatternBodyBlock::convertTicksTo96TPQN(const double time, const MidiMessageSequence& tempoEvents, const int timeFormat)
+{
+	double ticksPerSecondAtPpq96 = 96 / (tempoEvents.getNumEvents()>0 ? tempoEvents.getEventPointer(0)->message.getTempoSecondsPerQuarterNote() : 0.5);
+	if (timeFormat < 0)
+	{
+		double timeInSeconds = time / (-(timeFormat >> 8) * (timeFormat & 0xff));
+		return (unsigned int)(timeInSeconds * ticksPerSecondAtPpq96);
+	}
+
+	double lastTime = 0.0, correctedTime = 0.0;
+	const double tickLen = 1.0 / (timeFormat & 0x7fff); // ticks per quarter
+	double secsPerTick = 0.5 * tickLen;
+	const int numTempoEvents = tempoEvents.getNumEvents();
+
+	for (int i = 0; i < numTempoEvents; ++i)
+	{
+		const MidiMessage& m = tempoEvents.getEventPointer(i)->message;
+		const double eventTime = m.getTimeStamp();
+
+		if (eventTime >= time)
+			break;
+
+		correctedTime += (eventTime - lastTime) * secsPerTick;
+		lastTime = eventTime;
+
+		if (m.isTempoMetaEvent())
+		{
+			secsPerTick = tickLen * m.getTempoSecondsPerQuarterNote();
+			ticksPerSecondAtPpq96 = 96 / (tempoEvents.getNumEvents()>0 ? m.getTempoSecondsPerQuarterNote() : 0.5);
+		}
+		while (i + 1 < numTempoEvents)
+		{
+			const MidiMessage& m2 = tempoEvents.getEventPointer(i + 1)->message;
+
+			if (m2.getTimeStamp() != eventTime)
+				break;
+
+			if (m2.isTempoMetaEvent())
+			{
+				secsPerTick = tickLen * m2.getTempoSecondsPerQuarterNote();
+				ticksPerSecondAtPpq96 = 96 / (tempoEvents.getNumEvents()>0 ? m2.getTempoSecondsPerQuarterNote() : 0.5);
+			}
+			++i;
+		}
+	}
+
+	double timeInSeconds = correctedTime + (time - lastTime) * secsPerTick;
+	return (unsigned int)(timeInSeconds * ticksPerSecondAtPpq96);
+}
+
+void PatternBodyBlock::loadMidiFile(File &file)
+{
+	ScopedPointer<InputStream> loadStream = file.createInputStream();
+	MidiFile midiFile;
+	midiFile.readFrom(*loadStream);
+
+	MidiMessageSequence tempoEvents, timeSigEvents;
+	midiFile.findAllTempoEvents(tempoEvents);
+	midiFile.findAllTimeSigEvents(tempoEvents); // might also contain tempo
+	midiFile.findAllTimeSigEvents(timeSigEvents);
+
+	// convert to 96 TPQN
+	for (int i = 0; i < midiFile.getNumTracks(); ++i)
+	{
+		const MidiMessageSequence& ms = *midiFile.getTrack(i);
+		for (int j = ms.getNumEvents(); --j >= 0;)
+		{
+			MidiMessage& m = ms.getEventPointer(j)->message;
+			m.setTimeStamp(convertTicksTo96TPQN(m.getTimeStamp(), tempoEvents, midiFile.getTimeFormat()));
+		}
+	}
+
+	PatternSetupConfigBlock* setupConfig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+	
+	// load setup bpm and beat time signature
+	double bpm = (tempoEvents.getNumEvents()>0 ? 60.0 / tempoEvents.getEventPointer(0)->message.getTempoSecondsPerQuarterNote() : 120);
+	setupConfig->setTempoBpm((float)bpm);
+	int numerator = 4, denominator = 4;
+	if (timeSigEvents.getNumEvents() > 0){ timeSigEvents.getEventPointer(0)->message.getTimeSignatureInfo(numerator, denominator); }
+	setupConfig->setBeatSignature((uint8)numerator, (uint8)denominator);
+	this->setBeatSignature(setupConfig->getBeatSignature(), false);
+	const uint8 oneBeatLengthInTicks = getTicksPerBeat();
+	const unsigned int oneMeasureLengthInTicks = m_beatSigNumerator * oneBeatLengthInTicks;
+
+	MidiMessageSequence::MidiEventHolder* current;
+
+	// check first track: if the very first event is at timestamp 0.0 and is track name: take as title
+	setupConfig->setPatternName("");
+	if (midiFile.getNumTracks() > 0)
+	{
+		current = midiFile.getTrack(0)->getEventPointer(0);
+		if (current!=nullptr && current->message.isTrackNameEvent() && current->message.getTimeStamp() == 0.0)
+			setupConfig->setPatternName(current->message.getTextFromTextMetaEvent());
+	}
+
+	// merge into one sequence
+	MidiMessageSequence mergedSequence;
+	for (int i = 0; i < midiFile.getNumTracks(); i++) mergedSequence.addSequence(*midiFile.getTrack(i), 0.0, 0.0, midiFile.getLastTimestamp()+1.0);
+	mergedSequence.sort();
+	mergedSequence.updateMatchedPairs();
+
+	// get more information about the pattern
+	unsigned long patternBodyStartTickInMidi = 0;
+	unsigned long numMeasuresInMidiIncludingSetup = (unsigned long)(mergedSequence.getEndTime() / oneMeasureLengthInTicks);
+	unsigned long patternBodyEndTickInMidi = jmax<unsigned long>(numMeasuresInMidiIncludingSetup,1) * oneMeasureLengthInTicks;
+	uint8 numMeasures = 1;
+	bool firstNote = true;
+	for (int i = 0; i < mergedSequence.getNumEvents(); i++)
+	{
+		current = mergedSequence.getEventPointer(i);
+		if (current == nullptr) continue;
+		
+		// try to load title if not found yet
+		if (current->message.isTrackNameEvent() && setupConfig->getPatternName().trim().isEmpty() && current->message.getTimeStamp() == 0.0)
+		{
+			setupConfig->setPatternName(current->message.getTextFromTextMetaEvent());
+		}
+		
+		// find first note to estimate pattern body start
+		if (current->message.isNoteOn())
+		{
+			if (firstNote)
+			{
+				// get measure the first note is in
+				while (patternBodyStartTickInMidi + oneMeasureLengthInTicks - 1 < (unsigned long)current->message.getTimeStamp())
+				{
+					patternBodyStartTickInMidi += oneMeasureLengthInTicks;
+				}
+				firstNote = false; // okay, if first note was found
+			}
+		}
+		if (!current->message.isMetaEvent()&&!current->message.isNoteOff())
+		{
+			patternBodyEndTickInMidi = (unsigned long)current->message.getTimeStamp()+1;
+		}
+	}
+	unsigned long numTicks = patternBodyEndTickInMidi - patternBodyStartTickInMidi;
+	numMeasures = jlimit<uint8>(1, 32, (uint8) ceil((double)numTicks / oneMeasureLengthInTicks));
+	setupConfig->setPatternLengthInMeasures(numMeasures);
+	setupConfig->getParameter(0x12)->sendChangeMessage();
+	this->setLengthInMeasures(numMeasures, false);
+
+	m_sequenceBlocks.clear();
+
+	// iterate and load messages into pattern setup and body, when loading body data decrease time stamp by offset of patternBodyStartTickInMidi
+	for (int i = 0; i < mergedSequence.getNumEvents(); i++)
+	{
+		current = mergedSequence.getEventPointer(i);
+		if (current == nullptr) continue;
+
+		// body data
+		if ((unsigned long) current->message.getTimeStamp() >= patternBodyStartTickInMidi)
+		{
+			
+			if (current->message.isNoteOn() || 
+				current->message.isController() || 
+				current->message.isProgramChange() || 
+				current->message.isAftertouch() || 
+				current->message.isChannelPressure() || 
+				current->message.isPitchWheel())
+			{
+				unsigned long absTicks = (unsigned long)current->message.getTimeStamp() - patternBodyStartTickInMidi;
+				if (PatternEventData* newEvent = new PatternEventData(absTicks, current))
+				{
+					if (newEvent->getType() == PatternEventType::Evt_Unknown)
+						delete newEvent;
+					else
+						m_sequenceBlocks.add(newEvent);
+				}
+			}
+		}
+	}
+
+	// if no song title found, set by file name
+	if (setupConfig->getPatternName().trim().isEmpty()) setupConfig->setPatternName(file.getFileNameWithoutExtension());
+
+	// calculate realative ticks and insert tick increments
+	refreshRelativeTickIncrements();
 }

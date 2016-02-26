@@ -104,7 +104,7 @@ PatternSetupConfigBlock::PatternSetupConfigBlock() :
 
 	setupParameter("Beat Signature Numerator", 0x10, 2, 19, 4);
 	setupParameter("Beat Signature Denominator", 0x11, 4, 16, 4);
-	setupParameter("Measures", 0x12, 1, 32, 4, StringArray(),"Pattern lenght as number of measures.");
+	setupParameter("Measures", 0x12, 0, 32, 4, StringArray(),"Pattern lenght as number of measures.");
 
 	// use convertTempoBpmIntoByteValues and convertTempoByteValuesIntoBPM on these (default of 120.0f * 100 = 12000 = 0x2EE0) 
 	setupParameter("Tempo Byte 1", 0x13, 0, 0xF, 0x2, StringArray());
@@ -231,12 +231,13 @@ String PatternSetupConfigBlock::getPatternName()
 // name will be reduced to allowed ascii characters and max length of 15 characters
 void PatternSetupConfigBlock::setPatternName(String name)
 {
-	for (int i = 0; i < 15 && i < name.length(); i++)
+	for (int i = 0; i < 15; i++)
 	{
-		char c = (char)name[i];
+		char c = (i < name.length()) ? (char)name[i] : ' ';
 		if (c < 32 || c>125) c = 32;	// fallback to space
 		m_data[i] = c;
 	}
+	getParameter(0x00)->sendChangeMessage();
 }
 
 // beat signature getters / setters

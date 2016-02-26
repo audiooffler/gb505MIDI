@@ -79,7 +79,6 @@ public:
 	void loadSysExFile();
 	void saveSysExFile();
 	void exportAsMidiFile();
-	unsigned int convertTicksTo96TPQN(const double time, const MidiMessageSequence& tempoEvents, const int timeFormat);
 	void importMidiFile();
     //[/UserMethods]
 

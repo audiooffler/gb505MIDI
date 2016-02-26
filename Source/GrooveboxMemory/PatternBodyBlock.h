@@ -105,7 +105,7 @@ public:
 		// constructor for free data enty
 		PatternEventData(unsigned long absTick, const uint8 byte0, const uint8 byte1, const uint8 byte2, const uint8 byte3 = 0, const uint8 byte4 = 0, const uint8 byte5 = 0, const uint8 byte6 = 0, const uint8 byte7 = 0);
 		// constructor from midi event, relative tick will be null, just absolue tick set. so in PatternBodyBlock ticks must be refreshed after adding these
-		PatternEventData(unsigned long absTick, MidiMessage &midiMessage);
+		PatternEventData(unsigned long absTick, MidiMessageSequence::MidiEventHolder* midiEventHolder);
 
 		~PatternEventData();
 
@@ -212,13 +212,16 @@ public:
 	void clearPattern();
 
 	// to be called when beat signature in pattern setup is changed. updates the viewed table by sendChangeMessage() (for MM-BB-TT time display repaint)
-	void setBeatSignature(BeatSignature beatSignature);
+	void setBeatSignature(BeatSignature beatSignature, bool refreshTickIncrements = true);
 	// ticks per beat = 96 / (denominator / 4) (e.g. for 11/16 beat --> 96 / (16/4) = 96/4 = 24)
 	uint8 getTicksPerBeat();
-	void setLengthInMeasures(uint8 measures);
+	void setLengthInMeasures(uint8 measures, bool refreshTickIncrements = true);
 
 	// creates a new MidiFile
 	MidiFile* convertToMidiFile();
+
+	static unsigned int convertTicksTo96TPQN(const double time, const MidiMessageSequence& tempoEvents, const int timeFormat);
+	void loadMidiFile(File& file);
 
 	// get data request messages from this block and its sub blocks, the result is added to the array specified in the parameter, overridden for serializing pattern data
 	void createBlockSendMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr) override;
