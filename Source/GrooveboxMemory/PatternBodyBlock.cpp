@@ -11,9 +11,11 @@
 #include "PatternBodyBlock.h"
 #include "PatternSetupBlock.h"
 #include "OverallMemoryBlock.h"
+#include "QuickSysExBlock.h"
 #include "../GUI/GrooveboxLookAndFeel.h"
 
 extern OverallMemoryBlock* grooveboxMemory;
+extern QuickSysExBlock* quickSysEx;
 
 PatternBodyBlock::PatternBodyBlock() :
 	GrooveboxMemoryBlock(0x40000000, "Pattern Body Data", "1-6", 0x00000000),
@@ -1549,7 +1551,14 @@ void PatternBodyBlock::loadMidiFile(File &file)
 				int size = current->message.getSysExDataSize();
 				const uint8* data = current->message.getSysExData();
 				ScopedPointer<SyxMsg> msg = new SyxMsg(data, size, false);
-				grooveboxMemory->handleSysEx(msg);
+				if (msg->getType() == SyxMsg::Type_DT1)
+				{
+					grooveboxMemory->handleSysEx(msg);
+				}
+				else if (msg->getType() == SyxMsg::Type_DT1_Quick)
+				{
+					quickSysEx->handleSysEx(msg);					
+				}
 			}
 		}
 		else //if ((unsigned long) current->message.getTimeStamp() >= patternBodyStartTickInMidi)

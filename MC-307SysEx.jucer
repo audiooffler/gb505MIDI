@@ -311,6 +311,8 @@
               file="Source/GrooveboxMemory/PatternSetupBlock.cpp"/>
         <FILE id="ria7JC" name="PatternSetupBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/PatternSetupBlock.h"/>
+        <FILE id="B1c1fe" name="QuickSysExBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/QuickSysExBlock.cpp"/>
         <FILE id="ndMYwY" name="QuickSysExBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/QuickSysExBlock.h"/>
         <FILE id="BRrZZr" name="RhythmSetBlock.h" compile="0" resource="0"

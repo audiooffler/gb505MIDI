@@ -524,7 +524,7 @@ MidiMessageSequence PatternSetupConfigBlock::getInitalMuteStates(uint8 deviceId)
 	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String("PART R: ") + (patternSetupConfigPtr->isPartMute(pattern_part) ? "MUTED" : "ON")), 0.0);
 	messages.addEvent(getPartMuteSysEx(deviceId, part), 0.0);
 
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 7; i++)
 	{
 		pattern_part = (PatternBodyBlock::PatternPart)i;
 		part = (AllParts)i;
