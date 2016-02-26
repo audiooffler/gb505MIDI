@@ -1056,6 +1056,7 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 // calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
 void PatternBodyBlock::refreshRelativeTickIncrements()
 {
+	if (m_lengthInMeasures < 1) return;
 	// delete all existing INC events (they might not be up-to-date)
 	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--) { if (m_sequenceBlocks[i]->getType() == Evt_TickInc) { m_sequenceBlocks.remove(i); } }
 
@@ -1068,7 +1069,7 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 	// if empty sequence: add INCs
 	if (m_sequenceBlocks.size() == 0)
 	{
-		delta = patternEnd - currentAbsoluteTick;
+		delta = jmax<unsigned long>(patternEnd - currentAbsoluteTick, 0);
 		for (unsigned int j = 0; j < (delta / 0xFF); j++)
 		{
 			m_sequenceBlocks.add(new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
@@ -1087,7 +1088,7 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 		{
 			if (i == 0) // at start, before first
 			{
-				delta = m_sequenceBlocks[0]->absoluteTick - patternStart;
+				delta = jmax<unsigned long>(m_sequenceBlocks[0]->absoluteTick - patternStart, 0);
 				for (unsigned int j = 0; j < (delta / 0xFF); j++)
 				{
 					m_sequenceBlocks.insert(i,new PatternEventData(currentAbsoluteTick, 0xFF, 0x80, 0x00));
@@ -1104,7 +1105,7 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 
 			}
 			// till next or end
-			delta = ((i + 1) < m_sequenceBlocks.size() ? m_sequenceBlocks[i + 1]->absoluteTick : patternEnd) - currentAbsoluteTick;
+			delta = jmin<unsigned long>(((i + 1) < m_sequenceBlocks.size() ? m_sequenceBlocks[i + 1]->absoluteTick : patternEnd) - currentAbsoluteTick, patternEnd);
 			unsigned int num255s = delta / 0xFF;
 			unsigned int rest = delta % 0xFF;
 
@@ -1164,7 +1165,19 @@ void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature, bool refres
 
 void PatternBodyBlock::setLengthInMeasures(uint8 measures, bool refreshTickIncrements /*= true*/)
 {
-	m_lengthInMeasures = measures;
+	// get measure for last sequence entry to set the minimum
+	uint8 minimum = 1;
+	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--)
+	{
+		if (m_sequenceBlocks[i]->getType() != Evt_TickInc)
+		{
+			const uint8 oneBeatLengthInTicks = getTicksPerBeat();
+			const unsigned int oneMeasureLengthInTicks = m_beatSigNumerator * oneBeatLengthInTicks;
+			minimum = (uint8)ceil((double)m_sequenceBlocks[i]->absoluteTick / oneMeasureLengthInTicks);
+			break;
+		}
+	}
+	m_lengthInMeasures = jmax<uint8>(measures,minimum);
 	if (refreshTickIncrements) refreshRelativeTickIncrements();
 }
 
