@@ -233,6 +233,7 @@ private:
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 	HashMap<int, String> m_midiCCNames;
+	HashMap<int, String> m_keyDrumGroupes;
 	uint8 m_beatSigNumerator = 4; // = beats per measure
 	uint8 m_beatSigDenominator = 4;
 	uint8 m_lengthInMeasures = 4;

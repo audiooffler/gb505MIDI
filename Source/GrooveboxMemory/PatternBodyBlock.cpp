@@ -56,9 +56,13 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesOff)->addChangeListener(this);
 	m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewInc)->addChangeListener(this);
 
+	m_midiCCNames.set(0, "BANK SEL MSB");
+	m_midiCCNames.set(1, "MODULATION");
 	m_midiCCNames.set(5, "PORTA TIME");
+	m_midiCCNames.set(6, "RPN DATA MSB");
 	m_midiCCNames.set(7, "PART LEVEL");
 	m_midiCCNames.set(10, "PART PAN");
+	m_midiCCNames.set(11, "EXPRESSION");
 	m_midiCCNames.set(15, "LFO1 WAVE");
 	m_midiCCNames.set(16, "LFO1 RATE");
 	m_midiCCNames.set(18, "LFO1->PITCH");
@@ -70,13 +74,19 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_midiCCNames.set(28, "F-ENV S");
 	m_midiCCNames.set(29, "F-ENV R");
 	m_midiCCNames.set(31, "A-ENV S");
+	m_midiCCNames.set(32, "BANK SEL LSB");
 	m_midiCCNames.set(34, "FILTER TYPE");
 	m_midiCCNames.set(35, "TONE PAN");
 	m_midiCCNames.set(36, "TONE LVL");
 	m_midiCCNames.set(37, "RND PAN");
+	m_midiCCNames.set(38, "RPN DATA LSB");
 	m_midiCCNames.set(39, "P-ENV S");
 	m_midiCCNames.set(40, "P-ENV R");
+	m_midiCCNames.set(64, "HOLD-1");
 	m_midiCCNames.set(65, "PORTA SW");
+	m_midiCCNames.set(66, "SOSTENUTO");
+	m_midiCCNames.set(67, "SOFT");
+	m_midiCCNames.set(69, "HOLD-2");
 	m_midiCCNames.set(71, "FILTER RES");
 	m_midiCCNames.set(72, "A-ENV R");
 	m_midiCCNames.set(73, "A-ENV A");
@@ -87,12 +97,29 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_midiCCNames.set(81, "F-ENV-DEPTH");
 	m_midiCCNames.set(82, "F-ENV A");
 	m_midiCCNames.set(83, "F-ENV D");
+	m_midiCCNames.set(84, "PORTA CTRL");
 	m_midiCCNames.set(85, "KEY SHIFT");
 	m_midiCCNames.set(86, "M-FX SW");
 	m_midiCCNames.set(91, "REVERB");
 	m_midiCCNames.set(94, "DELAY");
+	m_midiCCNames.set(100, "RPN LSB");
+	m_midiCCNames.set(101, "RPN MSB");
+	m_midiCCNames.set(120, "ALL SOUNDS OFF");
+	m_midiCCNames.set(121, "RESET ALL CTRLS");
+	m_midiCCNames.set(123, "ALL NOTES OFF");
+	m_midiCCNames.set(124, "OMNI OFF");
+	m_midiCCNames.set(125, "OMNI ON");
 	m_midiCCNames.set(126, "SOLO ON");
 	m_midiCCNames.set(127, "SOLO OFF");
+
+	m_keyDrumGroupes.set(35, "BD"); m_keyDrumGroupes.set(36, "BD"); m_keyDrumGroupes.set(47, "BD"); m_keyDrumGroupes.set(48, "BD"); m_keyDrumGroupes.set(95, "BD"); m_keyDrumGroupes.set(96, "BD");
+	m_keyDrumGroupes.set(38, "SD"); m_keyDrumGroupes.set(40, "SD"); m_keyDrumGroupes.set(50, "SD"); m_keyDrumGroupes.set(52, "SD"); m_keyDrumGroupes.set(96, "SD"); m_keyDrumGroupes.set(98, "SD");
+	m_keyDrumGroupes.set(42, "HH"); m_keyDrumGroupes.set(44, "HH"); m_keyDrumGroupes.set(46, "HH"); m_keyDrumGroupes.set(54, "HH"); m_keyDrumGroupes.set(56, "HH"); m_keyDrumGroupes.set(58, "HH");
+	m_keyDrumGroupes.set(39, "CLP"); m_keyDrumGroupes.set(51, "CLP"); m_keyDrumGroupes.set(94, "CLP");
+	m_keyDrumGroupes.set(61, "CYM"); m_keyDrumGroupes.set(63, "CYM"); m_keyDrumGroupes.set(64, "CYM"); m_keyDrumGroupes.set(65, "CYM"); m_keyDrumGroupes.set(67, "CYM"); m_keyDrumGroupes.set(69, "CYM"); m_keyDrumGroupes.set(71, "CYM");
+	m_keyDrumGroupes.set(37, "PERC"); m_keyDrumGroupes.set(41, "PERC"); m_keyDrumGroupes.set(43, "PERC"); m_keyDrumGroupes.set(45, "PERC"); m_keyDrumGroupes.set(49, "PERC"); m_keyDrumGroupes.set(53, "PERC"); m_keyDrumGroupes.set(55, "PERC"); m_keyDrumGroupes.set(57, "PERC"); m_keyDrumGroupes.set(59, "PERC"); m_keyDrumGroupes.set(60, "PERC"); m_keyDrumGroupes.set(62, "PERC"); m_keyDrumGroupes.set(66, "PERC"); m_keyDrumGroupes.set(68, "PERC"); m_keyDrumGroupes.set(70, "PERC"); m_keyDrumGroupes.set(72, "PERC"); m_keyDrumGroupes.set(73, "PERC"); m_keyDrumGroupes.set(74, "PERC"); m_keyDrumGroupes.set(75, "PERC"); m_keyDrumGroupes.set(76, "PERC"); m_keyDrumGroupes.set(77, "PERC"); m_keyDrumGroupes.set(78, "PERC"); m_keyDrumGroupes.set(79, "PERC"); m_keyDrumGroupes.set(80, "PERC"); m_keyDrumGroupes.set(81, "PERC"); m_keyDrumGroupes.set(82, "PERC");
+	m_keyDrumGroupes.set(83, "HIT"); m_keyDrumGroupes.set(84, "HIT"); m_keyDrumGroupes.set(85, "HIT"); m_keyDrumGroupes.set(86, "HIT"); m_keyDrumGroupes.set(87, "HIT"); m_keyDrumGroupes.set(88, "HIT");
+	m_keyDrumGroupes.set(89, "OTHERS"); m_keyDrumGroupes.set(90, "OTHERS"); m_keyDrumGroupes.set(91, "OTHERS"); m_keyDrumGroupes.set(92, "OTHERS"); m_keyDrumGroupes.set(93, "OTHERS");
 
 	clearPattern();
 }
@@ -739,6 +766,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 			break;
 		case PatternBodyBlock::Col_EventType:
 			cellText = event->getTypeString();
+			if (event->getType() == Evt_Note && event->getPart() == PartR) cellText = m_keyDrumGroupes[event->bytes[1]] + " " + cellText;
 			break;
 		case PatternBodyBlock::Col_Raw2:
 			cellText = String::toHexString((int)event->bytes[2]).toUpperCase().paddedLeft('0', 2);
@@ -771,7 +799,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 				cellText = String(event->getPAftKeyString());
 				break;
 			case PatternBodyBlock::Evt_Cc:
-				cellText = String(event->getCcNo()) + " " + m_midiCCNames[event->getCcNo()];
+				cellText = String(event->getCcNo()) + " " + (m_midiCCNames[event->getCcNo()].isNotEmpty() ? m_midiCCNames[event->getCcNo()] : String(event->getCcNo()));
 				break;
 			case PatternBodyBlock::Evt_Pc:
 				cellText = String(event->getPcProgram());
@@ -1531,7 +1559,7 @@ void PatternBodyBlock::loadMidiFile(File &file)
 	setupConfig->setPatternLengthInMeasures(numMeasures);
 	setupConfig->getParameter(0x12)->sendChangeMessage();
 	this->setLengthInMeasures(numMeasures, false);
-
+	bool beforeFirstNoteOnChannel[10] = { true, true, true, true, true, true, true, true, true, true}; // for channel 1 2 3 4 5 6 7 8 9 R
 	m_sequenceBlocks.clear();
 	// iterate and load messages into pattern setup and body, when loading body data decrease time stamp by offset of patternBodyStartTickInMidi
 	for (int i = 0; i < mergedSequence.getNumEvents(); i++)
@@ -1539,12 +1567,44 @@ void PatternBodyBlock::loadMidiFile(File &file)
 		current = mergedSequence.getEventPointer(i);
 		if (current == nullptr) continue;
 
-		// body data
+		// setup data if some setup measures inserted before pattern body
 		if ((unsigned long)current->message.getTimeStamp() < patternBodyStartTickInMidi)
 		{
 			if (current->message.isController())
 			{
-				grooveboxMemory->handleCCFromGroovebox((uint8)current->message.getChannel(), (uint8)current->message.getControllerNumber(), (uint8) current->message.getControllerValue());
+				uint8 channel = (uint8)current->message.getChannel();
+				AllParts part = AllParts(channel - 1);
+				uint8 ccNo = (uint8)current->message.getControllerNumber();
+				uint8 val = (uint8)current->message.getControllerValue();
+				grooveboxMemory->handleCCFromGroovebox(channel, ccNo, val);
+				if ((part >= Part1 && part <= Part7) || part == PartR)
+				{
+					PatternSetupPartBlock* setupPart = grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(part);
+					switch (ccNo)
+					{
+					case 0:setupPart->getParameter(0x00)->setValue(val, Parameter::Init); break; // cc0 -> bank sel msb
+					case 32:setupPart->getParameter(0x01)->setValue(val, Parameter::Init); break; // cc32 -> bank sel lsb
+					case 7:setupPart->getParameter(0x03)->setValue(val, Parameter::Init); break; // cc0 -> vol
+					case 10:setupPart->getParameter(0x04)->setValue(val, Parameter::Init); break; // cc0 -> vol
+					case 85:setupPart->getParameter(0x05)->setValue(val, Parameter::Init); break; // cc85 -> key shift
+					case 91:setupPart->getParameter(0x06)->setValue(val, Parameter::Init); break; // cc91 -> reverb
+					case 94:setupPart->getParameter(0x07)->setValue(val, Parameter::Init); break; // cc94 -> delay
+					case 86:setupPart->getParameter(0x08)->setValue(val, Parameter::Init); break; // cc86 -> m-fx switch 
+					default: break;
+					}
+					
+				}
+			}
+			else if (current->message.isProgramChange())
+			{
+				uint8 channel = (uint8)current->message.getChannel();
+				AllParts part = AllParts(channel - 1);
+				uint8 progNo = (uint8)current->message.getProgramChangeNumber();
+				if ((part >= Part1 && part <= Part7) || part == PartR)
+				{
+					PatternSetupPartBlock* setupPart = grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(part);
+					setupPart->getParameter(0x02)->setValue(progNo, Parameter::Init); // pc
+				}
 			}
 			else if (current->message.isSysEx())
 			{
@@ -1561,9 +1621,10 @@ void PatternBodyBlock::loadMidiFile(File &file)
 				}
 			}
 		}
-		else //if ((unsigned long) current->message.getTimeStamp() >= patternBodyStartTickInMidi)
+		else // body data if ((unsigned long) current->message.getTimeStamp() >= patternBodyStartTickInMidi)
 		{
-			
+			uint8 channel = (uint8) current->message.getChannel();
+			AllParts part = (AllParts) (channel-1);
 			if (current->message.isNoteOn() || 
 				current->message.isController() || 
 				current->message.isProgramChange() || 
@@ -1571,13 +1632,47 @@ void PatternBodyBlock::loadMidiFile(File &file)
 				current->message.isChannelPressure() || 
 				current->message.isPitchWheel())
 			{
-				unsigned long absTicks = (unsigned long)current->message.getTimeStamp() - patternBodyStartTickInMidi;
-				if (PatternEventData* newEvent = new PatternEventData(absTicks, current))
+				// if no setup measure(s) and if before first note in this channel:
+				if (current->message.isController() && patternBodyStartTickInMidi == 0 && beforeFirstNoteOnChannel[part])
+				{
+					uint8 ccNo = (uint8)current->message.getControllerNumber();
+					uint8 val = (uint8)current->message.getControllerValue();
+					if ((part >= Part1 && part <= Part7) || part == PartR)
+					{
+						PatternSetupPartBlock* setupPart = grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(part);
+						switch (ccNo)
+						{
+						case 0:setupPart->getParameter(0x00)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc0 -> bank sel msb
+						case 32:setupPart->getParameter(0x01)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc32 -> bank sel lsb
+						case 7:setupPart->getParameter(0x03)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--;  break; // cc0 -> vol
+						case 10:setupPart->getParameter(0x04)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc0 -> vol
+						case 85:setupPart->getParameter(0x05)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc85 -> key shift
+						case 91:setupPart->getParameter(0x06)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc91 -> reverb
+						case 94:setupPart->getParameter(0x07)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc94 -> delay
+						case 86:setupPart->getParameter(0x08)->setValue(val, Parameter::Init); mergedSequence.deleteEvent(i, false); if (i>0) i--; break; // cc86 -> m-fx switch 
+						default: break;
+						}
+						grooveboxMemory->handleCCFromGroovebox(channel, ccNo, val);
+					}
+				}
+				else if (current->message.isProgramChange() && patternBodyStartTickInMidi == 0 && beforeFirstNoteOnChannel[part])
+				{
+					uint8 progNo = (uint8)current->message.getProgramChangeNumber();
+					if ((part >= Part1 && part <= Part7) || part == PartR)
+					{
+						PatternSetupPartBlock* setupPart = grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(part);
+						setupPart->getParameter(0x02)->setValue(progNo, Parameter::Init); // pc
+						mergedSequence.deleteEvent(i, false); if (i>0) i--; // remove current pc message
+					}
+				}
+				else
+					if (PatternEventData* newEvent = new PatternEventData((unsigned long)current->message.getTimeStamp() - patternBodyStartTickInMidi /*absTicks*/, current))
 				{
 					if (newEvent->getType() == PatternEventType::Evt_Unknown)
 						delete newEvent;
 					else
 						m_sequenceBlocks.add(newEvent);
+					if (current->message.isNoteOnOrOff()) beforeFirstNoteOnChannel[part] = false;
 				}
 			}
 		}

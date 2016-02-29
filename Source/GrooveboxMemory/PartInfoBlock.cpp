@@ -699,7 +699,7 @@ Preset B JX-305			82	0		0					4
 Preset B MC-307			83	0		0					4
 Preset B D2				84	0		0					4
 User					85	0		3					1
-Card					86	0		3					2	guessed
+Card					86	0		3					3	s
 */
 
 String PartInfoPartBlock::getPatchGroupNameByTypeAndID(uint8 patchGroupType, uint8 patchGroupId)
@@ -709,7 +709,7 @@ String PartInfoPartBlock::getPatchGroupNameByTypeAndID(uint8 patchGroupType, uin
 		if (patchGroupType == 0 && patchGroupId == 3) return "Preset A";
 		else if (patchGroupType == 0 && patchGroupId == 4) return "Preset B";
 		else if (patchGroupType == 3 && patchGroupId == 1) return "User";
-		else if (patchGroupType == 3 && patchGroupId == 2) return "Card"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+		else if (patchGroupType == 3 && patchGroupId == 3) return "Card"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
 	}
 	else
 	{
@@ -756,7 +756,7 @@ void PartInfoPartBlock::getBankSelMSB_LSBforGroup(uint8 patchGroupType, uint8 pa
 			{
 				msb = 85;
 			}
-			else if (patchGroupId == 2) // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+			else if (patchGroupId == 3) // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
 			{
 				msb = 86;
 			}
@@ -817,7 +817,7 @@ void PartInfoPartBlock::getGroupFromBankSelMSB_LSB(uint8 msb, uint8 lsb, uint8 &
 			case 83: patchGroupType = 0; patchGroupId = 4; break; // Preset B MC-307
 			case 84: patchGroupType = 0; patchGroupId = 4; break; // Preset B D2
 			case 85: patchGroupType = 3; patchGroupId = 1; break; // User
-			case 86: patchGroupType = 3; patchGroupId = 2; break; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
+			case 86: patchGroupType = 3; patchGroupId = 3; break; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
 			}
 		}
 	}
