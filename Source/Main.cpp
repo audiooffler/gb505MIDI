@@ -53,7 +53,7 @@ public:
 
         // This method is where you should put your application's initialisation code..
 
-		splashScreen = new GrooveboxSplashScreen("", 480, 320, true);
+		splashScreen = new GrooveboxSplashScreen("STARTING UP" + String(CharPointer_UTF8("\xe2\x80\xa6")), 480, 320, true);
 		
 
 		#if JUCE_OPENGL
@@ -89,7 +89,7 @@ public:
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
 		mainWindow->getContentComponent()->grabKeyboardFocus();
-		splashScreen->deleteAfterDelay(RelativeTime::seconds(7.0), true);
+		deleteAndZero(splashScreen);
     }
 
     void shutdown()
@@ -112,6 +112,7 @@ public:
 		deleteAndZero(waveForms);
 		if (grooveboxMemory!=nullptr) deleteAndZero(grooveboxMemory);
 		deleteAndZero(applicationCommandManager);
+		if (splashScreen != nullptr) deleteAndZero(splashScreen);
 		// deletes itself, dont uncomment this!: deleteAndZero(splashScreen);
     }
 

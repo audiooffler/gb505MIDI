@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -30,33 +30,52 @@
 GrooveboxSplashScreen::GrooveboxSplashScreen (const String &title, int width, int height, bool useDropShadow)
     : SplashScreen(title, width, height, useDropShadow)
 {
-    addAndMakeVisible (component = new PanelGroupGrey ("splashGrp","STARTING UP..."));
-    addAndMakeVisible (imageButton = new ImageButton ("new button"));
-    imageButton->setButtonText (String::empty);
-    imageButton->addListener (this);
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
 
-    imageButton->setImages (false, true, true,
-                            ImageCache::getFromMemory (grooveboxLogo_png, grooveboxLogo_pngSize), 1.000f, Colour (0x00000000),
-                            Image(), 1.000f, Colour (0x00000000),
-                            Image(), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (imageButton2 = new ImageButton ("new button"));
-    imageButton2->setButtonText (String::empty);
-    imageButton2->addListener (this);
+    addAndMakeVisible (m_groupComponent = new PanelGroupGrey ("splashGrp", title));
+    addAndMakeVisible (m_rolandGrooveboxImageButton = new ImageButton ("rolandGrooveboxImageButton"));
+    m_rolandGrooveboxImageButton->setButtonText (String());
+    m_rolandGrooveboxImageButton->addListener (this);
 
-    imageButton2->setImages (false, true, true,
-                             ImageCache::getFromMemory (icon_png, icon_pngSize), 1.000f, Colour (0x00000000),
-                             Image(), 1.000f, Colour (0x00000000),
-                             Image(), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (component2 = new ProgressBar (m_progress));
-    component2->setName ("new component");
+    m_rolandGrooveboxImageButton->setImages (false, true, true,
+                                             ImageCache::getFromMemory (grooveboxLogo_png, grooveboxLogo_pngSize), 1.000f, Colour (0x00000000),
+                                             Image(), 1.000f, Colour (0x00000000),
+                                             Image(), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (m_gbMidiImageButton = new ImageButton ("gbMidiImageButton"));
+    m_gbMidiImageButton->setButtonText (String());
+    m_gbMidiImageButton->addListener (this);
 
-    addAndMakeVisible (label = new Label ("new label",
-                                          TRANS("STARTING UP...")));
-    label->setFont (Font (12.00f, Font::bold));
-    label->setJustificationType (Justification::centredLeft);
-    label->setEditable (false, false, false);
-    label->setColour (TextEditor::textColourId, Colours::black);
-    label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_gbMidiImageButton->setImages (false, true, true,
+                                    ImageCache::getFromMemory (icon_png, icon_pngSize), 1.000f, Colour (0x00000000),
+                                    Image(), 1.000f, Colour (0x00000000),
+                                    Image(), 1.000f, Colour (0x00000000));
+    addAndMakeVisible (m_descrLabel = new Label ("descrLabel",
+                                                 CharPointer_UTF8 ("MIDI CONTROL YOUR ROLAND\xc2\xae MC-505, JX-305, MC-307, or D2")));
+    m_descrLabel->setFont (Font (12.00f, Font::bold));
+    m_descrLabel->setJustificationType (Justification::centred);
+    m_descrLabel->setEditable (false, false, false);
+    m_descrLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_descrLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_authorLabel = new Label ("authorLabel",
+                                                  CharPointer_UTF8 ("\xc2\xa9 MARTIN SPINDLER, 2016\n"
+                                                  "\n"
+                                                  "SHARED UNDER GNU PUBLIC LICENCE")));
+    m_authorLabel->setFont (Font (12.00f, Font::bold));
+    m_authorLabel->setJustificationType (Justification::centred);
+    m_authorLabel->setEditable (false, false, false);
+    m_authorLabel->setColour (Label::outlineColourId, Colours::black);
+    m_authorLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_authorLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_rolandTmLabel = new Label ("new label",
+                                                    TRANS("ROLAND AND THE ROLAND LOGO ARE TRADEMARKS OF ROLAND CORPORATION.")));
+    m_rolandTmLabel->setFont (Font (12.00f, Font::bold));
+    m_rolandTmLabel->setJustificationType (Justification::centred);
+    m_rolandTmLabel->setEditable (false, false, false);
+    m_rolandTmLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_rolandTmLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
 
     //[UserPreSize]
@@ -66,11 +85,7 @@ GrooveboxSplashScreen::GrooveboxSplashScreen (const String &title, int width, in
 
 
     //[Constructor] You can add your own custom stuff here..
-	component->setBounds(0, 0, getWidth() - 0, getHeight() - 0);
-	imageButton->setBounds(80, 44, 320, 77);
-	imageButton2->setBounds(208, (44) + (77) - -16, 64, 64);
-	component2->setBounds(16, 248, 448, 18);
-	label->setBounds(40, 280, 400, 24);
+	resized();
     //[/Constructor]
 }
 
@@ -79,11 +94,12 @@ GrooveboxSplashScreen::~GrooveboxSplashScreen()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    component = nullptr;
-    imageButton = nullptr;
-    imageButton2 = nullptr;
-    component2 = nullptr;
-    label = nullptr;
+    m_groupComponent = nullptr;
+    m_rolandGrooveboxImageButton = nullptr;
+    m_gbMidiImageButton = nullptr;
+    m_descrLabel = nullptr;
+    m_authorLabel = nullptr;
+    m_rolandTmLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -105,11 +121,15 @@ void GrooveboxSplashScreen::paint (Graphics& g)
 
 void GrooveboxSplashScreen::resized()
 {
-    component->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
-    imageButton->setBounds (80, 44, 320, 77);
-    imageButton2->setBounds (208, (44) + (77) - -16, 64, 64);
-    component2->setBounds (16, 256, 448, 18);
-    label->setBounds (40, 280, 400, 24);
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
+    m_groupComponent->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
+    m_rolandGrooveboxImageButton->setBounds (80, 40, 320, 77);
+    m_gbMidiImageButton->setBounds (208, 40 + 77 - 5, 64, 64);
+    m_descrLabel->setBounds (40, 184, 400, 24);
+    m_authorLabel->setBounds (40, 216, 400, 48);
+    m_rolandTmLabel->setBounds (8, 280, getWidth() - 16, 24);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -119,15 +139,15 @@ void GrooveboxSplashScreen::buttonClicked (Button* buttonThatWasClicked)
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == imageButton)
+    if (buttonThatWasClicked == m_rolandGrooveboxImageButton)
     {
-        //[UserButtonCode_imageButton] -- add your button handler code here..
-        //[/UserButtonCode_imageButton]
+        //[UserButtonCode_m_rolandGrooveboxImageButton] -- add your button handler code here..
+        //[/UserButtonCode_m_rolandGrooveboxImageButton]
     }
-    else if (buttonThatWasClicked == imageButton2)
+    else if (buttonThatWasClicked == m_gbMidiImageButton)
     {
-        //[UserButtonCode_imageButton2] -- add your button handler code here..
-        //[/UserButtonCode_imageButton2]
+        //[UserButtonCode_m_gbMidiImageButton] -- add your button handler code here..
+        //[/UserButtonCode_m_gbMidiImageButton]
     }
 
     //[UserbuttonClicked_Post]
@@ -155,29 +175,36 @@ BEGIN_JUCER_METADATA
                  snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="480" initialHeight="320">
   <BACKGROUND backgroundColour="0"/>
-  <JUCERCOMP name="" id="f74e793e15cd174a" memberName="component" virtualName=""
-             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
-             constructorParams="&quot;splashGrp&quot;,&quot;STARTING UP...&quot;"/>
-  <IMAGEBUTTON name="new button" id="c697bab31dc307c2" memberName="imageButton"
-               virtualName="" explicitFocusOrder="0" pos="80 44 320 77" buttonText=""
+  <JUCERCOMP name="groupComponent" id="f74e793e15cd174a" memberName="m_groupComponent"
+             virtualName="" explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             constructorParams="&quot;splashGrp&quot;, title"/>
+  <IMAGEBUTTON name="rolandGrooveboxImageButton" id="c697bab31dc307c2" memberName="m_rolandGrooveboxImageButton"
+               virtualName="" explicitFocusOrder="0" pos="80 40 320 77" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="grooveboxLogo_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
                opacityDown="1" colourDown="0"/>
-  <IMAGEBUTTON name="new button" id="948a9289594f2999" memberName="imageButton2"
-               virtualName="" explicitFocusOrder="0" pos="208 -16R 64 64" posRelativeY="c697bab31dc307c2"
+  <IMAGEBUTTON name="gbMidiImageButton" id="948a9289594f2999" memberName="m_gbMidiImageButton"
+               virtualName="" explicitFocusOrder="0" pos="208 5R 64 64" posRelativeY="c697bab31dc307c2"
                buttonText="" connectedEdges="0" needsCallback="1" radioGroupId="0"
                keepProportions="1" resourceNormal="icon_png" opacityNormal="1"
                colourNormal="0" resourceOver="" opacityOver="1" colourOver="0"
                resourceDown="" opacityDown="1" colourDown="0"/>
-  <GENERICCOMPONENT name="new component" id="5b571ad881590856" memberName="component2"
-                    virtualName="" explicitFocusOrder="0" pos="16 256 448 18" class="ProgressBar"
-                    params="m_progress"/>
-  <LABEL name="new label" id="dd1ba2da819166c1" memberName="label" virtualName=""
-         explicitFocusOrder="0" pos="40 280 400 24" edTextCol="ff000000"
-         edBkgCol="0" labelText="STARTING UP..." editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
+  <LABEL name="descrLabel" id="cc75401b922e1a2a" memberName="m_descrLabel"
+         virtualName="" explicitFocusOrder="0" pos="40 184 400 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="MIDI CONTROL YOUR ROLAND&#174; MC-505, JX-305, MC-307, or D2"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
+  <LABEL name="authorLabel" id="c1cc91fa58fbae67" memberName="m_authorLabel"
+         virtualName="" explicitFocusOrder="0" pos="40 216 400 48" outlineCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="&#169; MARTIN SPINDLER, 2016&#10;&#10;SHARED UNDER GNU PUBLIC LICENCE"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
+  <LABEL name="new label" id="360e85704d7c068f" memberName="m_rolandTmLabel"
+         virtualName="" explicitFocusOrder="0" pos="8 280 16M 24" edTextCol="ff000000"
+         edBkgCol="0" labelText="ROLAND AND THE ROLAND LOGO ARE TRADEMARKS OF ROLAND CORPORATION."
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

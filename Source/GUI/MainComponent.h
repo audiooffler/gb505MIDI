@@ -60,7 +60,8 @@ public:
 		gotoPartRTab = 0xF10,
 		gotoMixerTab = 0xF20,
 		gotoPatternTab = 0xF30,
-		gotoPatternEditorTab = 0xF31
+		gotoPatternEditorTab = 0xF31,
+		showInfo = 0xF50
 	};
 	ApplicationCommandTarget* getNextCommandTarget() override;
 	void getAllCommands(Array <CommandID>& commands) override;
@@ -99,6 +100,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+	void showInfoDlg();
     //[/UserVariables]
 
     //==============================================================================

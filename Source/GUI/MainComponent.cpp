@@ -23,6 +23,7 @@
 #include "PatchEditor.h"
 #include "MidiLoggerTab.h"
 #include "PatternEditorTab.h"
+#include "GrooveboxSplashScreen.h"
 //[/Headers]
 
 #include "MainComponent.h"
@@ -167,7 +168,8 @@ void MainComponent::getAllCommands(Array <CommandID>& commands)
 		CommandIDs::gotoPart5Tab,
 		CommandIDs::gotoPart6Tab,
 		CommandIDs::gotoPart7Tab,
-		CommandIDs::gotoPartRTab
+		CommandIDs::gotoPartRTab,
+		CommandIDs::showInfo
 	};
 	commands.addArray(ids, numElementsInArray(ids));
 }
@@ -221,6 +223,11 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo& 
 	case CommandIDs::gotoPatternEditorTab:
 		result.setInfo("Pattern Editor", "Opens the pattern event table", gotoTabCategory, 0);
 		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
+		break;
+	case CommandIDs::showInfo:
+		result.setInfo("Info", "Show info about this application", "info", 0);
+		result.addDefaultKeypress('i', ModifierKeys::commandModifier);
+		break;
 	default:
 		break;
 	}
@@ -264,6 +271,9 @@ bool MainComponent::perform(const InvocationInfo& info)
 	case CommandIDs::gotoPartRTab:
 		setCurrentTabIndex(11, true);
 		break;
+	case CommandIDs::showInfo:
+		showInfoDlg();
+		break;
 	default:
 		return false;
 	}
@@ -298,14 +308,20 @@ void MainComponent::buttonClicked(Button* buttonThatWasClicked)
 		// load commands from main component (this)
 		Array <CommandID> commandsOfMainComponent;
 		getAllCommands(commandsOfMainComponent);
-		for (int* currentCommandPtr = commandsOfMainComponent.begin(); currentCommandPtr < commandsOfMainComponent.end(); currentCommandPtr++)
+		for (int i = 0; i < commandsOfMainComponent.size(); i++)
 		{
-			gotoViewMenu.addCommandItem(applicationCommandManager, *currentCommandPtr);
+			int currentCommand = commandsOfMainComponent[i];
+			if (currentCommand >= gotoPart1Tab && currentCommand < CommandIDs::showInfo)
+			{
+				gotoViewMenu.addCommandItem(applicationCommandManager, currentCommand);
+			}
 		}
 
 		menu.addSubMenu("Go to view", gotoViewMenu);
 
 		menu.addSeparator();
+
+		menu.addCommandItem(applicationCommandManager, CommandIDs::showInfo);
 
 		// quit command from application instance
 		menu.addCommandItem(applicationCommandManager, StandardApplicationCommandIDs::quit);
@@ -314,6 +330,18 @@ void MainComponent::buttonClicked(Button* buttonThatWasClicked)
 	}
 }
 
+void MainComponent::showInfoDlg()
+{
+	GrooveboxSplashScreen* splashScreen = new GrooveboxSplashScreen("INFO", 480, 320, true);
+	OptionalScopedPointer<Component> splashScreenPtr(splashScreen, true);
+	DialogWindow::LaunchOptions options;
+	options.dialogTitle = "INFO";
+	options.content = splashScreenPtr;
+	options.escapeKeyTriggersCloseButton = true;
+	options.resizable = false;
+	options.launchAsync();
+
+}
 //[/MiscUserCode]
 
 

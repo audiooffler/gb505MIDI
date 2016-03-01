@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -47,9 +47,9 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void buttonClicked (Button* buttonThatWasClicked);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* grooveboxLogo_png;
@@ -60,15 +60,16 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	double m_progress;
+	double m_progress=-1.0;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<PanelGroupGrey> component;
-    ScopedPointer<ImageButton> imageButton;
-    ScopedPointer<ImageButton> imageButton2;
-    ScopedPointer<ProgressBar> component2;
-    ScopedPointer<Label> label;
+    ScopedPointer<PanelGroupGrey> m_groupComponent;
+    ScopedPointer<ImageButton> m_rolandGrooveboxImageButton;
+    ScopedPointer<ImageButton> m_gbMidiImageButton;
+    ScopedPointer<Label> m_descrLabel;
+    ScopedPointer<Label> m_authorLabel;
+    ScopedPointer<Label> m_rolandTmLabel;
 
 
     //==============================================================================
