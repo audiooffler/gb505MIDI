@@ -1,2 +1,12 @@
 # gb505MIDI
-Patch and Pattern Tool for Roland MC-505, MC-307, JX-305 and D2, based on SysEx communication.
+
+MIDI CONTROL YOUR ROLAND® MC-505, JX-305, MC-307, or D2
+
+A Patch Editing and Pattern Coversion Tool 
+for Roland MC-505, MC-307, JX-305 and D2, based on MIDI SysEx communication.
+
+© MARTIN SPINDLER, 2016
+
+SHARED UNDER GNU PUBLIC LICENCE
+
+ROLAND AND THE ROLAND LOGO ARE TRADEMARKS OF ROLAND CORPORATION.
