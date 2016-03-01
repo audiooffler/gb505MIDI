@@ -1101,6 +1101,22 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 	return true;
 }
 
+bool PatternBodyBlock::isPatternEmpty()
+{
+	if (m_sequenceBlocks.size() == 0) return true; 
+	else
+	{
+		for (int i = 0; i<m_sequenceBlocks.size(); i++)
+		{
+			if (m_sequenceBlocks[i]->getType() != PatternEventType::Evt_TickInc)
+			{
+				return false;
+			}
+		}
+	}
+	return true;
+}
+
 // calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
 void PatternBodyBlock::refreshRelativeTickIncrements()
 {
@@ -1683,4 +1699,36 @@ void PatternBodyBlock::loadMidiFile(File &file)
 
 	// calculate realative ticks and insert tick increments
 	refreshRelativeTickIncrements();
+}
+
+bool PatternBodyBlock::saveRawBinary(File& file)
+{
+	if (file.existsAsFile()) file.deleteFile();	// overwrite!
+
+	PatternBodyBlock::PatternEventData* event = nullptr;
+	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	{
+		event = m_sequenceBlocks[i];
+		// skip events that were built after loading
+		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
+		
+		file.appendData(event->bytes, 8);
+	}
+	return true;
+}
+
+bool PatternBodyBlock::saveRawCsv(File& file)
+{
+	if (file.existsAsFile()) file.deleteFile();	// overwrite!
+
+	PatternBodyBlock::PatternEventData* event = nullptr;
+	for (int i = 0; i < m_sequenceBlocks.size(); i++)
+	{
+		event = m_sequenceBlocks[i];
+		// skip events that were built after loading
+		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
+
+		file.appendText(String::toHexString(event->bytes, 8).toUpperCase() + (i + 1 < m_sequenceBlocks.size() ? "\r\n" : ""));
+	}
+	return true;
 }

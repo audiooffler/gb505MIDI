@@ -65,6 +65,7 @@ public:
 		fileSavePatternSyxFile = 0x2102,
 		fileImportPatternSmfFile = 0x2111,
 		fileExportPatternSmfFile = 0x2112,
+		fileSavePatternBinFile = 0x2124,
 		grooveBoxLoadPattern = 0x3101
 	};
 	// This must return the next target to try after this one.
@@ -78,6 +79,7 @@ public:
 
 	void loadSysExFile();
 	void saveSysExFile();
+	void saveRawBinaryFile();
 	void exportAsMidiFile();
 	void importMidiFile();
     //[/UserMethods]

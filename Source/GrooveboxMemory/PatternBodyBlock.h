@@ -204,7 +204,7 @@ public:
 	// returns true, if event is to be shown according to VirtualPatternTableFilterBlock m_patternTableFilterParams
 	bool filter(PatternEventData* event) const;
 
-	bool isPatternEmpty(){ return m_sequenceBlocks.size() == 0; }
+	bool isPatternEmpty();
 
 	// calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
 	void refreshRelativeTickIncrements();
@@ -226,6 +226,9 @@ public:
 
 	// get data request messages from this block and its sub blocks, the result is added to the array specified in the parameter, overridden for serializing pattern data
 	void createBlockSendMessages(OwnedArray<SyxMsg, CriticalSection>* syxMsgArrayPtr) override;
+
+	bool saveRawBinary(File& file);
+	bool saveRawCsv(File& file);
 
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each

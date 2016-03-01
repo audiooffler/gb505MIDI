@@ -451,7 +451,7 @@ bool QuickSysExBlock::handleSysEx(SyxMsg* msg)
 		}
 		else if (bbAddressDataH == 3)
 		{
-			// TODO: how does this quick sysex tempo work at all?!
+			// quick sysex tempo does not do anything -> tested it!
 		}
 	}
 	return true;

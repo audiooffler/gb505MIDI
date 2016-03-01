@@ -165,7 +165,7 @@ void GrooveboxConnector::handleIncomingMidiMessage(MidiInput* input, const MidiM
 		}
 		else if (msg.isSysEx())
 		{
-			SyxMsg* syxMsg = new SyxMsg(msg);
+			ScopedPointer<SyxMsg> syxMsg = new SyxMsg(msg);
 			if (syxMsg->getDeviceId() == m_selectedDeviceId && syxMsg->isCheckSumOkay())
 			{
 				if (syxMsg->getType() == SyxMsg::Type_DT1)
@@ -174,27 +174,7 @@ void GrooveboxConnector::handleIncomingMidiMessage(MidiInput* input, const MidiM
 				}
 				else if (syxMsg->getType() == SyxMsg::Type_DT1_Quick)
 				{
-					uint32 address(syxMsg->get32BitAddress());
-					uint8* data;
-					uint32 length;
-					syxMsg->getSysExDataArrayPtr(&data, length);
-					// quick sysex for sequencer section
-					if (address >> 8 == 0x70)
-					{
-						// part mute 
-						if ((address & 0xFF) == 0x01)
-						{
-							// dataL is part, dataR is 0 (false) or 1 (true)
-							quickSysEx->mutePart((AllParts)data[0], data[1] == 1, Parameter::MidiInFromGroovebox);
-						}
-						// rhythm mute
-						else if ((address & 0xFF) == 0x02)
-						{
-							// dataL is rhythm group, dataR is 0 (false) or 1 (true)
-							quickSysEx->muteRhytm((RhythmGroup)data[0], data[1] == 1, Parameter::MidiInFromGroovebox);
-						}
-					}
-					delete syxMsg;
+					quickSysEx->handleSysEx(syxMsg);
 				}
 			}
 		}

@@ -983,6 +983,8 @@ void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
 		fileImportPatternSmfFile,
 		fileExportPatternSmfFile,
 		/* ---------------------- */
+		fileSavePatternBinFile,
+		/* ---------------------- */
 		grooveBoxLoadPattern
 	};
 	commands.addArray(ids, numElementsInArray(ids));
@@ -998,6 +1000,7 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 	case createEmptyPattern:
 		result.setInfo("New empty pattern", "Clears the pattern data", category, 0);
 		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
+		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
 	case fileOpenPatternSyxFile:
 		result.setInfo("Open SysEx Pattern File...", "Opens a raw pattern file, either binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
@@ -1005,7 +1008,7 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 		break;
 	case fileImportPatternSmfFile:
 		result.setInfo("Import Pattern from MIDI File", "Tries to extract pattern data from a Standard MIDI File (.mid)", category, 0);
-		result.addDefaultKeypress('i', ModifierKeys::commandModifier);
+		result.addDefaultKeypress('o', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 		result.setActive(true);
 		break;
 	case fileSavePatternSyxFile:
@@ -1016,6 +1019,11 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 	case fileExportPatternSmfFile:
 		result.setInfo("Export Pattern as MIDI...", "Converts pattern to Standard MIDI File (.mid)", category, 0);
 		result.addDefaultKeypress('s', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
+		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
+		break;
+	case fileSavePatternBinFile:
+		result.setInfo("Export Pattern as Binary...", "Saves the raw decoded pattern events as8 bytes a 8bit binary (.bin)", category, 0);
+		result.addDefaultKeypress('s', ModifierKeys::commandModifier | ModifierKeys::shiftModifier | ModifierKeys::altModifier);
 		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
 	case grooveBoxLoadPattern:
@@ -1046,6 +1054,9 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 		return true;
 	case CommandIDs::fileExportPatternSmfFile:
 		exportAsMidiFile();
+		return true;
+	case CommandIDs::fileSavePatternBinFile:
+		saveRawBinaryFile();
 		return true;
 	case CommandIDs::grooveBoxLoadPattern:
 		//loadFromGroovebox();
@@ -1109,6 +1120,38 @@ void PatternEditorTab::saveSysExFile()
 			else if (file.getFileExtension().toLowerCase() == ".txt")
 			{
 				writtenSucessfully = grooveboxMemory->saveHexTextSysExFile(file);
+			}
+			// load current pattern. if no success loading: show empty pattern
+			if (!writtenSucessfully)
+			{
+				AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error writing pattern data"), TRANS("No pattern or pattern data was written."));
+			}
+		}
+	}
+}
+
+void PatternEditorTab::saveRawBinaryFile()
+{
+	FileChooser fileChooser("Save raw binary pattern file (Binary or Hex Bin Text)", File::getSpecialLocation(File::userHomeDirectory), "*.bin;*.csv");
+	if (fileChooser.browseForFileToSave(true))
+	{
+		File file = fileChooser.getResult();
+		if (file.getFileExtension().toLowerCase() != ".bin" && file.getFileExtension().toLowerCase() != ".csv")
+		{
+			AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .bin\t(Binary)\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .csv\t(Hex Text)");
+		}
+		else
+		{
+			bool writtenSucessfully(false);
+			if (file.getFileExtension().toLowerCase() == ".bin")
+			{
+				writtenSucessfully = grooveboxMemory->getPatternBodyBlock()->saveRawBinary(file);
+			}
+			else if (file.getFileExtension().toLowerCase() == ".csv")
+			{
+				writtenSucessfully = grooveboxMemory->getPatternBodyBlock()->saveRawCsv(file);
 			}
 			// load current pattern. if no success loading: show empty pattern
 			if (!writtenSucessfully)

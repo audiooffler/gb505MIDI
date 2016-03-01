@@ -15,6 +15,7 @@
 #include "GrooveboxMemory/QuickSysExBlock.h"
 #include "GrooveboxMemory/Waveforms.h"
 #include "MIDIConnection/GrooveboxConnector.h"
+#include "GUI/GrooveboxSplashScreen.h"
 
 ApplicationProperties* appProperties;
 MidiInput* midiInputDevice;
@@ -29,6 +30,7 @@ QuickSysExBlock* quickSysEx;
 Waveforms* waveForms;
 ApplicationCommandManager* applicationCommandManager;
 OpenGLContext* openGlContext;
+GrooveboxSplashScreen* splashScreen;
 
 //==============================================================================
 class MC307SysExApplication  : public JUCEApplication
@@ -50,6 +52,9 @@ public:
 		//_CrtSetBreakAlloc(9552);
 
         // This method is where you should put your application's initialisation code..
+
+		splashScreen = new GrooveboxSplashScreen("", 480, 320, true);
+		
 
 		#if JUCE_OPENGL
 		if (openGlContext == nullptr)
@@ -84,6 +89,7 @@ public:
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
 		mainWindow->getContentComponent()->grabKeyboardFocus();
+		splashScreen->deleteAfterDelay(RelativeTime::seconds(7.0), true);
     }
 
     void shutdown()
