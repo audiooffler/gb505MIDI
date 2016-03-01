@@ -80,8 +80,8 @@ public:
 	{
 		if (button.hasKeyboardFocus(true))
 		{
-			g.setColour(button.findColour(TextEditor::focusedOutlineColourId));
-			g.drawRect(0, 0, button.getWidth(), button.getHeight());
+			//g.setColour(button.findColour(TextEditor::focusedOutlineColourId));
+			//g.drawRect(0, 0, button.getWidth(), button.getHeight());
 		}
 
 		float fontSize = jmin(15.0f, button.getHeight() * 0.75f);

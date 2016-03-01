@@ -47,19 +47,19 @@ MixPartTrack::MixPartTrack (AllParts part)
 
     addAndMakeVisible (m_panSlider = new Knob ("07"));
     m_panSlider->setRange (-64, 63, 1);
-    m_panSlider->setSliderStyle (Slider::Rotary);
+    m_panSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_panSlider->setTextBoxStyle (Slider::NoTextBox, false, 48, 16);
     m_panSlider->addListener (this);
 
     addAndMakeVisible (m_delaySlider = new Knob ("0C"));
     m_delaySlider->setRange (0, 127, 1);
-    m_delaySlider->setSliderStyle (Slider::Rotary);
+    m_delaySlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 48, 16);
     m_delaySlider->addListener (this);
 
     addAndMakeVisible (m_ReverbSlider = new Knob ("0D"));
     m_ReverbSlider->setRange (0, 127, 1);
-    m_ReverbSlider->setSliderStyle (Slider::Rotary);
+    m_ReverbSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_ReverbSlider->setTextBoxStyle (Slider::NoTextBox, false, 48, 16);
     m_ReverbSlider->addListener (this);
 
@@ -226,19 +226,19 @@ void MixPartTrack::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_mixLevel->setBounds (20, 284, 32, getHeight() - 348);
-    m_panSlider->setBounds (12, 224, 48, 48);
-    m_delaySlider->setBounds (12, 64, 48, 48);
-    m_ReverbSlider->setBounds (12, 4, 48, 48);
-    m_keyShiftSlider->setBounds (8, 200, 56, 16);
-    m_muteToggle->setBounds (22, getHeight() - 1 - 27, 27, 27);
-    imageButton->setBounds (24, getHeight() - 37 - 18, 24, 18);
+    m_mixLevel->setBounds ((getWidth() / 2) - (32 / 2), 284, 32, getHeight() - 348);
+    m_panSlider->setBounds ((getWidth() / 2) - (48 / 2), 224, 48, 48);
+    m_delaySlider->setBounds ((getWidth() / 2) - (48 / 2), 64, 48, 48);
+    m_ReverbSlider->setBounds ((getWidth() / 2) - (48 / 2), 4, 48, 48);
+    m_keyShiftSlider->setBounds ((getWidth() / 2) - (56 / 2), 200, 56, 16);
+    m_muteToggle->setBounds ((getWidth() / 2) - (27 / 2), getHeight() - 1 - 27, 27, 27);
+    imageButton->setBounds ((getWidth() / 2) - (24 / 2), getHeight() - 37 - 18, 24, 18);
     m_panLabel->setBounds (0, 270, getWidth() - 0, 12);
     m_keyShiftLabel->setBounds (0, 187, getWidth() - 0, 12);
-    m_mfxLabel->setBounds (4, 130, getWidth() - 8, 12);
+    m_mfxLabel->setBounds ((getWidth() / 2) - (64 / 2), 130, 64, 12);
     m_delayLabel->setBounds (0, 110, getWidth() - 0, 12);
     m_reverbLabel->setBounds (0, 50, getWidth() - 0, 12);
-    m_mfxGrab->setBounds (36 - (54 / 2), 136, 54, 49);
+    m_mfxGrab->setBounds ((getWidth() / 2) - (54 / 2), 136, 54, 49);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -315,31 +315,31 @@ BEGIN_JUCER_METADATA
                  initialHeight="600">
   <BACKGROUND backgroundColour="0"/>
   <SLIDER name="06" id="1b5918ef3651954f" memberName="m_mixLevel" virtualName="MixPartLevelFader"
-          explicitFocusOrder="0" pos="20 284 32 348M" min="0" max="127"
+          explicitFocusOrder="0" pos="0Cc 284 32 348M" min="0" max="127"
           int="1" style="LinearVertical" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="32" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="07" id="8f70d251e0e8426e" memberName="m_panSlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="12 224 48 48" min="-64" max="63"
-          int="1" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
+          explicitFocusOrder="0" pos="0Cc 224 48 48" min="-64" max="63"
+          int="1" style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="0C" id="b38e1510f0f1e212" memberName="m_delaySlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="12 64 48 48" min="0" max="127" int="1"
-          style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="48"
-          textBoxHeight="16" skewFactor="1"/>
+          explicitFocusOrder="0" pos="0Cc 64 48 48" min="0" max="127" int="1"
+          style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
+          textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="0D" id="36532340fc1495b4" memberName="m_ReverbSlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="12 4 48 48" min="0" max="127" int="1"
-          style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="48"
-          textBoxHeight="16" skewFactor="1"/>
+          explicitFocusOrder="0" pos="0Cc 4 48 48" min="0" max="127" int="1"
+          style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
+          textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="08" id="2b89b2c11e2ad524" memberName="m_keyShiftSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="8 200 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="0Cc 200 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="-48" max="48" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
   <JUCERCOMP name="muteToggle" id="bb56ebeded4ccc44" memberName="m_muteToggle"
-             virtualName="" explicitFocusOrder="0" pos="22 1Rr 27 27" sourceFile="../ParameterWidgets/BigOrangeToggle.cpp"
-             constructorParams=""/>
+             virtualName="" explicitFocusOrder="0" pos="-0.5Cc 1Rr 27 27"
+             sourceFile="../ParameterWidgets/BigOrangeToggle.cpp" constructorParams=""/>
   <IMAGEBUTTON name="new button" id="168089c13a9f22fd" memberName="imageButton"
-               virtualName="" explicitFocusOrder="0" pos="24 37Rr 24 18" buttonText="new button"
+               virtualName="" explicitFocusOrder="0" pos="0Cc 37Rr 24 18" buttonText="new button"
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="partNameR_png" opacityNormal="1" colourNormal="ffffffff"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
@@ -355,7 +355,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="mfxLabel" id="f7600c3cc150c941" memberName="m_mfxLabel"
-         virtualName="" explicitFocusOrder="0" pos="4 130 8M 12" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="0Cc 130 64 12" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="MFX" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="33"/>
@@ -370,7 +370,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="0A" id="3d47dada4f5d9d7f" memberName="m_mfxGrab" virtualName="GrabSwitch"
-             explicitFocusOrder="0" pos="36c 136 54 49" sourceFile="../ParameterWidgets/GrabSwitch.cpp"
+             explicitFocusOrder="0" pos="0Cc 136 54 49" sourceFile="../ParameterWidgets/GrabSwitch.cpp"
              constructorParams="&quot;0A&quot;"/>
 </JUCER_COMPONENT>
 

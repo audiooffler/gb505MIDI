@@ -85,6 +85,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> m_mfxLabel;
     ScopedPointer<GrabSwitch> m_mfxGrab;
     ScopedPointer<MicroParameterSlider> m_mfxHelper;
     ScopedPointer<MixPartLevelFader> m_mixLevel;
@@ -99,7 +100,6 @@ private:
     ScopedPointer<Label> m_keyShiftLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<Label> m_delayLabel;
-    ScopedPointer<Label> m_mfxLabel;
 
 
     //==============================================================================

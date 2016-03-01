@@ -39,6 +39,15 @@ MixRhyTrack::MixRhyTrack (AllParts part)
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
+    addAndMakeVisible (m_mfxLabel = new Label ("mfxLabel",
+                                               TRANS("MFX")));
+    m_mfxLabel->setFont (Font (12.00f, Font::bold));
+    m_mfxLabel->setJustificationType (Justification::centredLeft);
+    m_mfxLabel->setEditable (false, false, false);
+    m_mfxLabel->setColour (Label::textColourId, Colours::black);
+    m_mfxLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_mfxLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     addAndMakeVisible (m_mfxGrab = new GrabSwitch ("0A"));
     addAndMakeVisible (m_mfxHelper = new MicroParameterSlider ("0A"));
     m_mfxHelper->setRange (0, 4, 1);
@@ -54,19 +63,19 @@ MixRhyTrack::MixRhyTrack (AllParts part)
 
     addAndMakeVisible (m_panSlider = new Knob ("07"));
     m_panSlider->setRange (-64, 63, 1);
-    m_panSlider->setSliderStyle (Slider::Rotary);
+    m_panSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_panSlider->setTextBoxStyle (Slider::NoTextBox, false, 48, 16);
     m_panSlider->addListener (this);
 
     addAndMakeVisible (m_delaySlider = new Knob ("0C"));
     m_delaySlider->setRange (0, 127, 1);
-    m_delaySlider->setSliderStyle (Slider::Rotary);
+    m_delaySlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_delaySlider->setTextBoxStyle (Slider::NoTextBox, false, 48, 16);
     m_delaySlider->addListener (this);
 
     addAndMakeVisible (m_ReverbSlider = new Knob ("0D"));
     m_ReverbSlider->setRange (0, 127, 1);
-    m_ReverbSlider->setSliderStyle (Slider::Rotary);
+    m_ReverbSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
     m_ReverbSlider->setTextBoxStyle (Slider::NoTextBox, false, 48, 16);
     m_ReverbSlider->addListener (this);
 
@@ -123,15 +132,6 @@ MixRhyTrack::MixRhyTrack (AllParts part)
     m_delayLabel->setColour (TextEditor::textColourId, Colours::black);
     m_delayLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (m_mfxLabel = new Label ("mfxLabel",
-                                               TRANS("MFX")));
-    m_mfxLabel->setFont (Font (12.00f, Font::bold));
-    m_mfxLabel->setJustificationType (Justification::centredLeft);
-    m_mfxLabel->setEditable (false, false, false);
-    m_mfxLabel->setColour (Label::textColourId, Colours::black);
-    m_mfxLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_mfxLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
 
     //[UserPreSize]
 	m_mfxGrab->addListener(this);
@@ -169,6 +169,7 @@ MixRhyTrack::~MixRhyTrack()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    m_mfxLabel = nullptr;
     m_mfxGrab = nullptr;
     m_mfxHelper = nullptr;
     m_mixLevel = nullptr;
@@ -183,7 +184,6 @@ MixRhyTrack::~MixRhyTrack()
     m_keyShiftLabel = nullptr;
     m_reverbLabel = nullptr;
     m_delayLabel = nullptr;
-    m_mfxLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -239,21 +239,21 @@ void MixRhyTrack::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_mfxGrab->setBounds (36 - (54 / 2), 136, 54, 49);
-    m_mfxHelper->setBounds (8, 168, 56, 16);
+    m_mfxLabel->setBounds ((getWidth() / 2) - (64 / 2), 130, 64, 12);
+    m_mfxGrab->setBounds ((getWidth() / 2) - (54 / 2), 136, 54, 49);
+    m_mfxHelper->setBounds ((getWidth() / 2) - (56 / 2), 168, 56, 16);
     m_mixLevel->setBounds ((getWidth() / 2) - (32 / 2), getHeight() - 64 - (getHeight() - 348), 32, getHeight() - 348);
     m_panSlider->setBounds ((getWidth() / 2) - (48 / 2), 224, 48, 48);
-    m_delaySlider->setBounds (getWidth() - 12 - 48, 64, 48, 48);
-    m_ReverbSlider->setBounds (12, 4, 48, 48);
-    m_keyShiftSlider->setBounds (8, 200, 56, 16);
+    m_delaySlider->setBounds ((getWidth() / 2) - (48 / 2), 64, 48, 48);
+    m_ReverbSlider->setBounds ((getWidth() / 2) - (48 / 2), 4, 48, 48);
+    m_keyShiftSlider->setBounds ((getWidth() / 2) - (56 / 2), 200, 56, 16);
     m_muteToggle->setBounds ((getWidth() / 2) - (27 / 2), getHeight() - 1 - 27, 27, 27);
     imageButton->setBounds ((getWidth() / 2) - (24 / 2), getHeight() - 55, 24, 18);
-    m_mfx_RHYtoggle->setBounds (56, 138, 12, 12);
+    m_mfx_RHYtoggle->setBounds (((getWidth() / 2) - (54 / 2)) + 54 - 7, 138, 12, 12);
     m_panLabel->setBounds (0, 270, getWidth() - 0, 12);
     m_keyShiftLabel->setBounds (0, 187, getWidth() - 0, 12);
     m_reverbLabel->setBounds (0, 50, getWidth() - 0, 12);
     m_delayLabel->setBounds (0, 110, getWidth() - 0, 12);
-    m_mfxLabel->setBounds (4, 130, getWidth() - 8, 12);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -382,11 +382,16 @@ BEGIN_JUCER_METADATA
                  snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="72"
                  initialHeight="600">
   <BACKGROUND backgroundColour="0"/>
+  <LABEL name="mfxLabel" id="f7600c3cc150c941" memberName="m_mfxLabel"
+         virtualName="" explicitFocusOrder="0" pos="0Cc 130 64 12" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="MFX" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="33"/>
   <JUCERCOMP name="mfxGrab" id="3d47dada4f5d9d7f" memberName="m_mfxGrab" virtualName=""
-             explicitFocusOrder="0" pos="36c 136 54 49" sourceFile="../ParameterWidgets/GrabSwitch.cpp"
+             explicitFocusOrder="0" pos="0Cc 136 54 49" sourceFile="../ParameterWidgets/GrabSwitch.cpp"
              constructorParams="&quot;0A&quot;"/>
   <SLIDER name="0A" id="e962bda8125de0dd" memberName="m_mfxHelper" virtualName="MicroParameterSlider"
-          explicitFocusOrder="0" pos="8 168 56 16" min="0" max="4" int="1"
+          explicitFocusOrder="0" pos="0Cc 168 56 16" min="0" max="4" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="06" id="1b5918ef3651954f" memberName="m_mixLevel" virtualName="MixPartLevelFader"
@@ -395,18 +400,18 @@ BEGIN_JUCER_METADATA
           textBoxWidth="32" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="07" id="8f70d251e0e8426e" memberName="m_panSlider" virtualName="Knob"
           explicitFocusOrder="0" pos="0Cc 224 48 48" min="-64" max="63"
-          int="1" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
-          textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
+          int="1" style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox"
+          textBoxEditable="1" textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="0C" id="b38e1510f0f1e212" memberName="m_delaySlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="12Rr 64 48 48" min="0" max="127"
-          int="1" style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1"
+          explicitFocusOrder="0" pos="0Cc 64 48 48" min="0" max="127" int="1"
+          style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
           textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="0D" id="36532340fc1495b4" memberName="m_ReverbSlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="12 4 48 48" min="0" max="127" int="1"
-          style="Rotary" textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="48"
-          textBoxHeight="16" skewFactor="1"/>
+          explicitFocusOrder="0" pos="0Cc 4 48 48" min="0" max="127" int="1"
+          style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox" textBoxEditable="1"
+          textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="08" id="2b89b2c11e2ad524" memberName="m_keyShiftSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="8 200 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="0Cc 200 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="-48" max="48" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
@@ -420,8 +425,8 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
                opacityDown="1" colourDown="0"/>
   <JUCERCOMP name="mfx_RHY" id="71afd96cb7e4d50f" memberName="m_mfx_RHYtoggle"
-             virtualName="" explicitFocusOrder="0" pos="56 138 12 12" sourceFile="../ParameterWidgets/SmallGreenToggle.cpp"
-             constructorParams=""/>
+             virtualName="" explicitFocusOrder="0" pos="7R 138 12 12" posRelativeX="3d47dada4f5d9d7f"
+             sourceFile="../ParameterWidgets/SmallGreenToggle.cpp" constructorParams=""/>
   <LABEL name="panLabel" id="39a07dbc337265d" memberName="m_panLabel"
          virtualName="" explicitFocusOrder="0" pos="0 270 0M 12" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PAN" editableSingleClick="0"
@@ -442,11 +447,6 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="DELAY" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
-  <LABEL name="mfxLabel" id="f7600c3cc150c941" memberName="m_mfxLabel"
-         virtualName="" explicitFocusOrder="0" pos="4 130 8M 12" textCol="ff000000"
-         edTextCol="ff000000" edBkgCol="0" labelText="MFX" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
