@@ -332,10 +332,10 @@ void MainComponent::buttonClicked(Button* buttonThatWasClicked)
 
 void MainComponent::showInfoDlg()
 {
-	GrooveboxSplashScreen* splashScreen = new GrooveboxSplashScreen("INFO", 480, 320, true);
+	GrooveboxSplashScreen* splashScreen = new GrooveboxSplashScreen("", 480, 320, true);
 	OptionalScopedPointer<Component> splashScreenPtr(splashScreen, true);
 	DialogWindow::LaunchOptions options;
-	options.dialogTitle = "INFO";
+	options.dialogTitle = JUCEApplication::getInstance()->getApplicationName();
 	options.content = splashScreenPtr;
 	options.escapeKeyTriggersCloseButton = true;
 	options.resizable = false;

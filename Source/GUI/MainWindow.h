@@ -24,7 +24,7 @@ our MainContentComponent class.
 class MainWindow : public DocumentWindow
 {
 public:
-	MainWindow() : DocumentWindow("Roland MC-307 SysEx",
+	MainWindow() : DocumentWindow(JUCEApplication::getInstance()->getApplicationName(),
 		Colours::lightgrey,
 		DocumentWindow::allButtons)
 	{
