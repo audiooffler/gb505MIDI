@@ -125,8 +125,8 @@ void GrooveboxSplashScreen::resized()
     //[/UserPreResize]
 
     m_groupComponent->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
-    m_rolandGrooveboxImageButton->setBounds (80, 40, 320, 77);
-    m_gbMidiImageButton->setBounds (208, 40 + 77 - 5, 64, 64);
+    m_rolandGrooveboxImageButton->setBounds (80, 40, 320, 48);
+    m_gbMidiImageButton->setBounds (208, 40 + 48 - -8, 64, 64);
     m_descrLabel->setBounds (40, 184, 400, 24);
     m_authorLabel->setBounds (40, 216, 400, 48);
     m_rolandTmLabel->setBounds (8, 280, getWidth() - 16, 24);
@@ -179,13 +179,13 @@ BEGIN_JUCER_METADATA
              virtualName="" explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;splashGrp&quot;, title"/>
   <IMAGEBUTTON name="rolandGrooveboxImageButton" id="c697bab31dc307c2" memberName="m_rolandGrooveboxImageButton"
-               virtualName="" explicitFocusOrder="0" pos="80 40 320 77" buttonText=""
+               virtualName="" explicitFocusOrder="0" pos="80 40 320 48" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
                resourceNormal="grooveboxLogo_png" opacityNormal="1" colourNormal="0"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
                opacityDown="1" colourDown="0"/>
   <IMAGEBUTTON name="gbMidiImageButton" id="948a9289594f2999" memberName="m_gbMidiImageButton"
-               virtualName="" explicitFocusOrder="0" pos="208 5R 64 64" posRelativeY="c697bab31dc307c2"
+               virtualName="" explicitFocusOrder="0" pos="208 -8R 64 64" posRelativeY="c697bab31dc307c2"
                buttonText="" connectedEdges="0" needsCallback="1" radioGroupId="0"
                keepProportions="1" resourceNormal="icon_png" opacityNormal="1"
                colourNormal="0" resourceOver="" opacityOver="1" colourOver="0"

@@ -53,7 +53,7 @@ public:
 
         // This method is where you should put your application's initialisation code..
 
-		splashScreen = new GrooveboxSplashScreen("STARTING UP " + String(getApplicationName()).toUpperCase() + String(CharPointer_UTF8("\xe2\x80\xa6")), 480, 320, true);
+		splashScreen = new GrooveboxSplashScreen("STARTING UP " + String(getApplicationName()) + String(CharPointer_UTF8("\xe2\x80\xa6")), 480, 320, true);
 		
 
 		#if JUCE_OPENGL

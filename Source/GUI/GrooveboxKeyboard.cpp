@@ -40,6 +40,8 @@ GrooveboxKeyboard::GrooveboxKeyboard (MidiKeyboardState &state, Orientation orie
 	setKeyWidth(30);
 	setScrollButtonsVisible(true);
 	setBlackNoteLengthProportion(1.0);
+	setAvailableRange(35, 98);
+	setMidiChannel(10);
     //[/UserPreSize]
 
     setSize (120, 104);
