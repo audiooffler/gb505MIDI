@@ -53,6 +53,7 @@ public:
 	void setBeatSignature(uint8 numerator, uint8 denominator);
 	// pattern length in num measures
 	uint8 getPatternLengthInMeasures();
+	unsigned long getPatternLengthInTicks();
 	// will be limited to 0..32
 	void setPatternLengthInMeasures(uint8 measures);
 	// tempo in BPM

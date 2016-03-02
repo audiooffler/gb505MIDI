@@ -258,6 +258,11 @@ uint8 PatternSetupConfigBlock::getPatternLengthInMeasures()
 	return m_data[0x12];
 }
 
+unsigned long PatternSetupConfigBlock::getPatternLengthInTicks()
+{
+	return m_data[0x12] * m_data[0x10] * (96 / (m_data[0x11] / 4));
+}
+
 void PatternSetupConfigBlock::setPatternLengthInMeasures(uint8 measures)
 {
 	m_data[0x12] = (uint8)jlimit<int>(1, 32, measures);

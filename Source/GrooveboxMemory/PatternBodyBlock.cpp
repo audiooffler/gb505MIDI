@@ -1125,7 +1125,7 @@ void PatternBodyBlock::refreshRelativeTickIncrements()
 	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--) { if (m_sequenceBlocks[i]->getType() == Evt_TickInc) { m_sequenceBlocks.remove(i); } }
 
 	const unsigned long patternStart = 0;
-	const unsigned long patternEnd = m_lengthInMeasures * m_beatSigNumerator * getTicksPerBeat();
+	const unsigned long patternEnd = getPatternLengthInTicks();
 	
 	unsigned long delta(0);
 	unsigned long currentAbsoluteTick = patternStart;
@@ -1731,4 +1731,14 @@ bool PatternBodyBlock::saveRawCsv(File& file)
 		file.appendText(String::toHexString(event->bytes, 8).toUpperCase() + (i + 1 < m_sequenceBlocks.size() ? "\r\n" : ""));
 	}
 	return true;
+}
+
+const OwnedArray<PatternBodyBlock::PatternEventData>* PatternBodyBlock::getFilteredSequenceBlocks() 
+{
+	return &m_filteredsequenceBlocks; 
+}
+
+unsigned long PatternBodyBlock::getPatternLengthInTicks()
+{
+	return m_lengthInMeasures * m_beatSigNumerator * getTicksPerBeat();
 }

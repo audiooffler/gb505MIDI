@@ -75,7 +75,7 @@ public:
 		Col_EventType = 12,
 		Col_Raw2 = 3,
 		Col_Raw3 = 4,
-		Col_Part= 13,
+		Col_Part = 13,
 		Col_Raw4 = 5,
 		Col_Raw5 = 6,
 		Col_Raw6 = 7,
@@ -112,7 +112,7 @@ public:
 		uint8 bytes[8];
 		unsigned long absoluteTick;	// set on construction by mostRecentAbsoluteTick + lastRelativeTickIncrement
 		ScopedPointer<MemoryBlock> m_joinedSysexData;
-		bool isNoteOff=false;
+		bool isNoteOff = false;
 
 		uint8 getRelativeTickIncrement();
 		PatternEventType getType();
@@ -158,7 +158,7 @@ public:
 	void selectedRowsChanged(int lastRowSelected) override;
 	void setTableSelectionMidiOutId(int id);
 	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut; }
-	
+
 	void refreshFilteredContent();
 	void changeListenerCallback(ChangeBroadcaster *source) override;
 
@@ -229,6 +229,10 @@ public:
 
 	bool saveRawBinary(File& file);
 	bool saveRawCsv(File& file);
+
+	const OwnedArray<PatternEventData>* getFilteredSequenceBlocks();
+
+	unsigned long getPatternLengthInTicks(); // depends on m_lengthInMeasures and time signature
 
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
