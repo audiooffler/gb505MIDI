@@ -90,6 +90,8 @@ public:
 		return m_checkThread->getRetrievedMessages();
 	}
 
+	bool sendPatchesPatternAndSetupAsDump();
+
 private:
 	uint8 m_selectedDeviceId;
 	OwnedArray<GrooveBoxConnectionEntry, CriticalSection> m_activeConnections;

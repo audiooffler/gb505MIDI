@@ -67,7 +67,8 @@ public:
 		fileImportPatternSmfFile = 0x2111,
 		fileExportPatternSmfFile = 0x2112,
 		fileSavePatternBinFile = 0x2124,
-		grooveBoxLoadPattern = 0x3101
+		grooveBoxLoadPattern = 0x3101,
+		grooveBoxSendPatternBulk = 0x3102
 	};
 	// This must return the next target to try after this one.
 	ApplicationCommandTarget* getNextCommandTarget() override;

@@ -1029,7 +1029,8 @@ void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
 		/* ---------------------- */
 		fileSavePatternBinFile,
 		/* ---------------------- */
-		grooveBoxLoadPattern
+		grooveBoxLoadPattern,
+		grooveBoxSendPatternBulk
 	};
 	commands.addArray(ids, numElementsInArray(ids));
 }
@@ -1074,6 +1075,12 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 		result.setInfo("Send Pattern Request SysEx", "Request temporary pattern data from groovebox.", category, 0);
 		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
 		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
+		break;
+	case grooveBoxSendPatternBulk:
+		result.setInfo("Transmit Pattern Bulk Dump", "Send patches, pattern, and setup data of temporary pattern to groovebox.", category, 0);
+		result.addDefaultKeypress('t', ModifierKeys::commandModifier);
+		result.setActive(grooveboxConnector->getActiveConnection() != nullptr && !grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
+		break;
 	default:
 		break;
 	}
@@ -1106,6 +1113,9 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 		return true;
 	case CommandIDs::grooveBoxLoadPattern:
 		//loadFromGroovebox();
+		return true;
+	case CommandIDs::grooveBoxSendPatternBulk:
+		grooveboxConnector->sendPatchesPatternAndSetupAsDump();
 		return true;
 	default:
 		return false;

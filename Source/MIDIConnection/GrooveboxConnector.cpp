@@ -181,6 +181,56 @@ void GrooveboxConnector::handleIncomingMidiMessage(MidiInput* input, const MidiM
 	}
 }
 
+bool GrooveboxConnector::sendPatchesPatternAndSetupAsDump()
+{
+	if (getActiveConnection() == nullptr) return false;
+	
+	String helpText;
+	switch (getActiveConnection()->deviceFamilyNumberCode)
+	{
+	case Model_MC_505: 
+		helpText = "Make sure your Groovebox is stopped. Select the tempo pattern (U:TMP).\r\n"
+			"Hold [SHIFT], press key-pad [16]. Select \"RECEIVE\"."; 
+		break;
+	case Model_JX_305: 
+		helpText = "Select the temporary pattern (TMP). Make sure the Pattern is stopped.\r\n."
+			"Press [UTILITY], select \"BULK DUMP\", press [ENTER]. Select \"RECEIVE\" and press [ENTER]."; 
+		break;
+	case Model_MC_307: 
+		helpText = "Make sure your Groovebox is stopped.\r\n"
+			"Press the [SYSTEM], then [F2 (UTIL)], then [F3 (BULK)]. Select [F2 (RX)]."; 
+		break;
+	case Model_D2: 
+		helpText = "Make sure your Groovebox is stopped.\r\n"
+			"Press[SYSTEM] several times to access the MIDI reception setting display (RX LED).\r\n"
+			"Press [ENTER] several times to access the Bulk Load setting display (rxY).\r\n"
+			"Turn [VALUE] to select \"Ptn\" and press [ENTER]."; 
+		break;
+	default:
+		return false;
+	}
+	midiOutputDevice->sendMessageNow(MidiMessage::midiStop());
+	if (AlertWindow::showOkCancelBox(AlertWindow::QuestionIcon, "Transmit Bulk Dump?",
+		"Please prepare your Groovebox to wait for receiving a bulk dump (BULK RX):\r\n\r\n"
+		+ helpText + "\r\n\r\n" +
+		"Continue by pressing OK."))
+	{
+		OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
+		grooveboxMemory->getPartInfoBlock()->createBlockSendMessages(&sysExCompilation);
+		grooveboxMemory->getSynthPatchesBlock()->createBlockSendMessages(&sysExCompilation);
+		grooveboxMemory->getRhythmSetBlock()->createBlockSendMessages(&sysExCompilation);
+		grooveboxMemory->getPatternBodyBlock()->createBlockSendMessages(&sysExCompilation);
+		grooveboxMemory->getPatternSetupBlock()->createBlockSendMessages(&sysExCompilation);
+		for (int i = 0; i < sysExCompilation.size(); i++)
+		{
+			midiOutputDevice->sendMessageNow(sysExCompilation[i]->getAsMidiMessage());
+			Thread::sleep(40);
+		}
+		return true;
+	}
+	else return false;
+}
+
 GrooveboxConnector::MIDIRetrieveTimeOutTimer::MIDIRetrieveTimeOutTimer(RetrieveSysExThread* threadRef) :Timer()
 {
 	m_threadPtr = threadRef;
