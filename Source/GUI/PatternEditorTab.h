@@ -96,6 +96,7 @@ public:
 
 	class PlayerThread : public Thread
 	{
+	public:
 		PlayerThread();
 		void run() override;
 	};
