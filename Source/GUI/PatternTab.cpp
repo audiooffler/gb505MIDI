@@ -438,7 +438,7 @@ void PatternTab::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_m_searchDevicesButton] -- add your button handler code here..
 		m_deviceToUseComboBox->clear();
-		int id (grooveboxConnector->refreshConnections(m_afterConstructor));
+		int id(grooveboxConnector->refreshConnections(m_afterConstructor, m_afterConstructor?10000:300));
 		if (id > 0)
 		{
 			for (int i = 0; i < grooveboxConnector->getConnections().size(); i++)

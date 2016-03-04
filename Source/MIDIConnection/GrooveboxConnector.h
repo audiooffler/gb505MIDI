@@ -56,7 +56,7 @@ public:
 
 	bool openGrooveboxMidiInAndOut(bool warnMsgBox=true);
 
-	int refreshConnections(bool warnMsgBox = true);
+	int refreshConnections(bool warnMsgBox = true, int timeOutMilliseconds=10000);
 
 	void addConnection(GrooveBoxConnectionEntry* entry);
 

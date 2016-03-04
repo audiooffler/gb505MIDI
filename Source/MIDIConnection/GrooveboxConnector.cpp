@@ -63,7 +63,7 @@ bool GrooveboxConnector::openGrooveboxMidiInAndOut(bool warnMsgBox)
 	return true;
 }
 
-int GrooveboxConnector::refreshConnections(bool warnMsgBox)
+int GrooveboxConnector::refreshConnections(bool warnMsgBox /*=true*/, int timeOutMilliseconds /*= 10000*/)
 {
 	{
 		m_activeConnections.clear();
@@ -75,7 +75,7 @@ int GrooveboxConnector::refreshConnections(bool warnMsgBox)
 	// Thread with progress Window: send broadcast sysex and wait for replys, stop after timeout (waiting long enough without any more replies)
 	// use a MidiMessageCollector handler during running thread
 	
-	m_checkThread = new IndenityRequestReplyThread(TRANS("Checking connections..."), 10000);
+	m_checkThread = new IndenityRequestReplyThread(TRANS("Searching connected Groovebox..."), timeOutMilliseconds);
 	m_checkThread->runThread();
 
 	// after thread: read connections from retrieved data

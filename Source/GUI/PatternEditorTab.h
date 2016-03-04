@@ -43,7 +43,6 @@
 class PatternEditorTab  : public Component,
                           public ChangeListener,
                           public ApplicationCommandTarget,
-                          public Timer,
                           public ComboBoxListener,
                           public ButtonListener,
                           public SliderListener
@@ -84,9 +83,6 @@ public:
 	void saveRawBinaryFile();
 	void exportAsMidiFile();
 	void importMidiFile();
-
-	// playback timer: play next event
-	void timerCallback();
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -95,17 +91,11 @@ public:
     void buttonClicked (Button* buttonThatWasClicked) override;
     void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
-	class PlayerThread : public Thread
-	{
-	public:
-		PlayerThread();
-		void run() override;
-	};
+
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	TableHeaderComponent* m_patternEventTableHeader; // will be owed by m_patternEventTable
-	PlayerThread m_playerThread;
     //[/UserVariables]
 
     //==============================================================================

@@ -22,6 +22,7 @@ public:
 
 	uint8 getNumerator(){ return m_numerator; }
 	uint8 getDenominator(){ return m_denominator; }
+	uint8 getTicksPerBeat(){ return 96 / (m_denominator / 4); }
 
 	String toString() { return String(m_numerator) + "/" + String(m_denominator); }
 	float getAsFraction(){ return (float)m_numerator / (float)m_denominator; }

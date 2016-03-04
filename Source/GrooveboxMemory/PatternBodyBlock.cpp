@@ -19,7 +19,8 @@ extern QuickSysExBlock* quickSysEx;
 
 PatternBodyBlock::PatternBodyBlock() :
 	GrooveboxMemoryBlock(0x40000000, "Pattern Body Data", "1-6", 0x00000000),
-	m_patternTableFilterParams(new VirtualPatternTableFilterBlock())
+	m_patternTableFilterParams(new VirtualPatternTableFilterBlock()),
+	m_playerThread(new PlayerThread())
 {
 	m_name = "Pattern Body";
 	// no parameters, just big data block
@@ -120,13 +121,12 @@ PatternBodyBlock::PatternBodyBlock() :
 	m_keyDrumGroupes.set(37, "PERC"); m_keyDrumGroupes.set(41, "PERC"); m_keyDrumGroupes.set(43, "PERC"); m_keyDrumGroupes.set(45, "PERC"); m_keyDrumGroupes.set(49, "PERC"); m_keyDrumGroupes.set(53, "PERC"); m_keyDrumGroupes.set(55, "PERC"); m_keyDrumGroupes.set(57, "PERC"); m_keyDrumGroupes.set(59, "PERC"); m_keyDrumGroupes.set(60, "PERC"); m_keyDrumGroupes.set(62, "PERC"); m_keyDrumGroupes.set(66, "PERC"); m_keyDrumGroupes.set(68, "PERC"); m_keyDrumGroupes.set(70, "PERC"); m_keyDrumGroupes.set(72, "PERC"); m_keyDrumGroupes.set(73, "PERC"); m_keyDrumGroupes.set(74, "PERC"); m_keyDrumGroupes.set(75, "PERC"); m_keyDrumGroupes.set(76, "PERC"); m_keyDrumGroupes.set(77, "PERC"); m_keyDrumGroupes.set(78, "PERC"); m_keyDrumGroupes.set(79, "PERC"); m_keyDrumGroupes.set(80, "PERC"); m_keyDrumGroupes.set(81, "PERC"); m_keyDrumGroupes.set(82, "PERC");
 	m_keyDrumGroupes.set(83, "HIT"); m_keyDrumGroupes.set(84, "HIT"); m_keyDrumGroupes.set(85, "HIT"); m_keyDrumGroupes.set(86, "HIT"); m_keyDrumGroupes.set(87, "HIT"); m_keyDrumGroupes.set(88, "HIT");
 	m_keyDrumGroupes.set(89, "OTHERS"); m_keyDrumGroupes.set(90, "OTHERS"); m_keyDrumGroupes.set(91, "OTHERS"); m_keyDrumGroupes.set(92, "OTHERS"); m_keyDrumGroupes.set(93, "OTHERS");
-
-	clearPattern();
 }
 
 PatternBodyBlock::~PatternBodyBlock()
 {
 	sysExBuilder.reset();
+	m_playerThread->stopThread(500);
 }
 
 bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
@@ -219,9 +219,11 @@ const String PatternBodyBlock::PatternEventData::NOTENAMES[] = { "C -1","C#-1","
 unsigned long PatternBodyBlock::PatternEventData::mostRecentAbsoluteTick = 0;
 uint8 PatternBodyBlock::PatternEventData::lastRelativeTickIncrement = 0;
 
-String PatternBodyBlock::PatternEventData::getAbsoluteTickString(unsigned int absoluteTicks, uint8 ticksPerBeat, uint8 beatsPerMeasure, bool asLength/*=false*/)
+String PatternBodyBlock::PatternEventData::getAbsoluteTickString(unsigned int absoluteTicks, bool asLength/*=false*/)
 {
-	unsigned int ticksRest = (absoluteTicks % ticksPerBeat);
+	unsigned int ticksPerBeat = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature().getTicksPerBeat();
+	unsigned int beatsPerMeasure = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature().getNumerator();
+	unsigned int ticksRest = (absoluteTicks % grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature().getTicksPerBeat());
 	unsigned int beats = absoluteTicks / ticksPerBeat;
 	unsigned int measure = beats / beatsPerMeasure;
 	beats = beats % beatsPerMeasure;
@@ -620,13 +622,13 @@ void PatternBodyBlock::PatternEventData::getSysExBytesCopyTo(uint8* fourBytes) /
 	}
 }
 
-String PatternBodyBlock::PatternEventData::toDebugString(uint8 ticksPerBeat, uint8 beatsPerMeasure)
+String PatternBodyBlock::PatternEventData::toDebugString()
 {
 	PatternEventType type = getType();
 	uint8 sysExData[4] = { 0, 0, 0, 0 };
 	if (type == Evt_SysExData) getSysExBytesCopyTo(sysExData);
 	String result = String::toHexString(bytes, 8, 1).toUpperCase() + "\t";
-	result += getAbsoluteTickString(absoluteTick, ticksPerBeat, beatsPerMeasure) + "\t";
+	result += getAbsoluteTickString(absoluteTick) + "\t";
 	result += String(getRelativeTickIncrement()) + "\t";
 	if (type != Evt_TickInc) result += getPartString(getPart()) + "\t";
 	result += getTypeString() + "\t";
@@ -635,7 +637,7 @@ String PatternBodyBlock::PatternEventData::toDebugString(uint8 ticksPerBeat, uin
 	{
 	case PatternBodyBlock::Evt_Note:
 		result += "v: " + String(getNoteVelocity()).paddedLeft('0', 3) + "\t";
-		result += getAbsoluteTickString(getNoteGateTicks(), ticksPerBeat, beatsPerMeasure, true) + "\t";
+		result += getAbsoluteTickString(getNoteGateTicks(), true) + "\t";
 		break;
 	case PatternBodyBlock::Evt_TickInc:
 		break;
@@ -753,7 +755,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 		switch ((PatternTableListColumnId)columnId)
 		{
 		case PatternBodyBlock::Col_Position:
-			cellText = PatternEventData::getAbsoluteTickString(event->absoluteTick, getTicksPerBeat(), m_beatSigNumerator);
+			cellText = event->PatternEventData::getAbsoluteTickString(event->absoluteTick);
 			break;
 		case PatternBodyBlock::Col_Raw0:
 			cellText = String::toHexString((int)event->bytes[0]).toUpperCase().paddedLeft('0',2);
@@ -833,7 +835,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 			switch (event->getType())
 			{
 			case PatternBodyBlock::Evt_Note:
-				cellText = PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), getTicksPerBeat(), m_beatSigNumerator, true /*gate time counting measures and beats from 0*/);
+				cellText = event->PatternEventData::getAbsoluteTickString(event->getNoteGateTicks(), true /*gate time counting measures and beats from 0*/);
 				break;
 			case PatternBodyBlock::Evt_PAft:
 				cellText = String(event->getPAftPressure());
@@ -872,11 +874,13 @@ void PatternBodyBlock::timerCallback()
 	{
 		for (int i = 1; i < 17; i++) tableSelectionMidiOut->sendMessageNow(MidiMessage::allNotesOff(i));
 	}
+	stopTimer();
 }
 
 void PatternBodyBlock::selectedRowsChanged(int lastRowSelected)
 {
-	if (lastRowSelected >= 0 && lastRowSelected < m_filteredsequenceBlocks.size() && tableSelectionMidiOut!=nullptr)
+	m_lastSelectedRowFilteredsequence = lastRowSelected;
+	if (lastRowSelected >= 0 && lastRowSelected < m_filteredsequenceBlocks.size() && tableSelectionMidiOut!=nullptr && !m_playerThread->isThreadRunning())
 	{
 		stopTimer();
 		for (int i = 1; i < 17; i++)
@@ -1120,7 +1124,7 @@ bool PatternBodyBlock::isPatternEmpty()
 // calculates and refreshes relative inc times from absolute times, from start to first event, between all events from last to end of pattern, if nescessary creates INC entries
 void PatternBodyBlock::refreshRelativeTickIncrements()
 {
-	if (m_lengthInMeasures < 1) return;
+	if (grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getPatternLengthInMeasures() < 1) return;
 	// delete all existing INC events (they might not be up-to-date)
 	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--) { if (m_sequenceBlocks[i]->getType() == Evt_TickInc) { m_sequenceBlocks.remove(i); } }
 
@@ -1219,38 +1223,6 @@ void PatternBodyBlock::clearPattern()
 	refreshRelativeTickIncrements();
 }
 
-// to be called when beat signature in pattern setup is changed, only 96 (for signatures of N/4) 48 (N/8) or 24 (N/16) will be accepted, else defaulting to 96. updates the viewed table (for tick time display interpretation)
-void PatternBodyBlock::setBeatSignature(BeatSignature beatSignature, bool refreshTickIncrements /*= true*/)
-{
-	m_beatSigNumerator = beatSignature.getNumerator();
-	m_beatSigDenominator = beatSignature.getDenominator();
-	if (refreshTickIncrements) refreshRelativeTickIncrements();
-}
-
-void PatternBodyBlock::setLengthInMeasures(uint8 measures, bool refreshTickIncrements /*= true*/)
-{
-	// get measure for last sequence entry to set the minimum
-	uint8 minimum = 1;
-	for (int i = m_sequenceBlocks.size() - 1; i >= 0; i--)
-	{
-		if (m_sequenceBlocks[i]->getType() != Evt_TickInc)
-		{
-			const uint8 oneBeatLengthInTicks = getTicksPerBeat();
-			const unsigned int oneMeasureLengthInTicks = m_beatSigNumerator * oneBeatLengthInTicks;
-			minimum = (uint8)ceil((double)m_sequenceBlocks[i]->absoluteTick / oneMeasureLengthInTicks);
-			break;
-		}
-	}
-	m_lengthInMeasures = jmax<uint8>(measures,minimum);
-	if (refreshTickIncrements) refreshRelativeTickIncrements();
-}
-
-// ticks per beat = 96 / (denominator / 4) (e.g. for 11/16 beat --> 96 / (16/4) = 96/4 = 24)
-uint8 PatternBodyBlock::getTicksPerBeat()
-{
-	return 96 / (m_beatSigDenominator / 4);
-}
-
 MidiFile* PatternBodyBlock::convertToMidiFile()
 {
 	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
@@ -1261,8 +1233,8 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 
 	uint8 deviceId = jmax<uint8>(grooveboxConnector->getActiveDeviceId(), 0x10);
 
-	double oneBeat = getTicksPerBeat();
-	double oneMeasure = (double)m_beatSigNumerator * oneBeat;
+	double oneBeat = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature().getTicksPerBeat();
+	double oneMeasure = (double)grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature().getNumerator() * oneBeat;
 	
 	ScopedPointer<MidiMessageSequence> muteCtrlTrack = new MidiMessageSequence();
 	ScopedPointer<MidiMessageSequence> metaInfoTrack = new MidiMessageSequence();
@@ -1512,9 +1484,8 @@ void PatternBodyBlock::loadMidiFile(File &file)
 	int numerator = 4, denominator = 4;
 	if (timeSigEvents.getNumEvents() > 0){ timeSigEvents.getEventPointer(0)->message.getTimeSignatureInfo(numerator, denominator); }
 	setupConfig->setBeatSignature((uint8)numerator, (uint8)denominator);
-	this->setBeatSignature(setupConfig->getBeatSignature(), false);
-	const uint8 oneBeatLengthInTicks = getTicksPerBeat();
-	const unsigned int oneMeasureLengthInTicks = m_beatSigNumerator * oneBeatLengthInTicks;
+	const uint8 oneBeatLengthInTicks = setupConfig->getBeatSignature().getTicksPerBeat();
+	const unsigned int oneMeasureLengthInTicks = setupConfig->getBeatSignature().getNumerator() * oneBeatLengthInTicks;
 
 	MidiMessageSequence::MidiEventHolder* current;
 
@@ -1572,7 +1543,7 @@ void PatternBodyBlock::loadMidiFile(File &file)
 	numMeasures = jlimit<uint8>(1, 32, (uint8) ceil((double)numTicks / oneMeasureLengthInTicks));
 	setupConfig->setPatternLengthInMeasures(numMeasures);
 	setupConfig->getParameter(0x12)->sendChangeMessage();
-	this->setLengthInMeasures(numMeasures, false);
+
 	bool beforeFirstNoteOnChannel[10] = { true, true, true, true, true, true, true, true, true, true}; // for channel 1 2 3 4 5 6 7 8 9 R
 	m_sequenceBlocks.clear();
 	// iterate and load messages into pattern setup and body, when loading body data decrease time stamp by offset of patternBodyStartTickInMidi
@@ -1606,7 +1577,8 @@ void PatternBodyBlock::loadMidiFile(File &file)
 					case 86:setupPart->getParameter(0x08)->setValue(val, Parameter::Init); break; // cc86 -> m-fx switch 
 					default: break;
 					}
-					
+					grooveboxMemory->handleCCFromGroovebox(channel, ccNo, val);
+					if (tableSelectionMidiOut != nullptr) tableSelectionMidiOut->sendMessageNow(MidiMessage::controllerEvent((int)part + 1, ccNo, val));
 				}
 			}
 			else if (current->message.isProgramChange())
@@ -1618,6 +1590,7 @@ void PatternBodyBlock::loadMidiFile(File &file)
 				{
 					PatternSetupPartBlock* setupPart = grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(part);
 					setupPart->getParameter(0x02)->setValue(progNo, Parameter::Init); // pc
+					if (tableSelectionMidiOut != nullptr) tableSelectionMidiOut->sendMessageNow(MidiMessage::programChange((int)part + 1, progNo));
 				}
 			}
 			else if (current->message.isSysEx())
@@ -1667,6 +1640,7 @@ void PatternBodyBlock::loadMidiFile(File &file)
 						default: break;
 						}
 						grooveboxMemory->handleCCFromGroovebox(channel, ccNo, val);
+						if (tableSelectionMidiOut != nullptr) tableSelectionMidiOut->sendMessageNow(MidiMessage::controllerEvent((int)part + 1, ccNo, val));
 					}
 				}
 				else if (current->message.isProgramChange() && patternBodyStartTickInMidi == 0 && beforeFirstNoteOnChannel[part])
@@ -1677,6 +1651,7 @@ void PatternBodyBlock::loadMidiFile(File &file)
 						PatternSetupPartBlock* setupPart = grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(part);
 						setupPart->getParameter(0x02)->setValue(progNo, Parameter::Init); // pc
 						mergedSequence.deleteEvent(i, false); if (i>0) i--; // remove current pc message
+						if (tableSelectionMidiOut != nullptr) tableSelectionMidiOut->sendMessageNow(MidiMessage::programChange((int)part + 1, progNo));
 					}
 				}
 				else
@@ -1738,5 +1713,90 @@ const OwnedArray<PatternBodyBlock::PatternEventData>* PatternBodyBlock::getFilte
 
 unsigned long PatternBodyBlock::getPatternLengthInTicks()
 {
-	return m_lengthInMeasures * m_beatSigNumerator * getTicksPerBeat();
+	return grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getPatternLengthInTicks();
+}
+
+PatternBodyBlock::PlayerThread::PlayerThread() :
+Thread("Pattern Player Thread")
+{
+
+}
+
+void PatternBodyBlock::PlayerThread::run()
+{
+	PatternBodyBlock* pattern = grooveboxMemory->getPatternBodyBlock();
+	PatternSetupConfigBlock* setup = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
+
+	if (pattern->isPatternEmpty()) return;
+
+	unsigned long patternEnd;
+	double bpm;
+	int currentIndex = currentIndex = pattern->m_lastSelectedRowFilteredsequence;
+	PatternBodyBlock::PatternEventData* current;
+	int nextIndex = currentIndex + 1;
+	PatternBodyBlock::PatternEventData* next;
+
+	// difftime
+	unsigned long ticksToWaitUntilNext;
+	int milliSecondsToWaitUntilNext;
+
+	uint32 computationTimeOfLastWait = Time::getMillisecondCounter();
+
+	while (!threadShouldExit())
+	{
+		if (pattern->m_filteredsequenceBlocks.size() < 1)break;
+		// tempo / pattern length might change while playing!
+		patternEnd = pattern->getPatternLengthInTicks();
+		bpm = setup->getTempoBpm();
+
+		// start with first selected row
+		if (currentIndex < 0 || currentIndex >= pattern->m_filteredsequenceBlocks.size()) currentIndex = 0;
+		current = pattern->m_filteredsequenceBlocks[currentIndex];
+		m_currentAbsoluteTimeInTicks = current->absoluteTick;
+		// next row would be:
+		nextIndex = currentIndex + 1;
+		if (nextIndex < 0 || nextIndex >= pattern->m_filteredsequenceBlocks.size()) nextIndex = 0;
+		next = pattern->m_filteredsequenceBlocks[nextIndex];
+
+		// midi out, time note-off
+		//m_patternEventTable->selectRow(currentRow, true, true);
+		if (pattern->tableSelectionMidiOut != nullptr)
+		{
+			pattern->tableSelectionMidiOut->sendMessageNow(current->toMidiMessage());
+			if (current->getType() == PatternEventType::Evt_Note)
+			{
+				double secondsToNoteOff = current->getNoteGateTicks() * 60.0 / (96.0*bpm);
+				// note off timer for channel / key
+				startTimer(getNoteOffID((uint8)current->getPart(), (uint8)current->getNoteNumber()), (int)(secondsToNoteOff*1000.0));
+			}
+		}
+
+		// continue with next event
+		currentIndex++;
+
+		// difftime to next
+		ticksToWaitUntilNext = (nextIndex == 0) ? patternEnd - current->absoluteTick + next->absoluteTick : next->absoluteTick - current->absoluteTick;
+		if ((signed long)ticksToWaitUntilNext < 0) ticksToWaitUntilNext = 0;
+		// wait if pause
+		if (ticksToWaitUntilNext > 0)
+		{
+			milliSecondsToWaitUntilNext = (int)(ticksToWaitUntilNext * 625.0 / bpm); // ticksToWaitUntilNext * 60.0 * 1000.0 / (96.0*bpm)
+			// compensate calculation time
+			wait(milliSecondsToWaitUntilNext - (Time::getMillisecondCounter() - computationTimeOfLastWait));
+			m_currentAbsoluteTimeInTicks = next->absoluteTick;
+			sendChangeMessage(); // broadcast change of time in absolute ticks
+			computationTimeOfLastWait = Time::getMillisecondCounter();
+		}
+	}
+}
+
+void PatternBodyBlock::PlayerThread::timerCallback(int noteOffId)
+{
+	uint8 part = 0, key = 0;
+	getPartAndKeyFromNoteOffId(noteOffId, part, key);
+	if (grooveboxMemory->getPatternBodyBlock()->tableSelectionMidiOut != nullptr)
+	{
+		grooveboxMemory->getPatternBodyBlock()->tableSelectionMidiOut->sendMessageNow(MidiMessage::noteOff(part + 1, key));
+	}
+	stopTimer(noteOffId);
 }

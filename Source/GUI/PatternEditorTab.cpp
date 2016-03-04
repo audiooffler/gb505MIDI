@@ -497,6 +497,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_midiOutComboBox->addItemList(MidiOutput::getDevices(), 1);
 	m_midiOutComboBox->setTextWhenNothingSelected(midiOutNames[MidiOutput::getDefaultDeviceIndex() + 1]);
 
+	m_patternEventTable->setMultipleSelectionEnabled(true);
 	m_patternEventTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_patternEventTable->setModel(patternBodyBlock);
 	m_patternEventTable->setHeader(m_patternEventTableHeader);
@@ -775,7 +776,6 @@ void PatternEditorTab::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				uint8 denominator = (uint8)signatureStrings[1].getIntValue();
 				PatternSetupConfigBlock* patternSetupConfigBlock = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
 				patternSetupConfigBlock->setBeatSignature(numerator, denominator);
-				grooveboxMemory->getPatternBodyBlock()->setBeatSignature(BeatSignature(numerator, denominator));
 			}
 		}
         //[/UserComboBoxCode_m_keySignatureComboBox]
@@ -885,33 +885,46 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_playButton)
     {
         //[UserButtonCode_m_playButton] -- add your button handler code here..
-		if (m_patternEventTable->getNumRows()>1)
-		{
-			const unsigned long patternEnd = grooveboxMemory->getPatternBodyBlock()->getPatternLengthInTicks();
-			const double bpm = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm();
+		//if (m_patternEventTable->getNumRows()>1)
+		//{
+		//	const unsigned long patternEnd = grooveboxMemory->getPatternBodyBlock()->getPatternLengthInTicks();
+		//	const double bpm = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm();
 
-			int currentRow = m_patternEventTable->getSelectedRow();
-			if (currentRow < 0 || currentRow >= m_patternEventTable->getNumRows()) currentRow = 0;
-			int nextRow = currentRow + 1;
-			if (nextRow < 0 || nextRow >= m_patternEventTable->getNumRows()) nextRow = 0;
-			const OwnedArray<PatternBodyBlock::PatternEventData>* events = grooveboxMemory->getPatternBodyBlock()->getFilteredSequenceBlocks();
-			PatternBodyBlock::PatternEventData* current = (*events)[currentRow];
-			PatternBodyBlock::PatternEventData* afternext = (*events)[nextRow];
-			// last: time to pattern end + time to first;, else simple difference
-			unsigned long ticksToWaitUntilNext = (nextRow == 0) ? patternEnd - current->absoluteTick + afternext->absoluteTick : afternext->absoluteTick - current->absoluteTick;
+		//	int currentRow = m_patternEventTable->getSelectedRow();
+		//	if (currentRow < 0 || currentRow >= m_patternEventTable->getNumRows()) currentRow = 0;
+		//	int nextRow = currentRow + 1;
+		//	if (nextRow < 0 || nextRow >= m_patternEventTable->getNumRows()) nextRow = 0;
+		//	const OwnedArray<PatternBodyBlock::PatternEventData>* events = grooveboxMemory->getPatternBodyBlock()->getFilteredSequenceBlocks();
+		//	PatternBodyBlock::PatternEventData* current = (*events)[currentRow];
+		//	PatternBodyBlock::PatternEventData* afternext = (*events)[nextRow];
+		//	// last: time to pattern end + time to first;, else simple difference
+		//	unsigned long ticksToWaitUntilNext = (nextRow == 0) ? patternEnd - current->absoluteTick + afternext->absoluteTick : afternext->absoluteTick - current->absoluteTick;
 
-			double secondsToWaitUntilNext = ticksToWaitUntilNext * 60.0 / (96.0*bpm);
+		//	double secondsToWaitUntilNext = ticksToWaitUntilNext * 60.0 / (96.0*bpm);
 
-			m_patternEventTable->selectRow(currentRow, true, true);
+		//	m_patternEventTable->selectRow(currentRow, true, true);
 
-			startTimer((int)(secondsToWaitUntilNext*1000.0));
-		}
+		//	startTimer((int)(secondsToWaitUntilNext*1000.0));
+		//}
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->addChangeListener(this);
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->startThread();
+		
         //[/UserButtonCode_m_playButton]
     }
     else if (buttonThatWasClicked == m_stopButton)
     {
         //[UserButtonCode_m_stopButton] -- add your button handler code here..
-		stopTimer();
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
+
+		if (grooveboxMemory->getPatternBodyBlock()->getOpenTableSelectionMidiOut() != nullptr)
+		{
+			for (int i = 1; i < 17; i++)
+			{
+				grooveboxMemory->getPatternBodyBlock()->getOpenTableSelectionMidiOut()->sendMessageNow(MidiMessage::allNotesOff(i));
+			}
+		}
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->removeChangeListener(this);
+			//stopTimer();
         //[/UserButtonCode_m_stopButton]
     }
 
@@ -961,7 +974,6 @@ void PatternEditorTab::sliderValueChanged (Slider* sliderThatWasMoved)
     else if (sliderThatWasMoved == m_measuresSlider)
     {
         //[UserSliderCode_m_measuresSlider] -- add your slider handling code here..
-		grooveboxMemory->getPatternBodyBlock()->setLengthInMeasures((uint8)m_measuresSlider->getValue());
         //[/UserSliderCode_m_measuresSlider]
     }
     else if (sliderThatWasMoved == m_tempoSlider)
@@ -985,6 +997,21 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 		m_patternEventTable->updateContent();
 		m_patternEventTable->repaint();
 	}
+	else if (source == grooveboxMemory->getPatternBodyBlock()->getPlayerThread())
+	{
+		unsigned long playPos = grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->getPlayBackTimeInAbsoluteTicks();
+		// select currently played back events
+		SparseSet<int> rowsToBeselected;
+		for (int i = 0; i < grooveboxMemory->getPatternBodyBlock()->getFilteredSequenceBlocks()->size(); i++)
+		{
+			if ((*grooveboxMemory->getPatternBodyBlock()->getFilteredSequenceBlocks())[i]->absoluteTick == playPos)
+			{
+				rowsToBeselected.addRange(Range<int>(i, i+1));
+			}
+		}
+		m_patternEventTable->setSelectedRows(rowsToBeselected, dontSendNotification);
+		//m_patternEventTable->scrollToEnsureRowIsOnscreen(rowsToBeselected.getTotalRange().getEnd());
+	}
 	else if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
 		if (param == grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x10) ||
@@ -992,7 +1019,6 @@ void PatternEditorTab::changeListenerCallback (ChangeBroadcaster *source)
 		{
 			BeatSignature sig = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getBeatSignature();
 			m_keySignatureComboBox->setText(sig.toString(),dontSendNotification);
-			grooveboxMemory->getPatternBodyBlock()->setBeatSignature(sig);
 			m_patternEventTable->updateContent();
 			m_patternEventTable->repaint();
 		}
@@ -1092,8 +1118,8 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 	switch (info.commandID)
 	{
 	case CommandIDs::createEmptyPattern:
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 		grooveboxMemory->getPatternBodyBlock()->clearPattern();
-		stopTimer();
 		m_patternEventTable->selectRow(0);
 		return true;
 	case CommandIDs::fileOpenPatternSyxFile:
@@ -1152,7 +1178,7 @@ void PatternEditorTab::loadSysExFile()
 			}
 			else
 			{
-				stopTimer();
+				grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 				m_patternEventTable->selectRow(0);
 			}
 		}
@@ -1250,56 +1276,11 @@ void PatternEditorTab::importMidiFile()
 		File file(myChooser.getResult());
 		if (file.existsAsFile())
 		{
+			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 			grooveboxMemory->getPatternBodyBlock()->loadMidiFile(file);
-			stopTimer();
 			m_patternEventTable->selectRow(0);
 		}
 	}
-}
-
-void PatternEditorTab::timerCallback()
-{
-	if (m_patternEventTable->getNumRows()>1)
-	{
-		unsigned long patternEnd = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getPatternLengthInTicks();
-		double bpm = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm();
-
-		double secondsToWaitUntilNext = 0.0;
-
-		while (secondsToWaitUntilNext == 0.0)
-		{
-			int nextRow = m_patternEventTable->getSelectedRow()+1;
-			if (nextRow < 0 || nextRow >= m_patternEventTable->getNumRows()) nextRow = 0;
-			int afternextRow = nextRow + 1;
-			if (afternextRow < 0 || afternextRow >= m_patternEventTable->getNumRows()) afternextRow = 0;
-			const OwnedArray<PatternBodyBlock::PatternEventData>* events = grooveboxMemory->getPatternBodyBlock()->getFilteredSequenceBlocks();
-			PatternBodyBlock::PatternEventData* next = (*events)[nextRow];
-			PatternBodyBlock::PatternEventData* afternext = (*events)[afternextRow];
-			
-			patternEnd = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getPatternLengthInTicks();
-			bpm = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm();
-
-			// last: time to pattern end + time to first;, else simple difference
-			unsigned long ticksToWaitUntilNext = (afternextRow == 0) ? patternEnd - next->absoluteTick + afternext->absoluteTick : afternext->absoluteTick - next->absoluteTick;
-			secondsToWaitUntilNext = ticksToWaitUntilNext * 60.0 / (96.0*bpm);
-
-			m_patternEventTable->selectRow(nextRow, true, false);
-		}
-		//if (secondsToWaitUntilNext > 0.0)
-		startTimer((int)(secondsToWaitUntilNext*1000.0));
-		
-	}
-}
-
-PatternEditorTab::PlayerThread::PlayerThread() :
-	Thread("Pattern Player Thread")
-{
-
-}
-
-void PatternEditorTab::PlayerThread::run()
-{
-
 }
 
 //[/MiscUserCode]
@@ -1315,7 +1296,7 @@ void PatternEditorTab::PlayerThread::run()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="PatternEditorTab" componentName=""
-                 parentClasses="public Component, public ChangeListener, public ApplicationCommandTarget, public Timer"
+                 parentClasses="public Component, public ChangeListener, public ApplicationCommandTarget"
                  constructorParams="" variableInitialisers="" snapPixels="4" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="0" initialWidth="1060"
                  initialHeight="400">

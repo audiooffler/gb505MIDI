@@ -93,7 +93,7 @@ public:
 		static unsigned long mostRecentAbsoluteTick;	// static, for all PatternEventData instances, increased by constructor of new instances by their relative tick increment
 		static uint8 lastRelativeTickIncrement; // set on instance construction by byte 1
 		// MM-BB-TT depends on beat signature. for gate times set asLength to true (conting beats and measures from 0 on instead beginning with number 1)
-		static String getAbsoluteTickString(unsigned int absoluteTicks, uint8 ticksPerBeat, uint8 beatsPerMeasure, bool asLength = false);
+		String getAbsoluteTickString(unsigned int absoluteTicks, bool asLength = false);
 		static String getPartString(PatternPart part);
 		static String getRhythmGroupString(RhythmGroup rhythmGroup);
 
@@ -138,7 +138,7 @@ public:
 		uint32 getSysExSize();
 		uint8* getSysExBytesPtr(); // pointer to last 4 bytes
 		void getSysExBytesCopyTo(uint8* fourBytes); // make sure to give reference to a 4-byte array which values are to be set
-		String toDebugString(uint8 ticksPerBeat, uint8 beatsPerMeasure);
+		String toDebugString();
 		MidiMessage toMidiMessage();
 	};
 
@@ -212,12 +212,6 @@ public:
 	// clears entries m_sequenceBlocks, calls refreshRelativeTickIncrements(), calls refreshFilteredContent()
 	void clearPattern();
 
-	// to be called when beat signature in pattern setup is changed. updates the viewed table by sendChangeMessage() (for MM-BB-TT time display repaint)
-	void setBeatSignature(BeatSignature beatSignature, bool refreshTickIncrements = true);
-	// ticks per beat = 96 / (denominator / 4) (e.g. for 11/16 beat --> 96 / (16/4) = 96/4 = 24)
-	uint8 getTicksPerBeat();
-	void setLengthInMeasures(uint8 measures, bool refreshTickIncrements = true);
-
 	// creates a new MidiFile
 	MidiFile* convertToMidiFile();
 
@@ -234,16 +228,35 @@ public:
 
 	unsigned long getPatternLengthInTicks(); // depends on m_lengthInMeasures and time signature
 
+	friend class PlayerThread;
+	class PlayerThread : public Thread, public MultiTimer, public ChangeBroadcaster
+	{
+	public:
+		PlayerThread();
+		void run() override;
+		// note-off timers
+		void timerCallback(int noteOffId) override;
+		static int getNoteOffID(uint8 part, uint8 key){ return (part << 8) + key; }
+		static void getPartAndKeyFromNoteOffId(int noteOffId, uint8 &part, uint8 &key){ key = (uint8)(noteOffId & 0x7F); part = (uint8)(noteOffId >> 8); }
+		// to be called on change message
+		unsigned long getPlayBackTimeInAbsoluteTicks(){ return m_currentAbsoluteTimeInTicks; }
+	private:
+		unsigned long m_currentAbsoluteTimeInTicks=0;
+	};
+
+	PlayerThread* getPlayerThread() { return m_playerThread; }
+
 private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
 	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
+	int m_lastSelectedRowFilteredsequence = -1;
 	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
+	ScopedPointer<PlayerThread> m_playerThread;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 	HashMap<int, String> m_midiCCNames;
 	HashMap<int, String> m_keyDrumGroupes;
-	uint8 m_beatSigNumerator = 4; // = beats per measure
-	uint8 m_beatSigDenominator = 4;
-	uint8 m_lengthInMeasures = 4;
+	//uint8 m_beatSigNumerator = 4; // = beats per measure
+	//uint8 m_beatSigDenominator = 4;
 	// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
 	MemoryBlock sysExBuilder;
 	unsigned int sysExBuilderByteIndex = 0;
