@@ -24,18 +24,25 @@ extern Waveforms* waveForms;
 
 GrooveboxConnector::GrooveboxConnector() :
 	m_selectedDeviceId(0),	// 0 is invalid (no connection) - only values from 0x10 (17) to 0x7F are allowed
-	m_checkThread(nullptr)
+	m_checkThread(nullptr),
+	m_sendBulkDumpThread(nullptr)
 {
 }
 
 GrooveboxConnector::~GrooveboxConnector()
 {
 	m_activeConnections.clear();
-	if (m_checkThread != nullptr)
+	m_sendBulkDumpThread = nullptr;
+	/*if (m_checkThread != nullptr)
 	{
 		m_checkThread->waitForThreadToExit(50);
 		delete m_checkThread;
 	}
+	if (m_sendBulkDumpThread != nullptr)
+	{
+		if (m_sendBulkDumpThread->isThreadRunning()) m_sendBulkDumpThread->stopThread(50);
+		delete m_sendBulkDumpThread;
+	}*/
 }
 
 bool GrooveboxConnector::openGrooveboxMidiInAndOut(bool warnMsgBox)
@@ -68,9 +75,7 @@ int GrooveboxConnector::refreshConnections(bool warnMsgBox)
 	// Thread with progress Window: send broadcast sysex and wait for replys, stop after timeout (waiting long enough without any more replies)
 	// use a MidiMessageCollector handler during running thread
 	
-	ScopedPointer<SyxMsg> inquiry = new SyxMsg(SyxMsg::Type_Inquiry_Request);
-
-	m_checkThread = new RetrieveSysExThread(inquiry, TRANS("Checking connections..."), 100);
+	m_checkThread = new IndenityRequestReplyThread(TRANS("Checking connections..."), 10000);
 	m_checkThread->runThread();
 
 	// after thread: read connections from retrieved data
@@ -99,7 +104,6 @@ int GrooveboxConnector::refreshConnections(bool warnMsgBox)
 			}
 		}
 	}
-	deleteAndZero(m_checkThread);
 	// now that the active connections are known: which one to select?
 
 	uint8 deviceIdToUse(0);
@@ -215,23 +219,20 @@ bool GrooveboxConnector::sendPatchesPatternAndSetupAsDump()
 		+ helpText + "\r\n\r\n" +
 		"Continue by pressing OK."))
 	{
-		OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
-		grooveboxMemory->getPartInfoBlock()->createBlockSendMessages(&sysExCompilation);
-		grooveboxMemory->getSynthPatchesBlock()->createBlockSendMessages(&sysExCompilation);
-		grooveboxMemory->getRhythmSetBlock()->createBlockSendMessages(&sysExCompilation);
-		grooveboxMemory->getPatternBodyBlock()->createBlockSendMessages(&sysExCompilation);
-		grooveboxMemory->getPatternSetupBlock()->createBlockSendMessages(&sysExCompilation);
-		for (int i = 0; i < sysExCompilation.size(); i++)
-		{
-			midiOutputDevice->sendMessageNow(sysExCompilation[i]->getAsMidiMessage());
-			Thread::sleep(40);
-		}
+		m_sendBulkDumpThread = new SendBulkDumpThread();
+		// feed thread data
+		grooveboxMemory->getPartInfoBlock()->createBlockSendMessages(m_sendBulkDumpThread->getSysExCompilationPtr());
+		grooveboxMemory->getSynthPatchesBlock()->createBlockSendMessages(m_sendBulkDumpThread->getSysExCompilationPtr());
+		grooveboxMemory->getRhythmSetBlock()->createBlockSendMessages(m_sendBulkDumpThread->getSysExCompilationPtr());
+		grooveboxMemory->getPatternBodyBlock()->createBlockSendMessages(m_sendBulkDumpThread->getSysExCompilationPtr());
+		grooveboxMemory->getPatternSetupBlock()->createBlockSendMessages(m_sendBulkDumpThread->getSysExCompilationPtr());
+		m_sendBulkDumpThread->launchThread();
 		return true;
 	}
 	else return false;
 }
 
-GrooveboxConnector::MIDIRetrieveTimeOutTimer::MIDIRetrieveTimeOutTimer(RetrieveSysExThread* threadRef) :Timer()
+GrooveboxConnector::MIDIRetrieveTimeOutTimer::MIDIRetrieveTimeOutTimer(IndenityRequestReplyThread* threadRef) :Timer()
 {
 	m_threadPtr = threadRef;
 }
@@ -240,74 +241,52 @@ void GrooveboxConnector::MIDIRetrieveTimeOutTimer::timerCallback()
 {
 	// timer ran out, so the response might me received completely.
 	// tell the thread to continue with next request
-	m_threadPtr->callNextRequestEvent->signal();
 	stopTimer();
+	m_threadPtr->stopThread(100);
 }
 
-GrooveboxConnector::RetrieveSysExThread::RetrieveSysExThread(OwnedArray<SyxMsg, CriticalSection>& requestSysExMessagesPtr, String windowTitle, int timeOutInMs) :
-ThreadWithProgressWindow(windowTitle, true, false, timeOutInMs),
-m_retrieveTimeout(timeOutInMs),
-m_timeoutTimer(new MIDIRetrieveTimeOutTimer(this)),
-callNextRequestEvent(new WaitableEvent())
+GrooveboxConnector::IndenityRequestReplyThread::IndenityRequestReplyThread(String windowTitle, int timeOutInMs) :
+	ThreadWithProgressWindow(windowTitle, true, true, timeOutInMs),
+	inquiry (new SyxMsg(SyxMsg::Type_Inquiry_Request)),
+	m_retrieveTimeout(timeOutInMs),
+	m_timeoutTimer(new MIDIRetrieveTimeOutTimer(this))
 {
-	// copy request messages
-	for (int i = 0; i < requestSysExMessagesPtr.size(); i++)
-	{
-		m_requestMessages.add(requestSysExMessagesPtr[i]->copyToNew());
-	}
 	setProgress(-1.0);
 }
 
-
-GrooveboxConnector::RetrieveSysExThread::RetrieveSysExThread(SyxMsg* requestSysExMessagePtr, String windowTitle, int timeOutInMs) :
-ThreadWithProgressWindow(windowTitle, true, false, timeOutInMs),
-m_retrieveTimeout(timeOutInMs),
-m_timeoutTimer(new MIDIRetrieveTimeOutTimer(this)),
-callNextRequestEvent(new WaitableEvent())
-{
-	m_requestMessages.add(requestSysExMessagePtr->copyToNew());
-	setProgress(-1.0);
-}
-
-GrooveboxConnector::RetrieveSysExThread::~RetrieveSysExThread()
+GrooveboxConnector::IndenityRequestReplyThread::~IndenityRequestReplyThread()
 {
 }
 
-void GrooveboxConnector::RetrieveSysExThread::run()
+void GrooveboxConnector::IndenityRequestReplyThread::run()
 {
 	if (midiOutputDevice != nullptr && midiInputDevice != nullptr)
 	{
 		m_retrievedSysExMessages.clear();
 		midiInputDevice->start();
 
-		while (m_requestMessages.size() > 0 && !threadShouldExit())
+		// send request:
+		midiOutputDevice->sendMessageNow(inquiry->getAsMidiMessage());
+
+		// now rest in loop until exit is signalled by external timer, triggered by handleIncomingMidiMessage
+		m_timeoutTimer->startTimer(m_retrieveTimeout);
+		while (m_retrievedSysExMessages.size() == 0 && !threadShouldExit())
 		{
-
-			// send inquiry request broadcast out
-			SyxMsg* currentRequest = m_requestMessages.getFirst();
-			midiOutputDevice->sendMessageNow(currentRequest->getAsMidiMessage());
-			m_requestMessages.removeObject(currentRequest, true);
-			// now rest in loop until exit is signalled by external timer, triggered by handleIncomingMidiMessage
-			m_timeoutTimer->startTimer(m_retrieveTimeout);
 			// wait till timer signals
-			callNextRequestEvent->wait();
-
-			// { ... }
-
-			// after timeout, continue:
-
-			// 
-			if (m_requestMessages.size() == 0)
-			{
-				signalThreadShouldExit();
-			}
-			// else if more m_requestMessages left, continue(request next, restart timer...)
+			wait(40);
 		}
 	}
 	else return;
 }
 
-void GrooveboxConnector::RetrieveSysExThread::addMidiMessage(MidiInput *midiIn, const MidiMessage &midiInMsg)
+void GrooveboxConnector::IndenityRequestReplyThread::threadComplete(bool userPressedCancel)
+{
+	if (userPressedCancel)
+	{
+	}
+}
+
+void GrooveboxConnector::IndenityRequestReplyThread::addMidiMessage(MidiInput *midiIn, const MidiMessage &midiInMsg)
 {
 	if (midiIn == midiInputDevice && midiInMsg.isSysEx())
 	{
@@ -317,5 +296,37 @@ void GrooveboxConnector::RetrieveSysExThread::addMidiMessage(MidiInput *midiIn, 
 		m_timeoutTimer->startTimer(m_retrieveTimeout);
 		// collect incoming sysex into an array, where he caller can get them from after the tread finished
 		m_retrievedSysExMessages.add(syxMsg);
+		signalThreadShouldExit();
 	}
+}
+
+GrooveboxConnector::SendBulkDumpThread::SendBulkDumpThread()
+	: ThreadWithProgressWindow("Transmitting Bulk Dump to Groovebox...", true, true)
+{
+
+}
+
+GrooveboxConnector::SendBulkDumpThread::~SendBulkDumpThread()
+{
+	sysExCompilation.clear();
+}
+
+void GrooveboxConnector::SendBulkDumpThread::run()
+{
+	setProgress(0.0);
+	for (int i = 0; i < sysExCompilation.size() && !threadShouldExit(); i++)
+	{
+		midiOutputDevice->sendMessageNow(sysExCompilation[i]->getAsMidiMessage());
+		setProgress(((double)i + 1.0) / (double)sysExCompilation.size());
+		Thread::wait(40);
+	}
+}
+
+void GrooveboxConnector::SendBulkDumpThread::threadComplete(bool userPressedCancel)
+{
+	if (userPressedCancel)
+	{
+
+	}
+	sysExCompilation.clear();
 }

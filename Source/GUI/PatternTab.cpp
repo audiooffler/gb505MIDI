@@ -591,7 +591,7 @@ bool PatternTab::perform(const InvocationInfo& info)
 		exportAsMidiFile();
 		break;
 	case CommandIDs::grooveBoxLoadPattern:
-		loadFromGroovebox();
+		//loadFromGroovebox();
 		break;
 	default:
 		return false;
@@ -634,7 +634,7 @@ void PatternTab::loadFromGroovebox()
 		// new pattern
 		m_currentPattern = new GrooveboxPattern(grooveboxConnector->getActiveDeviceId());
 		// load current pattern. if no success loading: show empty pattern
-		if (!m_currentPattern->loadFromGroovebox())
+		if (false==true/*!m_currentPattern->loadFromGroovebox()*/)
 		{
 			m_patternNameText->setText("EMPTY PATTERN");
 			m_beatText->setText("4/4");

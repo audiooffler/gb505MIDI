@@ -1391,8 +1391,6 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 		allEventsAs8Bit.append(event->bytes, 8);
 	}
 
-	DBG("unpacked data: " + String::toHexString(allEventsAs8Bit.getData(), allEventsAs8Bit.getSize()));
-
 	// encode every 7 bytes into 8x 7-bit MIDI data bytes
 	MemoryBlock allEventsAs7Bit;
 	uint8 encodedBlock[8] = { 0, 0, 0, 0, 0, 0, 0, 0 }; // current 8x 7Bit-Bytes Block, made from 7x 8Bit-Bytes
@@ -1415,7 +1413,6 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 		allEventsAs7Bit.append(encodedBlock, 8);
 	}
 	allEventsAs7Bit.setSize((unsigned int)ceilf((float)allEventsAs8Bit.getSize()*8.0f / 7.0f));
-	DBG("encoded data: " + String::toHexString(allEventsAs7Bit.getData(), allEventsAs7Bit.getSize()));
 
 	// output encoded bytes as sysex
 	uint8 deviceId((grooveboxConnector != nullptr && grooveboxConnector->getActiveConnection()!=nullptr) ? 
@@ -1431,6 +1428,7 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 		address[2] = addressOffset;
 		syxMsgArrayPtr->add(new SyxMsg(SyxMsg::Type_DT1, deviceId, address, data, dataLength));
 		addressOffset++;
+		delete[] data;
 	}
 }
 

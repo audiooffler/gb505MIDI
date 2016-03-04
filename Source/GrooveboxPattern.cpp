@@ -131,36 +131,6 @@ bool GrooveboxPattern::loadFromArray(OwnedArray<SyxMsg, CriticalSection>& sysExM
 	return false;
 }
 
-// todo: bug - missing notes in U:051 "Unit2Sunsh A"
-bool GrooveboxPattern::loadFromGroovebox()
-{
-	OwnedArray<SyxMsg, CriticalSection> requestMessages;
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, GrooveboxPatternSetup::ptnSetupRQ1Address, GrooveboxPatternSetup::ptnSetupRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, ptnBodyRQ1Address, ptnBodyRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part1PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part2PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part3PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part4PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part5PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part6PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, part7PatchNameRQ1Address, patchNameRQ1Size));
-	requestMessages.add(new SyxMsg(SyxMsg::Type_RQ1, m_deviceId, partRRhythmNameRQ1Address, patchNameRQ1Size));
-
-	if (grooveboxConnector != nullptr)
-	{
-		// true if successfully loaded pattern
-		return loadFromArray(
-			grooveboxConnector->requestSysExData(requestMessages, TRANS("Retrieving Pattern Setup, Pattern Body and Part Names data..."), 1500)
-			);
-	}
-
-	//RetrieveSysExThread getPtnAndSetupThread(requestMessages, TRANS("Retrieving Pattern Setup, Pattern Body and Part Names data..."), 1500);
-	//getPtnAndSetupThread.runThread();
-	//bool success = loadFromArray(getPtnAndSetupThread.getRetrievedMessages());
-	//return success;
-	return false;
-}
-
 bool GrooveboxPattern::loadBinarySysExFile(const File& file)
 {
 	ScopedPointer<FileInputStream> inputStream = file.createInputStream();
