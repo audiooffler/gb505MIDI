@@ -1757,7 +1757,12 @@ void PatternBodyBlock::PlayerThread::run()
 		nextIndex = currentIndex + 1;
 		if (nextIndex < 0 || nextIndex >= pattern->m_filteredsequenceBlocks.size()) nextIndex = 0;
 		next = pattern->m_filteredsequenceBlocks[nextIndex];
-
+		// but if exceeding pattern length search next within pattern
+		if (next->absoluteTick > patternEnd) 
+		{ 
+			nextIndex = 0; 
+			next = pattern->m_filteredsequenceBlocks[nextIndex]; 
+		}
 		// midi out, time note-off
 		//m_patternEventTable->selectRow(currentRow, true, true);
 		if (pattern->tableSelectionMidiOut != nullptr)
@@ -1769,10 +1774,11 @@ void PatternBodyBlock::PlayerThread::run()
 				// note off timer for channel / key
 				startTimer(getNoteOffID((uint8)current->getPart(), (uint8)current->getNoteNumber()), (int)(secondsToNoteOff*1000.0));
 			}
+			pattern->m_lastSelectedRowFilteredsequence = currentIndex;
 		}
 
 		// continue with next event
-		currentIndex++;
+		currentIndex = nextIndex;
 
 		// difftime to next
 		ticksToWaitUntilNext = (nextIndex == 0) ? patternEnd - current->absoluteTick + next->absoluteTick : next->absoluteTick - current->absoluteTick;

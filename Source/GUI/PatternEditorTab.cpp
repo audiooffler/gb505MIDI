@@ -484,7 +484,7 @@ PatternEditorTab::PatternEditorTab ()
     m_viewTypeIncLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_playButton = new TextButton ("playButton"));
-    m_playButton->setButtonText (TRANS(">||"));
+    m_playButton->setButtonText (TRANS(">"));
     m_playButton->addListener (this);
 
     addAndMakeVisible (m_stopButton = new TextButton ("stopButton"));
@@ -885,37 +885,33 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_playButton)
     {
         //[UserButtonCode_m_playButton] -- add your button handler code here..
-		//if (m_patternEventTable->getNumRows()>1)
-		//{
-		//	const unsigned long patternEnd = grooveboxMemory->getPatternBodyBlock()->getPatternLengthInTicks();
-		//	const double bpm = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getTempoBpm();
-
-		//	int currentRow = m_patternEventTable->getSelectedRow();
-		//	if (currentRow < 0 || currentRow >= m_patternEventTable->getNumRows()) currentRow = 0;
-		//	int nextRow = currentRow + 1;
-		//	if (nextRow < 0 || nextRow >= m_patternEventTable->getNumRows()) nextRow = 0;
-		//	const OwnedArray<PatternBodyBlock::PatternEventData>* events = grooveboxMemory->getPatternBodyBlock()->getFilteredSequenceBlocks();
-		//	PatternBodyBlock::PatternEventData* current = (*events)[currentRow];
-		//	PatternBodyBlock::PatternEventData* afternext = (*events)[nextRow];
-		//	// last: time to pattern end + time to first;, else simple difference
-		//	unsigned long ticksToWaitUntilNext = (nextRow == 0) ? patternEnd - current->absoluteTick + afternext->absoluteTick : afternext->absoluteTick - current->absoluteTick;
-
-		//	double secondsToWaitUntilNext = ticksToWaitUntilNext * 60.0 / (96.0*bpm);
-
-		//	m_patternEventTable->selectRow(currentRow, true, true);
-
-		//	startTimer((int)(secondsToWaitUntilNext*1000.0));
-		//}
-		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->addChangeListener(this);
-		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->startThread();
+		if (grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->isThreadRunning())
+		{
+			m_playButton->setButtonText(">");
+			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
+			if (grooveboxMemory->getPatternBodyBlock()->getOpenTableSelectionMidiOut() != nullptr)
+			{
+				for (int i = 1; i < 17; i++)
+				{
+					grooveboxMemory->getPatternBodyBlock()->getOpenTableSelectionMidiOut()->sendMessageNow(MidiMessage::allNotesOff(i));
+				}
+			}
+			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->removeChangeListener(this);
+		}
+		else if (!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty())
+		{
+			m_playButton->setButtonText("||");
+			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->addChangeListener(this);
+			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->startThread();
+		}
 		
         //[/UserButtonCode_m_playButton]
     }
     else if (buttonThatWasClicked == m_stopButton)
     {
         //[UserButtonCode_m_stopButton] -- add your button handler code here..
+		m_playButton->setButtonText(">");
 		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
-
 		if (grooveboxMemory->getPatternBodyBlock()->getOpenTableSelectionMidiOut() != nullptr)
 		{
 			for (int i = 1; i < 17; i++)
@@ -924,6 +920,7 @@ void PatternEditorTab::buttonClicked (Button* buttonThatWasClicked)
 			}
 		}
 		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->removeChangeListener(this);
+		m_patternEventTable->selectRow(0, false, true);
 			//stopTimer();
         //[/UserButtonCode_m_stopButton]
     }
@@ -1603,7 +1600,7 @@ BEGIN_JUCER_METADATA
          fontsize="12" bold="1" italic="0" justification="34"/>
   <TEXTBUTTON name="playButton" id="157fa00440f1675e" memberName="m_playButton"
               virtualName="" explicitFocusOrder="0" pos="56Rr 40 40 20" posRelativeX="b3dca965d9e5cad6"
-              buttonText="&gt;||" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
+              buttonText="&gt;" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <TEXTBUTTON name="stopButton" id="25cf7d97eb70d36e" memberName="m_stopButton"
               virtualName="" explicitFocusOrder="0" pos="8Rr 40 40 20" posRelativeX="b3dca965d9e5cad6"
               buttonText="&#9632;" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
