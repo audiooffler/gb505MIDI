@@ -9,6 +9,7 @@
 */
 
 #include "PartInfoBlock.h"
+#include "PatternSetupBlock.h"
 
 // ----------------------------------------------------------------------------
 
@@ -189,6 +190,9 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 	autoPanRateStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_whole) + " Whole (1/1)");
 	autoPanRateStrings.add("2 Measures"); autoPanRateStrings.add("3 Measures"); autoPanRateStrings.add("4 Measures");
 	autoPanRateStrings.add("8 Measures"); autoPanRateStrings.add("16 Measures");
+
+	uint8 parameterValuesBeforeSetup[12] = { m_data[0x0E], m_data[0x0F], m_data[0x10], m_data[0x11], m_data[0x12], m_data[0x13], m_data[0x14], m_data[0x15], m_data[0x16], m_data[0x17], m_data[0x18], m_data[0x19] };
+
 	switch (mFXTypeIndex)
 	{
 	case 0: // 4BAND EQ
@@ -584,6 +588,7 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 		setupParameter("M-FX Parameter 12", 0x19, 0, 127);
 		break;
 	}
+	for (uint16 i = 0x0E; i <= 0x19; i++) getParameter(i)->setValue(parameterValuesBeforeSetup[i - 0x0E], Parameter::ChangeSource::LoadingFile);
 }
 
 // delayType must by of 0..1 (short / long)
@@ -598,6 +603,29 @@ void PartInfoCommonBlock::refreshParametersForDelayTypeValue(uint8 delayType)
 	{
 		setupParameter("Delay Time", 0x25, 0, 120, 114, StringArray::fromTokens("200,205,210,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310,315,320,325,330,335,340,345,350,355,360,365,370,375,380,385,390,395,400,405,410,415,420,425,430,435,440,445,450,455,460,465,470,475,480,485,490,495,500,510,520,530,540,550,560,570,580,590,600,610,620,630,640,650,660,670,680,690,700,710,720,730,740,750,760,770,780,790,800,810,820,830,840,850,860,870,880,890,900,910,920,930,940,950,960,970,980,990,1000,Sixteenth Note (1/16),Eighth Triplet (1/12),Dotted Sixteenth (3/32),Eighth Note (1/8),Quarter Triplet (1/6),Dotted Eighth (3/16),Quarter Note (1/4),Half Tiplet (1/3),Dotted Quarter (3/8),Half Note (1/2)", ",", ""),
 			"Adjusts the time from the original sound until when the delayed sound is heard(the interval between repeats).\r\nIt is not possible to set a delay time longer than 1000 ms (1 second). When the delay time is synchronized to the BPM, selecting a note value which would make the delay time exceed 1000 ms will cause the delay time to be halved, and the delay sound will be heard at 1/2 the specified interval. In addition, even if 1/2 the length would exceed 1000 ms, the delay time will be shortened to 1/4 the length.");
+	}
+}
+
+// for setup effects changed
+void PartInfoCommonBlock::changeListenerCallback(ChangeBroadcaster *source)
+{
+	if (Parameter* param = dynamic_cast<Parameter*>(source))
+	{
+		if (PatternSetupEffectsBlock* setupFx = dynamic_cast<PatternSetupEffectsBlock*>(param->getBlock()))
+		{
+			if (param->getAddressOffset() >= 0x02 && param->getAddressOffset() <= 0x12) // m-fx type and 12 parameters, 2 reserved, m-fx MFX send to DLY and to REV
+				this->getParameter(0x0B + param->getAddressOffset())->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() >= 0x1D && param->getAddressOffset() <= 0x1E) // delay Level, Type
+				this->getParameter(0x05 + param->getAddressOffset())->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() == 0x1F) // delay Time
+				this->getParameter(0x25)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() == 0x20) // delay HF Damp
+				this->getParameter(0x24)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() >= 0x21 && param->getAddressOffset() <= 0x22) // delay Feed	Route
+				this->getParameter(0x05 + param->getAddressOffset())->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() >= 0x18 && param->getAddressOffset() <= 0x1B) // reverb parameters Type, Level, Time, Damp
+				this->getParameter(0x10 + param->getAddressOffset())->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+		}
 	}
 }
 
@@ -879,8 +907,8 @@ void PartInfoPartBlock::handleCC(uint8 channel, uint8 controllerType, uint8 valu
 			getGroupFromBankSelMSB_LSB(lastCC00BankMsbVal, lastCC32BankLsbVal, groupType, groupId);
 			if (groupId != 0)
 			{
-				getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::Init);
-				getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::Init);
+				getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::MidiInFromGroovebox);
+				getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::MidiInFromGroovebox);
 			}
 		}
 		else if (controllerType == 32)
@@ -891,8 +919,8 @@ void PartInfoPartBlock::handleCC(uint8 channel, uint8 controllerType, uint8 valu
 			getGroupFromBankSelMSB_LSB(lastCC00BankMsbVal, lastCC32BankLsbVal, groupType, groupId);
 			if (groupId != 0)
 			{
-				getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::Init);
-				getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::Init);
+				getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::MidiInFromGroovebox);
+				getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::MidiInFromGroovebox);
 			}
 		}
 		else switch (controllerType)
@@ -906,6 +934,67 @@ void PartInfoPartBlock::handleCC(uint8 channel, uint8 controllerType, uint8 valu
 		default:break;
 		}
 		// TODO: if not coming from midi in port that is part of active connection to groovebox, send to midiout (should be handled outside this, in mini in handler or so...)
+	}
+}
+
+// for setup part changed
+void PartInfoPartBlock::changeListenerCallback(ChangeBroadcaster *source)
+{
+	if (Parameter* param = dynamic_cast<Parameter*>(source))
+	{
+		if (PatternSetupPartBlock* setupPart = dynamic_cast<PatternSetupPartBlock*>(param->getBlock()))
+		{
+			if (param->getAddressOffset() == 0x00) // CC 00 (Bank Select MSB)
+			{
+				lastCC00BankMsbVal = param->getValue();
+				uint8 groupType, groupId;
+				getGroupFromBankSelMSB_LSB(lastCC00BankMsbVal, lastCC32BankLsbVal, groupType, groupId);
+				if (groupId != 0)
+				{
+					this->getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::LoadingFile);
+					this->getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::LoadingFile);
+				}
+			}
+			else if (param->getAddressOffset() == 0x01) // CC 32 (Bank Select LSB)
+			{
+				lastCC32BankLsbVal = param->getValue();
+				uint8 groupType, groupId;
+				getGroupFromBankSelMSB_LSB(lastCC00BankMsbVal, lastCC32BankLsbVal, groupType, groupId);
+				if (groupId != 0)
+				{
+					this->getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::LoadingFile);
+					this->getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::LoadingFile);
+				}
+			}
+			else if (param->getAddressOffset() == 0x02) // PC
+			{
+				this->getParameter(0x04)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			}
+			else if (param->getAddressOffset() == 0x03) // Level
+			{
+				this->getParameter(0x06)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			}
+			else if (param->getAddressOffset() == 0x04) // Pan
+			{
+				this->getParameter(0x07)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			}
+			else if (param->getAddressOffset() == 0x05) // Key +/- (map 0 127, center 64 to 0-96 (-48 - +48, center 48) by subtracting 0x10 ) 
+			{
+				this->getParameter(0x08)->setValue(jmax<uint8>(0,param->getValue() - 0x10), Parameter::ChangeSource::LoadingFile);
+			}
+			else if (param->getAddressOffset() == 0x06) // Rev send
+			{
+				this->getParameter(0x0D)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			}
+			else if (param->getAddressOffset() == 0x07) // DLY send
+			{
+				this->getParameter(0x0C)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			}
+			else if (param->getAddressOffset() == 0x08) // M-FX switch
+			{
+				this->getParameter(0x0A)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			}
+		}
 	}
 }
 

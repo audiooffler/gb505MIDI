@@ -14,7 +14,7 @@
 #include "GrooveboxMemoryBlock.h"
 #include "../GUI/AsciiWithNoteValuesTypeface.h"
 
-class PartInfoCommonBlock : public GrooveboxMemoryBlock
+class PartInfoCommonBlock : public GrooveboxMemoryBlock, public ChangeListener
 {
 public:
 	PartInfoCommonBlock();
@@ -26,6 +26,9 @@ public:
 	
 	// delayType must by of 0..1 (short / long)
 	void refreshParametersForDelayTypeValue(uint8 delayType);
+
+	// for setup effects changed
+	void changeListenerCallback(ChangeBroadcaster *source) override;
 	
 private:
 	String m_EffectDescription;
@@ -34,7 +37,7 @@ private:
 
 // 8 instances
 // TODO Receive Switches in Pattern Setup too?
-class PartInfoPartBlock : public GrooveboxMemoryBlock
+class PartInfoPartBlock : public GrooveboxMemoryBlock, public ChangeListener
 {
 public:
 	PartInfoPartBlock::PartInfoPartBlock(AllParts part);
@@ -55,6 +58,9 @@ public:
 	void getGroupFromBankSelMSB_LSB(uint8 msb, uint8 lsb, uint8 &patchGroupType, uint8 &patchGroupId);
 
 	void handleCC(uint8 channel, uint8 controllerType, uint8 value);
+
+	// for setup part changed
+	void changeListenerCallback(ChangeBroadcaster *source) override;
 
 private:
 	AllParts m_part;

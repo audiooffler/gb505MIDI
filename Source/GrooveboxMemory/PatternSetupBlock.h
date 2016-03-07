@@ -13,6 +13,7 @@
 
 #include "GrooveboxMemoryBlock.h"
 #include "PatternBodyBlock.h"
+#include "PartInfoBlock.h"
 
 class BeatSignature
 {
@@ -103,7 +104,7 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupConfigBlock)
 };
 
-class PatternSetupEffectsBlock : public GrooveboxMemoryBlock
+class PatternSetupEffectsBlock : public GrooveboxMemoryBlock, public ChangeListener
 {
 public:
 	static const StringArray PatternSetupEffectsBlock::mFxTypeNameStrings;
@@ -111,19 +112,29 @@ public:
 	MidiMessageSequence getM_FX_SetupMidiMessageSequence(uint8 deviceId);
 	MidiMessageSequence getReverbSetupMidiMessageSequence(uint8 deviceId);
 	MidiMessageSequence getDelaySetupMidiMessageSequence(uint8 deviceId);
+	// for part info common (performance) changed
+	bool handleSysEx(SyxMsg* sysExMsg) override;
+	void setPartInfoPartBlock(PartInfoCommonBlock* partInfoCommonBlockPtr){ m_partInfoCommonBlockPtr = partInfoCommonBlockPtr; }
+	void changeListenerCallback(ChangeBroadcaster *source) override;
 private:
+	PartInfoCommonBlock* m_partInfoCommonBlockPtr;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupEffectsBlock)
 };
 
 // 8 instances
-class PatternSetupPartBlock : public GrooveboxMemoryBlock
+class PatternSetupPartBlock : public GrooveboxMemoryBlock, public ChangeListener
 {
 public:
 	PatternSetupPartBlock(AllParts part);
 	String getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32);
 	MidiMessageSequence getSinglePartSetupMidiMessageSequence();
+	// for part info part (performance) changed
+	void changeListenerCallback(ChangeBroadcaster *source) override;
+	bool handleSysEx(SyxMsg* sysExMsg) override;
+	void setPartInfoPartBlock(PartInfoPartBlock* partInfoPartBlockPtr){ m_partInfoPartBlockPtr = partInfoPartBlockPtr; }
 private:
 	AllParts m_part;
+	PartInfoPartBlock* m_partInfoPartBlockPtr;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupPartBlock)
 };
 

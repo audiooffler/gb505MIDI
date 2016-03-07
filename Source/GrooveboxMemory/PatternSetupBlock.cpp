@@ -553,8 +553,9 @@ MidiMessageSequence PatternSetupConfigBlock::getInitalMuteStates(uint8 deviceId)
 
 /*static*/ const StringArray PatternSetupEffectsBlock::mFxTypeNameStrings = StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", "");
 
-PatternSetupEffectsBlock::PatternSetupEffectsBlock()
-	:GrooveboxMemoryBlock(0x30002000, "Pattern Setup Effect Settings","",0x24)
+PatternSetupEffectsBlock::PatternSetupEffectsBlock() :
+	GrooveboxMemoryBlock(0x30002000, "Pattern Setup Effect Settings","",0x24),
+	m_partInfoCommonBlockPtr(nullptr)
 {
 	m_name = "Pattern Setup Effects";
 	
@@ -665,11 +666,64 @@ MidiMessageSequence PatternSetupEffectsBlock::getDelaySetupMidiMessageSequence(u
 
 	return result;
 }
+
+void PatternSetupEffectsBlock::changeListenerCallback(ChangeBroadcaster *source)
+{
+	if (Parameter* param = dynamic_cast<Parameter*>(source))
+	{
+		if (PartInfoCommonBlock* setupFx = dynamic_cast<PartInfoCommonBlock*>(param->getBlock()))
+		{
+			if (param->getAddressOffset() >= 0x0D && param->getAddressOffset() <= 0x1D) // m-fx type and 12 parameters, 2 reserved, m-fx MFX send to DLY and to REV
+				this->getParameter(param->getAddressOffset() - 0x0B)->setValue(param->getValue(), Parameter::ChangeSource::GuiWidget);
+			else if (param->getAddressOffset() >= 0x22 && param->getAddressOffset() <= 0x23) // delay Level, Type
+				this->getParameter(param->getAddressOffset() - 0x05)->setValue(param->getValue(), Parameter::ChangeSource::GuiWidget);
+			else if (param->getAddressOffset() == 0x24) // delay Damp
+				this->getParameter(0x20)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() == 0x25) // delay time
+				this->getParameter(0x1F)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() >= 0x26 && param->getAddressOffset() <= 0x27) // delay Feed, Route
+				this->getParameter(param->getAddressOffset() - 0x05)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+			else if (param->getAddressOffset() >= 0x28 && param->getAddressOffset() <= 0x2B) // reverb parameters Type, Level, Time, Damp
+				this->getParameter(param->getAddressOffset() - 0x10)->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);
+		}
+	}
+}
+
+bool PatternSetupEffectsBlock::handleSysEx(SyxMsg* sysExMsg)
+{
+	bool success = GrooveboxMemoryBlock::handleSysEx(sysExMsg);
+	if (success && sysExMsg->get32BitAddress() == m_address && m_partInfoCommonBlockPtr != nullptr)
+	{
+		uint8* data;
+		uint32 size;
+		uint8 bankSelMsb(81), bankSelLsb(0), groupType, groupId;
+		sysExMsg->getSysExDataArrayPtr(&data, size);
+		for (uint32 i = 0; i < size; i++)
+		{
+			uint8 val = data[i];
+			if (i >= 0x02 && i <= 0x12) // m-fx type and 12 parameters, 2 reserved, m-fx MFX send to DLY and to REV
+				m_partInfoCommonBlockPtr->getParameter(0x0B + i)->setValue(val, Parameter::ChangeSource::LoadingFile);
+			else if (i >= 0x1D && i <= 0x1E) // delay Level, Type
+				m_partInfoCommonBlockPtr->getParameter(0x05 + i)->setValue(val, Parameter::ChangeSource::LoadingFile);
+			else if (i == 0x1F) // delay Time
+				m_partInfoCommonBlockPtr->getParameter(0x25)->setValue(val, Parameter::ChangeSource::LoadingFile);
+			else if (i == 0x20) // delay HF Damp
+				m_partInfoCommonBlockPtr->getParameter(0x24)->setValue(val, Parameter::ChangeSource::LoadingFile);
+			else if (i >= 0x21 && i <= 0x22) // delay Feed	Route
+				m_partInfoCommonBlockPtr->getParameter(0x05 + i)->setValue(val, Parameter::ChangeSource::LoadingFile);
+			else if (i >= 0x18 && i <= 0x1B) // reverb parameters Type, Level, Time, Damp
+				m_partInfoCommonBlockPtr->getParameter(0x10 + i)->setValue(val, Parameter::ChangeSource::LoadingFile);
+		}
+	}
+	return success;
+}
+
 // === PatternSetupPartBlock: =================================================
 
 PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
 	GrooveboxMemoryBlock(0x30004000, "Pattern Setup Mixer Part ", "", 9),
-	m_part(part)
+	m_part(part),
+	m_partInfoPartBlockPtr(nullptr)
 {
 	switch (part)
 	{
@@ -814,14 +868,99 @@ MidiMessageSequence PatternSetupPartBlock::getSinglePartSetupMidiMessageSequence
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 10, getParameter(0x04)->getValue()), 6.0);
 	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Key Shift: " + getParameter(0x05)->getDisplayedValue()), 7.0);
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 85, getParameter(0x05)->getValue()), 7.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Reverb Send Level: " + getParameter(0x07)->getDisplayedValue()), 8.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 91, getParameter(0x07)->getValue()), 8.0);
-	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Delay Send Level: " + getParameter(0x06)->getDisplayedValue()), 9.0);
-	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 94, getParameter(0x06)->getValue()), 9.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Reverb Send Level: " + getParameter(0x06)->getDisplayedValue()), 8.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 91, getParameter(0x06)->getValue()), 8.0);
+	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Delay Send Level: " + getParameter(0x07)->getDisplayedValue()), 9.0);
+	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 94, getParameter(0x07)->getValue()), 9.0);
 	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "M-FX: " + getParameter(0x08)->getDisplayedValue()), 10.0);
 	messages.addEvent(MidiMessage::controllerEvent(m_part + 1, 86, getParameter(0x08)->getValue()), 10.0);
 	messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- END OF SETUP -------------------------------"),23.0);
 	return messages;
+}
+
+// for part info part (performance) changed
+void PatternSetupPartBlock::changeListenerCallback(ChangeBroadcaster *source)
+{
+	if (Parameter* param = dynamic_cast<Parameter*>(source))
+	{
+		if (PartInfoPartBlock* performancePart = dynamic_cast<PartInfoPartBlock*>(param->getBlock()))
+		{
+			if (param->getAddressOffset() == 0x02 || param->getAddressOffset() == 0x03) // patch group type /id --> CC 00 (Bank Select MSB), CC 32 (Bank Select LSB)
+			{
+				uint8 bankSelMsb, bankSelLsb;
+				GrooveboxConnector::GrooveboxModel model = (grooveboxConnector != nullptr&&grooveboxConnector->getActiveConnection() != nullptr) ? grooveboxConnector->getActiveConnection()->deviceFamilyNumberCode : GrooveboxConnector::GrooveboxModel::Model_MC_307;
+				performancePart->getBankSelMSB_LSBforGroup(performancePart->getParameter(0x02)->getValue(), performancePart->getParameter(0x03)->getValue(), bankSelMsb, bankSelLsb, model);
+				this->getParameter(0x00)->setValue(bankSelMsb, Parameter::GuiWidget);
+				this->getParameter(0x01)->setValue(bankSelLsb, Parameter::GuiWidget);
+			}
+			else if (param->getAddressOffset() == 0x04) // patch --> pc
+				this->getParameter(0x02)->setValue(param->getValue(), Parameter::GuiWidget);
+			else if (param->getAddressOffset() == 0x06) // level
+				this->getParameter(0x03)->setValue(param->getValue(), Parameter::GuiWidget);
+			else if (param->getAddressOffset() == 0x07) // pan
+				this->getParameter(0x04)->setValue(param->getValue(), Parameter::GuiWidget);
+			else if (param->getAddressOffset() == 0x08) // key +/- (map 0-96 (-48 - +48, center 48) to 0..127 by adding 0x10 ) 
+				this->getParameter(0x05)->setValue(param->getValue() + 0x10, Parameter::GuiWidget);
+			else if (param->getAddressOffset() == 0x0A) // m-fx switch
+				this->getParameter(0x08)->setValue(param->getValue(), Parameter::GuiWidget);
+			else if (param->getAddressOffset() == 0x0C) // delay send
+				this->getParameter(0x07)->setValue(param->getValue(), Parameter::GuiWidget);
+			else if (param->getAddressOffset() == 0x0D) // rev send
+				this->getParameter(0x06)->setValue(param->getValue(), Parameter::GuiWidget);
+		}
+	}
+}
+
+bool PatternSetupPartBlock::handleSysEx(SyxMsg* sysExMsg)
+{
+	bool success = GrooveboxMemoryBlock::handleSysEx(sysExMsg);
+	if (success && sysExMsg->get32BitAddress() == m_address && m_partInfoPartBlockPtr!=nullptr)
+	{
+		uint8* data;
+		uint32 size;
+		uint8 bankSelMsb(81), bankSelLsb(0), groupType, groupId;
+		sysExMsg->getSysExDataArrayPtr(&data, size);
+		for (uint32 i = 0; i < size; i++)
+		{
+			uint8 val = data[i];
+			switch (i)
+			{
+			case 0:
+				bankSelMsb = val;
+				break;
+			case 1:
+				bankSelLsb = val;
+				m_partInfoPartBlockPtr->getGroupFromBankSelMSB_LSB(bankSelMsb, bankSelLsb, groupType, groupId);
+				m_partInfoPartBlockPtr->getParameter(0x02)->setValue(groupType, Parameter::ChangeSource::LoadingFile);
+				m_partInfoPartBlockPtr->getParameter(0x03)->setValue(groupId, Parameter::ChangeSource::LoadingFile);
+				break;
+			case 2:
+				m_partInfoPartBlockPtr->getParameter(0x04)->setValue(val, Parameter::ChangeSource::LoadingFile); // pc
+				break;
+			case 3:
+				m_partInfoPartBlockPtr->getParameter(0x06)->setValue(val, Parameter::ChangeSource::LoadingFile); // level
+				break;
+			case 4:
+				m_partInfoPartBlockPtr->getParameter(0x07)->setValue(val, Parameter::ChangeSource::LoadingFile); // pan
+				break;
+			case 5: // Key +/- (map 0 127, center 64 to 0-96 (-48 - +48, center 48) by subtracting 0x10 ) 
+				m_partInfoPartBlockPtr->getParameter(0x08)->setValue(jmax<uint8>(0, val - 0x10), Parameter::ChangeSource::LoadingFile);
+				break;
+			case 6:
+				m_partInfoPartBlockPtr->getParameter(0x0D)->setValue(val, Parameter::ChangeSource::LoadingFile); // rev send
+				break;
+			case 7:
+				m_partInfoPartBlockPtr->getParameter(0x0C)->setValue(val, Parameter::ChangeSource::LoadingFile); // dly send
+				break;
+			case 8:
+				m_partInfoPartBlockPtr->getParameter(0x0A)->setValue(val, Parameter::ChangeSource::LoadingFile); // m-fx switch
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	return success;
 }
 
 // === PatternSetupBlock: =====================================================
