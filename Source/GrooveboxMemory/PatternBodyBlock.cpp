@@ -684,6 +684,8 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 
 MidiMessage PatternBodyBlock::PatternEventData::toMidiMessage()
 {
+	if (getType() == Evt_Unknown || getPart() == Pattern_Part_Unknown) return MidiMessage(); // just an active sense message (empty sysex)
+
 	if (getType() == PatternBodyBlock::Evt_SysExJoined)
 	{
 		return MidiMessage::createSysExMessage((m_joinedSysexData->getData()), m_joinedSysexData->getSize());
