@@ -255,7 +255,7 @@ MFXEditor::MFXEditor ()
 		getChildComponent(i)->setComponentID(getChildComponent(i)->getName());
 	}
 
-	m_partInfoCommonBlock = new PartInfoCommonBlock();
+	m_partInfoCommonBlock = grooveboxMemory->getPartInfoBlock()->getPartInfoCommonBlockPtr();
 	Parameter* m_FX_Type(m_partInfoCommonBlock->getParameter(0x0D));
 	//for (uint8 i = m_FX_Type->getMin(); i <= m_FX_Type->getMax(); i++)
 	//{
@@ -490,7 +490,7 @@ void MFXEditor::changeListenerCallback(ChangeBroadcaster* source)
 {
 	if (source == m_partInfoCommonBlock->getParameter(0x0D))
 	{
-		m_partInfoCommonBlock->refreshParametersForMFXTypeValue((uint8)m_MFXTypeComboBox->getSelectedId() - 1);
+		m_partInfoCommonBlock->refreshParametersForMFXTypeValue(m_partInfoCommonBlock->getParameter(0x0D)->getValue());
 		m_MFXTypeDescriptionTextEditor->setText(m_partInfoCommonBlock->getEffectDescription(), dontSendNotification);
 
 		for (uint8 i = 0; i < 11; i++)

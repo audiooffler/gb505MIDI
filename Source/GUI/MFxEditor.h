@@ -62,8 +62,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	// for testing:
-	ScopedPointer<PartInfoCommonBlock> m_partInfoCommonBlock;
+	PartInfoCommonBlock* m_partInfoCommonBlock;
     //[/UserVariables]
 
     //==============================================================================

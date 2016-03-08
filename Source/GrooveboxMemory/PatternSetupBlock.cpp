@@ -697,7 +697,7 @@ bool PatternSetupEffectsBlock::handleSysEx(SyxMsg* sysExMsg)
 		uint8* data;
 		uint32 size;
 		sysExMsg->getSysExDataArrayPtr(&data, size);
-		DBG(String::toHexString(data,size));
+		//DBG(String::toHexString(data,size));
 		for (uint16 i = 0; i < size; i++)
 		{
 			uint8 val = data[i];

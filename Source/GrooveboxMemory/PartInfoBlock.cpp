@@ -111,20 +111,9 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Reserved", 0x42, 0, 15, 0, jv2080EfxSources, "JV-2080 Performance EFX-B Source");
 	setupParameter("Reserved", 0x43, 0, 15, 3, jv2080EfxSources, "JV-2080 Performance EFX-C Source");
 
-	getParameter(0x0D)->addChangeListener(this);
-}
+	refreshParametersForMFXTypeValue(getParameter(0x0D)->getValue());
 
-bool PartInfoCommonBlock::handleSysEx(SyxMsg* msg)
-{
-	bool success = GrooveboxMemoryBlock::handleSysEx(msg);
-	if (success)
-	{
-		uint8* data;
-		uint32 size;
-		msg->getAsSysExData(&data, size);
-		DBG("PartInfoCommonBlock " + String::toHexString(&data[0x0D+0x0A],size-0x0D-0x0A));
-	}
-	return success;
+	getParameter(0x0D)->addChangeListener(this);
 }
 
 // typeIndex must by of 0..24
@@ -206,7 +195,8 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 	autoPanRateStrings.add("2 Measures"); autoPanRateStrings.add("3 Measures"); autoPanRateStrings.add("4 Measures");
 	autoPanRateStrings.add("8 Measures"); autoPanRateStrings.add("16 Measures");
 
-	uint8 parameterValuesBeforeSetup[12] = { m_data[0x0E], m_data[0x0F], m_data[0x10], m_data[0x11], m_data[0x12], m_data[0x13], m_data[0x14], m_data[0x15], m_data[0x16], m_data[0x17], m_data[0x18], m_data[0x19] };
+	uint8 parameterValuesBeforeSetup[0x20];
+	for (int i = 0; i < 0x20; i++) parameterValuesBeforeSetup[i] = m_data[i];
 
 	switch (mFXTypeIndex)
 	{
@@ -603,7 +593,7 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 		setupParameter("M-FX Parameter 12", 0x19, 0, 127);
 		break;
 	}
-	for (uint16 i = 0x0E; i <= 0x19; i++) getParameter(i)->setValue(parameterValuesBeforeSetup[i - 0x0E], Parameter::ChangeSource::LoadingFile);
+	for (uint16 i = 0x0E; i <= 0x19; i++) getParameter(i)->setValue(parameterValuesBeforeSetup[i], Parameter::ChangeSource::GuiWidget);
 }
 
 // delayType must by of 0..1 (short / long)

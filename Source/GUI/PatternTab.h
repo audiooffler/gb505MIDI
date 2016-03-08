@@ -27,7 +27,6 @@
 #include "../GrooveboxMemory/GrooveboxMemoryBlock.h"
 //[/Headers]
 
-#include "MFxEditor.h"
 
 
 //==============================================================================
@@ -178,7 +177,6 @@ private:
     ScopedPointer<TextButton> m_getPatternButton;
     ScopedPointer<TextButton> m_saveMidiFileButton;
     ScopedPointer<ImageButton> m_dragSmfImageButton;
-    ScopedPointer<MFXEditor> component;
 
 
     //==============================================================================
