@@ -122,7 +122,7 @@ bool PartInfoCommonBlock::handleSysEx(SyxMsg* msg)
 		uint8* data;
 		uint32 size;
 		msg->getAsSysExData(&data, size);
-		DBG("PartInfoCommonBlock " + String::toHexString(&data[0x00],size-0x00));
+		DBG("PartInfoCommonBlock " + String::toHexString(&data[0x0D+0x0A],size-0x0D-0x0A));
 	}
 	return success;
 }
