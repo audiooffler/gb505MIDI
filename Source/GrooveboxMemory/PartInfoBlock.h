@@ -21,6 +21,8 @@ public:
 
 	String getEffectDescription(){ return m_EffectDescription; }
 
+	bool handleSysEx(SyxMsg* msg) override;
+
 	// typeIndex must by of 0..24
 	void refreshParametersForMFXTypeValue(uint8 mFXTypeIndex);
 	

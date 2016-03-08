@@ -114,6 +114,19 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	getParameter(0x0D)->addChangeListener(this);
 }
 
+bool PartInfoCommonBlock::handleSysEx(SyxMsg* msg)
+{
+	bool success = GrooveboxMemoryBlock::handleSysEx(msg);
+	if (success)
+	{
+		uint8* data;
+		uint32 size;
+		msg->getAsSysExData(&data, size);
+		DBG("PartInfoCommonBlock " + String::toHexString(&data[0x00],size-0x00));
+	}
+	return success;
+}
+
 // typeIndex must by of 0..24
 void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 {

@@ -696,10 +696,9 @@ bool PatternSetupEffectsBlock::handleSysEx(SyxMsg* sysExMsg)
 	{
 		uint8* data;
 		uint32 size;
-		uint8 bankSelMsb(81), bankSelLsb(0), groupType, groupId;
 		sysExMsg->getSysExDataArrayPtr(&data, size);
 		DBG(String::toHexString(data,size));
-		for (uint32 i = 0; i < size; i++)
+		for (uint16 i = 0; i < size; i++)
 		{
 			uint8 val = data[i];
 			if (i >= 0x02 && i <= 0x12) // m-fx type and 12 parameters, 2 reserved, m-fx MFX send to DLY and to REV
