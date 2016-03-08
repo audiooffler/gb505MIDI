@@ -1249,28 +1249,28 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 
 	// add 7 tracks (0..6: part 1 to 7; 7: rhythm part, 8: mute ctrl part (sysEx messages)), 
 	ScopedPointer<MidiMessageSequence> partRTrack = new MidiMessageSequence();
-	partRTrack->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::PartR)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	partRTrack->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::PartR)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part1Track = new MidiMessageSequence();
-	part1Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part1)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part1Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part1)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part2Track = new MidiMessageSequence();
-	part2Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part2)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part2Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part2)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part3Track = new MidiMessageSequence();
-	part3Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part3)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part3Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part3)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part4Track = new MidiMessageSequence();
-	part4Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part4)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part4Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part4)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part5Track = new MidiMessageSequence();
-	part5Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part5)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part5Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part5)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part6Track = new MidiMessageSequence();
-	part6Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part6)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part6Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part6)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	ScopedPointer<MidiMessageSequence> part7Track = new MidiMessageSequence();
-	part7Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part7)->getSinglePartSetupMidiMessageSequence(), 0, 0, oneMeasure);
+	part7Track->addSequence(grooveboxMemory->getPatternSetupBlock()->getPatternSetupPartBlockPtr(AllParts::Part7)->getSinglePartSetupMidiMessageSequence(), 0, 0, 2.0*oneMeasure);
 
 	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Setup"));
 	muteCtrlTrack->addEvent(SyxMsg::createChannelPrefixMetaEvent(0x0E, 1.0));
@@ -1279,19 +1279,30 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 
 	// note: don't add TrackName meta event to very first track. might be just a reaper issue but reaper shows all meta (text) events of the first track in all other tracks too
 
+	
+	OwnedArray<SyxMsg,CriticalSection> synthAndRhyhtmBlockSendMessages;
+	grooveboxMemory->getSynthPatchesBlock()->createBlockSendMessages(&synthAndRhyhtmBlockSendMessages);
+	grooveboxMemory->getRhythmSetBlock()->createBlockSendMessages(&synthAndRhyhtmBlockSendMessages);
+	for (int i = 0; i < synthAndRhyhtmBlockSendMessages.size(); i++)
+	{
+		muteCtrlTrack->addEvent(synthAndRhyhtmBlockSendMessages[i]->toMidiMessage(), 4.0 + ((double)i*3.840));
+	}
+
 	// effects setups
 	MidiMessageSequence mFxSetup = patternSetupEffectsPtr->getM_FX_SetupMidiMessageSequence(deviceId);
-	muteCtrlTrack->addSequence(mFxSetup, 6.0, 0.0, oneMeasure);
+	muteCtrlTrack->addSequence(mFxSetup, oneMeasure + oneBeat, 0.0, 2.0*oneMeasure);
 	MidiMessageSequence revSetup = patternSetupEffectsPtr->getReverbSetupMidiMessageSequence(deviceId);
-	muteCtrlTrack->addSequence(revSetup, 12.0, 0.0, oneMeasure);
+	muteCtrlTrack->addSequence(revSetup, oneMeasure + oneBeat + 3.0, 0.0, 2.0*oneMeasure);
 	MidiMessageSequence dlySetup = patternSetupEffectsPtr->getDelaySetupMidiMessageSequence(deviceId);
-	muteCtrlTrack->addSequence(dlySetup, 18.0, 0.0, oneMeasure);
-	// parts setup
-	muteCtrlTrack->addSequence(patternSetupConfigPtr->getInitalMuteStates(deviceId), oneBeat, 0, oneMeasure);
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- END OF SETUP -------------------------------"), oneBeat+oneBeat);
+	muteCtrlTrack->addSequence(dlySetup, oneMeasure + oneBeat + 6.0, 0.0, 2.0*oneMeasure);
+	// parts mute setup
+	muteCtrlTrack->addSequence(patternSetupConfigPtr->getInitalMuteStates(deviceId), oneMeasure + oneBeat +8.0, 0, 2.0*oneMeasure);
 
-	// offset 1 measure (use first measure for setup)
-	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Pattern Loop Region Start", oneMeasure));
+
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "--- END OF SETUP -------------------------------"), 2.0*oneMeasure);
+
+	// offset 2 measures (use first two measures for setup)
+	muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Pattern Loop Region Start", 2.0*oneMeasure));
 	PatternEventData* event = nullptr;
 	for (int i = 0; i < m_sequenceBlocks.size(); i++)
 	{
@@ -1316,28 +1327,28 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 		{
 			if (event->getType() == Evt_Note)
 			{
-				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
-				c_trackPointer->addEvent(MidiMessage::noteOff(event->getMidiChannel(), event->getNoteNumber()), event->absoluteTick + oneMeasure + event->getNoteGateTicks());
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
+				c_trackPointer->addEvent(MidiMessage::noteOff(event->getMidiChannel(), event->getNoteNumber()), event->absoluteTick + (2.0*oneMeasure) + event->getNoteGateTicks());
 			}
 			else if (event->getType() == Evt_PAft || event->getType() == Evt_Cc || event->getType() == Evt_Pc || event->getType() == Evt_CAft || event->getType() == Evt_PBend || event->getType() == Evt_Tempo || event->getType() == Evt_SysExJoined)
 			{
-				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
 			else if (event->getType() == Evt_PartMute)
 			{
 				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Unmute " : "Mute ") + event->getPartString(event->getPart()), event->absoluteTick + oneMeasure));
-				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
 			else if (event->getType() == Evt_RhyMute)
 			{
 				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Unmute " : "Mute ") + event->getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
-				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + oneMeasure);
+				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
 			// igonore Evt_SysExSize, Evt_SysExData, Evt_TickInc, Evt_Unknown
 		}
 	}
 	if (event!=nullptr)
-		muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Pattern Loop Region End", oneMeasure + (oneMeasure*patternSetupConfigPtr->getPatternLengthInMeasures())));
+		muteCtrlTrack->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::Marker, "Pattern Loop Region End", (2.0*oneMeasure) + (oneMeasure*patternSetupConfigPtr->getPatternLengthInMeasures())));
 
 	midiFile->addTrack(*metaInfoTrack);
 	midiFile->addTrack(*partRTrack);
