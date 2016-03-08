@@ -18,12 +18,14 @@
 */
 
 //[Headers] You can add your own extra header files here...
+#include "../GrooveboxMemory/OverallMemoryBlock.h"
 //[/Headers]
 
 #include "MFxEditor.h"
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+extern OverallMemoryBlock* grooveboxMemory;
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -255,10 +257,24 @@ MFXEditor::MFXEditor ()
 
 	m_partInfoCommonBlock = new PartInfoCommonBlock();
 	Parameter* m_FX_Type(m_partInfoCommonBlock->getParameter(0x0D));
-	for (uint8 i = m_FX_Type->getMin(); i <= m_FX_Type->getMax(); i++)
-	{
-		m_MFXTypeComboBox->addItem(String(i + 1) + ": " + m_FX_Type->getDisplayedValue(i), i + 1);
-	}
+	//for (uint8 i = m_FX_Type->getMin(); i <= m_FX_Type->getMax(); i++)
+	//{
+	//	m_MFXTypeComboBox->addItem(String(i + 1) + ": " + m_FX_Type->getDisplayedValue(i), i + 1);
+	//}
+	m_MFXTypeComboBox->setParameter(m_FX_Type);
+	m_FX_Type->addChangeListener(this);
+	m_paramSlider1->setParameter(m_partInfoCommonBlock->getParameter(0x0E));
+	m_paramSlider2->setParameter(m_partInfoCommonBlock->getParameter(0x0F));
+	m_paramSlider3->setParameter(m_partInfoCommonBlock->getParameter(0x10));
+	m_paramSlider4->setParameter(m_partInfoCommonBlock->getParameter(0x11));
+	m_paramSlider5->setParameter(m_partInfoCommonBlock->getParameter(0x12));
+	m_paramSlider6->setParameter(m_partInfoCommonBlock->getParameter(0x13));
+	m_paramSlider7->setParameter(m_partInfoCommonBlock->getParameter(0x14));
+	m_paramSlider8->setParameter(m_partInfoCommonBlock->getParameter(0x15));
+	m_paramSlider9->setParameter(m_partInfoCommonBlock->getParameter(0x16));
+	m_paramSlider10->setParameter(m_partInfoCommonBlock->getParameter(0x17));
+	m_paramSlider11->setParameter(m_partInfoCommonBlock->getParameter(0x18));
+	changeListenerCallback(m_FX_Type);
     //[/UserPreSize]
 
     setSize (344, 400);
@@ -361,89 +377,89 @@ void MFXEditor::sliderValueChanged (Slider* sliderThatWasMoved)
     if (sliderThatWasMoved == m_paramSlider1)
     {
         //[UserSliderCode_m_paramSlider1] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x0E);
-		String suffix (param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x0E);
+		//String suffix (param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider1]
     }
     else if (sliderThatWasMoved == m_paramSlider2)
     {
         //[UserSliderCode_m_paramSlider2] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x0F);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x0F);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider2]
     }
     else if (sliderThatWasMoved == m_paramSlider3)
     {
         //[UserSliderCode_m_paramSlider3] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x10);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x10);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider3]
     }
     else if (sliderThatWasMoved == m_paramSlider4)
     {
         //[UserSliderCode_m_paramSlider4] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x11);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x11);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider4]
     }
     else if (sliderThatWasMoved == m_paramSlider5)
     {
         //[UserSliderCode_m_paramSlider5] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x12);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x12);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider5]
     }
     else if (sliderThatWasMoved == m_paramSlider6)
     {
         //[UserSliderCode_m_paramSlider6] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x13);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x13);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider6]
     }
     else if (sliderThatWasMoved == m_paramSlider7)
     {
         //[UserSliderCode_m_paramSlider7] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x14);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x14);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider7]
     }
     else if (sliderThatWasMoved == m_paramSlider8)
     {
         //[UserSliderCode_m_paramSlider8] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x15);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x15);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider8]
     }
     else if (sliderThatWasMoved == m_paramSlider9)
     {
         //[UserSliderCode_m_paramSlider9] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x16);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x16);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider9]
     }
     else if (sliderThatWasMoved == m_paramSlider10)
     {
         //[UserSliderCode_m_paramSlider10] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x17);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x17);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider10]
     }
     else if (sliderThatWasMoved == m_paramSlider11)
     {
         //[UserSliderCode_m_paramSlider11] -- add your slider handling code here..
-		Parameter* param = m_partInfoCommonBlock->getParameter(0x18);
-		String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
-		sliderThatWasMoved->setTextValueSuffix(suffix);
+		//Parameter* param = m_partInfoCommonBlock->getParameter(0x18);
+		//String suffix(param->getDisplayedValue((uint8)m_paramSlider1->getValue()));
+		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider11]
     }
 
@@ -459,7 +475,22 @@ void MFXEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     if (comboBoxThatHasChanged == m_MFXTypeComboBox)
     {
         //[UserComboBoxCode_m_MFXTypeComboBox] -- add your combo box handling code here..
-		m_partInfoCommonBlock->refreshParametersForMFXTypeValue((uint8)m_MFXTypeComboBox->getSelectedId()-1);
+        //[/UserComboBoxCode_m_MFXTypeComboBox]
+    }
+
+    //[UsercomboBoxChanged_Post]
+    //[/UsercomboBoxChanged_Post]
+}
+
+
+
+//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+
+void MFXEditor::changeListenerCallback(ChangeBroadcaster* source)
+{
+	if (source == m_partInfoCommonBlock->getParameter(0x0D))
+	{
+		m_partInfoCommonBlock->refreshParametersForMFXTypeValue((uint8)m_MFXTypeComboBox->getSelectedId() - 1);
 		m_MFXTypeDescriptionTextEditor->setText(m_partInfoCommonBlock->getEffectDescription(), dontSendNotification);
 
 		for (uint8 i = 0; i < 11; i++)
@@ -485,16 +516,9 @@ void MFXEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 				}
 			}
 		}
-        //[/UserComboBoxCode_m_MFXTypeComboBox]
-    }
-
-    //[UsercomboBoxChanged_Post]
-    //[/UsercomboBoxChanged_Post]
+	}
 }
 
-
-
-//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 //[/MiscUserCode]
 
 
@@ -508,9 +532,9 @@ void MFXEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="MFXEditor" componentName=""
-                 parentClasses="public Component" constructorParams="" variableInitialisers=""
-                 snapPixels="8" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="344" initialHeight="400">
+                 parentClasses="public Component, public ChangeListener" constructorParams=""
+                 variableInitialisers="" snapPixels="8" snapActive="1" snapShown="1"
+                 overlayOpacity="0.330" fixedSize="1" initialWidth="344" initialHeight="400">
   <BACKGROUND backgroundColour="f5f5f5"/>
   <JUCERCOMP name="" id="4b94c0a5a762f613" memberName="component" virtualName=""
              explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/PanelGroupGrey.cpp"

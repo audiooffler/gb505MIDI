@@ -34,6 +34,7 @@
 #include "GroupWidgets/RectangleDark.h"
 #include "MixerSectionsEditors/MixRhyTrack.h"
 #include "ParameterWidgets/BigGreenToggle.h"
+#include "MFxEditor.h"
 
 
 //==============================================================================
@@ -55,8 +56,8 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
     // Binary resources:
     static const char* partNameR_png;
@@ -123,6 +124,7 @@ private:
     ScopedPointer<RectangleDark> m_darkSepRect6;
     ScopedPointer<RectangleDark> m_darkSepRect7;
     ScopedPointer<Label> m_dlyLabel;
+    ScopedPointer<MFXEditor> m_mFxEditor;
 
 
     //==============================================================================

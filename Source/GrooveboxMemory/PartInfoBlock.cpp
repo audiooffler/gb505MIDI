@@ -110,6 +110,8 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Reserved", 0x41, 0, 1, 1, StringArray::fromTokens("PERFORMANCE SYSTEM", false), "JV-2080 Performance Clock Source");
 	setupParameter("Reserved", 0x42, 0, 15, 0, jv2080EfxSources, "JV-2080 Performance EFX-B Source");
 	setupParameter("Reserved", 0x43, 0, 15, 3, jv2080EfxSources, "JV-2080 Performance EFX-C Source");
+
+	getParameter(0x0D)->addChangeListener(this);
 }
 
 // typeIndex must by of 0..24
@@ -611,7 +613,11 @@ void PartInfoCommonBlock::changeListenerCallback(ChangeBroadcaster *source)
 {
 	if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
-		if (PatternSetupEffectsBlock* setupFx = dynamic_cast<PatternSetupEffectsBlock*>(param->getBlock()))
+		if (param->getAddressOffset() == 0x0D)
+		{
+			refreshParametersForMFXTypeValue(param->getValue());
+		}
+		else if (PatternSetupEffectsBlock* setupFx = dynamic_cast<PatternSetupEffectsBlock*>(param->getBlock()))
 		{
 			if (param->getAddressOffset() >= 0x02 && param->getAddressOffset() <= 0x12) // m-fx type and 12 parameters, 2 reserved, m-fx MFX send to DLY and to REV
 				this->getParameter(0x0B + param->getAddressOffset())->setValue(param->getValue(), Parameter::ChangeSource::LoadingFile);

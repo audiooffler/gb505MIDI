@@ -202,6 +202,7 @@ MixerTab::MixerTab ()
     m_dlyLabel->setColour (TextEditor::textColourId, Colours::black);
     m_dlyLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (m_mFxEditor = new MFXEditor());
 
     //[UserPreSize]
 	if (QuickSysExSequencerBlock* s = quickSysEx->getQuickSysExSequencerBlock())
@@ -217,7 +218,7 @@ MixerTab::MixerTab ()
 	}
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (1328, 675);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -270,6 +271,7 @@ MixerTab::~MixerTab()
     m_darkSepRect6 = nullptr;
     m_darkSepRect7 = nullptr;
     m_dlyLabel = nullptr;
+    m_mFxEditor = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -342,6 +344,7 @@ void MixerTab::resized()
     m_darkSepRect6->setBounds (512, 24, 4, 544 - 0);
     m_darkSepRect7->setBounds (588, 24, 4, 544 - 0);
     m_dlyLabel->setBounds (0, 88, 56, 60);
+    m_mFxEditor->setBounds (672, 228, 344, 400);
     //[UserResized] Add your own custom resize handling here..
     Component::resized();
     //[/UserResized]
@@ -365,7 +368,7 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="MixerTab" componentName=""
                  parentClasses="public Component" constructorParams="" variableInitialisers=""
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="0" initialWidth="600" initialHeight="400">
+                 fixedSize="1" initialWidth="1328" initialHeight="675">
   <BACKGROUND backgroundColour="ffb1afaf">
     <RECT pos="0 0 0M 0M" fill="linear: 120 248, 224 720, 0=ffcdcccc, 1=ff979797"
           hasStroke="0"/>
@@ -523,6 +526,9 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="DLY&#10;SEND" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
+  <JUCERCOMP name="mFxEditor" id="1c042851e92cf4e0" memberName="m_mFxEditor"
+             virtualName="" explicitFocusOrder="0" pos="672 228 344 400" sourceFile="MFxEditor.cpp"
+             constructorParams=""/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

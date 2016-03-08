@@ -39,6 +39,7 @@
                                                                     //[/Comments]
 */
 class MFXEditor  : public Component,
+                   public ChangeListener,
                    public SliderListener,
                    public ComboBoxListener
 {
@@ -49,6 +50,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+	void changeListenerCallback(ChangeBroadcaster* source) override;
     //[/UserMethods]
 
     void paint (Graphics& g) override;

@@ -698,6 +698,7 @@ bool PatternSetupEffectsBlock::handleSysEx(SyxMsg* sysExMsg)
 		uint32 size;
 		uint8 bankSelMsb(81), bankSelLsb(0), groupType, groupId;
 		sysExMsg->getSysExDataArrayPtr(&data, size);
+		DBG(String::toHexString(data,size));
 		for (uint32 i = 0; i < size; i++)
 		{
 			uint8 val = data[i];
