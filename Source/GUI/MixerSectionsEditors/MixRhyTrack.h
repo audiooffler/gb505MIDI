@@ -102,6 +102,7 @@ private:
     ScopedPointer<Label> m_keyShiftLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<Label> m_delayLabel;
+    ScopedPointer<Label> m_mixerPatchLabel;
     Image cachedImage_mixerTapeLabel_png_1;
 
 

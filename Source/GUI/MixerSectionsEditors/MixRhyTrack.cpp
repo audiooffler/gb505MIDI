@@ -132,6 +132,14 @@ MixRhyTrack::MixRhyTrack (AllParts part)
     m_delayLabel->setColour (TextEditor::textColourId, Colours::black);
     m_delayLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (m_mixerPatchLabel = new Label ("mixerPatchLabel",
+                                                      String()));
+    m_mixerPatchLabel->setFont (Font (11.00f, Font::italic));
+    m_mixerPatchLabel->setJustificationType (Justification::centredLeft);
+    m_mixerPatchLabel->setEditable (false, false, false);
+    m_mixerPatchLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_mixerPatchLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
     cachedImage_mixerTapeLabel_png_1 = ImageCache::getFromMemory (mixerTapeLabel_png, mixerTapeLabel_pngSize);
 
     //[UserPreSize]
@@ -185,6 +193,7 @@ MixRhyTrack::~MixRhyTrack()
     m_keyShiftLabel = nullptr;
     m_reverbLabel = nullptr;
     m_delayLabel = nullptr;
+    m_mixerPatchLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -260,6 +269,7 @@ void MixRhyTrack::resized()
     m_keyShiftLabel->setBounds (0, 207, getWidth() - 0, 12);
     m_reverbLabel->setBounds (0, 24, getWidth() - 0, 12);
     m_delayLabel->setBounds (0, 84, getWidth() - 0, 12);
+    m_mixerPatchLabel->setBounds ((getWidth() / 2) - (72 / 2), 0, 72, 20);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -455,6 +465,11 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="DELAY" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
+  <LABEL name="mixerPatchLabel" id="cb6832f94074d9e1" memberName="m_mixerPatchLabel"
+         virtualName="" explicitFocusOrder="0" pos="0Cc 0 72 20" edTextCol="ff000000"
+         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="11"
+         bold="0" italic="1" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

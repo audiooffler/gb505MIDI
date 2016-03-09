@@ -99,6 +99,7 @@ private:
     ScopedPointer<Label> m_delayLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<GrabSwitch> m_mfxGrab;
+    ScopedPointer<Label> m_mixerPatchLabel;
     Image cachedImage_mixerTapeLabel_png_1;
 
 
