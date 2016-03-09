@@ -18,7 +18,7 @@
 */
 
 //[Headers] You can add your own extra header files here...
-#include "../GrooveboxMemory/OverallMemoryBlock.h"
+#include "../../GrooveboxMemory/OverallMemoryBlock.h"
 //[/Headers]
 
 #include "MFxEditor.h"
@@ -537,7 +537,7 @@ BEGIN_JUCER_METADATA
                  overlayOpacity="0.330" fixedSize="1" initialWidth="344" initialHeight="400">
   <BACKGROUND backgroundColour="f5f5f5"/>
   <JUCERCOMP name="" id="4b94c0a5a762f613" memberName="component" virtualName=""
-             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;mfxEditorPanelGroup&quot;,&quot;MULTI-EFFECTS (M-FX)&quot;"/>
   <LABEL name="paramLabel1" id="26c4c7d87be07d4e" memberName="m_paramLabel1"
          virtualName="" explicitFocusOrder="0" pos="8 136 144 16" edTextCol="ff000000"

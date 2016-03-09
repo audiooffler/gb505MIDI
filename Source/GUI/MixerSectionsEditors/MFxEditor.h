@@ -22,12 +22,12 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
-#include "ParameterWidgets/ParameterSlider.h"
-#include "ParameterWidgets/ParameterComboBox.h"
-#include "../GrooveboxMemory/PartInfoBlock.h"
+#include "../ParameterWidgets/ParameterSlider.h"
+#include "../ParameterWidgets/ParameterComboBox.h"
+#include "../../GrooveboxMemory/PartInfoBlock.h"
 //[/Headers]
 
-#include "GroupWidgets/PanelGroupGrey.h"
+#include "../GroupWidgets/PanelGroupGrey.h"
 
 
 //==============================================================================

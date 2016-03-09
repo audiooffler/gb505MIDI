@@ -34,7 +34,7 @@
 #include "GroupWidgets/RectangleDark.h"
 #include "MixerSectionsEditors/MixRhyTrack.h"
 #include "ParameterWidgets/BigGreenToggle.h"
-#include "MFxEditor.h"
+#include "MixerSectionsEditors/MFxEditor.h"
 
 
 //==============================================================================

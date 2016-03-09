@@ -527,7 +527,7 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="34"/>
   <JUCERCOMP name="mFxEditor" id="1c042851e92cf4e0" memberName="m_mFxEditor"
-             virtualName="" explicitFocusOrder="0" pos="672 228 344 400" sourceFile="MFxEditor.cpp"
+             virtualName="" explicitFocusOrder="0" pos="672 228 344 400" sourceFile="MixerSectionsEditors/MFxEditor.cpp"
              constructorParams=""/>
 </JUCER_COMPONENT>
 
