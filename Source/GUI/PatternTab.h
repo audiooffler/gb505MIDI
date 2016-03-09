@@ -161,15 +161,6 @@ private:
     ScopedPointer<Label> m_midiInLabel;
     ScopedPointer<ComboBox> m_midiOutComboBox;
     ScopedPointer<Label> m_midiOutLabel;
-    ScopedPointer<Label> m_bpmLabel;
-    ScopedPointer<TextEditor> m_bpmText;
-    ScopedPointer<Label> m_measuresLabel;
-    ScopedPointer<TextEditor> m_measuresText;
-    ScopedPointer<Label> m_beatLabel;
-    ScopedPointer<TextEditor> m_beatText;
-    ScopedPointer<Label> m_measuresLabel3;
-    ScopedPointer<Label> m_patternNameLabel;
-    ScopedPointer<TextEditor> m_patternNameText;
     ScopedPointer<ListBox> m_receivedSysExList;
     ScopedPointer<ImageComponent> m_imageViewComponent;
     ScopedPointer<TextButton> m_searchDevicesButton;

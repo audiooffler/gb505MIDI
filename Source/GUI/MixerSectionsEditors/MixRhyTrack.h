@@ -27,6 +27,7 @@
 #include "../ParameterWidgets/MixPartLevelFader.h"
 #include "../ParameterWidgets/BigOrangeToggle.h"
 #include "../ParameterWidgets/MicroParameterSlider.h"
+#include "../ParameterWidgets/ParameterTextEditor.h"
 //[/Headers]
 
 #include "../ParameterWidgets/GrabSwitch.h"
@@ -102,7 +103,7 @@ private:
     ScopedPointer<Label> m_keyShiftLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<Label> m_delayLabel;
-    ScopedPointer<Label> m_mixerPatchLabel;
+    ScopedPointer<ParameterTextEditor> m_patchNameEditor;
     Image cachedImage_mixerTapeLabel_png_1;
 
 

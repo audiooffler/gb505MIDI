@@ -90,99 +90,6 @@ PatternTab::PatternTab ()
     m_midiOutLabel->setColour (TextEditor::textColourId, Colours::black);
     m_midiOutLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (m_bpmLabel = new Label ("bpmLabel",
-                                               TRANS("Tempo (BPM):")));
-    m_bpmLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_bpmLabel->setFont (Font (15.00f, Font::plain));
-    m_bpmLabel->setJustificationType (Justification::centredLeft);
-    m_bpmLabel->setEditable (false, false, false);
-    m_bpmLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_bpmLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_bpmText = new TextEditor ("bpmText"));
-    m_bpmText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_bpmText->setMultiLine (false);
-    m_bpmText->setReturnKeyStartsNewLine (false);
-    m_bpmText->setReadOnly (true);
-    m_bpmText->setScrollbarsShown (true);
-    m_bpmText->setCaretVisible (false);
-    m_bpmText->setPopupMenuEnabled (true);
-    m_bpmText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
-    m_bpmText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_bpmText->setText (TRANS("120.0"));
-
-    addAndMakeVisible (m_measuresLabel = new Label ("measuresLabel",
-                                                    TRANS("Length in Measures:")));
-    m_measuresLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_measuresLabel->setFont (Font (15.00f, Font::plain));
-    m_measuresLabel->setJustificationType (Justification::centredLeft);
-    m_measuresLabel->setEditable (false, false, false);
-    m_measuresLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_measuresLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_measuresText = new TextEditor ("measuresText"));
-    m_measuresText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_measuresText->setMultiLine (false);
-    m_measuresText->setReturnKeyStartsNewLine (false);
-    m_measuresText->setReadOnly (true);
-    m_measuresText->setScrollbarsShown (true);
-    m_measuresText->setCaretVisible (false);
-    m_measuresText->setPopupMenuEnabled (true);
-    m_measuresText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
-    m_measuresText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_measuresText->setText (TRANS("4"));
-
-    addAndMakeVisible (m_beatLabel = new Label ("measuresLabel",
-                                                TRANS("Beat:")));
-    m_beatLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_beatLabel->setFont (Font (15.00f, Font::plain));
-    m_beatLabel->setJustificationType (Justification::centredLeft);
-    m_beatLabel->setEditable (false, false, false);
-    m_beatLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_beatLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_beatText = new TextEditor ("beatText"));
-    m_beatText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_beatText->setMultiLine (false);
-    m_beatText->setReturnKeyStartsNewLine (false);
-    m_beatText->setReadOnly (true);
-    m_beatText->setScrollbarsShown (true);
-    m_beatText->setCaretVisible (false);
-    m_beatText->setPopupMenuEnabled (true);
-    m_beatText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
-    m_beatText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_beatText->setText (TRANS("4/4"));
-
-    addAndMakeVisible (m_measuresLabel3 = new Label ("measuresLabel",
-                                                     TRANS("Pattern Setup:")));
-    m_measuresLabel3->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_measuresLabel3->setFont (Font (15.00f, Font::plain));
-    m_measuresLabel3->setJustificationType (Justification::centredLeft);
-    m_measuresLabel3->setEditable (false, false, false);
-    m_measuresLabel3->setColour (TextEditor::textColourId, Colours::black);
-    m_measuresLabel3->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_patternNameLabel = new Label ("patternNameLabel",
-                                                       TRANS("Name:")));
-    m_patternNameLabel->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_patternNameLabel->setFont (Font (15.00f, Font::plain));
-    m_patternNameLabel->setJustificationType (Justification::centredLeft);
-    m_patternNameLabel->setEditable (false, false, false);
-    m_patternNameLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_patternNameLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
-    addAndMakeVisible (m_patternNameText = new TextEditor ("patternNameText"));
-    m_patternNameText->setTooltip (TRANS("(4 byte, hex, seperated by whitespace)"));
-    m_patternNameText->setMultiLine (false);
-    m_patternNameText->setReturnKeyStartsNewLine (false);
-    m_patternNameText->setReadOnly (true);
-    m_patternNameText->setScrollbarsShown (true);
-    m_patternNameText->setCaretVisible (false);
-    m_patternNameText->setPopupMenuEnabled (true);
-    m_patternNameText->setColour (TextEditor::backgroundColourId, Colour (0xffd0d0d0));
-    m_patternNameText->setColour (TextEditor::outlineColourId, Colour (0xb2808080));
-    m_patternNameText->setText (TRANS("EMPTY PATTERN"));
-
     addAndMakeVisible (m_receivedSysExList = new ListBox());
     m_receivedSysExList->setName ("receivedSysExList");
 
@@ -304,15 +211,6 @@ PatternTab::~PatternTab()
     m_midiInLabel = nullptr;
     m_midiOutComboBox = nullptr;
     m_midiOutLabel = nullptr;
-    m_bpmLabel = nullptr;
-    m_bpmText = nullptr;
-    m_measuresLabel = nullptr;
-    m_measuresText = nullptr;
-    m_beatLabel = nullptr;
-    m_beatText = nullptr;
-    m_measuresLabel3 = nullptr;
-    m_patternNameLabel = nullptr;
-    m_patternNameText = nullptr;
     m_receivedSysExList = nullptr;
     m_imageViewComponent = nullptr;
     m_searchDevicesButton = nullptr;
@@ -356,15 +254,6 @@ void PatternTab::resized()
     m_midiInLabel->setBounds (getWidth() - 488 - 72, 16, 72, 24);
     m_midiOutComboBox->setBounds (getWidth() - 288 - 197, 48, 197, 24);
     m_midiOutLabel->setBounds (getWidth() - 488 - 72, 48, 72, 24);
-    m_bpmLabel->setBounds (640, 232, 96, 24);
-    m_bpmText->setBounds (744, 232, 48, 24);
-    m_measuresLabel->setBounds (448, 232, 136, 24);
-    m_measuresText->setBounds (592, 232, 32, 24);
-    m_beatLabel->setBounds (336, 232, 48, 24);
-    m_beatText->setBounds (392, 232, 40, 24);
-    m_measuresLabel3->setBounds (8, 232, 104, 24);
-    m_patternNameLabel->setBounds (128, 232, 56, 24);
-    m_patternNameText->setBounds (192, 232, 128, 24);
     m_receivedSysExList->setBounds (8, 304, getWidth() - 16, getHeight() - 312);
     m_imageViewComponent->setBounds (getWidth() - 8 - 264, 8, 264, 176);
     m_searchDevicesButton->setBounds (getWidth() - 290 - 62, 96, 62, 24);
@@ -633,21 +522,10 @@ void PatternTab::loadFromGroovebox()
 		// load current pattern. if no success loading: show empty pattern
 		if (false==true/*!m_currentPattern->loadFromGroovebox()*/)
 		{
-			m_patternNameText->setText("EMPTY PATTERN");
-			m_beatText->setText("4/4");
-			m_measuresText->setText("4");
-			m_bpmText->setText("120.0");
 			AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error getting pattern data"), TRANS("No pattern or pattern data was retrieved."));
 		}
 		else // if success
 		{
-			if (m_currentPattern->getSetup() != nullptr)
-			{
-				m_patternNameText->setText(m_currentPattern->getSetup()->getPatternName(), dontSendNotification);
-				m_beatText->setText(String(m_currentPattern->getSetup()->getBeatNumerator()) + "/" + String(m_currentPattern->getSetup()->getBeatDenominator()), dontSendNotification);
-				m_measuresText->setText(String(m_currentPattern->getSetup()->getNumMeasures()), dontSendNotification);
-				m_bpmText->setText(String(m_currentPattern->getSetup()->getBPM(), 1), dontSendNotification);
-			}
 			// set list box model:
 			m_loadedMessagesListArray.addArray(m_currentPattern->getSetup()->getSetupSysExMessages());
 			m_loadedMessagesListArray.addArray(m_currentPattern->getSequenceSysExMessages());
@@ -698,21 +576,10 @@ void PatternTab::loadFile(const File &file)
 		// load current pattern. if no success loading: show empty pattern
 		if (!loadedSucessfully)
 		{
-			m_patternNameText->setText("EMPTY PATTERN");
-			m_beatText->setText("4/4");
-			m_measuresText->setText("4");
-			m_bpmText->setText("120.0");
 			AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error getting pattern data"), TRANS("No pattern or pattern data was retrieved."));
 		}
 		else // if success
 		{
-			if (m_currentPattern->getSetup() != nullptr)
-			{
-				m_patternNameText->setText(m_currentPattern->getSetup()->getPatternName(), dontSendNotification);
-				m_beatText->setText(String(m_currentPattern->getSetup()->getBeatNumerator()) + "/" + String(m_currentPattern->getSetup()->getBeatDenominator()), dontSendNotification);
-				m_measuresText->setText(String(m_currentPattern->getSetup()->getNumMeasures()), dontSendNotification);
-				m_bpmText->setText(String(m_currentPattern->getSetup()->getBPM(), 1), dontSendNotification);
-			}
 			// set list box model:
 			m_loadedMessagesListArray.addArray(m_currentPattern->getSetup()->getSetupSysExMessages());
 			m_loadedMessagesListArray.addArray(m_currentPattern->getSequenceSysExMessages());
@@ -830,48 +697,6 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="Midi Out:" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="15"
          bold="0" italic="0" justification="33"/>
-  <LABEL name="bpmLabel" id="35ab1e98fdf77369" memberName="m_bpmLabel"
-         virtualName="" explicitFocusOrder="0" pos="640 232 96 24" tooltip="(4 byte, hex, seperated by whitespace)"
-         edTextCol="ff000000" edBkgCol="0" labelText="Tempo (BPM):" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="33"/>
-  <TEXTEDITOR name="bpmText" id="d621e92137923d8e" memberName="m_bpmText" virtualName=""
-              explicitFocusOrder="0" pos="744 232 48 24" tooltip="(4 byte, hex, seperated by whitespace)"
-              bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="120.0" multiline="0"
-              retKeyStartsLine="0" readonly="1" scrollbars="1" caret="0" popupmenu="1"/>
-  <LABEL name="measuresLabel" id="c48296727a3f0042" memberName="m_measuresLabel"
-         virtualName="" explicitFocusOrder="0" pos="448 232 136 24" tooltip="(4 byte, hex, seperated by whitespace)"
-         edTextCol="ff000000" edBkgCol="0" labelText="Length in Measures:"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="33"/>
-  <TEXTEDITOR name="measuresText" id="459fa482571aa848" memberName="m_measuresText"
-              virtualName="" explicitFocusOrder="0" pos="592 232 32 24" tooltip="(4 byte, hex, seperated by whitespace)"
-              bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="4" multiline="0"
-              retKeyStartsLine="0" readonly="1" scrollbars="1" caret="0" popupmenu="1"/>
-  <LABEL name="measuresLabel" id="982dd1c0902bdcb6" memberName="m_beatLabel"
-         virtualName="" explicitFocusOrder="0" pos="336 232 48 24" tooltip="(4 byte, hex, seperated by whitespace)"
-         edTextCol="ff000000" edBkgCol="0" labelText="Beat:" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="33"/>
-  <TEXTEDITOR name="beatText" id="40b80ef540e69d5e" memberName="m_beatText"
-              virtualName="" explicitFocusOrder="0" pos="392 232 40 24" tooltip="(4 byte, hex, seperated by whitespace)"
-              bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="4/4" multiline="0"
-              retKeyStartsLine="0" readonly="1" scrollbars="1" caret="0" popupmenu="1"/>
-  <LABEL name="measuresLabel" id="cd690b5f396110f4" memberName="m_measuresLabel3"
-         virtualName="" explicitFocusOrder="0" pos="8 232 104 24" tooltip="(4 byte, hex, seperated by whitespace)"
-         edTextCol="ff000000" edBkgCol="0" labelText="Pattern Setup:"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="15" bold="0" italic="0" justification="33"/>
-  <LABEL name="patternNameLabel" id="3adefa6b7c5bad59" memberName="m_patternNameLabel"
-         virtualName="" explicitFocusOrder="0" pos="128 232 56 24" tooltip="(4 byte, hex, seperated by whitespace)"
-         edTextCol="ff000000" edBkgCol="0" labelText="Name:" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="15" bold="0" italic="0" justification="33"/>
-  <TEXTEDITOR name="patternNameText" id="f85a59ae1b778ae" memberName="m_patternNameText"
-              virtualName="" explicitFocusOrder="0" pos="192 232 128 24" tooltip="(4 byte, hex, seperated by whitespace)"
-              bkgcol="ffd0d0d0" outlinecol="b2808080" initialText="EMPTY PATTERN"
-              multiline="0" retKeyStartsLine="0" readonly="1" scrollbars="1"
-              caret="0" popupmenu="1"/>
   <GENERICCOMPONENT name="receivedSysExList" id="93c14b7479ff5d1e" memberName="m_receivedSysExList"
                     virtualName="" explicitFocusOrder="0" pos="8 304 16M 312M" class="ListBox"
                     params=""/>
