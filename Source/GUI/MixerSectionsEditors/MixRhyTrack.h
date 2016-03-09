@@ -55,10 +55,10 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void buttonClicked (Button* buttonThatWasClicked);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* partNameR_png;
@@ -77,6 +77,8 @@ public:
     static const int partName6_pngSize;
     static const char* partName7_png;
     static const int partName7_pngSize;
+    static const char* mixerTapeLabel_png;
+    static const int mixerTapeLabel_pngSize;
 
 
 private:
@@ -100,6 +102,7 @@ private:
     ScopedPointer<Label> m_keyShiftLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<Label> m_delayLabel;
+    Image cachedImage_mixerTapeLabel_png_1;
 
 
     //==============================================================================

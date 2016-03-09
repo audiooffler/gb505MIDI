@@ -236,6 +236,46 @@ MFXEditor::MFXEditor ()
     m_MFXTypeDescriptionTextEditor->setColour (TextEditor::backgroundColourId, Colour (0xffe0e0e0));
     m_MFXTypeDescriptionTextEditor->setText (String());
 
+    addAndMakeVisible (m_MFXSendLabel = new Label ("MFXSendLabel",
+                                                   TRANS("M-FX SEND")));
+    m_MFXSendLabel->setFont (Font (12.00f, Font::bold));
+    m_MFXSendLabel->setJustificationType (Justification::centredLeft);
+    m_MFXSendLabel->setEditable (false, false, false);
+    m_MFXSendLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_MFXSendLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_sendToReverbSlider = new MicroParameterSlider ("sendToReverbSlider"));
+    m_sendToReverbSlider->setRange (-48, 48, 1);
+    m_sendToReverbSlider->setSliderStyle (Slider::LinearBar);
+    m_sendToReverbSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
+    m_sendToReverbSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
+    m_sendToReverbSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_sendToReverbSlider->addListener (this);
+
+    addAndMakeVisible (m_sendToDelaySlider = new MicroParameterSlider ("sendToDelaySlider"));
+    m_sendToDelaySlider->setRange (-48, 48, 1);
+    m_sendToDelaySlider->setSliderStyle (Slider::LinearBar);
+    m_sendToDelaySlider->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
+    m_sendToDelaySlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
+    m_sendToDelaySlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_sendToDelaySlider->addListener (this);
+
+    addAndMakeVisible (m_toDelayLabel = new Label ("toDelayLabel",
+                                                   TRANS("TO DELAY")));
+    m_toDelayLabel->setFont (Font (12.00f, Font::bold));
+    m_toDelayLabel->setJustificationType (Justification::centredRight);
+    m_toDelayLabel->setEditable (false, false, false);
+    m_toDelayLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_toDelayLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_toReverbLabel = new Label ("toReverbLabel",
+                                                    TRANS("TO REVERB")));
+    m_toReverbLabel->setFont (Font (12.00f, Font::bold));
+    m_toReverbLabel->setJustificationType (Justification::centredRight);
+    m_toReverbLabel->setEditable (false, false, false);
+    m_toReverbLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_toReverbLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 	m_paramSlider1->setVisible(false);
@@ -263,6 +303,8 @@ MFXEditor::MFXEditor ()
 	//}
 	m_MFXTypeComboBox->setParameter(m_FX_Type);
 	m_FX_Type->addChangeListener(this);
+	m_sendToReverbSlider->setParameter(m_partInfoCommonBlock->getParameter(0x1D));
+	m_sendToDelaySlider->setParameter(m_partInfoCommonBlock->getParameter(0x1C));
 	m_paramSlider1->setParameter(m_partInfoCommonBlock->getParameter(0x0E));
 	m_paramSlider2->setParameter(m_partInfoCommonBlock->getParameter(0x0F));
 	m_paramSlider3->setParameter(m_partInfoCommonBlock->getParameter(0x10));
@@ -277,7 +319,7 @@ MFXEditor::MFXEditor ()
 	changeListenerCallback(m_FX_Type);
     //[/UserPreSize]
 
-    setSize (344, 400);
+    setSize (344, 424);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -315,6 +357,11 @@ MFXEditor::~MFXEditor()
     m_MFXTypeComboBox = nullptr;
     m_MFXTypeLabel = nullptr;
     m_MFXTypeDescriptionTextEditor = nullptr;
+    m_MFXSendLabel = nullptr;
+    m_sendToReverbSlider = nullptr;
+    m_sendToDelaySlider = nullptr;
+    m_toDelayLabel = nullptr;
+    m_toReverbLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -340,31 +387,36 @@ void MFXEditor::resized()
     //[/UserPreResize]
 
     component->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
-    m_paramLabel1->setBounds (8, 136, 144, 16);
-    m_paramSlider1->setBounds (152, 136, 184, 16);
-    m_paramSlider2->setBounds (152, 160, 184, 16);
-    m_paramLabel2->setBounds (8, 160, 144, 16);
-    m_paramSlider3->setBounds (152, 184, 184, 16);
-    m_paramLabel3->setBounds (8, 184, 144, 16);
-    m_paramSlider4->setBounds (152, 208, 184, 16);
-    m_paramLabel4->setBounds (8, 208, 144, 16);
-    m_paramSlider5->setBounds (152, 232, 184, 16);
-    m_paramLabel5->setBounds (8, 232, 144, 16);
-    m_paramSlider6->setBounds (152, 256, 184, 16);
-    m_paramLabel6->setBounds (8, 256, 144, 16);
-    m_paramSlider7->setBounds (152, 280, 184, 16);
-    m_paramLabel7->setBounds (8, 280, 144, 16);
-    m_paramSlider8->setBounds (152, 304, 184, 16);
-    m_paramLabel8->setBounds (8, 304, 144, 16);
-    m_paramSlider9->setBounds (152, 328, 184, 16);
-    m_paramLabel9->setBounds (8, 328, 144, 16);
-    m_paramSlider10->setBounds (152, 352, 184, 16);
-    m_paramLabel10->setBounds (8, 352, 144, 16);
-    m_paramSlider11->setBounds (152, 376, 184, 16);
-    m_paramLabel11->setBounds (8, 376, 144, 16);
-    m_MFXTypeComboBox->setBounds (152, 24, 184, 16);
-    m_MFXTypeLabel->setBounds (8, 24, 144, 16);
-    m_MFXTypeDescriptionTextEditor->setBounds (8, 48, 328, 80);
+    m_paramLabel1->setBounds (8, 160, 144, 16);
+    m_paramSlider1->setBounds (152, 160, 184, 16);
+    m_paramSlider2->setBounds (152, 184, 184, 16);
+    m_paramLabel2->setBounds (8, 184, 144, 16);
+    m_paramSlider3->setBounds (152, 208, 184, 16);
+    m_paramLabel3->setBounds (8, 208, 144, 16);
+    m_paramSlider4->setBounds (152, 232, 184, 16);
+    m_paramLabel4->setBounds (8, 232, 144, 16);
+    m_paramSlider5->setBounds (152, 256, 184, 16);
+    m_paramLabel5->setBounds (8, 256, 144, 16);
+    m_paramSlider6->setBounds (152, 280, 184, 16);
+    m_paramLabel6->setBounds (8, 280, 144, 16);
+    m_paramSlider7->setBounds (152, 304, 184, 16);
+    m_paramLabel7->setBounds (8, 304, 144, 16);
+    m_paramSlider8->setBounds (152, 328, 184, 16);
+    m_paramLabel8->setBounds (8, 328, 144, 16);
+    m_paramSlider9->setBounds (152, 352, 184, 16);
+    m_paramLabel9->setBounds (8, 352, 144, 16);
+    m_paramSlider10->setBounds (152, 376, 184, 16);
+    m_paramLabel10->setBounds (8, 376, 144, 16);
+    m_paramSlider11->setBounds (152, 400, 184, 16);
+    m_paramLabel11->setBounds (8, 400, 144, 16);
+    m_MFXTypeComboBox->setBounds (152, 48, 184, 16);
+    m_MFXTypeLabel->setBounds (8, 48, 144, 16);
+    m_MFXTypeDescriptionTextEditor->setBounds (8, 72, 328, 80);
+    m_MFXSendLabel->setBounds (8, 24, 104, 16);
+    m_sendToReverbSlider->setBounds (152, 24, 56, 16);
+    m_sendToDelaySlider->setBounds (280, 24, 56, 16);
+    m_toDelayLabel->setBounds (208, 24, 72, 16);
+    m_toReverbLabel->setBounds (80, 24, 72, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -462,6 +514,16 @@ void MFXEditor::sliderValueChanged (Slider* sliderThatWasMoved)
 		//sliderThatWasMoved->setTextValueSuffix(suffix);
         //[/UserSliderCode_m_paramSlider11]
     }
+    else if (sliderThatWasMoved == m_sendToReverbSlider)
+    {
+        //[UserSliderCode_m_sendToReverbSlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_sendToReverbSlider]
+    }
+    else if (sliderThatWasMoved == m_sendToDelaySlider)
+    {
+        //[UserSliderCode_m_sendToDelaySlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_sendToDelaySlider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -534,133 +596,158 @@ BEGIN_JUCER_METADATA
 <JUCER_COMPONENT documentType="Component" className="MFXEditor" componentName=""
                  parentClasses="public Component, public ChangeListener" constructorParams=""
                  variableInitialisers="" snapPixels="8" snapActive="1" snapShown="1"
-                 overlayOpacity="0.330" fixedSize="1" initialWidth="344" initialHeight="400">
-  <BACKGROUND backgroundColour="f5f5f5"/>
+                 overlayOpacity="0.330" fixedSize="1" initialWidth="344" initialHeight="424">
+  <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="" id="4b94c0a5a762f613" memberName="component" virtualName=""
              explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;mfxEditorPanelGroup&quot;,&quot;MULTI-EFFECTS (M-FX)&quot;"/>
   <LABEL name="paramLabel1" id="26c4c7d87be07d4e" memberName="m_paramLabel1"
-         virtualName="" explicitFocusOrder="0" pos="8 136 144 16" edTextCol="ff000000"
-         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider1" id="d0a9513fc3a91caa" memberName="m_paramSlider1"
-          virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 136 184 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
-          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="paramSlider2" id="4821e52736d929c5" memberName="m_paramSlider2"
-          virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 160 184 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
-          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel2" id="edfa2e3b40b60132" memberName="m_paramLabel2"
          virtualName="" explicitFocusOrder="0" pos="8 160 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider3" id="71ed30aebc0bc355" memberName="m_paramSlider3"
+  <SLIDER name="paramSlider1" id="d0a9513fc3a91caa" memberName="m_paramSlider1"
+          virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 160 184 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="paramSlider2" id="4821e52736d929c5" memberName="m_paramSlider2"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 184 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel3" id="e5eb06fac533310b" memberName="m_paramLabel3"
+  <LABEL name="paramLabel2" id="edfa2e3b40b60132" memberName="m_paramLabel2"
          virtualName="" explicitFocusOrder="0" pos="8 184 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider4" id="fc9e47aed2428f4f" memberName="m_paramSlider4"
+  <SLIDER name="paramSlider3" id="71ed30aebc0bc355" memberName="m_paramSlider3"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 208 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel4" id="361e9773fe349ccb" memberName="m_paramLabel4"
+  <LABEL name="paramLabel3" id="e5eb06fac533310b" memberName="m_paramLabel3"
          virtualName="" explicitFocusOrder="0" pos="8 208 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider5" id="53736e6f644de3fa" memberName="m_paramSlider5"
+  <SLIDER name="paramSlider4" id="fc9e47aed2428f4f" memberName="m_paramSlider4"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 232 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel5" id="84b29f6843e70961" memberName="m_paramLabel5"
+  <LABEL name="paramLabel4" id="361e9773fe349ccb" memberName="m_paramLabel4"
          virtualName="" explicitFocusOrder="0" pos="8 232 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider6" id="40632b4ba9eba11" memberName="m_paramSlider6"
+  <SLIDER name="paramSlider5" id="53736e6f644de3fa" memberName="m_paramSlider5"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 256 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel6" id="c473e7af094036db" memberName="m_paramLabel6"
+  <LABEL name="paramLabel5" id="84b29f6843e70961" memberName="m_paramLabel5"
          virtualName="" explicitFocusOrder="0" pos="8 256 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider7" id="fc59c3d4d89f8303" memberName="m_paramSlider7"
+  <SLIDER name="paramSlider6" id="40632b4ba9eba11" memberName="m_paramSlider6"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 280 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel7" id="9d09551f236443d9" memberName="m_paramLabel7"
+  <LABEL name="paramLabel6" id="c473e7af094036db" memberName="m_paramLabel6"
          virtualName="" explicitFocusOrder="0" pos="8 280 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider8" id="29a992b05c679b6d" memberName="m_paramSlider8"
+  <SLIDER name="paramSlider7" id="fc59c3d4d89f8303" memberName="m_paramSlider7"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 304 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel8" id="139e83611709d0de" memberName="m_paramLabel8"
+  <LABEL name="paramLabel7" id="9d09551f236443d9" memberName="m_paramLabel7"
          virtualName="" explicitFocusOrder="0" pos="8 304 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider9" id="2d51feeac15453bd" memberName="m_paramSlider9"
+  <SLIDER name="paramSlider8" id="29a992b05c679b6d" memberName="m_paramSlider8"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 328 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel9" id="c976388ace30186f" memberName="m_paramLabel9"
+  <LABEL name="paramLabel8" id="139e83611709d0de" memberName="m_paramLabel8"
          virtualName="" explicitFocusOrder="0" pos="8 328 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider10" id="18f3dba27081936e" memberName="m_paramSlider10"
+  <SLIDER name="paramSlider9" id="2d51feeac15453bd" memberName="m_paramSlider9"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 352 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel10" id="67997801d93968ed" memberName="m_paramLabel10"
+  <LABEL name="paramLabel9" id="c976388ace30186f" memberName="m_paramLabel9"
          virtualName="" explicitFocusOrder="0" pos="8 352 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
-  <SLIDER name="paramSlider11" id="cec491c6bcd28d25" memberName="m_paramSlider11"
+  <SLIDER name="paramSlider10" id="18f3dba27081936e" memberName="m_paramSlider10"
           virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 376 184 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
-  <LABEL name="paramLabel11" id="ffd78ecf192afd8" memberName="m_paramLabel11"
+  <LABEL name="paramLabel10" id="67997801d93968ed" memberName="m_paramLabel10"
          virtualName="" explicitFocusOrder="0" pos="8 376 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
+  <SLIDER name="paramSlider11" id="cec491c6bcd28d25" memberName="m_paramSlider11"
+          virtualName="ParameterSlider" explicitFocusOrder="0" pos="152 400 184 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="paramLabel11" id="ffd78ecf192afd8" memberName="m_paramLabel11"
+         virtualName="" explicitFocusOrder="0" pos="8 400 144 16" edTextCol="ff000000"
+         edBkgCol="0" labelText="" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
+         bold="1" italic="0" justification="33"/>
   <COMBOBOX name="MFXTypeComboBox" id="310da11a3b4d1c0" memberName="m_MFXTypeComboBox"
-            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="152 24 184 16"
+            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="152 48 184 16"
             editable="0" layout="33" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <LABEL name="MFXTypeLabel" id="46e1e88403b5ba1f" memberName="m_MFXTypeLabel"
-         virtualName="" explicitFocusOrder="0" pos="8 24 144 16" edTextCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="8 48 144 16" edTextCol="ff000000"
          edBkgCol="0" labelText="M-FX TYPE" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
   <TEXTEDITOR name="MFXTypeDescriptionTextEditor" id="ef9484120a302f50" memberName="m_MFXTypeDescriptionTextEditor"
-              virtualName="" explicitFocusOrder="0" pos="8 48 328 80" bkgcol="ffe0e0e0"
+              virtualName="" explicitFocusOrder="0" pos="8 72 328 80" bkgcol="ffe0e0e0"
               initialText="" multiline="1" retKeyStartsLine="1" readonly="1"
               scrollbars="1" caret="0" popupmenu="1"/>
+  <LABEL name="MFXSendLabel" id="1f065e6555b4449e" memberName="m_MFXSendLabel"
+         virtualName="" explicitFocusOrder="0" pos="8 24 104 16" edTextCol="ff000000"
+         edBkgCol="0" labelText="M-FX SEND" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
+         bold="1" italic="0" justification="33"/>
+  <SLIDER name="sendToReverbSlider" id="2b89b2c11e2ad524" memberName="m_sendToReverbSlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="152 24 56 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="-48" max="48" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
+  <SLIDER name="sendToDelaySlider" id="d4cba3908f11c75d" memberName="m_sendToDelaySlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="280 24 56 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="-48" max="48" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="toDelayLabel" id="752b9cc2fdf14cbf" memberName="m_toDelayLabel"
+         virtualName="" explicitFocusOrder="0" pos="208 24 72 16" edTextCol="ff000000"
+         edBkgCol="0" labelText="TO DELAY" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
+         bold="1" italic="0" justification="34"/>
+  <LABEL name="toReverbLabel" id="74a296cc00e0e05a" memberName="m_toReverbLabel"
+         virtualName="" explicitFocusOrder="0" pos="80 24 72 16" edTextCol="ff000000"
+         edBkgCol="0" labelText="TO REVERB" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
+         bold="1" italic="0" justification="34"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

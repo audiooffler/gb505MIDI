@@ -23,6 +23,7 @@
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
 #include "../ParameterWidgets/ParameterSlider.h"
+#include "../ParameterWidgets/MicroParameterSlider.h"
 #include "../ParameterWidgets/ParameterComboBox.h"
 #include "../../GrooveboxMemory/PartInfoBlock.h"
 //[/Headers]
@@ -92,6 +93,11 @@ private:
     ScopedPointer<ParameterComboBox> m_MFXTypeComboBox;
     ScopedPointer<Label> m_MFXTypeLabel;
     ScopedPointer<TextEditor> m_MFXTypeDescriptionTextEditor;
+    ScopedPointer<Label> m_MFXSendLabel;
+    ScopedPointer<MicroParameterSlider> m_sendToReverbSlider;
+    ScopedPointer<MicroParameterSlider> m_sendToDelaySlider;
+    ScopedPointer<Label> m_toDelayLabel;
+    ScopedPointer<Label> m_toReverbLabel;
 
 
     //==============================================================================

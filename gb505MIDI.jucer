@@ -78,11 +78,18 @@
           <FILE id="VtqCYP" name="RectangleGrey.h" compile="0" resource="0" file="Source/GUI/GroupWidgets/RectangleGrey.h"/>
         </GROUP>
         <GROUP id="{5CE30D5B-37C8-2FC4-93C3-979CA95A79C1}" name="MixerSectionsEditors">
+          <FILE id="vLmLon" name="DelayEditor.cpp" compile="1" resource="0" file="Source/GUI/MixerSectionsEditors/DelayEditor.cpp"/>
+          <FILE id="icXtIT" name="DelayEditor.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/DelayEditor.h"/>
+          <FILE id="SuLvdT" name="MFxEditor.cpp" compile="1" resource="0" file="Source/GUI/MixerSectionsEditors/MFxEditor.cpp"/>
+          <FILE id="yDt5rM" name="MFxEditor.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/MFxEditor.h"/>
           <FILE id="yEtHOF" name="MixPartTrack.cpp" compile="1" resource="0"
                 file="Source/GUI/MixerSectionsEditors/MixPartTrack.cpp"/>
           <FILE id="cvf7Hi" name="MixPartTrack.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/MixPartTrack.h"/>
           <FILE id="arvt1o" name="MixRhyTrack.cpp" compile="1" resource="0" file="Source/GUI/MixerSectionsEditors/MixRhyTrack.cpp"/>
           <FILE id="oRk4GI" name="MixRhyTrack.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/MixRhyTrack.h"/>
+          <FILE id="PnVbFy" name="ReverbEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/MixerSectionsEditors/ReverbEditor.cpp"/>
+          <FILE id="qVD23K" name="ReverbEditor.h" compile="0" resource="0" file="Source/GUI/MixerSectionsEditors/ReverbEditor.h"/>
         </GROUP>
         <GROUP id="{73B96D91-5127-8DE8-74B5-A6D55718BEFB}" name="ParameterWidgets">
           <FILE id="FPPIUa" name="BigGreenToggle.cpp" compile="1" resource="0"
@@ -177,8 +184,6 @@
                 file="Source/GUI/ParameterWidgets/WaveformsGroup.h"/>
         </GROUP>
         <GROUP id="{726CEA5C-C5CB-C9FB-CDE1-0EA7EA230B02}" name="PatchSectionEditors">
-          <FILE id="s3PlTF" name="PatchToneEditorAbstract.h" compile="0" resource="0"
-                file="Source/GUI/PatchSectionEditors/PatchToneEditorAbstract.h"/>
           <FILE id="EsVWXz" name="AmpEditorAdvanced.cpp" compile="1" resource="0"
                 file="Source/GUI/PatchSectionEditors/AmpEditorAdvanced.cpp"/>
           <FILE id="vQTHjT" name="AmpEditorAdvanced.h" compile="0" resource="0"
@@ -205,16 +210,16 @@
                 file="Source/GUI/PatchSectionEditors/PatchToneEditor.cpp"/>
           <FILE id="RBDMH0" name="PatchToneEditor.h" compile="0" resource="0"
                 file="Source/GUI/PatchSectionEditors/PatchToneEditor.h"/>
-          <FILE id="X8zF11" name="PatchToneEditorOverview.cpp" compile="1" resource="0"
-                file="Source/GUI/PatchSectionEditors/PatchToneEditorOverview.cpp"/>
-          <FILE id="QOJXZ7" name="PatchToneEditorOverview.h" compile="0" resource="0"
-                file="Source/GUI/PatchSectionEditors/PatchToneEditorOverview.h"/>
+          <FILE id="s3PlTF" name="PatchToneEditorAbstract.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorAbstract.h"/>
           <FILE id="eo87vy" name="PatchToneEditorAdvanced.cpp" compile="1" resource="0"
                 file="Source/GUI/PatchSectionEditors/PatchToneEditorAdvanced.cpp"/>
           <FILE id="MOAmVe" name="PatchToneEditorAdvanced.h" compile="0" resource="0"
                 file="Source/GUI/PatchSectionEditors/PatchToneEditorAdvanced.h"/>
-          <FILE id="bWIiWQ" name="WaveEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.cpp"/>
-          <FILE id="iz4sHe" name="WaveEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.h"/>
+          <FILE id="X8zF11" name="PatchToneEditorOverview.cpp" compile="1" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorOverview.cpp"/>
+          <FILE id="QOJXZ7" name="PatchToneEditorOverview.h" compile="0" resource="0"
+                file="Source/GUI/PatchSectionEditors/PatchToneEditorOverview.h"/>
           <FILE id="NrGCov" name="PitchEditorAdvanced.cpp" compile="1" resource="0"
                 file="Source/GUI/PatchSectionEditors/PitchEditorAdvanced.cpp"/>
           <FILE id="EHCkF3" name="PitchEditorAdvanced.h" compile="0" resource="0"
@@ -250,6 +255,8 @@
                 resource="0" file="Source/GUI/PatchSectionEditors/ToneMixTableToneVeloXFade.cpp"/>
           <FILE id="JILApp" name="ToneMixTableToneVeloXFade.h" compile="0" resource="0"
                 file="Source/GUI/PatchSectionEditors/ToneMixTableToneVeloXFade.h"/>
+          <FILE id="bWIiWQ" name="WaveEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.cpp"/>
+          <FILE id="iz4sHe" name="WaveEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.h"/>
         </GROUP>
         <FILE id="IU9iK0" name="AsciiWithNoteValuesTypeface.cpp" compile="1"
               resource="0" file="Source/GUI/AsciiWithNoteValuesTypeface.cpp"/>
@@ -271,8 +278,6 @@
               file="Source/GUI/MainComponent.cpp"/>
         <FILE id="ENKhlT" name="MainComponent.h" compile="0" resource="0" file="Source/GUI/MainComponent.h"/>
         <FILE id="pPqrmM" name="MainWindow.h" compile="0" resource="0" file="Source/GUI/MainWindow.h"/>
-        <FILE id="MbW6xS" name="MFxEditor.cpp" compile="1" resource="0" file="Source/GUI/MFxEditor.cpp"/>
-        <FILE id="lvJUaJ" name="MFxEditor.h" compile="0" resource="0" file="Source/GUI/MFxEditor.h"/>
         <FILE id="sxMdJv" name="MidiLoggerTab.cpp" compile="1" resource="0"
               file="Source/GUI/MidiLoggerTab.cpp"/>
         <FILE id="AmQZ6j" name="MidiLoggerTab.h" compile="0" resource="0" file="Source/GUI/MidiLoggerTab.h"/>
@@ -347,18 +352,18 @@
                        isDebug="0" optimisation="3" targetName="gb505MIDI"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_gui_basics" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_graphics" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_events" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_data_structures" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_core" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_audio_processors" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_audio_formats" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_audio_devices" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_audio_utils" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_audio_basics" path="..\JUCE\modules"/>
-        <MODULEPATH id="juce_opengl" path="..\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_gui_basics" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_graphics" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_events" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_data_structures" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_core" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_processors" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_formats" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_devices" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_utils" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_basics" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_opengl" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
       </MODULEPATHS>
     </VS2013>
   </EXPORTFORMATS>

@@ -35,6 +35,8 @@
 #include "MixerSectionsEditors/MixRhyTrack.h"
 #include "ParameterWidgets/BigGreenToggle.h"
 #include "MixerSectionsEditors/MFxEditor.h"
+#include "MixerSectionsEditors/ReverbEditor.h"
+#include "MixerSectionsEditors/DelayEditor.h"
 
 
 //==============================================================================
@@ -125,6 +127,8 @@ private:
     ScopedPointer<RectangleDark> m_darkSepRect7;
     ScopedPointer<Label> m_dlyLabel;
     ScopedPointer<MFXEditor> m_mFxEditor;
+    ScopedPointer<ReverbEditor> m_reverbEditor;
+    ScopedPointer<DelayEditor> m_delayEditor;
 
 
     //==============================================================================

@@ -81,11 +81,11 @@ void ParameterLedSwitch::paint (Graphics& g)
     //[/UserPrePaint]
 
     //[UserPaint] Add your own custom painting code here..
-	if (hasKeyboardFocus(true))
-	{
-		g.setColour(findColour(TextEditor::focusedOutlineColourId));
-		g.drawRect(0, 0, getWidth(), getHeight());
-	}
+	//if (hasKeyboardFocus(true))
+	//{
+	//	g.setColour(findColour(TextEditor::focusedOutlineColourId));
+	//	g.drawRect(0, 0, getWidth(), getHeight());
+	//}
     //[/UserPaint]
 }
 
@@ -118,7 +118,18 @@ void ParameterLedSwitch::buttonClicked (Button* buttonThatWasClicked)
     }
 
     //[UserbuttonClicked_Post]
-	uint8 value(m_toggleButton1->getToggleState() ? 0 : (m_toggleButton2->getToggleState() ? 1 : 0));
+	uint8 value = 0;
+	if (m_paramPtr != nullptr && m_paramPtr->getMax() - m_paramPtr->getMin() == 1)
+	{
+		if (m_toggleButton1->getToggleState()) value = 0;
+		else if (m_toggleButton2->getToggleState()) value = 1;
+	}
+	else if (m_paramPtr != nullptr && m_paramPtr->getMax() - m_paramPtr->getMin() == 2)
+	{
+		if (m_toggleButton1->getToggleState() && m_toggleButton2->getToggleState()) value = 2;
+		else if (m_toggleButton1->getToggleState()) value = 0;
+		else if (m_toggleButton2->getToggleState()) value = 1;
+	}
 	setValue(value);
     //[/UserbuttonClicked_Post]
 }
@@ -139,13 +150,19 @@ void ParameterLedSwitch::setValue(uint8 v)
 	if (v == 0)
 	{
 		m_toggleButton1->setToggleState(true, dontSendNotification);
+		m_toggleButton2->setToggleState(false, dontSendNotification);
 	}
-	else
+	else if (v == 1)
 	{
 		m_toggleButton2->setToggleState(true, dontSendNotification);
+		m_toggleButton1->setToggleState(false, dontSendNotification);
 	}
-
-	//DBG("GUI toggled value to " + String(m_value).paddedLeft('0', 3));
+	else if (v == 2)
+	{
+		m_toggleButton1->setToggleState(true, dontSendNotification);
+		m_toggleButton2->setToggleState(true, dontSendNotification);
+	}
+	DBG("GUI toggled value to " + String(m_value).paddedLeft('0', 3));
 
 	if (m_paramPtr != nullptr)
 	{
@@ -196,6 +213,17 @@ void ParameterLedSwitch::setParameter(Parameter* param)
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);
 		setTooltip(m_paramPtr->getDescription());
+		// if only off / on, set toggle group
+		if (m_paramPtr != nullptr && m_paramPtr->getMax() - m_paramPtr->getMin() == 1)
+		{
+			m_toggleButton1->setRadioGroupId(1);
+			m_toggleButton2->setRadioGroupId(1);
+		}
+		else
+		{
+			m_toggleButton1->setRadioGroupId(0);
+			m_toggleButton2->setRadioGroupId(0);
+		}
 		// range must always be 0 - 1 for this widget!
 		m_toggleButton1->setButtonText(m_paramPtr->getDisplayedValue(0));
 		m_toggleButton1->setTooltip(m_paramPtr->getDescription());

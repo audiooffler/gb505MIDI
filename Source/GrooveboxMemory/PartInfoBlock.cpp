@@ -80,7 +80,7 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Delay Feedback Level", 0x26, 0, 98, 50, feedbackPercentageStrings, "Sets the amount of delayed sound to be repeated, as a proportion of the original sound.");
 	setupParameter("Delay Delay Output Assign", 0x27, 0, 2, 2, StringArray::fromTokens("LINE REV LINE+REV", false), "Allows you to select a destination for the sound after delay has been applied. Selecting LINE outputs the sound to the OUTPUT jacks on the rear panel; selecting REV outputs it to Reverb; or selecting LINE + REV outputs the sound to both the OUTPUT jacks and Reverb.");
 
-	setupParameter("Reverb Type", 0x28, 0, 7, 2, StringArray::fromTokens("ROOM1 ROOM2 STAGE1 STAGE2 HALL1 HALL2", false), "- ROOM1: Reverb with short decay and high density.\r\n- ROOM2: Reverb with short decay and low density.\r\n- STAGE1: Reverb with much lingering reverberation.\r\n- STAGE2: Reverb with strong early reflections.\r\n- HALL1: Clear-sounding reverb.\r\n- HALL2: Rich-sounding reverb.\r\n");
+	setupParameter("Reverb Type", 0x28, 0, 7, 2, StringArray::fromTokens("ROOM1 ROOM2 STAGE1 STAGE2 HALL1 HALL2 DELAY PAN-DLY", false), "- ROOM1: Reverb with short decay and high density.\r\n- ROOM2: Reverb with short decay and low density.\r\n- STAGE1: Reverb with much lingering reverberation.\r\n- STAGE2: Reverb with strong early reflections.\r\n- HALL1: Clear-sounding reverb.\r\n- HALL2: Rich-sounding reverb.\r\n");
 	setupParameter("Reverb Master Level", 0x29, 0, 127, 127, StringArray(), "You can adjust the overall volume of reverb for the eight parts(rhythm part and parts 1-7).");
 	setupParameter("Reverb Time", 0x2A, 0, 127, 90, StringArray(), "You can adjust the time over which the reverberation will continue.");
 	setupParameter("Reverb HF Damp", 0x2B, 0, 17, 13, hfFreqStrings, "Specifies the frequency at which the high frequency portions of the reverberation will be cut.\r\nLowering this setting will cause more of the upper frequency content to be cut, making the reverberation more muted. If 'BYPASS' is selected, the high frequency range will not be cut.");
@@ -112,8 +112,10 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Reserved", 0x43, 0, 15, 3, jv2080EfxSources, "JV-2080 Performance EFX-C Source");
 
 	refreshParametersForMFXTypeValue(getParameter(0x0D)->getValue());
+	refreshParametersForDelayTypeValue(getParameter(0x23)->getValue());
 
 	getParameter(0x0D)->addChangeListener(this);
+	getParameter(0x23)->addChangeListener(this);
 }
 
 // typeIndex must by of 0..24
@@ -606,7 +608,18 @@ void PartInfoCommonBlock::refreshParametersForDelayTypeValue(uint8 delayType)
 	}
 	else if (delayType == 1) // long
 	{
-		setupParameter("Delay Time", 0x25, 0, 120, 114, StringArray::fromTokens("200,205,210,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310,315,320,325,330,335,340,345,350,355,360,365,370,375,380,385,390,395,400,405,410,415,420,425,430,435,440,445,450,455,460,465,470,475,480,485,490,495,500,510,520,530,540,550,560,570,580,590,600,610,620,630,640,650,660,670,680,690,700,710,720,730,740,750,760,770,780,790,800,810,820,830,840,850,860,870,880,890,900,910,920,930,940,950,960,970,980,990,1000,Sixteenth Note (1/16),Eighth Triplet (1/12),Dotted Sixteenth (3/32),Eighth Note (1/8),Quarter Triplet (1/6),Dotted Eighth (3/16),Quarter Note (1/4),Half Tiplet (1/3),Dotted Quarter (3/8),Half Note (1/2)", ",", ""),
+		StringArray valueStrings = StringArray::fromTokens("200,205,210,215,220,225,230,235,240,245,250,255,260,265,270,275,280,285,290,295,300,305,310,315,320,325,330,335,340,345,350,355,360,365,370,375,380,385,390,395,400,405,410,415,420,425,430,435,440,445,450,455,460,465,470,475,480,485,490,495,500,510,520,530,540,550,560,570,580,590,600,610,620,630,640,650,660,670,680,690,700,710,720,730,740,750,760,770,780,790,800,810,820,830,840,850,860,870,880,890,900,910,920,930,940,950,960,970,980,990,1000", ",", "");
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_16th));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_8th_triplet));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_16th_dotted));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_8th));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_4th_triplet));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_8th_dotted));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_4th));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_half_triplet));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_4th_dotted));
+		valueStrings.add(AsciiWithNoteValuesTypeface::getNoteString(AsciiWithNoteValuesTypeface::NoteValue_half));
+		setupParameter("Delay Time", 0x25, 0, 120, 114, valueStrings,
 			"Adjusts the time from the original sound until when the delayed sound is heard(the interval between repeats).\r\nIt is not possible to set a delay time longer than 1000 ms (1 second). When the delay time is synchronized to the BPM, selecting a note value which would make the delay time exceed 1000 ms will cause the delay time to be halved, and the delay sound will be heard at 1/2 the specified interval. In addition, even if 1/2 the length would exceed 1000 ms, the delay time will be shortened to 1/4 the length.");
 	}
 }
@@ -619,6 +632,10 @@ void PartInfoCommonBlock::changeListenerCallback(ChangeBroadcaster *source)
 		if (param->getAddressOffset() == 0x0D)
 		{
 			refreshParametersForMFXTypeValue(param->getValue());
+		}
+		if (param->getAddressOffset() == 0x23)
+		{
+			refreshParametersForDelayTypeValue(param->getValue());
 		}
 		else if (PatternSetupEffectsBlock* setupFx = dynamic_cast<PatternSetupEffectsBlock*>(param->getBlock()))
 		{
