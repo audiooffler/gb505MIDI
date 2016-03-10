@@ -612,7 +612,7 @@ MidiMessageSequence PatternSetupEffectsBlock::getM_FX_SetupMidiMessageSequence(u
 	MidiMessageSequence result;
 	// addr 01 00 00 0D,	size 13 (type + 12 params)
 	uint8* dt1_address = new uint8[4]{0x01, 0x00, 0x00, 0x0D};
-	uint8* dt1_data = new uint8[13]{(uint8)m_data[0x02], (uint8)m_data[0x03], (uint8)m_data[0x04], (uint8)m_data[0x05], (uint8)m_data[0x06], (uint8)m_data[0x07], (uint8)m_data[0x08], (uint8)m_data[0x09], (uint8)m_data[0x1A], (uint8)m_data[0x1B], (uint8)m_data[0x1C], (uint8)m_data[0x1D], (uint8)m_data[0x1E]};
+	uint8* dt1_data = new uint8[13]{(uint8)m_data[0x02], (uint8)m_data[0x03], (uint8)m_data[0x04], (uint8)m_data[0x05], (uint8)m_data[0x06], (uint8)m_data[0x07], (uint8)m_data[0x08], (uint8)m_data[0x09], (uint8)m_data[0x0A], (uint8)m_data[0x0B], (uint8)m_data[0x0C], (uint8)m_data[0x0D], (uint8)m_data[0x0E]};
 	ScopedPointer<SyxMsg> mFXTypeAndParamsSysex = new SyxMsg(SyxMsg::MessageType::Type_DT1, deviceId, dt1_address, dt1_data, 13, SyxMsg::calcDt1Checksum(dt1_address, 4, dt1_data, 13));
 	result.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, "Setup M-FX Type and 12 Parameters (" + mFxTypeNameStrings[m_data[0x02]] + ")"));
 	result.addEvent(mFXTypeAndParamsSysex->toMidiMessage());
