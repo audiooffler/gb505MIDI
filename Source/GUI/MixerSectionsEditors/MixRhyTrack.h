@@ -32,8 +32,8 @@
 
 #include "../ParameterWidgets/GrabSwitch.h"
 #include "../ParameterWidgets/BigOrangeToggle.h"
-#include "../ParameterWidgets/SmallGreenToggle.h"
 #include "../ParameterWidgets/ParameterTextLabel.h"
+#include "../ParameterWidgets/SmallGreenToggle.h"
 
 
 //==============================================================================
@@ -45,22 +45,24 @@
                                                                     //[/Comments]
 */
 class MixRhyTrack  : public Component,
+                     public ChangeListener,
                      public SliderListener,
                      public ButtonListener
 {
 public:
     //==============================================================================
-    MixRhyTrack (AllParts part);
+    MixRhyTrack ();
     ~MixRhyTrack();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+	void changeListenerCallback(ChangeBroadcaster* source) override;
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void buttonClicked (Button* buttonThatWasClicked);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* partNameR_png;
@@ -83,13 +85,12 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    AllParts m_part;
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<Label> m_mfxLabel2;
     ScopedPointer<Label> m_mfxLabel;
     ScopedPointer<GrabSwitch> m_mfxGrab;
-    ScopedPointer<MicroParameterSlider> m_mfxHelper;
     ScopedPointer<MixPartLevelFader> m_mixLevel;
     ScopedPointer<Knob> m_panSlider;
     ScopedPointer<Knob> m_delaySlider;
@@ -97,12 +98,14 @@ private:
     ScopedPointer<MicroParameterSlider> m_keyShiftSlider;
     ScopedPointer<BigOrangeToggle> m_muteToggle;
     ScopedPointer<ImageButton> imageButton;
-    ScopedPointer<SmallGreenToggle> m_mfx_RHYtoggle;
     ScopedPointer<Label> m_panLabel;
     ScopedPointer<Label> m_keyShiftLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<Label> m_delayLabel;
     ScopedPointer<ParameterTextLabel> m_patchNameEditor;
+    ScopedPointer<MicroParameterSlider> m_voiceResvSlider;
+    ScopedPointer<Label> m_voiceResvLabel;
+    ScopedPointer<SmallGreenToggle> m_mfx_RHYtoggle;
 
 
     //==============================================================================

@@ -1044,11 +1044,8 @@ void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
 	const CommandID ids[] = {
 		createEmptyPattern,
 		/* ---------------------- */
-		fileOpenPatternSyxFile,
-		fileSavePatternSyxFile,
-		/* ---------------------- */
-		fileImportPatternSmfFile,
-		fileExportPatternSmfFile,
+		fileOpenPattern,
+		fileSavePattern,
 		/* ---------------------- */
 		fileSavePatternBinFile,
 		/* ---------------------- */
@@ -1070,23 +1067,13 @@ void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInf
 		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
 		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
-	case fileOpenPatternSyxFile:
-		result.setInfo("Open SysEx Pattern File...", "Opens a raw pattern file, either binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
+	case fileOpenPattern:
+		result.setInfo("Open Pattern File...", "Opens a pattern file, either a standard MIDI File (.mid), a binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
 		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
 		break;
-	case fileImportPatternSmfFile:
-		result.setInfo("Import Pattern from MIDI File", "Tries to extract pattern data from a Standard MIDI File (.mid)", category, 0);
-		result.addDefaultKeypress('o', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
-		result.setActive(true);
-		break;
-	case fileSavePatternSyxFile:
-		result.setInfo("Save Pattern as SysEx...", "Saves a pattern file as raw data, either binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
+	case fileSavePattern:
+		result.setInfo("Save Pattern...", "Saves a pattern file, either as Standard MIDI File (.mid), a binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
 		result.addDefaultKeypress('s', ModifierKeys::commandModifier);
-		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
-		break;
-	case fileExportPatternSmfFile:
-		result.setInfo("Export Pattern as MIDI...", "Converts pattern to Standard MIDI File (.mid)", category, 0);
-		result.addDefaultKeypress('s', ModifierKeys::commandModifier | ModifierKeys::shiftModifier);
 		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
 	case fileSavePatternBinFile:
@@ -1119,17 +1106,11 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 		grooveboxMemory->getPatternBodyBlock()->clearPattern();
 		m_patternEventTable->selectRow(0);
 		return true;
-	case CommandIDs::fileOpenPatternSyxFile:
-		loadSysExFile();
+	case CommandIDs::fileOpenPattern:
+		loadPatternFile();
 		return true;
-	case CommandIDs::fileImportPatternSmfFile:
-		importMidiFile();
-		return true;
-	case CommandIDs::fileSavePatternSyxFile:
-		saveSysExFile();
-		return true;
-	case CommandIDs::fileExportPatternSmfFile:
-		exportAsMidiFile();
+	case CommandIDs::fileSavePattern:
+		savePatternFile();
 		return true;
 	case CommandIDs::fileSavePatternBinFile:
 		saveRawBinaryFile();
@@ -1145,22 +1126,30 @@ bool PatternEditorTab::perform(const InvocationInfo &info)
 	}
 }
 
-void PatternEditorTab::loadSysExFile()
+void PatternEditorTab::loadPatternFile()
 {
-	FileChooser fileChooser("Open SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
+	FileChooser fileChooser("Load Pattern", File::getSpecialLocation(File::userHomeDirectory), "*.mid;*.syx;*.txt");
 	if (fileChooser.browseForFileToOpen())
 	{
 		File file = fileChooser.getResult();
-		if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt")
+		if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt" && file.getFileExtension().toLowerCase() != ".mid")
 		{
 			AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
-				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive)\r\n" +
-				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Text)");
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .mid\t(Standard MIDI file)\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive Dump)\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Dump Text)");
 		}
 		else
 		{
 			bool loadedSucessfully(false);
-			if (file.getFileExtension().toLowerCase() == ".syx")
+			if (file.getFileExtension().toLowerCase() == ".mid")
+			{
+				grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
+				grooveboxMemory->getPatternBodyBlock()->loadMidiFile(file);
+				m_patternEventTable->selectRow(0);
+				loadedSucessfully = true;
+			}
+			else if (file.getFileExtension().toLowerCase() == ".syx")
 			{
 				loadedSucessfully = grooveboxMemory->loadBinarySysExFile(file);
 			}
@@ -1182,22 +1171,31 @@ void PatternEditorTab::loadSysExFile()
 	}
 }
 
-void PatternEditorTab::saveSysExFile()
+void PatternEditorTab::savePatternFile()
 {
-	FileChooser fileChooser("Save SysEx pattern file (Binary System Exclusive or Hex SysEx Text)", File::getSpecialLocation(File::userHomeDirectory), "*.syx;*.txt");
+	FileChooser fileChooser("Save Pattern", File::getSpecialLocation(File::userHomeDirectory), "*.mid;*.syx;*.txt");
 	if (fileChooser.browseForFileToSave(true))
 	{
 		File file = fileChooser.getResult();
-		if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt")
+		if (file.getFileExtension().toLowerCase() != ".syx" && file.getFileExtension().toLowerCase() != ".txt" && file.getFileExtension().toLowerCase() != ".mid")
 		{
 			AlertWindow::showMessageBox(AlertWindow::WarningIcon, "File extension not supported", "Only the folling file extensions are supported:\r\n" +
+				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .mid\t(Standard MIDI file)\r\n" +
 				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .syx\t(Binary System Exclusive)\r\n" +
 				String(CharPointer_UTF8("\xe2\x80\xa2")) + " .txt\t(Hex SysEx Text)");
 		}
 		else
 		{
 			bool writtenSucessfully(false);
-			if (file.getFileExtension().toLowerCase() == ".syx")
+			if (file.getFileExtension().toLowerCase() == ".mid")
+			{
+				if (file.existsAsFile()) file.deleteFile();
+				ScopedPointer<OutputStream> saveStream = file.createOutputStream();
+				ScopedPointer<MidiFile> midiFile = grooveboxMemory->getPatternBodyBlock()->convertToMidiFile();
+				midiFile->writeTo(*saveStream);
+				writtenSucessfully = true;
+			}
+			else if(file.getFileExtension().toLowerCase() == ".syx")
 			{
 				writtenSucessfully = grooveboxMemory->saveBinarySysExFile(file);
 			}
@@ -1242,40 +1240,6 @@ void PatternEditorTab::saveRawBinaryFile()
 			{
 				AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error writing pattern data"), TRANS("No pattern or pattern data was written."));
 			}
-		}
-	}
-}
-
-void PatternEditorTab::exportAsMidiFile()
-{
-	File defaultFile = File(File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + File::separatorString + grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getPatternName().trim() + ".mid");
-	FileChooser myChooser(TRANS("Export as MIDI File"),
-		defaultFile,
-		"*.mid");
-	if (myChooser.browseForFileToSave(true))
-	{
-		File selectedFile(myChooser.getResult());
-		if (selectedFile.existsAsFile()) selectedFile.deleteFile();
-		ScopedPointer<OutputStream> saveStream = selectedFile.createOutputStream();
-		ScopedPointer<MidiFile> midiFile = grooveboxMemory->getPatternBodyBlock()->convertToMidiFile();
-		midiFile->writeTo(*saveStream);
-	}
-}
-
-void PatternEditorTab::importMidiFile()
-{
-	//File defaultFile = File(File::getSpecialLocation(File::userHomeDirectory).getFullPathName() + File::separatorString);
-	FileChooser myChooser(TRANS("Export as MIDI File"),
-		File::nonexistent,
-		"*.mid");
-	if (myChooser.browseForFileToOpen())
-	{
-		File file(myChooser.getResult());
-		if (file.existsAsFile())
-		{
-			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
-			grooveboxMemory->getPatternBodyBlock()->loadMidiFile(file);
-			m_patternEventTable->selectRow(0);
 		}
 	}
 }

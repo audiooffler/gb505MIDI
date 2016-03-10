@@ -61,10 +61,8 @@ public:
 	enum CommandIDs
 	{
 		createEmptyPattern = 0x20FF,
-		fileOpenPatternSyxFile = 0x2101,
-		fileSavePatternSyxFile = 0x2102,
-		fileImportPatternSmfFile = 0x2111,
-		fileExportPatternSmfFile = 0x2112,
+		fileOpenPattern = 0x2101,
+		fileSavePattern = 0x2102,
 		fileSavePatternBinFile = 0x2124,
 		grooveBoxLoadPattern = 0x3101,
 		grooveBoxSendPatternBulk = 0x3102
@@ -78,11 +76,9 @@ public:
 	// This must actually perform the specified command.
 	bool perform(const InvocationInfo &info) override;
 
-	void loadSysExFile();
-	void saveSysExFile();
+	void loadPatternFile();
+	void savePatternFile();
 	void saveRawBinaryFile();
-	void exportAsMidiFile();
-	void importMidiFile();
     //[/UserMethods]
 
     void paint (Graphics& g) override;

@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -42,16 +42,19 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     : m_part (part),
       m_tone (tone)
 {
-    addAndMakeVisible (m_ampGrp = new PanelGroupTransp ("AmpGrp","AMP OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
-    addAndMakeVisible (m_filterGrp = new PanelGroupTransp ("FilterGrp","FILTER OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
+    addAndMakeVisible (m_ampGrp = new PanelGroupGrey ("AmpGrp","AMP OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
+    addAndMakeVisible (m_filterGrp = new PanelGroupGrey ("FilterGrp","FILTER OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
     addAndMakeVisible (m_filterEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Filter, true));
-    addAndMakeVisible (m_pitchGrp = new PanelGroupTransp ("PitchGrp","PITCH OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
-    addAndMakeVisible (m_waveGrp = new PanelGroupTransp ("WAVEGrp","TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
+    addAndMakeVisible (m_pitchGrp = new PanelGroupGrey ("PitchGrp","PITCH OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
+    addAndMakeVisible (m_waveGrp = new PanelGroupGrey ("WAVEGrp","TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
     addAndMakeVisible (m_pitchEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Pitch, true));
     addAndMakeVisible (m_ampEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Amp, true));
     addAndMakeVisible (m_onToggle = new BlackToggle());
     addAndMakeVisible (m_onLabel = new Label ("onLabel",
-                                              "ON"));
+                                              TRANS("ON")));
     m_onLabel->setFont (Font (12.00f, Font::bold));
     m_onLabel->setJustificationType (Justification::centredRight);
     m_onLabel->setEditable (false, false, false);
@@ -60,11 +63,11 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_onLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_waveButton = new TextButton ("new button"));
-    m_waveButton->setButtonText ("A:001 Dist TB 303a");
+    m_waveButton->setButtonText (TRANS("A:001 Dist TB 303a"));
     m_waveButton->addListener (this);
 
     addAndMakeVisible (m_waveLabel = new Label ("waveLabel",
-                                                "WAVEFORM"));
+                                                TRANS("WAVEFORM")));
     m_waveLabel->setFont (Font (12.00f, Font::bold));
     m_waveLabel->setJustificationType (Justification::centredRight);
     m_waveLabel->setEditable (false, false, false);
@@ -73,7 +76,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_waveLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_onLabel2 = new Label ("onLabel",
-                                               "GAIN"));
+                                               TRANS("GAIN")));
     m_onLabel2->setFont (Font (12.00f, Font::bold));
     m_onLabel2->setJustificationType (Justification::centredRight);
     m_onLabel2->setEditable (false, false, false);
@@ -84,7 +87,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     addAndMakeVisible (m_lfo1 = new LfoEditor ("LFO 1 OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1),m_part, m_tone, false));
     addAndMakeVisible (m_lfo2 = new LfoEditor ("LFO 2 OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1),m_part, m_tone, true));
     addAndMakeVisible (m_controlMatrixButton = new TextWithArrowButton ("controlMatrixButton"));
-    m_controlMatrixButton->setButtonText ("CTRL MATRIX");
+    m_controlMatrixButton->setButtonText (TRANS("CTRL MATRIX"));
     m_controlMatrixButton->addListener (this);
 
     addAndMakeVisible (m_coarseTuneSlider = new MicroParameterSlider ("coarseTuneSlider"));
@@ -104,7 +107,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_fineTuneSlider->addListener (this);
 
     addAndMakeVisible (m_coarseTuneLabel = new Label ("coarseTuneLabel",
-                                                      "COARSE TUNE"));
+                                                      TRANS("COARSE TUNE")));
     m_coarseTuneLabel->setFont (Font (12.00f, Font::bold));
     m_coarseTuneLabel->setJustificationType (Justification::centredRight);
     m_coarseTuneLabel->setEditable (false, false, false);
@@ -113,7 +116,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_coarseTuneLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_fineTuneLabel = new Label ("fineTuneLabel",
-                                                    "FINE TUNE"));
+                                                    TRANS("FINE TUNE")));
     m_fineTuneLabel->setFont (Font (12.00f, Font::bold));
     m_fineTuneLabel->setJustificationType (Justification::centredRight);
     m_fineTuneLabel->setEditable (false, false, false);
@@ -130,7 +133,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_pitchEnvelopeDepthSlider->addListener (this);
 
     addAndMakeVisible (m_pitchEnvelopeDepthLabel = new Label ("pitchEnvelopeDepthLabel",
-                                                              "ENV DEPTH"));
+                                                              TRANS("ENV DEPTH")));
     m_pitchEnvelopeDepthLabel->setFont (Font (12.00f, Font::bold));
     m_pitchEnvelopeDepthLabel->setJustificationType (Justification::centredRight);
     m_pitchEnvelopeDepthLabel->setEditable (false, false, false);
@@ -139,7 +142,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_pitchEnvelopeDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_pitchAdvancedButton = new TextWithArrowButton ("new button"));
-    m_pitchAdvancedButton->setButtonText ("PITCH");
+    m_pitchAdvancedButton->setButtonText (TRANS("PITCH"));
     m_pitchAdvancedButton->addListener (this);
 
     addAndMakeVisible (m_filterEnvelopeDepthSlider = new MicroParameterSlider ("filterEnvelopeDepthSlider"));
@@ -151,7 +154,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_filterEnvelopeDepthSlider->addListener (this);
 
     addAndMakeVisible (m_filterEnvelopeDepthLabel = new Label ("filterEnvelopeDepthLabel",
-                                                               "ENV DEPTH"));
+                                                               TRANS("ENV DEPTH")));
     m_filterEnvelopeDepthLabel->setFont (Font (12.00f, Font::bold));
     m_filterEnvelopeDepthLabel->setJustificationType (Justification::centredRight);
     m_filterEnvelopeDepthLabel->setEditable (false, false, false);
@@ -160,7 +163,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_filterEnvelopeDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_filterAdvancedButton = new TextWithArrowButton ("filterAdvancedButton"));
-    m_filterAdvancedButton->setButtonText ("FILTER");
+    m_filterAdvancedButton->setButtonText (TRANS("FILTER"));
     m_filterAdvancedButton->addListener (this);
 
     addAndMakeVisible (m_cutoffSlider = new MicroParameterSlider ("cutoffSlider"));
@@ -173,7 +176,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_cutoffSlider->addListener (this);
 
     addAndMakeVisible (m_cutoffLabel = new Label ("cutoffLabel",
-                                                  "CUT"));
+                                                  TRANS("CUT")));
     m_cutoffLabel->setFont (Font (12.00f, Font::bold));
     m_cutoffLabel->setJustificationType (Justification::centredRight);
     m_cutoffLabel->setEditable (false, false, false);
@@ -182,7 +185,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_cutoffLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_resonanceLabel = new Label ("resonanceLabel",
-                                                     "RES"));
+                                                     TRANS("RES")));
     m_resonanceLabel->setFont (Font (12.00f, Font::bold));
     m_resonanceLabel->setJustificationType (Justification::centredRight);
     m_resonanceLabel->setEditable (false, false, false);
@@ -191,7 +194,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_resonanceLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_filterTypeLabel = new Label ("filterTypeLabel",
-                                                      "TYPE"));
+                                                      TRANS("TYPE")));
     m_filterTypeLabel->setFont (Font (12.00f, Font::bold));
     m_filterTypeLabel->setJustificationType (Justification::centred);
     m_filterTypeLabel->setEditable (false, false, false);
@@ -202,13 +205,13 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     addAndMakeVisible (m_filterTypeComboBox = new ParameterComboBox ("filterTypeComboBox"));
     m_filterTypeComboBox->setEditableText (false);
     m_filterTypeComboBox->setJustificationType (Justification::centred);
-    m_filterTypeComboBox->setTextWhenNothingSelected ("OFF");
-    m_filterTypeComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_filterTypeComboBox->addItem ("OFF", 1);
-    m_filterTypeComboBox->addItem ("LPF", 2);
-    m_filterTypeComboBox->addItem ("BPF", 3);
-    m_filterTypeComboBox->addItem ("HPF", 4);
-    m_filterTypeComboBox->addItem ("PKG", 5);
+    m_filterTypeComboBox->setTextWhenNothingSelected (TRANS("OFF"));
+    m_filterTypeComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_filterTypeComboBox->addItem (TRANS("OFF"), 1);
+    m_filterTypeComboBox->addItem (TRANS("LPF"), 2);
+    m_filterTypeComboBox->addItem (TRANS("BPF"), 3);
+    m_filterTypeComboBox->addItem (TRANS("HPF"), 4);
+    m_filterTypeComboBox->addItem (TRANS("PKG"), 5);
     m_filterTypeComboBox->addListener (this);
 
     addAndMakeVisible (m_resonanceSlider = new MicroParameterSlider ("resonanceSlider"));
@@ -221,7 +224,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_resonanceSlider->addListener (this);
 
     addAndMakeVisible (m_ampAdvancedButton = new TextWithArrowButton ("ampAdvancedButton"));
-    m_ampAdvancedButton->setButtonText ("AMP");
+    m_ampAdvancedButton->setButtonText (TRANS("AMP"));
     m_ampAdvancedButton->addListener (this);
 
     addAndMakeVisible (m_toneLevelSlider = new MixPartLevelFader ("toneLevelSlider"));
@@ -231,7 +234,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_toneLevelSlider->addListener (this);
 
     addAndMakeVisible (m_toneLevelLabel = new Label ("toneLevelLabel",
-                                                     "TONE LEVEL"));
+                                                     TRANS("TONE LEVEL")));
     m_toneLevelLabel->setFont (Font (12.00f, Font::bold));
     m_toneLevelLabel->setJustificationType (Justification::centredLeft);
     m_toneLevelLabel->setEditable (false, false, false);
@@ -249,7 +252,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_tonePanSlider->addListener (this);
 
     addAndMakeVisible (m_tonePanLabel = new Label ("tonePanLabel",
-                                                   "PAN"));
+                                                   TRANS("PAN")));
     m_tonePanLabel->setFont (Font (12.00f, Font::bold));
     m_tonePanLabel->setJustificationType (Justification::centredRight);
     m_tonePanLabel->setEditable (false, false, false);
@@ -258,11 +261,11 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
     m_tonePanLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_fxmAdvancedButton = new TextWithArrowButton ("fxmAdvancedButton"));
-    m_fxmAdvancedButton->setButtonText ("FXM");
+    m_fxmAdvancedButton->setButtonText (TRANS("FXM"));
     m_fxmAdvancedButton->addListener (this);
 
     addAndMakeVisible (imageButton = new ImageButton ("new button"));
-    imageButton->setButtonText (String::empty);
+    imageButton->setButtonText (String());
     imageButton->addListener (this);
 
     imageButton->setImages (false, true, true,
@@ -270,7 +273,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
                             Image(), 1.000f, Colour (0x4340454a),
                             Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (imageButton4 = new ImageButton ("new button"));
-    imageButton4->setButtonText (String::empty);
+    imageButton4->setButtonText (String());
     imageButton4->addListener (this);
 
     imageButton4->setImages (false, true, true,
@@ -278,7 +281,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
                              Image(), 1.000f, Colour (0x4340454a),
                              Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (imageButton5 = new ImageButton ("new button"));
-    imageButton5->setButtonText (String::empty);
+    imageButton5->setButtonText (String());
     imageButton5->addListener (this);
 
     imageButton5->setImages (false, true, true,
@@ -286,7 +289,7 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
                              Image(), 1.000f, Colour (0x4340454a),
                              Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (imageButton6 = new ImageButton ("new button"));
-    imageButton6->setButtonText (String::empty);
+    imageButton6->setButtonText (String());
     imageButton6->addListener (this);
 
     imageButton6->setImages (false, true, true,
@@ -294,20 +297,21 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
                              ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, Colour (0x4340454a),
                              ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (m_delayAdvancedButton = new TextWithArrowButton ("delayAdvancedButton"));
-    m_delayAdvancedButton->setButtonText ("DLY");
+    m_delayAdvancedButton->setButtonText (TRANS("DLY"));
     m_delayAdvancedButton->addListener (this);
 
     addAndMakeVisible (m_waveGainComboBox = new ParameterComboBox ("waveGainComboBox"));
     m_waveGainComboBox->setEditableText (false);
     m_waveGainComboBox->setJustificationType (Justification::centredRight);
-    m_waveGainComboBox->setTextWhenNothingSelected ("-6dB");
-    m_waveGainComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_waveGainComboBox->addItem ("-6dB", 1);
-    m_waveGainComboBox->addItem ("0dB", 2);
-    m_waveGainComboBox->addItem ("+6dB", 3);
-    m_waveGainComboBox->addItem ("+12dB", 4);
+    m_waveGainComboBox->setTextWhenNothingSelected (TRANS("-6dB"));
+    m_waveGainComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_waveGainComboBox->addItem (TRANS("-6dB"), 1);
+    m_waveGainComboBox->addItem (TRANS("0dB"), 2);
+    m_waveGainComboBox->addItem (TRANS("+6dB"), 3);
+    m_waveGainComboBox->addItem (TRANS("+12dB"), 4);
     m_waveGainComboBox->addListener (this);
 
+    addAndMakeVisible (component = new RectangleTransp());
 
     //[UserPreSize]
 	m_waveGroupType = nullptr;
@@ -428,6 +432,7 @@ PatchToneEditor::~PatchToneEditor()
     imageButton6 = nullptr;
     m_delayAdvancedButton = nullptr;
     m_waveGainComboBox = nullptr;
+    component = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -443,22 +448,15 @@ void PatchToneEditor::paint (Graphics& g)
 	#endif
     //[/UserPrePaint]
 
-    g.setGradientFill (ColourGradient (Colour (0xff969a9d),
-                                       48.0f, static_cast<float> (proportionOfHeight (0.0127f)),
-                                       Colour (0xff767b7d),
-                                       56.0f, static_cast<float> (proportionOfHeight (0.7722f)),
-                                       false));
-    g.fillRoundedRectangle (0.0f, 0.0f, static_cast<float> (getWidth() - 0), static_cast<float> (getHeight() - 0), 5.000f);
-
-    g.setColour (Colour (0xff888b90));
-    g.drawRoundedRectangle (0.0f, 0.0f, static_cast<float> (getWidth() - 0), static_cast<float> (getHeight() - 0), 5.000f, 2.000f);
-
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
 
 void PatchToneEditor::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_ampGrp->setBounds (0, 440, 304, 132);
     m_filterGrp->setBounds (0, 306, 304, 132);
     m_filterEnv->setBounds (4, 367, 296, 72);
@@ -491,7 +489,7 @@ void PatchToneEditor::resized()
     m_filterTypeComboBox->setBounds (100, 346, 55, 16);
     m_resonanceSlider->setBounds (36, 346, 56, 16);
     m_ampAdvancedButton->setBounds (164, 458, 132, 20);
-    m_toneLevelSlider->setBounds (88 - ((168) / 2), 501 - 36, 168, 36);
+    m_toneLevelSlider->setBounds (88 - (168 / 2), 501 - 36, 168, 36);
     m_toneLevelLabel->setBounds (-2, 465, 78, 16);
     m_tonePanSlider->setBounds (240, 482, 56, 16);
     m_tonePanLabel->setBounds (208, 482, 32, 16);
@@ -502,6 +500,7 @@ void PatchToneEditor::resized()
     imageButton6->setBounds (3, 441, 16, 16);
     m_delayAdvancedButton->setBounds (92, 42, 52, 20);
     m_waveGainComboBox->setBounds (37, 45, 53, 16);
+    component->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -723,24 +722,21 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="m_part (part),&#10;m_tone (tone)" snapPixels="4"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="304" initialHeight="572">
-  <BACKGROUND backgroundColour="0">
-    <ROUNDRECT pos="0 0 0M 0M" cornerSize="5" fill="linear: 48 1.266%, 56 77.215%, 0=ff969a9d, 1=ff767b7d"
-               hasStroke="1" stroke="2, mitered, butt" strokeColour="solid: ff888b90"/>
-  </BACKGROUND>
+  <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="ampGrp" id="5cd694ce73de64a1" memberName="m_ampGrp" virtualName=""
-             explicitFocusOrder="0" pos="0 440 304 132" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
+             explicitFocusOrder="0" pos="0 440 304 132" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;AmpGrp&quot;,&quot;AMP OF TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
   <JUCERCOMP name="filterGrp" id="f4657682b52d89a6" memberName="m_filterGrp"
-             virtualName="" explicitFocusOrder="0" pos="0 306 304 132" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
+             virtualName="" explicitFocusOrder="0" pos="0 306 304 132" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;FilterGrp&quot;,&quot;FILTER OF TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
   <JUCERCOMP name="filterEnv" id="bca85c8be5cf169c" memberName="m_filterEnv"
              virtualName="" explicitFocusOrder="0" pos="4 367 296 72" sourceFile="Envelope.cpp"
              constructorParams="m_part, m_tone, EnvelopeTypes::Filter, true"/>
   <JUCERCOMP name="pitchGrp" id="e06439a01507ceb3" memberName="m_pitchGrp"
-             virtualName="" explicitFocusOrder="0" pos="0 172 304 132" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
+             virtualName="" explicitFocusOrder="0" pos="0 172 304 132" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;PitchGrp&quot;,&quot;PITCH OF TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
   <JUCERCOMP name="waveGrp" id="7b720d409c5094e7" memberName="m_waveGrp" virtualName=""
-             explicitFocusOrder="0" pos="0 0 304 68" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
+             explicitFocusOrder="0" pos="0 0 304 68" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;WAVEGrp&quot;,&quot;TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
   <JUCERCOMP name="pitchEnv" id="99a40d72d7ad1e22" memberName="m_pitchEnv"
              virtualName="" explicitFocusOrder="0" pos="4 229 296 72" sourceFile="Envelope.cpp"
@@ -910,6 +906,9 @@ BEGIN_JUCER_METADATA
             virtualName="ParameterComboBox" explicitFocusOrder="0" pos="37 45 53 16"
             editable="0" layout="34" items="-6dB&#10;0dB&#10;+6dB&#10;+12dB"
             textWhenNonSelected="-6dB" textWhenNoItems="(no choices)"/>
+  <JUCERCOMP name="" id="9ebb028778fef461" memberName="component" virtualName=""
+             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/RectangleTransp.cpp"
+             constructorParams=""/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

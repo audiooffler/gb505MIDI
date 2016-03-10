@@ -126,10 +126,27 @@ MixPartTrack::MixPartTrack (AllParts part)
 
     addAndMakeVisible (m_mfxGrab = new GrabSwitch ("0A"));
     addAndMakeVisible (m_patchNameEditor = new ParameterTextLabel ("patchNameEditor"));
+    addAndMakeVisible (m_voiceResvSlider = new MicroParameterSlider ("voiceResvSlider"));
+    m_voiceResvSlider->setRange (0, 64, 1);
+    m_voiceResvSlider->setSliderStyle (Slider::LinearBar);
+    m_voiceResvSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
+    m_voiceResvSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
+    m_voiceResvSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_voiceResvSlider->addListener (this);
+
+    addAndMakeVisible (m_voiceResvLabel = new Label ("voiceResvLabel",
+                                                     TRANS("VOICE RESV")));
+    m_voiceResvLabel->setFont (Font (12.00f, Font::bold));
+    m_voiceResvLabel->setJustificationType (Justification::centred);
+    m_voiceResvLabel->setEditable (false, false, false);
+    m_voiceResvLabel->setColour (Label::textColourId, Colours::black);
+    m_voiceResvLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_voiceResvLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 	m_patchNameEditor->setParameter1(grooveboxMemory->getSynthPatchesBlock()->getPatchPartBlockPtr((SynthParts)part)->getPatchCommonBlockPtr()->getParameter(0x0));
-
+	m_voiceResvSlider->setParameter(grooveboxMemory->getPartInfoBlock()->getPartInfoCommonBlockPtr()->getParameter(0x30 + (uint16)part));
 	imageButton->setVisible(false);
 	if (grooveboxMemory != nullptr)
 	{
@@ -175,6 +192,8 @@ MixPartTrack::~MixPartTrack()
     m_reverbLabel = nullptr;
     m_mfxGrab = nullptr;
     m_patchNameEditor = nullptr;
+    m_voiceResvSlider = nullptr;
+    m_voiceResvLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -230,20 +249,22 @@ void MixPartTrack::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_mixLevel->setBounds ((getWidth() / 2) - (32 / 2), 304, 32, getHeight() - 368);
-    m_panSlider->setBounds ((getWidth() / 2) - (48 / 2), 254, 48, 48);
+    m_mixLevel->setBounds ((getWidth() / 2) - (32 / 2), 340, 32, getHeight() - 404);
+    m_panSlider->setBounds ((getWidth() / 2) - (48 / 2), 288, 48, 48);
     m_delaySlider->setBounds ((getWidth() / 2) - (48 / 2), 94, 48, 48);
     m_ReverbSlider->setBounds ((getWidth() / 2) - (48 / 2), 34, 48, 48);
     m_keyShiftSlider->setBounds ((getWidth() / 2) - (56 / 2), 220, 56, 16);
     m_muteToggle->setBounds ((getWidth() / 2) - (27 / 2), getHeight() - 1 - 27, 27, 27);
     imageButton->setBounds ((getWidth() / 2) - (24 / 2), getHeight() - 37 - 18, 24, 18);
-    m_panLabel->setBounds (0, 244, getWidth() - 0, 12);
+    m_panLabel->setBounds (0, 276, getWidth() - 0, 12);
     m_keyShiftLabel->setBounds (0, 207, getWidth() - 0, 12);
     m_mfxLabel->setBounds ((getWidth() / 2) - (64 / 2), 150, 64, 12);
     m_delayLabel->setBounds (0, 84, getWidth() - 0, 12);
     m_reverbLabel->setBounds (0, 24, getWidth() - 0, 12);
     m_mfxGrab->setBounds ((getWidth() / 2) - (54 / 2), 156, 54, 49);
     m_patchNameEditor->setBounds ((getWidth() / 2) - (72 / 2), 0, 72, 20);
+    m_voiceResvSlider->setBounds ((getWidth() / 2) - (56 / 2), 256, 56, 16);
+    m_voiceResvLabel->setBounds (-4, 242, getWidth() - -8, 12);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -277,6 +298,11 @@ void MixPartTrack::sliderValueChanged (Slider* sliderThatWasMoved)
     {
         //[UserSliderCode_m_keyShiftSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_keyShiftSlider]
+    }
+    else if (sliderThatWasMoved == m_voiceResvSlider)
+    {
+        //[UserSliderCode_m_voiceResvSlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_voiceResvSlider]
     }
 
     //[UsersliderValueChanged_Post]
@@ -320,11 +346,11 @@ BEGIN_JUCER_METADATA
                  initialHeight="620">
   <BACKGROUND backgroundColour="0"/>
   <SLIDER name="06" id="1b5918ef3651954f" memberName="m_mixLevel" virtualName="MixPartLevelFader"
-          explicitFocusOrder="0" pos="0Cc 304 32 368M" min="0" max="127"
+          explicitFocusOrder="0" pos="0Cc 340 32 404M" min="0" max="127"
           int="1" style="LinearVertical" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="32" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="07" id="8f70d251e0e8426e" memberName="m_panSlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="0Cc 254 48 48" min="-64" max="63"
+          explicitFocusOrder="0" pos="0Cc 288 48 48" min="-64" max="63"
           int="1" style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="0C" id="b38e1510f0f1e212" memberName="m_delaySlider" virtualName="Knob"
@@ -350,7 +376,7 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
                opacityDown="1" colourDown="0"/>
   <LABEL name="panLabel" id="39a07dbc337265d" memberName="m_panLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 244 0M 12" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="0 276 0M 12" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PAN" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
@@ -380,6 +406,16 @@ BEGIN_JUCER_METADATA
   <JUCERCOMP name="" id="a7e0a63fcc688db0" memberName="m_patchNameEditor"
              virtualName="" explicitFocusOrder="0" pos="0Cc 0 72 20" sourceFile="../ParameterWidgets/ParameterTextLabel.cpp"
              constructorParams="&quot;patchNameEditor&quot;"/>
+  <SLIDER name="voiceResvSlider" id="a048beb2c0778056" memberName="m_voiceResvSlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="0Cc 256 56 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="64" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="voiceResvLabel" id="6fc13f78eb63f1be" memberName="m_voiceResvLabel"
+         virtualName="" explicitFocusOrder="0" pos="-4 242 -8M 12" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="VOICE RESV" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="36"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

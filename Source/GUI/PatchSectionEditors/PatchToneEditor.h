@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -29,10 +29,11 @@
 #include "../ParameterWidgets/KeyfollowMicroParameterSlider.h"
 //[/Headers]
 
-#include "../GroupWidgets/PanelGroupTransp.h"
+#include "../GroupWidgets/PanelGroupGrey.h"
 #include "Envelope.h"
 #include "../ParameterWidgets/BlackToggle.h"
 #include "LfoEditor.h"
+#include "../GroupWidgets/RectangleTransp.h"
 
 
 //==============================================================================
@@ -76,11 +77,11 @@ public:
 
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void buttonClicked (Button* buttonThatWasClicked);
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
 
     // Binary resources:
     static const char* wave_png;
@@ -103,11 +104,11 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<PanelGroupTransp> m_ampGrp;
-    ScopedPointer<PanelGroupTransp> m_filterGrp;
+    ScopedPointer<PanelGroupGrey> m_ampGrp;
+    ScopedPointer<PanelGroupGrey> m_filterGrp;
     ScopedPointer<Envelope> m_filterEnv;
-    ScopedPointer<PanelGroupTransp> m_pitchGrp;
-    ScopedPointer<PanelGroupTransp> m_waveGrp;
+    ScopedPointer<PanelGroupGrey> m_pitchGrp;
+    ScopedPointer<PanelGroupGrey> m_waveGrp;
     ScopedPointer<Envelope> m_pitchEnv;
     ScopedPointer<Envelope> m_ampEnv;
     ScopedPointer<BlackToggle> m_onToggle;
@@ -146,6 +147,7 @@ private:
     ScopedPointer<ImageButton> imageButton6;
     ScopedPointer<TextWithArrowButton> m_delayAdvancedButton;
     ScopedPointer<ParameterComboBox> m_waveGainComboBox;
+    ScopedPointer<RectangleTransp> component;
 
 
     //==============================================================================

@@ -33,11 +33,19 @@ extern QuickSysExBlock* quickSysEx;
 //[/MiscUserDefs]
 
 //==============================================================================
-MixRhyTrack::MixRhyTrack (AllParts part)
-    : m_part(part)
+MixRhyTrack::MixRhyTrack ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
+
+    addAndMakeVisible (m_mfxLabel2 = new Label ("mfxLabel",
+                                                TRANS("RHY")));
+    m_mfxLabel2->setFont (Font (12.00f, Font::bold));
+    m_mfxLabel2->setJustificationType (Justification::centredRight);
+    m_mfxLabel2->setEditable (false, false, false);
+    m_mfxLabel2->setColour (Label::textColourId, Colours::black);
+    m_mfxLabel2->setColour (TextEditor::textColourId, Colours::black);
+    m_mfxLabel2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_mfxLabel = new Label ("mfxLabel",
                                                TRANS("MFX")));
@@ -49,12 +57,6 @@ MixRhyTrack::MixRhyTrack (AllParts part)
     m_mfxLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_mfxGrab = new GrabSwitch ("0A"));
-    addAndMakeVisible (m_mfxHelper = new MicroParameterSlider ("0A"));
-    m_mfxHelper->setRange (0, 4, 1);
-    m_mfxHelper->setSliderStyle (Slider::LinearBar);
-    m_mfxHelper->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_mfxHelper->addListener (this);
-
     addAndMakeVisible (m_mixLevel = new MixPartLevelFader ("06"));
     m_mixLevel->setRange (0, 127, 1);
     m_mixLevel->setSliderStyle (Slider::LinearVertical);
@@ -95,7 +97,6 @@ MixRhyTrack::MixRhyTrack (AllParts part)
                             ImageCache::getFromMemory (partNameR_png, partNameR_pngSize), 1.000f, Colours::white,
                             Image(), 1.000f, Colour (0x00000000),
                             Image(), 1.000f, Colour (0x00000000));
-    addAndMakeVisible (m_mfx_RHYtoggle = new SmallGreenToggle());
     addAndMakeVisible (m_panLabel = new Label ("panLabel",
                                                TRANS("PAN")));
     m_panLabel->setFont (Font (12.00f, Font::bold));
@@ -133,31 +134,49 @@ MixRhyTrack::MixRhyTrack (AllParts part)
     m_delayLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_patchNameEditor = new ParameterTextLabel ("patchNameEditor"));
+    addAndMakeVisible (m_voiceResvSlider = new MicroParameterSlider ("voiceResvSlider"));
+    m_voiceResvSlider->setRange (0, 64, 1);
+    m_voiceResvSlider->setSliderStyle (Slider::LinearBar);
+    m_voiceResvSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
+    m_voiceResvSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
+    m_voiceResvSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_voiceResvSlider->addListener (this);
+
+    addAndMakeVisible (m_voiceResvLabel = new Label ("voiceResvLabel",
+                                                     TRANS("VOICE RESV")));
+    m_voiceResvLabel->setFont (Font (12.00f, Font::bold));
+    m_voiceResvLabel->setJustificationType (Justification::centred);
+    m_voiceResvLabel->setEditable (false, false, false);
+    m_voiceResvLabel->setColour (Label::textColourId, Colours::black);
+    m_voiceResvLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_voiceResvLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_mfx_RHYtoggle = new SmallGreenToggle());
 
     //[UserPreSize]
 	m_patchNameEditor->setParameter1(grooveboxMemory->getRhythmSetBlock()->getRhythmSetCommonBlockPtr()->getParameter(0x0));
-	
+	m_voiceResvSlider->setParameter(grooveboxMemory->getPartInfoBlock()->getPartInfoCommonBlockPtr()->getParameter(0x39));
+
 	m_mfxGrab->addListener(this);
 	m_mfx_RHYtoggle->addListener(this);
 	imageButton->setVisible(false);
 	if (grooveboxMemory != nullptr)
 	{
-		if (PartInfoPartBlock* p = grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(m_part))
+		if (PartInfoPartBlock* p = grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR))
 		{
-			m_mixLevel->setParameter(p->getParameter((uint16)m_mixLevel->getName().getHexValue32()));
+			m_mixLevel->setParameter(p->getParameter(0x06));
 			m_panSlider->setParameter(p->getParameter((uint16)m_panSlider->getName().getHexValue32()));
 			m_keyShiftSlider->setParameter(p->getParameter((uint16)m_keyShiftSlider->getName().getHexValue32()));
 			m_delaySlider->setParameter(p->getParameter((uint16)m_delaySlider->getName().getHexValue32()));
 			m_ReverbSlider->setParameter(p->getParameter((uint16)m_ReverbSlider->getName().getHexValue32()));
-			m_mfxHelper->setParameter(p->getParameter((uint16)m_mfxGrab->getName().getHexValue32()));
+			p->getParameter(0x0A)->addChangeListener(this);
 		}
 		if (QuickSysExSequencerBlock* s = quickSysEx->getQuickSysExSequencerBlock())
 		{
-			m_muteToggle->setParameter(s->getParameter(m_part));
+			m_muteToggle->setParameter(s->getParameter(PartR));
 		}
 	}
 	m_mfx_RHYtoggle->setTooltip(TRANS("Switch M-FX for Rhythm Notes instead of the whole R-Part"));
-	m_mfxHelper->setVisible(false);
     //[/UserPreSize]
 
     setSize (72, 620);
@@ -172,9 +191,9 @@ MixRhyTrack::~MixRhyTrack()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    m_mfxLabel2 = nullptr;
     m_mfxLabel = nullptr;
     m_mfxGrab = nullptr;
-    m_mfxHelper = nullptr;
     m_mixLevel = nullptr;
     m_panSlider = nullptr;
     m_delaySlider = nullptr;
@@ -182,12 +201,14 @@ MixRhyTrack::~MixRhyTrack()
     m_keyShiftSlider = nullptr;
     m_muteToggle = nullptr;
     imageButton = nullptr;
-    m_mfx_RHYtoggle = nullptr;
     m_panLabel = nullptr;
     m_keyShiftLabel = nullptr;
     m_reverbLabel = nullptr;
     m_delayLabel = nullptr;
     m_patchNameEditor = nullptr;
+    m_voiceResvSlider = nullptr;
+    m_voiceResvLabel = nullptr;
+    m_mfx_RHYtoggle = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -206,35 +227,8 @@ void MixRhyTrack::paint (Graphics& g)
     int x(getWidth()/2-12);
     int w(24);
     int h(18);
-	switch (m_part)
-	{
-	case PartR:
-		g.drawImageWithin(ImageCache::getFromMemory(partNameR_png, partNameR_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part1:
-		g.drawImageWithin(ImageCache::getFromMemory(partName1_png, partName1_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part2:
-		g.drawImageWithin(ImageCache::getFromMemory(partName2_png, partName2_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part3:
-		g.drawImageWithin(ImageCache::getFromMemory(partName3_png, partName3_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part4:
-		g.drawImageWithin(ImageCache::getFromMemory(partName4_png, partName4_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part5:
-		g.drawImageWithin(ImageCache::getFromMemory(partName5_png, partName5_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part6:
-		g.drawImageWithin(ImageCache::getFromMemory(partName6_png, partName6_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	case Part7:
-		g.drawImageWithin(ImageCache::getFromMemory(partName7_png, partName7_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
-		break;
-	default:
-		break;
-	}
+	g.drawImageWithin(ImageCache::getFromMemory(partNameR_png, partNameR_pngSize), x, y, w, h, RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize, true);
+
     //[/UserPaint]
 }
 
@@ -243,22 +237,24 @@ void MixRhyTrack::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_mfxLabel->setBounds ((getWidth() / 2) - (64 / 2), 150, 64, 12);
+    m_mfxLabel2->setBounds ((getWidth() / 2) + 16 - (48 / 2), 150, 48, 12);
+    m_mfxLabel->setBounds ((getWidth() / 2) + -14 - (36 / 2), 150, 36, 12);
     m_mfxGrab->setBounds ((getWidth() / 2) - (54 / 2), 156, 54, 49);
-    m_mfxHelper->setBounds ((getWidth() / 2) - (56 / 2), 188, 56, 16);
-    m_mixLevel->setBounds ((getWidth() / 2) - (32 / 2), getHeight() - 64 - (getHeight() - 368), 32, getHeight() - 368);
-    m_panSlider->setBounds ((getWidth() / 2) - (48 / 2), 254, 48, 48);
+    m_mixLevel->setBounds ((getWidth() / 2) - (32 / 2), getHeight() - 64 - (getHeight() - 404), 32, getHeight() - 404);
+    m_panSlider->setBounds ((getWidth() / 2) - (48 / 2), 288, 48, 48);
     m_delaySlider->setBounds ((getWidth() / 2) - (48 / 2), 94, 48, 48);
     m_ReverbSlider->setBounds ((getWidth() / 2) - (48 / 2), 34, 48, 48);
     m_keyShiftSlider->setBounds ((getWidth() / 2) - (56 / 2), 220, 56, 16);
     m_muteToggle->setBounds ((getWidth() / 2) - (27 / 2), getHeight() - 1 - 27, 27, 27);
     imageButton->setBounds ((getWidth() / 2) - (24 / 2), getHeight() - 55, 24, 18);
-    m_mfx_RHYtoggle->setBounds (((getWidth() / 2) - (54 / 2)) + 54 - 7, 158, 12, 12);
-    m_panLabel->setBounds (0, 244, getWidth() - 0, 12);
+    m_panLabel->setBounds (0, 276, getWidth() - 0, 12);
     m_keyShiftLabel->setBounds (0, 207, getWidth() - 0, 12);
     m_reverbLabel->setBounds (0, 24, getWidth() - 0, 12);
     m_delayLabel->setBounds (0, 84, getWidth() - 0, 12);
     m_patchNameEditor->setBounds ((getWidth() / 2) - (72 / 2), 0, 72, 20);
+    m_voiceResvSlider->setBounds ((getWidth() / 2) - (56 / 2), 256, 56, 16);
+    m_voiceResvLabel->setBounds (-4, 242, getWidth() - -8, 12);
+    m_mfx_RHYtoggle->setBounds (((getWidth() / 2) - (54 / 2)) + 54 - 7, 163, 12, 12);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -268,27 +264,7 @@ void MixRhyTrack::sliderValueChanged (Slider* sliderThatWasMoved)
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == m_mfxHelper)
-    {
-        //[UserSliderCode_m_mfxHelper] -- add your slider handling code here..
-		int v = (int) m_mfxHelper->getValueObject().getValue();
-		if (v == 0)
-		{
-			m_mfxGrab->setToggleState(false, dontSendNotification);
-		}
-		else if (v == 1)
-		{
-			m_mfxGrab->setToggleState(true, dontSendNotification);
-			m_mfx_RHYtoggle->setToggleState(false, dontSendNotification);
-		}
-		else if (v == 4)
-		{
-			m_mfxGrab->setToggleState(true, dontSendNotification);
-			m_mfx_RHYtoggle->setToggleState(true, dontSendNotification);
-		}
-        //[/UserSliderCode_m_mfxHelper]
-    }
-    else if (sliderThatWasMoved == m_mixLevel)
+    if (sliderThatWasMoved == m_mixLevel)
     {
         //[UserSliderCode_m_mixLevel] -- add your slider handling code here..
         //[/UserSliderCode_m_mixLevel]
@@ -313,6 +289,11 @@ void MixRhyTrack::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_m_keyShiftSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_keyShiftSlider]
     }
+    else if (sliderThatWasMoved == m_voiceResvSlider)
+    {
+        //[UserSliderCode_m_voiceResvSlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_voiceResvSlider]
+    }
 
     //[UsersliderValueChanged_Post]
     //[/UsersliderValueChanged_Post]
@@ -330,38 +311,24 @@ void MixRhyTrack::buttonClicked (Button* buttonThatWasClicked)
     }
 
     //[UserbuttonClicked_Post]
-	else if (buttonThatWasClicked == m_mfxGrab)
+	else if (buttonThatWasClicked == m_mfxGrab || buttonThatWasClicked == m_mfx_RHYtoggle)
 	{
 		if (m_mfxGrab->getToggleState())
 		{
 			if (m_mfx_RHYtoggle->getToggleState())
 			{
-				m_mfxHelper->setValue(4.0, sendNotification);
+				grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR)->getParameter(0x0A)->setValue(4,Parameter::GuiWidget);
 			}
 			else
 			{
-				m_mfxHelper->setValue(1.0, sendNotification);
+				grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR)->getParameter(0x0A)->setValue(1, Parameter::GuiWidget);
 			}
 		}
 		else
 		{
-			m_mfxHelper->setValue(0.0, sendNotification);
+			grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR)->getParameter(0x0A)->setValue(0, Parameter::GuiWidget);
 		}
 
-	}
-	else if (buttonThatWasClicked == m_mfx_RHYtoggle)
-	{
-		if (m_mfxGrab->getToggleState())
-		{
-			if (m_mfx_RHYtoggle->getToggleState())
-			{
-				m_mfxHelper->setValue(4.0, sendNotification);
-			}
-			else
-			{
-				m_mfxHelper->setValue(1.0, sendNotification);
-			}
-		}
 	}
     //[/UserbuttonClicked_Post]
 }
@@ -369,6 +336,27 @@ void MixRhyTrack::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+void MixRhyTrack::changeListenerCallback(ChangeBroadcaster* source)
+{
+	if (dynamic_cast<Parameter*>(source) == grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR)->getParameter(0x0A))
+	{
+		uint8 v = grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR)->getParameter(0x0A)->getValue();
+		if (v == 0)
+		{
+			m_mfxGrab->setToggleState(false, dontSendNotification);
+		}
+		else if (v==1)
+		{
+			m_mfxGrab->setToggleState(true, dontSendNotification);
+			m_mfx_RHYtoggle->setToggleState(false, dontSendNotification);
+		}
+		else if(v == 4)
+		{
+			m_mfxGrab->setToggleState(true, dontSendNotification);
+			m_mfx_RHYtoggle->setToggleState(true, dontSendNotification);
+		}
+	}
+}
 //[/MiscUserCode]
 
 
@@ -382,29 +370,29 @@ void MixRhyTrack::buttonClicked (Button* buttonThatWasClicked)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="MixRhyTrack" componentName=""
-                 parentClasses="public Component" constructorParams="AllParts part"
-                 variableInitialisers="m_part(part)" snapPixels="4" snapActive="1"
-                 snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="72"
-                 initialHeight="620">
+                 parentClasses="public Component, public ChangeListener" constructorParams=""
+                 variableInitialisers="" snapPixels="4" snapActive="1" snapShown="1"
+                 overlayOpacity="0.330" fixedSize="1" initialWidth="72" initialHeight="620">
   <BACKGROUND backgroundColour="0"/>
+  <LABEL name="mfxLabel" id="3b53bc579e5fcd0b" memberName="m_mfxLabel2"
+         virtualName="" explicitFocusOrder="0" pos="16Cc 150 48 12" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="RHY" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
   <LABEL name="mfxLabel" id="f7600c3cc150c941" memberName="m_mfxLabel"
-         virtualName="" explicitFocusOrder="0" pos="0Cc 150 64 12" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="-14Cc 150 36 12" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="MFX" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="33"/>
   <JUCERCOMP name="mfxGrab" id="3d47dada4f5d9d7f" memberName="m_mfxGrab" virtualName=""
              explicitFocusOrder="0" pos="0Cc 156 54 49" sourceFile="../ParameterWidgets/GrabSwitch.cpp"
              constructorParams="&quot;0A&quot;"/>
-  <SLIDER name="0A" id="e962bda8125de0dd" memberName="m_mfxHelper" virtualName="MicroParameterSlider"
-          explicitFocusOrder="0" pos="0Cc 188 56 16" min="0" max="4" int="1"
-          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
   <SLIDER name="06" id="1b5918ef3651954f" memberName="m_mixLevel" virtualName="MixPartLevelFader"
-          explicitFocusOrder="0" pos="0Cc 64Rr 32 368M" min="0" max="127"
+          explicitFocusOrder="0" pos="0Cc 64Rr 32 404M" min="0" max="127"
           int="1" style="LinearVertical" textBoxPos="TextBoxBelow" textBoxEditable="1"
           textBoxWidth="32" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="07" id="8f70d251e0e8426e" memberName="m_panSlider" virtualName="Knob"
-          explicitFocusOrder="0" pos="0Cc 254 48 48" min="-64" max="63"
+          explicitFocusOrder="0" pos="0Cc 288 48 48" min="-64" max="63"
           int="1" style="RotaryHorizontalVerticalDrag" textBoxPos="NoTextBox"
           textBoxEditable="1" textBoxWidth="48" textBoxHeight="16" skewFactor="1"/>
   <SLIDER name="0C" id="b38e1510f0f1e212" memberName="m_delaySlider" virtualName="Knob"
@@ -429,11 +417,8 @@ BEGIN_JUCER_METADATA
                resourceNormal="partNameR_png" opacityNormal="1" colourNormal="ffffffff"
                resourceOver="" opacityOver="1" colourOver="0" resourceDown=""
                opacityDown="1" colourDown="0"/>
-  <JUCERCOMP name="mfx_RHY" id="71afd96cb7e4d50f" memberName="m_mfx_RHYtoggle"
-             virtualName="" explicitFocusOrder="0" pos="7R 158 12 12" posRelativeX="3d47dada4f5d9d7f"
-             sourceFile="../ParameterWidgets/SmallGreenToggle.cpp" constructorParams=""/>
   <LABEL name="panLabel" id="39a07dbc337265d" memberName="m_panLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 244 0M 12" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="0 276 0M 12" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PAN" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
@@ -455,6 +440,19 @@ BEGIN_JUCER_METADATA
   <JUCERCOMP name="" id="a7e0a63fcc688db0" memberName="m_patchNameEditor"
              virtualName="" explicitFocusOrder="0" pos="0Cc 0 72 20" sourceFile="../ParameterWidgets/ParameterTextLabel.cpp"
              constructorParams="&quot;patchNameEditor&quot;"/>
+  <SLIDER name="voiceResvSlider" id="a048beb2c0778056" memberName="m_voiceResvSlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="0Cc 256 56 16"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="64" int="1"
+          style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
+          textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="voiceResvLabel" id="6fc13f78eb63f1be" memberName="m_voiceResvLabel"
+         virtualName="" explicitFocusOrder="0" pos="-4 242 -8M 12" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="VOICE RESV" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="36"/>
+  <JUCERCOMP name="mfx_RHY" id="71afd96cb7e4d50f" memberName="m_mfx_RHYtoggle"
+             virtualName="" explicitFocusOrder="0" pos="7R 163 12 12" posRelativeX="3d47dada4f5d9d7f"
+             sourceFile="../ParameterWidgets/SmallGreenToggle.cpp" constructorParams=""/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

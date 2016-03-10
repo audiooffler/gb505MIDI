@@ -76,6 +76,10 @@
           <FILE id="Zin7FA" name="RectangleGrey.cpp" compile="1" resource="0"
                 file="Source/GUI/GroupWidgets/RectangleGrey.cpp"/>
           <FILE id="VtqCYP" name="RectangleGrey.h" compile="0" resource="0" file="Source/GUI/GroupWidgets/RectangleGrey.h"/>
+          <FILE id="eNrLI1" name="RectangleTransp.cpp" compile="1" resource="0"
+                file="Source/GUI/GroupWidgets/RectangleTransp.cpp"/>
+          <FILE id="RlMp5h" name="RectangleTransp.h" compile="0" resource="0"
+                file="Source/GUI/GroupWidgets/RectangleTransp.h"/>
         </GROUP>
         <GROUP id="{5CE30D5B-37C8-2FC4-93C3-979CA95A79C1}" name="MixerSectionsEditors">
           <FILE id="vLmLon" name="DelayEditor.cpp" compile="1" resource="0" file="Source/GUI/MixerSectionsEditors/DelayEditor.cpp"/>

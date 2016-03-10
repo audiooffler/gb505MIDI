@@ -17,23 +17,13 @@
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_92D3C6058F64568A__
-#define __JUCE_HEADER_92D3C6058F64568A__
+#ifndef __JUCE_HEADER_A87EB6B0F04A2116__
+#define __JUCE_HEADER_A87EB6B0F04A2116__
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
-#include "PatchToneEditorAbstract.h"
 //[/Headers]
 
-#include "AmpEditorAdvanced.h"
-#include "FilterEditorAdvanced.h"
-#include "PitchEditorAdvanced.h"
-#include "LfoEditorAdvanced.h"
-#include "PatchControllerMatrixEditor.h"
-#include "FxmEditor.h"
-#include "ToneDelayEditor.h"
-#include "WaveEditor.h"
-#include "../GroupWidgets/RectangleTransp.h"
 
 
 //==============================================================================
@@ -44,12 +34,12 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class PatchToneEditorAdvanced  : public PatchToneEditorAbstract
+class RectangleTransp  : public Component
 {
 public:
     //==============================================================================
-    PatchToneEditorAdvanced (SynthParts part, Tone tone);
-    ~PatchToneEditorAdvanced();
+    RectangleTransp ();
+    ~RectangleTransp();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -62,28 +52,16 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-    SynthParts m_part;
-	Tone m_tone;
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<AmpEditorAdvanced> m_amp;
-    ScopedPointer<FilterEditorAdvanced> m_filter;
-    ScopedPointer<PitchEditorAdvanced> m_pitch;
-    ScopedPointer<LfoEditorAdvanced> m_lfo1;
-    ScopedPointer<LfoEditorAdvanced> m_lfo2;
-    ScopedPointer<PatchControllerMatrixEditor> m_controlMatrix;
-    ScopedPointer<FxmEditor> m_fxm;
-    ScopedPointer<ToneDelayEditor> m_delay;
-    ScopedPointer<WaveEditor> m_wave;
-    ScopedPointer<RectangleTransp> component;
 
 
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PatchToneEditorAdvanced)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RectangleTransp)
 };
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_92D3C6058F64568A__
+#endif   // __JUCE_HEADER_A87EB6B0F04A2116__

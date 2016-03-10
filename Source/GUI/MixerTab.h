@@ -28,7 +28,6 @@
 #include "ParameterWidgets/BigGreenToggle.h"
 //[/Headers]
 
-#include "GroupWidgets/PanelGroupDark.h"
 #include "GroupWidgets/RectangleGrey.h"
 #include "MixerSectionsEditors/MixPartTrack.h"
 #include "GroupWidgets/RectangleDark.h"
@@ -85,7 +84,6 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<PanelGroupDark> m_mixerGroup;
     ScopedPointer<RectangleGrey> component2;
     ScopedPointer<MixPartTrack> m_MixPart7;
     ScopedPointer<RectangleDark> m_blackStripePartNames;
@@ -129,6 +127,7 @@ private:
     ScopedPointer<MFXEditor> m_mFxEditor;
     ScopedPointer<ReverbEditor> m_reverbEditor;
     ScopedPointer<DelayEditor> m_delayEditor;
+    ScopedPointer<Label> m_keyShiftLabel2;
 
 
     //==============================================================================

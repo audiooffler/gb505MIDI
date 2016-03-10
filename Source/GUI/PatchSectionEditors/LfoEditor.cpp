@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -33,9 +33,12 @@ extern OverallMemoryBlock* grooveboxMemory;
 LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, bool lfo2)
     : Component (componentName), m_part(part), m_tone(tone), m_lfo2(lfo2)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_lfoGrp = new PanelGroupGrey ("lfoGrp", getName ()));
     addAndMakeVisible (m_waveformLabel = new Label ("waveformLabel",
-                                                    "WAVE"));
+                                                    TRANS("WAVE")));
     m_waveformLabel->setFont (Font (12.00f, Font::bold));
     m_waveformLabel->setJustificationType (Justification::centred);
     m_waveformLabel->setEditable (false, false, false);
@@ -46,20 +49,20 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
     addAndMakeVisible (m_waveformComboBox = new ParameterComboBox ("waveformComboBox"));
     m_waveformComboBox->setEditableText (false);
     m_waveformComboBox->setJustificationType (Justification::centred);
-    m_waveformComboBox->setTextWhenNothingSelected (String::empty);
-    m_waveformComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_waveformComboBox->addItem ("TRI", 1);
-    m_waveformComboBox->addItem ("SIN", 2);
-    m_waveformComboBox->addItem ("SAW", 3);
-    m_waveformComboBox->addItem ("SQR", 4);
-    m_waveformComboBox->addItem ("TRP", 5);
-    m_waveformComboBox->addItem ("S&H", 6);
-    m_waveformComboBox->addItem ("RND", 7);
-    m_waveformComboBox->addItem ("CHAOS", 8);
+    m_waveformComboBox->setTextWhenNothingSelected (String());
+    m_waveformComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_waveformComboBox->addItem (TRANS("TRI"), 1);
+    m_waveformComboBox->addItem (TRANS("SIN"), 2);
+    m_waveformComboBox->addItem (TRANS("SAW"), 3);
+    m_waveformComboBox->addItem (TRANS("SQR"), 4);
+    m_waveformComboBox->addItem (TRANS("TRP"), 5);
+    m_waveformComboBox->addItem (TRANS("S&H"), 6);
+    m_waveformComboBox->addItem (TRANS("RND"), 7);
+    m_waveformComboBox->addItem (TRANS("CHAOS"), 8);
     m_waveformComboBox->addListener (this);
 
     addAndMakeVisible (m_portamentoModeLabel3 = new Label ("portamentoModeLabel",
-                                                           "RATE"));
+                                                           TRANS("RATE")));
     m_portamentoModeLabel3->setFont (Font (12.00f, Font::bold));
     m_portamentoModeLabel3->setJustificationType (Justification::centred);
     m_portamentoModeLabel3->setEditable (false, false, false);
@@ -108,7 +111,7 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
     m_panSlider->addListener (this);
 
     addAndMakeVisible (m_pitchLabel = new Label ("pitchLabel",
-                                                 "PITCH"));
+                                                 TRANS("PITCH")));
     m_pitchLabel->setFont (Font (12.00f, Font::bold));
     m_pitchLabel->setJustificationType (Justification::centredLeft);
     m_pitchLabel->setEditable (false, false, false);
@@ -117,7 +120,7 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
     m_pitchLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_filterLabel = new Label ("filterLabel",
-                                                  "FILTER"));
+                                                  TRANS("FILTER")));
     m_filterLabel->setFont (Font (12.00f, Font::bold));
     m_filterLabel->setJustificationType (Justification::centredLeft);
     m_filterLabel->setEditable (false, false, false);
@@ -126,7 +129,7 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
     m_filterLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_ampLabel = new Label ("ampLabel",
-                                               "AMP"));
+                                               TRANS("AMP")));
     m_ampLabel->setFont (Font (12.00f, Font::bold));
     m_ampLabel->setJustificationType (Justification::centredLeft);
     m_ampLabel->setEditable (false, false, false);
@@ -135,7 +138,7 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
     m_ampLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_panLabel = new Label ("panLabel",
-                                               "PAN"));
+                                               TRANS("PAN")));
     m_panLabel->setFont (Font (12.00f, Font::bold));
     m_panLabel->setJustificationType (Justification::centredLeft);
     m_panLabel->setEditable (false, false, false);
@@ -144,11 +147,11 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
     m_panLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_advancedButton = new TextWithArrowButton ("new button"));
-    m_advancedButton->setButtonText ("LFO");
+    m_advancedButton->setButtonText (TRANS("LFO"));
     m_advancedButton->addListener (this);
 
     addAndMakeVisible (m_imageButton = new ImageButton ("new button"));
-    m_imageButton->setButtonText (String::empty);
+    m_imageButton->setButtonText (String());
     m_imageButton->addListener (this);
 
     m_imageButton->setImages (false, true, true,
@@ -251,6 +254,9 @@ void LfoEditor::paint (Graphics& g)
 
 void LfoEditor::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_lfoGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_waveformLabel->setBounds (88, 16, 56, 16);
     m_waveformComboBox->setBounds (88, 29, 56, 16);

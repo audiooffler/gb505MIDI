@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -31,6 +31,9 @@ PatchToneEditorAdvanced::PatchToneEditorAdvanced (SynthParts part, Tone tone)
     : m_part (part),
       m_tone (tone)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_amp = new AmpEditorAdvanced ("AMP", m_part, m_tone));
     addAndMakeVisible (m_filter = new FilterEditorAdvanced ("FILTER", m_part, m_tone));
     addAndMakeVisible (m_pitch = new PitchEditorAdvanced ("PITCH", m_part, m_tone));
@@ -40,6 +43,7 @@ PatchToneEditorAdvanced::PatchToneEditorAdvanced (SynthParts part, Tone tone)
     addAndMakeVisible (m_fxm = new FxmEditor ("FXM", m_part, m_tone));
     addAndMakeVisible (m_delay = new ToneDelayEditor ("DELAY", m_part, m_tone));
     addAndMakeVisible (m_wave = new WaveEditor ("WAVE", m_part, m_tone));
+    addAndMakeVisible (component = new RectangleTransp());
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -65,6 +69,7 @@ PatchToneEditorAdvanced::~PatchToneEditorAdvanced()
     m_fxm = nullptr;
     m_delay = nullptr;
     m_wave = nullptr;
+    component = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -96,6 +101,9 @@ void PatchToneEditorAdvanced::paint (Graphics& g)
 
 void PatchToneEditorAdvanced::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_amp->setBounds (868, 172, 376, 400);
     m_filter->setBounds (488, 172, 376, 400);
     m_pitch->setBounds (108, 172, 376, 400);
@@ -105,6 +113,7 @@ void PatchToneEditorAdvanced::resized()
     m_fxm->setBounds (0, 312, 104, 108);
     m_delay->setBounds (0, 424, 104, 148);
     m_wave->setBounds (0, 172, 104, 136);
+    component->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -160,6 +169,9 @@ BEGIN_JUCER_METADATA
   <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
              explicitFocusOrder="0" pos="0 172 104 136" sourceFile="WaveEditor.cpp"
              constructorParams="&quot;WAVE&quot;, m_part, m_tone"/>
+  <JUCERCOMP name="" id="587e664fd3d5400a" memberName="component" virtualName=""
+             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/RectangleTransp.cpp"
+             constructorParams=""/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
