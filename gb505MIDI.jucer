@@ -146,6 +146,10 @@
                 file="Source/GUI/ParameterWidgets/ParameterTextEditor.cpp"/>
           <FILE id="kngviw" name="ParameterTextEditor.h" compile="0" resource="0"
                 file="Source/GUI/ParameterWidgets/ParameterTextEditor.h"/>
+          <FILE id="C9xNoy" name="ParameterTextLabel.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterTextLabel.cpp"/>
+          <FILE id="Obm2C7" name="ParameterTextLabel.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/ParameterTextLabel.h"/>
           <FILE id="YUcFuP" name="ParameterToggle.cpp" compile="1" resource="0"
                 file="Source/GUI/ParameterWidgets/ParameterToggle.cpp"/>
           <FILE id="nALWjy" name="ParameterToggle.h" compile="0" resource="0"
@@ -352,18 +356,18 @@
                        isDebug="0" optimisation="3" targetName="gb505MIDI"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_gui_basics" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_graphics" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_events" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_data_structures" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_core" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_processors" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_formats" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_devices" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_utils" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_basics" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_opengl" path="..\juce\modules\"/>
+        <MODULEPATH id="juce_gui_extra" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_gui_basics" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_graphics" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_events" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_data_structures" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_core" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_processors" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_formats" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_devices" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_utils" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_basics" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_opengl" path="f:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
       </MODULEPATHS>
     </VS2013>
   </EXPORTFORMATS>

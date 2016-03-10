@@ -27,11 +27,12 @@
 #include "../ParameterWidgets/MixPartLevelFader.h"
 #include "../ParameterWidgets/BigOrangeToggle.h"
 #include "../ParameterWidgets/MicroParameterSlider.h"
-#include "../ParameterWidgets/ParameterTextEditor.h"
+#include "../ParameterWidgets/ParameterTextLabel.h"
 //[/Headers]
 
 #include "../ParameterWidgets/BigOrangeToggle.h"
 #include "../ParameterWidgets/GrabSwitch.h"
+#include "../ParameterWidgets/ParameterTextLabel.h"
 
 
 //==============================================================================
@@ -55,10 +56,10 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
-    void resized() override;
-    void sliderValueChanged (Slider* sliderThatWasMoved) override;
-    void buttonClicked (Button* buttonThatWasClicked) override;
+    void paint (Graphics& g);
+    void resized();
+    void sliderValueChanged (Slider* sliderThatWasMoved);
+    void buttonClicked (Button* buttonThatWasClicked);
 
     // Binary resources:
     static const char* partNameR_png;
@@ -77,8 +78,6 @@ public:
     static const int partName6_pngSize;
     static const char* partName7_png;
     static const int partName7_pngSize;
-    static const char* mixerTapeLabel_png;
-    static const int mixerTapeLabel_pngSize;
 
 
 private:
@@ -100,8 +99,7 @@ private:
     ScopedPointer<Label> m_delayLabel;
     ScopedPointer<Label> m_reverbLabel;
     ScopedPointer<GrabSwitch> m_mfxGrab;
-    ScopedPointer<ParameterTextEditor> m_patchNameEditor;
-    Image cachedImage_mixerTapeLabel_png_1;
+    ScopedPointer<ParameterTextLabel> m_patchNameEditor;
 
 
     //==============================================================================
