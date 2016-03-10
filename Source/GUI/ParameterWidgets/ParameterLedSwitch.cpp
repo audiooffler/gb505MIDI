@@ -78,6 +78,9 @@ ParameterLedSwitch::~ParameterLedSwitch()
 void ParameterLedSwitch::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
+#if JUCE_MSVC
+	g;
+#endif
     //[/UserPrePaint]
 
     //[UserPaint] Add your own custom painting code here..
@@ -109,6 +112,8 @@ void ParameterLedSwitch::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == m_toggleButton1)
     {
         //[UserButtonCode_m_toggleButton1] -- add your button handler code here..
+		if (!m_toggleButton1->getToggleState() && !m_toggleButton2->getToggleState())
+			m_toggleButton2->setToggleState(true, dontSendNotification);
         //[/UserButtonCode_m_toggleButton1]
     }
     else if (buttonThatWasClicked == m_toggleButton2)
@@ -126,9 +131,9 @@ void ParameterLedSwitch::buttonClicked (Button* buttonThatWasClicked)
 	}
 	else if (m_paramPtr != nullptr && m_paramPtr->getMax() - m_paramPtr->getMin() == 2)
 	{
-		if (m_toggleButton1->getToggleState() && m_toggleButton2->getToggleState()) value = 2;
-		else if (m_toggleButton1->getToggleState()) value = 0;
-		else if (m_toggleButton2->getToggleState()) value = 1;
+		if (!m_toggleButton2->getToggleState()) value = 0;
+		else if (!m_toggleButton1->getToggleState() && m_toggleButton2->getToggleState()) value = 1;
+		else if (m_toggleButton1->getToggleState() && m_toggleButton2->getToggleState()) value = 2;
 	}
 	setValue(value);
     //[/UserbuttonClicked_Post]
@@ -149,20 +154,29 @@ void ParameterLedSwitch::setValue(uint8 v)
 	m_value = v;
 	if (v == 0)
 	{
-		m_toggleButton1->setToggleState(true, dontSendNotification);
-		m_toggleButton2->setToggleState(false, dontSendNotification);
+		if (m_paramPtr != nullptr && m_paramPtr->getMax() - m_paramPtr->getMin() == 2)
+		{
+			m_toggleButton1->setToggleState(true, dontSendNotification);
+			m_toggleButton2->setToggleState(false, dontSendNotification);
+		}
+		else
+		{
+			m_toggleButton1->setToggleState(true, dontSendNotification);
+			m_toggleButton2->setToggleState(false, dontSendNotification);
+		}
 	}
 	else if (v == 1)
 	{
-		m_toggleButton2->setToggleState(true, dontSendNotification);
-		m_toggleButton1->setToggleState(false, dontSendNotification);
+		{
+			m_toggleButton1->setToggleState(false, dontSendNotification);
+			m_toggleButton2->setToggleState(true, dontSendNotification);
+		}
 	}
 	else if (v == 2)
 	{
 		m_toggleButton1->setToggleState(true, dontSendNotification);
 		m_toggleButton2->setToggleState(true, dontSendNotification);
 	}
-	DBG("GUI toggled value to " + String(m_value).paddedLeft('0', 3));
 
 	if (m_paramPtr != nullptr)
 	{
