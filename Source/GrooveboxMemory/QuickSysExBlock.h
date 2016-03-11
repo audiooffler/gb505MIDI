@@ -52,14 +52,12 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(QuickSysExSequencerBlock)
 };
 
-class QuickSysExBlock : public GrooveboxMemoryBlock, public ChangeListener
+class QuickSysExBlock : public GrooveboxMemoryBlock
 {
 public:
 	QuickSysExBlock();
 
 	bool handleSysEx(SyxMsg* msg) override;
-
-	void changeListenerCallback(ChangeBroadcaster *source);
 
 	QuickSysExPartBlock* getQuickSysExPartBlock(SynthParts part);
 
@@ -67,9 +65,9 @@ public:
 
 	QuickSysExSequencerBlock* getQuickSysExSequencerBlock();
 
-	void mutePart(AllParts part, bool unmute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
+	void mutePart(AllParts part, bool mute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
 
-	void muteRhytm(RhythmGroup rhyGrp, bool unmute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
+	void muteRhytm(RhythmGroup rhyGrp, bool mute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
 
 private:
 

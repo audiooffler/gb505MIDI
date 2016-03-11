@@ -11,8 +11,10 @@
 #include "PatternSetupBlock.h"
 
 #include "OverallMemoryBlock.h"
+#include "QuickSysExBlock.h"
 
 extern OverallMemoryBlock* grooveboxMemory;
+extern QuickSysExBlock* quickSysEx;
 
 /*static */const unsigned int BeatSignature::ALLOWED_FRACTIONS_SIZE = 17;
 /*static */const float BeatSignature::allowedFractions[ALLOWED_FRACTIONS_SIZE] = { 0.5f, 0.5625f, 0.625f, 0.6875f, 0.75f, 0.75f, 0.8125f, 0.875f, 0.9375f, 1.0f, 1.0625f, 1.125f, 1.1875f, 1.25f, 1.5f, 1.5f, 1.75f };
@@ -498,6 +500,21 @@ void PatternSetupConfigBlock::setSeqOut(PatternBodyBlock::PatternPart part, uint
 	default:
 		break;
 	}
+}
+
+bool PatternSetupConfigBlock::handleSysEx(SyxMsg* sysExMsg)
+{
+	bool success = GrooveboxMemoryBlock::handleSysEx(sysExMsg);
+	if (success)
+	{
+		// quick sysex seq: mute synth parts
+		for (int i = 0; i < 7; i++) quickSysEx->mutePart((AllParts)i, isPartMute((PatternBodyBlock::PatternPart)i), Parameter::LoadingFile);
+		// quick sysex seq: mute r part
+		quickSysEx->mutePart(PartR, isPartMute(PatternBodyBlock::Pattern_Part_R), Parameter::LoadingFile);
+		// quick sysex seq: mute rhy groups
+		for (int i = 0; i < 8; i++) quickSysEx->muteRhytm((RhythmGroup)i, isRyhGroupMute((PatternBodyBlock::RhythmGroup)i), Parameter::LoadingFile);
+	}
+	return success;
 }
 
 MidiMessage PatternSetupConfigBlock::getPartMuteSysEx(uint8 deviceId, AllParts part)

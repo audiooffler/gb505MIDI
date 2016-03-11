@@ -47,8 +47,8 @@ public:
 	BigOrangeToggle();
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
     // Binary resources:
     static const char* bigOrangeToggleOff_png;

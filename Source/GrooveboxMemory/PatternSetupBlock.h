@@ -97,6 +97,9 @@ public:
 	// 0=INT,1=EXT,2=BOTH
 	void setSeqOut(PatternBodyBlock::PatternPart part, uint8 seqOut);
 
+	// for forwarding mute states to quick sysex block
+	bool handleSysEx(SyxMsg* sysExMsg) override;
+
 	MidiMessage getPartMuteSysEx(uint8 deviceId, AllParts part);
 	MidiMessage getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group);
 	MidiMessageSequence getInitalMuteStates(uint8 deviceId);

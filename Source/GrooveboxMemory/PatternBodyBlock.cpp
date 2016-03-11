@@ -591,7 +591,7 @@ PatternBodyBlock::RhythmGroup PatternBodyBlock::PatternEventData::getMuteRhythmG
 	return (PatternBodyBlock::RhythmGroup)bytes[5];
 }
 
-bool PatternBodyBlock::PatternEventData::getMuteState()	// false=Mute, true=On
+bool PatternBodyBlock::PatternEventData::getMuteState()	// false=On, true=Mute
 {
 	return bytes[7]!=0;
 }
@@ -663,11 +663,11 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 		break;
 	case PatternBodyBlock::Evt_PartMute:
 		result += getPartString(getMutePart())+"\t";
-		result += String(getMuteState() ? +"On" : "Mute") + "\t";
+		result += String(getMuteState() ? +"Mute" : "On") + "\t";
 		break;
 	case PatternBodyBlock::Evt_RhyMute:
 		result += getRhythmGroupString(getMuteRhythmGroup()) + "\t";
-		result += String(getMuteState() ? +"On" : "Mute") + "\t";
+		result += String(getMuteState() ? +"Mute" : "On") + "\t";
 		break;
 	case PatternBodyBlock::Evt_SysExSize:
 		result += String(getSysExSize()) + "\t";
@@ -846,10 +846,10 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 				cellText = String(event->getCcValue());
 				break;
 			case PatternBodyBlock::Evt_PartMute:
-				cellText = String(event->getMuteState() ? "On" : "Mute");
+				cellText = String(event->getMuteState() ? "Mute" : "On");
 				break;
 			case PatternBodyBlock::Evt_RhyMute:
-				cellText = String(event->getMuteState() ? "On" : "Mute");
+				cellText = String(event->getMuteState() ? "Mute" : "On");
 				break;
 			default:
 				break;
@@ -1359,12 +1359,12 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 			}
 			else if (event->getType() == Evt_PartMute)
 			{
-				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Unmute " : "Mute ") + event->getPartString(event->getPart()), event->absoluteTick + oneMeasure));
+				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Mute " : "Unmute ") + event->getPartString(event->getPart()), event->absoluteTick + oneMeasure));
 				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
 			else if (event->getType() == Evt_RhyMute)
 			{
-				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Unmute " : "Mute ") + event->getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
+				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Mute " : "Unmute ") + event->getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
 				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
 			// igonore Evt_SysExSize, Evt_SysExData, Evt_TickInc, Evt_Unknown

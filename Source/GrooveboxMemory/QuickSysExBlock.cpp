@@ -287,8 +287,8 @@ QuickSysExRhythmBlock::QuickSysExRhythmBlock(RhythmGroup rhyGrp) :
 | Offset      | Size                |                                          |
 |     Address | DataL     DataE     | Description           Data(Value L/E)    |
 |—————————————+————————————————————————————————————————————————————————————————|
-|          01 | 0000 aaaa 0000 000a | Part Mute             0-6,9 / 0,1        |	Part: Sound (MUTE, ON)
-|          02 | 0000 aaaa 0000 000a | Drum Mute             0-7*1 / 0,1        | Rhy Grp: Sound (MUTE, ON)
+|          01 | 0000 aaaa 0000 000a | Part Mute             0-6,9 / 0,1        |	Part: Sound (0=ON, 1=MUTED)
+|          02 | 0000 aaaa 0000 000a | Drum Mute             0-7*1 / 0,1        | Rhy Grp: Sound (0=ON, 1=MUTED)
 |          03 | 0aaa aaaa 0aaa aaaa | Tempo                 7-93 / 0-127       |
 +——————————————————————————————————————————————————————————————————————————————+
 *   1:BD,SD,HH,CLP,CYM,TOM/PEC,HIT,OTHERS
@@ -302,29 +302,29 @@ QuickSysExSequencerBlock::QuickSysExSequencerBlock() :
 {
 	m_name = "Quick SysEx Sequencer";
 
-	StringArray offOnStrings(StringArray::fromTokens("OFF ON", false));
+	StringArray onMuteStrings(StringArray::fromTokens("ON MUTE", false));
 
 	// the following addresses are not the real addresses but must be unique, use getParameter(AllParts part) for accessing parameter
 	// in real life they all are 0x01 (MSB of virtual address) and DataL (LSB of virtual address) would be the Part 1..7,R (0..6,9)
-	setupParameter("Sequencer Part 1 On", 0x10, 0, 1, 1, offOnStrings, "Mute Part 1");
-	setupParameter("Sequencer Part 2 On", 0x11, 0, 1, 1, offOnStrings, "Mute Part 2");
-	setupParameter("Sequencer Part 3 On", 0x12, 0, 1, 1, offOnStrings, "Mute Part 3");
-	setupParameter("Sequencer Part 4 On", 0x13, 0, 1, 1, offOnStrings, "Mute Part 4");
-	setupParameter("Sequencer Part 5 On", 0x14, 0, 1, 1, offOnStrings, "Mute Part 5");
-	setupParameter("Sequencer Part 6 On", 0x15, 0, 1, 1, offOnStrings, "Mute Part 6");
-	setupParameter("Sequencer Part 7 On", 0x16, 0, 1, 1, offOnStrings, "Mute Part 7");
-	setupParameter("Sequencer Part R On", 0x19, 0, 1, 1, offOnStrings, "Mute Part R");
+	setupParameter("Sequencer Part 1 Mute", 0x10, 0, 1, 1, onMuteStrings, "Mute Part 1");
+	setupParameter("Sequencer Part 2 Mute", 0x11, 0, 1, 1, onMuteStrings, "Mute Part 2");
+	setupParameter("Sequencer Part 3 Mute", 0x12, 0, 1, 1, onMuteStrings, "Mute Part 3");
+	setupParameter("Sequencer Part 4 Mute", 0x13, 0, 1, 1, onMuteStrings, "Mute Part 4");
+	setupParameter("Sequencer Part 5 Mute", 0x14, 0, 1, 1, onMuteStrings, "Mute Part 5");
+	setupParameter("Sequencer Part 6 Mute", 0x15, 0, 1, 1, onMuteStrings, "Mute Part 6");
+	setupParameter("Sequencer Part 7 Mute", 0x16, 0, 1, 1, onMuteStrings, "Mute Part 7");
+	setupParameter("Sequencer Part R Mute", 0x19, 0, 1, 1, onMuteStrings, "Mute Part R");
 
 	// the following addresses are not the real addresses but must be unique, use getParameter(RhythmGroup rhyGrp) for accessing parameter
 	// in real life they all are 0x02 (MSB of virtual address) and DataL (LSB of virtual address) would be the Rhythm Group BD..OTHERS (0..7) 
-	setupParameter("Sequencer BD On", 0x20, 0, 1, 1, offOnStrings, "Mute BD");
-	setupParameter("Sequencer SD On", 0x21, 0, 1, 1, offOnStrings, "Mute SD");
-	setupParameter("Sequencer HH On", 0x22, 0, 1, 1, offOnStrings, "Mute HH");
-	setupParameter("Sequencer CLP On", 0x23, 0, 1, 1, offOnStrings, "Mute CLP");
-	setupParameter("Sequencer CYM On", 0x24, 0, 1, 1, offOnStrings, "Mute CYM");
-	setupParameter("Sequencer TOM/PERC On", 0x25, 0, 1, 1, offOnStrings, "Mute TOM/PERC");
-	setupParameter("Sequencer HIT On", 0x26, 0, 1, 1, offOnStrings, "Mute HIT");
-	setupParameter("Sequencer OTHERS On", 0x27, 0, 1, 1, offOnStrings, "Mute OTHER");
+	setupParameter("Sequencer BD Mute", 0x20, 0, 1, 1, onMuteStrings, "Mute BD");
+	setupParameter("Sequencer SD Mute", 0x21, 0, 1, 1, onMuteStrings, "Mute SD");
+	setupParameter("Sequencer HH Mute", 0x22, 0, 1, 1, onMuteStrings, "Mute HH");
+	setupParameter("Sequencer CLP Mute", 0x23, 0, 1, 1, onMuteStrings, "Mute CLP");
+	setupParameter("Sequencer CYM Mute", 0x24, 0, 1, 1, onMuteStrings, "Mute CYM");
+	setupParameter("Sequencer TOM/PERC Mute", 0x25, 0, 1, 1, onMuteStrings, "Mute TOM/PERC");
+	setupParameter("Sequencer HIT Mute", 0x26, 0, 1, 1, onMuteStrings, "Mute HIT");
+	setupParameter("Sequencer OTHERS Mute", 0x27, 0, 1, 1, onMuteStrings, "Mute OTHER");
 }
 
 Parameter* QuickSysExSequencerBlock::getParameter(AllParts part)
@@ -396,13 +396,6 @@ QuickSysExBlock::QuickSysExBlock() :
 	addSubBlock(new QuickSysExRhythmBlock(HIT));
 	addSubBlock(new QuickSysExRhythmBlock(OTHERS));
 	addSubBlock(new QuickSysExSequencerBlock());
-
-	PatternSetupConfigBlock* configPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
-	configPtr->getParameter(0x1F)->addChangeListener(this);
-	configPtr->getParameter(0x20)->addChangeListener(this);
-	configPtr->getParameter(0x22)->addChangeListener(this);
-	configPtr->getParameter(0x2F)->addChangeListener(this);
-	configPtr->getParameter(0x30)->addChangeListener(this);
 }
 
 bool QuickSysExBlock::handleSysEx(SyxMsg* msg)
@@ -439,13 +432,13 @@ bool QuickSysExBlock::handleSysEx(SyxMsg* msg)
 	{
 		if (bbAddressDataH == 1)
 		{
-			mutePart((AllParts)ccDataL, ddDataE == 0, Parameter::Init);
+			mutePart((AllParts)ccDataL, ddDataE == 1, Parameter::Init);
 			grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->setPartMute(
 				(PatternBodyBlock::PatternPart)ccDataL, ddDataE == 1);
 		}
 		else if (bbAddressDataH == 2)
 		{
-			muteRhytm((RhythmGroup)ccDataL, ddDataE == 0, Parameter::Init);
+			muteRhytm((RhythmGroup)ccDataL, ddDataE == 1, Parameter::Init);
 			grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->setRyhGroupMute(
 				(PatternBodyBlock::RhythmGroup)ccDataL, ddDataE == 1);
 		}
@@ -456,54 +449,6 @@ bool QuickSysExBlock::handleSysEx(SyxMsg* msg)
 	}
 	return true;
 }
-
-void QuickSysExBlock::changeListenerCallback(ChangeBroadcaster *source)
-{
-	if (Parameter* param = dynamic_cast<Parameter*>(source))
-	{
-		PatternSetupConfigBlock* configPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
-		if (param->getBlock() == configPtr)
-		{
-			// Mute Parts 5, 6, 7
-			if (param->getAddressOffset() == 0x1F)
-			{
-				mutePart(Part5, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_5));
-				mutePart(Part6, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_6));
-				mutePart(Part7, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_7));
-			}
-			// Mute Parts 1, 2, 3, 4
-			else if (param->getAddressOffset() == 0x20)
-			{
-				mutePart(Part1, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_1));
-				mutePart(Part2, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_2));
-				mutePart(Part3, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_3));
-				mutePart(Part4, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_4));
-			}
-			// Mute Part R
-			else if (param->getAddressOffset() == 0x22)
-			{
-				mutePart(PartR, !configPtr->isPartMute(PatternBodyBlock::Pattern_Part_R));
-			}
-			// Mute Rhy Cym-Others
-			else if (param->getAddressOffset() == 0x2F)
-			{
-				muteRhytm(CYM, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_CYM));
-				muteRhytm(TOM_PERC, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_TomPerc));
-				muteRhytm(HIT, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_Hit));
-				muteRhytm(OTHERS, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_Others));
-			}
-			// Mute Rhy Bd-Clp
-			else if (param->getAddressOffset() == 0x30)
-			{
-				muteRhytm(BD, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_BD));
-				muteRhytm(SD, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_SD));
-				muteRhytm(HH, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_HH));
-				muteRhytm(CLP, !configPtr->isRyhGroupMute(PatternBodyBlock::Rhythm_Group_CLP));
-			}
-		}
-	}
-}
-
 
 QuickSysExPartBlock* QuickSysExBlock::getQuickSysExPartBlock(SynthParts part)
 {
@@ -541,12 +486,12 @@ QuickSysExSequencerBlock* QuickSysExBlock::getQuickSysExSequencerBlock()
 	return dynamic_cast<QuickSysExSequencerBlock*>(m_subBlocks[getSubBlocks()->size() - 1]);
 }
 
-void QuickSysExBlock::mutePart(AllParts part, bool unmute/* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
+void QuickSysExBlock::mutePart(AllParts part, bool mute/* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
 {
-	getQuickSysExSequencerBlock()->getParameter(part)->setValue(unmute ? 1 : 0, source);
+	getQuickSysExSequencerBlock()->getParameter(part)->setValue(mute ? 1 : 0, source);
 }
 
-void QuickSysExBlock::muteRhytm(RhythmGroup rhyGrp, bool unmute /* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
+void QuickSysExBlock::muteRhytm(RhythmGroup rhyGrp, bool mute /* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
 {
-	getQuickSysExSequencerBlock()->getParameter(rhyGrp)->setValue(unmute ? 1 : 0, source);
+	getQuickSysExSequencerBlock()->getParameter(rhyGrp)->setValue(mute ? 1 : 0, source);
 }
