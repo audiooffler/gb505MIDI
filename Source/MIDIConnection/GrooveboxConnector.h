@@ -72,6 +72,8 @@ public:
 
 	void handleIncomingMidiMessage(MidiInput* input, const MidiMessage& msg);
 
+	bool receiveDump();
+
 	bool sendPatchesPatternAndSetupAsDump();
 
 private:
@@ -130,8 +132,34 @@ private:
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(SendBulkDumpThread);
 	};
 
+	// after running it will contain received SysEx-Messages in its private sysExCompilation array and handle them in threadComplete
+	class RecvBulkDumpThread : public ThreadWithProgressWindow
+	{
+	public:
+		RecvBulkDumpThread();
+		~RecvBulkDumpThread();
+		void run() override;
+		void threadComplete(bool userPressedCancel) override;
+		OwnedArray<SyxMsg, CriticalSection>* getSysExCompilationPtr(){ return &sysExCompilation; }
+		class TimeOutTimer : public juce::Timer
+		{
+		public:
+			TimeOutTimer(RecvBulkDumpThread* bulkDumpThread);
+			void timerCallback() override; // for timeup after
+		private:
+			RecvBulkDumpThread* m_bulkDumpThread;
+		};
+		friend class TimeOutTimer;
+		void addReceivedMidiMessage(const MidiMessage& msg);
+	private:
+		OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
+		ScopedPointer<TimeOutTimer> m_timeoutTimer;
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RecvBulkDumpThread);
+	};
+
 	ScopedPointer<IndenityRequestReplyThread> m_checkThread;
 	ScopedPointer<SendBulkDumpThread> m_sendBulkDumpThread;
+	ScopedPointer<RecvBulkDumpThread> m_recvBulkDumpThread;
 
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GrooveboxConnector)
 };

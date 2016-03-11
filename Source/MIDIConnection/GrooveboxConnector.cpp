@@ -159,6 +159,10 @@ void GrooveboxConnector::handleIncomingMidiMessage(MidiInput* input, const MidiM
 		// get responses
 		m_checkThread->addMidiMessage(input, msg);
 	}
+	else if (m_recvBulkDumpThread != nullptr && m_recvBulkDumpThread->isThreadRunning() && input == midiInputDevice)
+	{
+		m_recvBulkDumpThread->addReceivedMidiMessage(msg);
+	}
 	else if (input == midiInputDevice)
 	{
 		//DBG("Midi In Message from \"" + input->getName().trim() + "\": " + String::toHexString(msg.getRawData(), msg.getRawDataSize()).toUpperCase());
@@ -185,6 +189,40 @@ void GrooveboxConnector::handleIncomingMidiMessage(MidiInput* input, const MidiM
 	}
 }
 
+bool GrooveboxConnector::receiveDump()
+{
+	if (getActiveConnection() == nullptr) return false;
+
+	String helpText;
+	switch (getActiveConnection()->deviceFamilyNumberCode)
+	{
+	case Model_MC_505:
+		helpText = "Make sure your Groovebox is stopped. Select the tempo pattern (U:TMP).\r\n"
+			"Hold [SHIFT], press key-pad [16]. Select \"SEND\" and the type of data you want to transmit from the groovebox.";
+		break;
+	case Model_JX_305:
+		helpText = "Select the temporary pattern (TMP). Make sure the Pattern is stopped.\r\n."
+			"Press [UTILITY], select \"BULK DUMP\", press [ENTER]. Select \"SEND\" and and the type of data you want to transmit from the groovebox.";
+		break;
+	case Model_MC_307:
+		helpText = "Make sure your Groovebox is stopped.\r\n"
+			"Press the [SYSTEM], then [F2 (UTIL)], then [F3 (BULK)]. Select [F1 (TX)] and and the type of data you want to transmit from the groovebox.";
+		break;
+	case Model_D2:
+		helpText = "Make sure your Groovebox is stopped.\r\n"
+			"Press[SYSTEM] several times to access the MIDI reception setting display (RX LED).\r\n"
+			"Press [ENTER] several times to access the Bulk Dump setting display (dMP).\r\n"
+			"Turn [VALUE] to select \"Ptn\" and press [ENTER].";
+		break;
+	default:
+		return false;
+	}
+	m_recvBulkDumpThread = new RecvBulkDumpThread();
+	m_recvBulkDumpThread->setStatusMessage(helpText);
+	m_recvBulkDumpThread->launchThread();
+	return true;
+}
+
 bool GrooveboxConnector::sendPatchesPatternAndSetupAsDump()
 {
 	if (getActiveConnection() == nullptr) return false;
@@ -207,7 +245,7 @@ bool GrooveboxConnector::sendPatchesPatternAndSetupAsDump()
 	case Model_D2: 
 		helpText = "Make sure your Groovebox is stopped.\r\n"
 			"Press[SYSTEM] several times to access the MIDI reception setting display (RX LED).\r\n"
-			"Press [ENTER] several times to access the Bulk Load setting display (rxY).\r\n"
+			"Press [ENTER] several times to access the Bulk Load setting display (rcY).\r\n"
 			"Turn [VALUE] to select \"Ptn\" and press [ENTER]."; 
 		break;
 	default:
@@ -329,4 +367,59 @@ void GrooveboxConnector::SendBulkDumpThread::threadComplete(bool userPressedCanc
 
 	}
 	sysExCompilation.clear();
+}
+
+GrooveboxConnector::RecvBulkDumpThread::RecvBulkDumpThread()
+	: ThreadWithProgressWindow("Receiving Bulk Dump from Groovebox...", true, true)
+{
+	m_timeoutTimer = new TimeOutTimer(this);
+}
+
+GrooveboxConnector::RecvBulkDumpThread::~RecvBulkDumpThread()
+{
+	sysExCompilation.clear();
+}
+
+void GrooveboxConnector::RecvBulkDumpThread::run()
+{
+	setProgress(0.0);
+	while (!threadShouldExit())
+	{
+		wait(20);
+	}
+}
+
+void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMessage& msg)
+{
+	if (msg.isSysEx())
+	{
+		sysExCompilation.add(new SyxMsg(msg));
+		setStatusMessage("");
+		setProgress(sysExCompilation.size()/200.0);
+		m_timeoutTimer->startTimer(750);
+	}
+}
+
+void GrooveboxConnector::RecvBulkDumpThread::threadComplete(bool userPressedCancel)
+{
+	if (userPressedCancel)
+	{
+		sysExCompilation.clear();
+	}
+	else
+	{
+		grooveboxMemory->loadFromArray(sysExCompilation);
+	}
+}
+
+GrooveboxConnector::RecvBulkDumpThread::TimeOutTimer::TimeOutTimer(GrooveboxConnector::RecvBulkDumpThread* bulkDumpThread) :
+	juce::Timer(),
+	m_bulkDumpThread(bulkDumpThread)
+{
+
+}
+
+void GrooveboxConnector::RecvBulkDumpThread::TimeOutTimer::timerCallback()
+{
+	m_bulkDumpThread->signalThreadShouldExit();
 }

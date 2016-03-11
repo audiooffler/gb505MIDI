@@ -168,6 +168,7 @@ void MainComponent::getAllCommands(Array <CommandID>& commands)
 		CommandIDs::fileSavePatternBinFile,
 		/* ---------------------- */
 		CommandIDs::grooveBoxLoadPattern,
+		CommandIDs::grooveBoxRecvPatternBulk,
 		CommandIDs::grooveBoxSendPatternBulk,
 		/* ---------------------- */
 			CommandIDs::gotoSystemTab,
@@ -214,12 +215,17 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo& 
 		break;
 	case grooveBoxLoadPattern:
 		result.setInfo("Send Pattern Request SysEx", "Request temporary pattern data from groovebox.", "Pattern", 0);
-		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
+		//result.addDefaultKeypress('r', ModifierKeys::commandModifier);
+		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
+		break;
+	case grooveBoxRecvPatternBulk:
+		result.setInfo("Receive Pattern Bulk Dump", "Receive patches, pattern, and / or setup data of temporary pattern from the groovebox.", "Pattern", 0);
+		//result.addDefaultKeypress('r', ModifierKeys::commandModifier);
 		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
 		break;
 	case grooveBoxSendPatternBulk:
 		result.setInfo("Transmit Pattern Bulk Dump", "Send patches, pattern, and setup data of temporary pattern to groovebox.", "Pattern", 0);
-		result.addDefaultKeypress('t', ModifierKeys::commandModifier);
+		//result.addDefaultKeypress('t', ModifierKeys::commandModifier);
 		result.setActive(grooveboxConnector->getActiveConnection() != nullptr && !grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
 	case CommandIDs::gotoPart1Tab:
@@ -282,9 +288,11 @@ bool MainComponent::perform(const InvocationInfo& info)
 	switch (info.commandID)
 	{
 	case CommandIDs::createEmptyPattern:
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 		editorTab->newPattern();
 		return true;
 	case CommandIDs::fileOpenPattern:
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 		editorTab->loadPatternFile();
 		return true;
 	case CommandIDs::fileSavePattern:
@@ -296,7 +304,12 @@ bool MainComponent::perform(const InvocationInfo& info)
 	case CommandIDs::grooveBoxLoadPattern:
 		//loadFromGroovebox();
 		return true;
+	case CommandIDs::grooveBoxRecvPatternBulk:
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
+		grooveboxConnector->receiveDump();
+		return true;
 	case CommandIDs::grooveBoxSendPatternBulk:
+		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 		grooveboxConnector->sendPatchesPatternAndSetupAsDump();
 		return true;
 	case CommandIDs::gotoSystemTab:
@@ -346,19 +359,22 @@ Drawable* MainComponent::getDrawableForCommand(CommandID commandID, bool inactiv
 	Image img;
 	switch (commandID)
 	{
-	case MainComponent::createEmptyPattern:
+	case CommandIDs::createEmptyPattern:
 		img = ImageCache::getFromMemory(new_png, new_pngSize);
 		break;
-	case MainComponent::fileOpenPattern:
+	case CommandIDs::fileOpenPattern:
 		img = ImageCache::getFromMemory(open_png, open_pngSize);
 		break;
-	case MainComponent::fileSavePattern:
+	case CommandIDs::fileSavePattern:
 		img = ImageCache::getFromMemory(save_png, save_pngSize);
 		break;
-	case MainComponent::grooveBoxLoadPattern:
+	case CommandIDs::grooveBoxLoadPattern:
 		img = ImageCache::getFromMemory(midiIn_png, midiIn_pngSize);
 		break;
-	case MainComponent::grooveBoxSendPatternBulk:
+	case CommandIDs::grooveBoxRecvPatternBulk:
+		img = ImageCache::getFromMemory(midiIn_png, midiIn_pngSize);
+		break;
+	case CommandIDs::grooveBoxSendPatternBulk:
 		img = ImageCache::getFromMemory(midiOut_png, midiOut_pngSize);
 		break;
 	default:

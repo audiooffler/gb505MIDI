@@ -55,7 +55,8 @@ public:
 		fileSavePattern = 0x2102,
 		fileSavePatternBinFile = 0x2124,
 		grooveBoxLoadPattern = 0x3101,
-		grooveBoxSendPatternBulk = 0x3102,
+		grooveBoxRecvPatternBulk = 0x3102,
+		grooveBoxSendPatternBulk = 0x3103,
 
 		gotoPart1Tab = 0xF01,
 		gotoPart2Tab = 0xF02,

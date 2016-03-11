@@ -1076,10 +1076,10 @@ void PatternEditorTab::loadPatternFile()
 		}
 		else
 		{
+			grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 			bool loadedSucessfully(false);
 			if (file.getFileExtension().toLowerCase() == ".mid")
 			{
-				grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
 				grooveboxMemory->getPatternBodyBlock()->loadMidiFile(file);
 				m_patternEventTable->selectRow(0);
 				loadedSucessfully = true;
