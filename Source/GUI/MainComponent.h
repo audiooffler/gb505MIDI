@@ -50,6 +50,13 @@ public:
 	/* ApplicationCommandTarget implementation: */
 	enum CommandIDs
 	{
+		createEmptyPattern = 0x20FF,
+		fileOpenPattern = 0x2101,
+		fileSavePattern = 0x2102,
+		fileSavePatternBinFile = 0x2124,
+		grooveBoxLoadPattern = 0x3101,
+		grooveBoxSendPatternBulk = 0x3102,
+
 		gotoPart1Tab = 0xF01,
 		gotoPart2Tab = 0xF02,
 		gotoPart3Tab = 0xF03,
@@ -59,7 +66,7 @@ public:
 		gotoPart7Tab = 0xF07,
 		gotoPartRTab = 0xF10,
 		gotoMixerTab = 0xF20,
-		gotoPatternTab = 0xF30,
+		gotoSystemTab = 0xF30,
 		gotoPatternEditorTab = 0xF31,
 		showInfo = 0xF50
 	};
@@ -67,7 +74,7 @@ public:
 	void getAllCommands(Array <CommandID>& commands) override;
 	void getCommandInfo(CommandID commandID, ApplicationCommandInfo& result) override;
 	bool perform(const InvocationInfo& info) override;
-
+	Drawable* getDrawableForCommand(CommandID commandID, bool inactive=false);
 	/* Button::Listener implementation for listening to menu button */
 	void buttonClicked(Button* buttonThatWasClicked) override;
 
@@ -96,6 +103,21 @@ public:
     void paint (Graphics& g) override;
     void resized() override;
 
+    // Binary resources:
+    static const char* new_png;
+    static const int new_pngSize;
+    static const char* open_png;
+    static const int open_pngSize;
+    static const char* save_png;
+    static const int save_pngSize;
+    static const char* midiIn_png;
+    static const int midiIn_pngSize;
+    static const char* midiOut_png;
+    static const int midiOut_pngSize;
+    static const char* info_png;
+    static const int info_pngSize;
+    static const char* quit_png;
+    static const int quit_pngSize;
 
 
 private:

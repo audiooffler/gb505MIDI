@@ -60,12 +60,12 @@ public:
 
 	enum CommandIDs
 	{
-		createEmptyPattern = 0x20FF,
+		/*createEmptyPattern = 0x20FF,
 		fileOpenPattern = 0x2101,
 		fileSavePattern = 0x2102,
 		fileSavePatternBinFile = 0x2124,
 		grooveBoxLoadPattern = 0x3101,
-		grooveBoxSendPatternBulk = 0x3102
+		grooveBoxSendPatternBulk = 0x3102*/
 	};
 	// This must return the next target to try after this one.
 	ApplicationCommandTarget* getNextCommandTarget() override;
@@ -76,6 +76,7 @@ public:
 	// This must actually perform the specified command.
 	bool perform(const InvocationInfo &info) override;
 
+	void newPattern();
 	void loadPatternFile();
 	void savePatternFile();
 	void saveRawBinaryFile();

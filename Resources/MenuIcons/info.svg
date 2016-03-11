@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="16"
+   height="16"
+   viewBox="0 0 16 16"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91pre4 r13712"
+   sodipodi:docname="info.svg"
+   inkscape:export-filename="F:\Users\Spindler\Documents\Visual Studio 2013\Projects\gb505MIDI\Resources\MenuIcons\midiIn.png"
+   inkscape:export-xdpi="180"
+   inkscape:export-ydpi="180">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="14.96875"
+     inkscape:cx="1.9799381"
+     inkscape:cy="-10.503979"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4136"
+       spacingx="1"
+       spacingy="1"
+       empspacing="4" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-1036.3622)">
+    <g
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:125.99999905%;font-family:'Times New Roman';-inkscape-font-specification:'Times New Roman, ';text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       id="text6565">
+      <path
+         d="m 8.0549316,1039.1547 q 0.3076172,0 0.5200196,0.2197 0.2197265,0.2124 0.2197265,0.52 0,0.3076 -0.2197265,0.5274 -0.2124024,0.2197 -0.5200196,0.2197 -0.3076171,0 -0.5273437,-0.2197 -0.2197266,-0.2198 -0.2197266,-0.5274 0,-0.3076 0.2124024,-0.52 0.2197265,-0.2197 0.5346679,-0.2197 z m 0.6079102,3.5083 0,5.3906 q 0,0.6299 0.087891,0.8423 0.095215,0.2051 0.2709961,0.3076 0.1831055,0.1025 0.6591797,0.1025 l 0,0.2637 -3.2592773,0 0,-0.2637 q 0.4907226,0 0.6591796,-0.095 0.1684571,-0.095 0.2636719,-0.3149 0.1025391,-0.2198 0.1025391,-0.8423 l 0,-2.5855 q 0,-1.0913 -0.065918,-1.4135 -0.05127,-0.2344 -0.1611328,-0.3223 -0.1098633,-0.095 -0.300293,-0.095 -0.2050781,0 -0.4980468,0.1098 l -0.1025391,-0.2636 2.0214844,-0.8203 0.3222656,0 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15px;font-family:serif;-inkscape-font-specification:serif"
+         id="path6570" />
+    </g>
+  </g>
+</svg>

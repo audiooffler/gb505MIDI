@@ -1041,89 +1041,24 @@ ApplicationCommandTarget* PatternEditorTab::getNextCommandTarget()
 void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
 {
 	// this returns the set of all commands that this target can perform..
-	const CommandID ids[] = {
-		createEmptyPattern,
-		/* ---------------------- */
-		fileOpenPattern,
-		fileSavePattern,
-		/* ---------------------- */
-		fileSavePatternBinFile,
-		/* ---------------------- */
-		grooveBoxLoadPattern,
-		grooveBoxSendPatternBulk
-	};
-	commands.addArray(ids, numElementsInArray(ids));
 }
 
 //This must provide details about one of the commands that this target can perform.
 void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo &result)
 {
-	const String category("Pattern");
-
-	switch (commandID)
-	{
-	case createEmptyPattern:
-		result.setInfo("New empty pattern", "Clears the pattern data", category, 0);
-		result.addDefaultKeypress('n', ModifierKeys::commandModifier);
-		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
-		break;
-	case fileOpenPattern:
-		result.setInfo("Open Pattern File...", "Opens a pattern file, either a standard MIDI File (.mid), a binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
-		result.addDefaultKeypress('o', ModifierKeys::commandModifier);
-		break;
-	case fileSavePattern:
-		result.setInfo("Save Pattern...", "Saves a pattern file, either as Standard MIDI File (.mid), a binary SysEx (.syx) or Hex SysEx text (.txt)", category, 0);
-		result.addDefaultKeypress('s', ModifierKeys::commandModifier);
-		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
-		break;
-	case fileSavePatternBinFile:
-		result.setInfo("Export Pattern as Binary...", "Saves the raw decoded pattern events as8 bytes a 8bit binary (.bin)", category, 0);
-		result.addDefaultKeypress('s', ModifierKeys::commandModifier | ModifierKeys::shiftModifier | ModifierKeys::altModifier);
-		result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
-		break;
-	case grooveBoxLoadPattern:
-		result.setInfo("Send Pattern Request SysEx", "Request temporary pattern data from groovebox.", category, 0);
-		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
-		result.setActive(grooveboxConnector->getActiveConnection() != nullptr);
-		break;
-	case grooveBoxSendPatternBulk:
-		result.setInfo("Transmit Pattern Bulk Dump", "Send patches, pattern, and setup data of temporary pattern to groovebox.", category, 0);
-		result.addDefaultKeypress('t', ModifierKeys::commandModifier);
-		result.setActive(grooveboxConnector->getActiveConnection() != nullptr && !grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
-		break;
-	default:
-		break;
-	}
 }
 
 // This must actually perform the specified command.
 bool PatternEditorTab::perform(const InvocationInfo &info)
 {
-	switch (info.commandID)
-	{
-	case CommandIDs::createEmptyPattern:
-		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
-		grooveboxMemory->getPatternBodyBlock()->clearPattern();
-		m_patternEventTable->selectRow(0);
-		return true;
-	case CommandIDs::fileOpenPattern:
-		loadPatternFile();
-		return true;
-	case CommandIDs::fileSavePattern:
-		savePatternFile();
-		return true;
-	case CommandIDs::fileSavePatternBinFile:
-		saveRawBinaryFile();
-		return true;
-	case CommandIDs::grooveBoxLoadPattern:
-		//loadFromGroovebox();
-		return true;
-	case CommandIDs::grooveBoxSendPatternBulk:
-		grooveboxConnector->sendPatchesPatternAndSetupAsDump();
-		return true;
-	default:
-		return false;
-	}
+	return false;
+}
+
+void PatternEditorTab::newPattern()
+{
+	grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
+	grooveboxMemory->getPatternBodyBlock()->clearPattern();
+	m_patternEventTable->selectRow(0);
 }
 
 void PatternEditorTab::loadPatternFile()

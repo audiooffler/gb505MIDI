@@ -297,8 +297,8 @@
               file="Source/GUI/PatternEditorTab.cpp"/>
         <FILE id="PJYBAJ" name="PatternEditorTab.h" compile="0" resource="0"
               file="Source/GUI/PatternEditorTab.h"/>
-        <FILE id="z4L3DQ" name="PatternTab.cpp" compile="1" resource="0" file="Source/GUI/PatternTab.cpp"/>
-        <FILE id="wiNUil" name="PatternTab.h" compile="0" resource="0" file="Source/GUI/PatternTab.h"/>
+        <FILE id="z4L3DQ" name="SystemTab.cpp" compile="1" resource="0" file="Source/GUI/SystemTab.cpp"/>
+        <FILE id="wiNUil" name="SystemTab.h" compile="0" resource="0" file="Source/GUI/SystemTab.h"/>
         <FILE id="khOcWg" name="TabbedComponentWithMenu.h" compile="0" resource="0"
               file="Source/GUI/TabbedComponentWithMenu.h"/>
       </GROUP>
@@ -338,16 +338,7 @@
         <FILE id="mms8LX" name="Waveforms.cpp" compile="1" resource="0" file="Source/GrooveboxMemory/Waveforms.cpp"/>
         <FILE id="q93eIL" name="Waveforms.h" compile="0" resource="0" file="Source/GrooveboxMemory/Waveforms.h"/>
       </GROUP>
-      <FILE id="A5zRYm" name="GrooveboxPattern.cpp" compile="1" resource="0"
-            file="Source/GrooveboxPattern.cpp"/>
-      <FILE id="PENm5N" name="GrooveboxPattern.h" compile="0" resource="0"
-            file="Source/GrooveboxPattern.h"/>
-      <FILE id="p2EhLf" name="GrooveboxPatternSetup.cpp" compile="1" resource="0"
-            file="Source/GrooveboxPatternSetup.cpp"/>
-      <FILE id="tRTRul" name="GrooveboxPatternSetup.h" compile="0" resource="0"
-            file="Source/GrooveboxPatternSetup.h"/>
       <FILE id="z4CH5h" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
-      <FILE id="tUTF7C" name="PatternEvent.h" compile="0" resource="0" file="Source/PatternEvent.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
