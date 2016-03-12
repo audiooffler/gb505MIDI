@@ -407,7 +407,7 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 				button->setVisible(false);
 			}
 		}
-		getAlertWindow()->setEscapeKeyCancels(false);
+		//getAlertWindow()->setEscapeKeyCancels(false);
 
 		m_timeoutTimer->startTimer(3000);
 	}
