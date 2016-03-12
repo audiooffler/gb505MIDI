@@ -399,7 +399,6 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 		sysExCompilation.add(new SyxMsg(msg));
 		if (!afterFirstReceivedMsg)
 		{
-			const MessageManagerLock mmLock;
 			afterFirstReceivedMsg = true;
 			setStatusMessage("");
 			for (int i = 0; getAlertWindow()->getNumChildComponents(); i++)
