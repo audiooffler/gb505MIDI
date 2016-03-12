@@ -401,13 +401,6 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 		{
 			afterFirstReceivedMsg = true;
 			setStatusMessage("");
-			for (int i = 0; getAlertWindow()->getNumChildComponents(); i++)
-			{
-				if (TextButton* button = dynamic_cast<TextButton*>(getAlertWindow()->getChildComponent(i)))
-				{
-					button->setEnabled(false);
-				}
-			}
 		}
 
 		setProgress(sysExCompilation.size()/200.0);
