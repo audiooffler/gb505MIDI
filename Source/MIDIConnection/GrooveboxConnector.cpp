@@ -311,7 +311,7 @@ void GrooveboxConnector::IndenityRequestReplyThread::run()
 		while (m_retrievedSysExMessages.size() == 0 && !threadShouldExit())
 		{
 			// wait till timer signals
-			wait(100);
+			wait(1000);
 			// repeat inquiry
 			if (m_retrievedSysExMessages.size() == 0) midiOutputDevice->sendMessageNow(inquiry->getAsMidiMessage());
 		}
