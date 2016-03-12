@@ -311,9 +311,10 @@ void GrooveboxConnector::IndenityRequestReplyThread::run()
 		while (m_retrievedSysExMessages.size() == 0 && !threadShouldExit())
 		{
 			// wait till timer signals
-			wait(1000);
+			wait(500);
 			// repeat inquiry
 			if (m_retrievedSysExMessages.size() == 0) midiOutputDevice->sendMessageNow(inquiry->getAsMidiMessage());
+			wait(500);
 		}
 	}
 	else return;
@@ -334,7 +335,7 @@ void GrooveboxConnector::IndenityRequestReplyThread::addMidiMessage(MidiInput *m
 		//DBG("Retrieved " + String::toHexString(midiInMsg.getRawData(), midiInMsg.getRawDataSize()));
 		// reset timeout
 		m_timeoutTimer->startTimer(m_retrieveTimeout);
-		// collect incoming sysex into an array, where he caller can get them from after the tread finished
+		// collect incoming sysex into an array, where the caller can get them from after the tread finished
 		m_retrievedSysExMessages.add(syxMsg);
 		signalThreadShouldExit();
 	}
