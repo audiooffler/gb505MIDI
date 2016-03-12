@@ -311,7 +311,9 @@ void GrooveboxConnector::IndenityRequestReplyThread::run()
 		while (m_retrievedSysExMessages.size() == 0 && !threadShouldExit())
 		{
 			// wait till timer signals
-			wait(40);
+			wait(100);
+			// repeat inquiry
+			if (m_retrievedSysExMessages.size() == 0) midiOutputDevice->sendMessageNow(inquiry->getAsMidiMessage());
 		}
 	}
 	else return;
@@ -403,7 +405,7 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 		}
 		getAlertWindow()->setEscapeKeyCancels(false);
 
-		m_timeoutTimer->startTimer(1000);
+		m_timeoutTimer->startTimer(2000);
 	}
 }
 
