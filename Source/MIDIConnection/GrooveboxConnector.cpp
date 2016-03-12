@@ -396,7 +396,14 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 		sysExCompilation.add(new SyxMsg(msg));
 		setStatusMessage("");
 		setProgress(sysExCompilation.size()/200.0);
-		m_timeoutTimer->startTimer(750);
+		if (TextButton* button = dynamic_cast<TextButton*>(getAlertWindow()->findChildWithID(TRANS("Cancel"))))
+		{
+			button->setEnabled(false);
+			button->setVisible(false);
+		}
+		getAlertWindow()->setEscapeKeyCancels(false);
+
+		m_timeoutTimer->startTimer(1000);
 	}
 }
 

@@ -65,9 +65,9 @@ public:
 
 	QuickSysExSequencerBlock* getQuickSysExSequencerBlock();
 
-	void mutePart(AllParts part, bool mute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
+	void mutePart(AllParts part, bool unmute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
 
-	void muteRhytm(RhythmGroup rhyGrp, bool mute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
+	void muteRhytm(RhythmGroup rhyGrp, bool unmute = false, Parameter::ChangeSource source = Parameter::MidiInFromGroovebox);
 
 private:
 

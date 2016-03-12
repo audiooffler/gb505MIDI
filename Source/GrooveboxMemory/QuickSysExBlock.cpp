@@ -287,8 +287,8 @@ QuickSysExRhythmBlock::QuickSysExRhythmBlock(RhythmGroup rhyGrp) :
 | Offset      | Size                |                                          |
 |     Address | DataL     DataE     | Description           Data(Value L/E)    |
 |—————————————+————————————————————————————————————————————————————————————————|
-|          01 | 0000 aaaa 0000 000a | Part Mute             0-6,9 / 0,1        |	Part: Sound (0=ON, 1=MUTED)
-|          02 | 0000 aaaa 0000 000a | Drum Mute             0-7*1 / 0,1        | Rhy Grp: Sound (0=ON, 1=MUTED)
+|          01 | 0000 aaaa 0000 000a | Part Mute             0-6,9 / 0,1        |	Part: Sound (0=MUTED, 1=ON, tested! reverse polarity in setup!)
+|          02 | 0000 aaaa 0000 000a | Drum Mute             0-7*1 / 0,1        | Rhy Grp: Sound (0=MUTED, 1=ON, tested! reverse polarity in setup!)
 |          03 | 0aaa aaaa 0aaa aaaa | Tempo                 7-93 / 0-127       |
 +——————————————————————————————————————————————————————————————————————————————+
 *   1:BD,SD,HH,CLP,CYM,TOM/PEC,HIT,OTHERS
@@ -486,12 +486,12 @@ QuickSysExSequencerBlock* QuickSysExBlock::getQuickSysExSequencerBlock()
 	return dynamic_cast<QuickSysExSequencerBlock*>(m_subBlocks[getSubBlocks()->size() - 1]);
 }
 
-void QuickSysExBlock::mutePart(AllParts part, bool mute/* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
+void QuickSysExBlock::mutePart(AllParts part, bool unmute/* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
 {
-	getQuickSysExSequencerBlock()->getParameter(part)->setValue(mute ? 1 : 0, source);
+	getQuickSysExSequencerBlock()->getParameter(part)->setValue(unmute ? 1 : 0, source);
 }
 
-void QuickSysExBlock::muteRhytm(RhythmGroup rhyGrp, bool mute /* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
+void QuickSysExBlock::muteRhytm(RhythmGroup rhyGrp, bool unmute /* = false*/, Parameter::ChangeSource source /*= Parameter::MidiInFromGroovebox*/)
 {
-	getQuickSysExSequencerBlock()->getParameter(rhyGrp)->setValue(mute ? 1 : 0, source);
+	getQuickSysExSequencerBlock()->getParameter(rhyGrp)->setValue(unmute ? 1 : 0, source);
 }
