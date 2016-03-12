@@ -386,9 +386,24 @@ GrooveboxConnector::RecvBulkDumpThread::~RecvBulkDumpThread()
 void GrooveboxConnector::RecvBulkDumpThread::run()
 {
 	setProgress(0.0);
+	bool stoppedCancelAbility = false;
 	while (!threadShouldExit())
 	{
 		wait(20);
+		if (afterFirstReceivedMsg && stoppedCancelAbility==false)
+		{
+			MessageManagerLock lock;
+			for (int i = 0; getAlertWindow()->getNumChildComponents(); i++)
+			{
+				if (TextButton* button = dynamic_cast<TextButton*>(getAlertWindow()->getChildComponent(i)))
+				{
+					button->setEnabled(false);
+					break;
+				}
+			}
+			getAlertWindow()->setEscapeKeyCancels(false);
+			stoppedCancelAbility = true;
+		}
 	}
 }
 
