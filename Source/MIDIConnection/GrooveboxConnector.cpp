@@ -397,17 +397,22 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 	if (msg.isSysEx())
 	{
 		sysExCompilation.add(new SyxMsg(msg));
-		setStatusMessage("");
-		setProgress(sysExCompilation.size()/200.0);
-		for (int i = 0; getAlertWindow()->getNumChildComponents(); i++)
+		if (!afterFirstReceivedMsg)
 		{
-			if (TextButton* button = dynamic_cast<TextButton*>(getAlertWindow()->getChildComponent(i)))
+			const MessageManagerLock mmLock;
+			afterFirstReceivedMsg = true;
+			setStatusMessage("");
+			for (int i = 0; getAlertWindow()->getNumChildComponents(); i++)
 			{
-				button->setEnabled(false);
-				button->setVisible(false);
+				if (TextButton* button = dynamic_cast<TextButton*>(getAlertWindow()->getChildComponent(i)))
+				{
+					button->setEnabled(false);
+				}
 			}
+			getAlertWindow()->setEscapeKeyCancels(false);
 		}
-		//getAlertWindow()->setEscapeKeyCancels(false);
+
+		setProgress(sysExCompilation.size()/200.0);
 
 		m_timeoutTimer->startTimer(3000);
 	}
