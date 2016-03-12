@@ -77,7 +77,7 @@ void BigOrangeToggle::paint (Graphics& g)
                  0, 0, cachedImage_bigOrangeToggleOff_png_1.getWidth(), cachedImage_bigOrangeToggleOff_png_1.getHeight());
 
     //[UserPaint] Add your own custom painting code here..
-	if (!getToggleState())
+	if (getToggleState())
 	{
 		g.setColour(Colours::black);
 		g.drawImage(cachedImage_bigOrangeToggleOn_png,

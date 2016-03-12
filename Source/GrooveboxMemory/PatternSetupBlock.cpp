@@ -508,11 +508,11 @@ bool PatternSetupConfigBlock::handleSysEx(SyxMsg* sysExMsg)
 	if (success)
 	{
 		// quick sysex seq: mute synth parts
-		for (int i = 0; i < 7; i++) quickSysEx->mutePart((AllParts)i, isPartMute((PatternBodyBlock::PatternPart)i), Parameter::LoadingFile);
+		for (int i = 0; i < 7; i++) quickSysEx->mutePart((AllParts)i, !isPartMute((PatternBodyBlock::PatternPart)i), Parameter::LoadingFile);
 		// quick sysex seq: mute r part
-		quickSysEx->mutePart(PartR, isPartMute(PatternBodyBlock::Pattern_Part_R), Parameter::LoadingFile);
+		quickSysEx->mutePart(PartR, !isPartMute(PatternBodyBlock::Pattern_Part_R), Parameter::LoadingFile);
 		// quick sysex seq: mute rhy groups
-		for (int i = 0; i < 8; i++) quickSysEx->muteRhytm((RhythmGroup)i, isRyhGroupMute((PatternBodyBlock::RhythmGroup)i), Parameter::LoadingFile);
+		for (int i = 0; i < 8; i++) quickSysEx->muteRhytm((RhythmGroup)i, !isRyhGroupMute((PatternBodyBlock::RhythmGroup)i), Parameter::LoadingFile);
 	}
 	return success;
 }
