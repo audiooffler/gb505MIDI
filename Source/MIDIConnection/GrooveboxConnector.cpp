@@ -408,7 +408,6 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 					button->setEnabled(false);
 				}
 			}
-			getAlertWindow()->setEscapeKeyCancels(false);
 		}
 
 		setProgress(sysExCompilation.size()/200.0);
