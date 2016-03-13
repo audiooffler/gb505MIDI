@@ -280,7 +280,7 @@ void GrooveboxConnector::MIDIRetrieveTimeOutTimer::timerCallback()
 	// timer ran out, so the response might me received completely.
 	// tell the thread to continue with next request
 	stopTimer();
-	m_threadPtr->stopThread(100);
+	m_threadPtr->stopThread(500);
 }
 
 GrooveboxConnector::IndenityRequestReplyThread::IndenityRequestReplyThread(String windowTitle, int timeOutInMs) :
@@ -311,10 +311,10 @@ void GrooveboxConnector::IndenityRequestReplyThread::run()
 		while (m_retrievedSysExMessages.size() == 0 && !threadShouldExit())
 		{
 			// wait till timer signals
-			wait(500);
+			wait(250);
 			// repeat inquiry
 			if (m_retrievedSysExMessages.size() == 0) midiOutputDevice->sendMessageNow(inquiry->getAsMidiMessage());
-			wait(500);
+			wait(250);
 		}
 	}
 	else return;
@@ -419,12 +419,13 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 			setStatusMessage("");
 		}
 
-		if (sysexLine->get32BitAddress() == 30000000)
+		if (sysexLine->get32BitAddress() == 0x30000000)
 		{
 			estimatedNumOfLinesToReceive = sysExCompilation.size() + 9;
 		}
-
-		setProgress(sysExCompilation.size()/estimatedNumOfLinesToReceive);
+		double progress = (double)sysExCompilation.size() / (double)estimatedNumOfLinesToReceive;
+		DBG(String(sysExCompilation.size()) + " of " + String(estimatedNumOfLinesToReceive)+" "+String(progress,2));
+		setProgress(progress);
 
 		m_timeoutTimer->startTimer(3000);
 	}
