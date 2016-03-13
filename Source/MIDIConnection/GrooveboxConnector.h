@@ -153,6 +153,7 @@ private:
 		void addReceivedMidiMessage(const MidiMessage& msg);
 	private:
 		bool afterFirstReceivedMsg = false;
+		int estimatedNumOfLinesToReceive = 200;
 		OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
 		ScopedPointer<TimeOutTimer> m_timeoutTimer;
 		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RecvBulkDumpThread);

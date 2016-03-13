@@ -411,14 +411,20 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 {
 	if (msg.isSysEx())
 	{
-		sysExCompilation.add(new SyxMsg(msg));
+		SyxMsg* sysexLine = new SyxMsg(msg);
+		sysExCompilation.add(sysexLine);
 		if (!afterFirstReceivedMsg)
 		{
 			afterFirstReceivedMsg = true;
 			setStatusMessage("");
 		}
 
-		setProgress(sysExCompilation.size()/200.0);
+		if (sysexLine->get32BitAddress() == 30000000)
+		{
+			estimatedNumOfLinesToReceive = sysExCompilation.size() + 9;
+		}
+
+		setProgress(sysExCompilation.size()/estimatedNumOfLinesToReceive);
 
 		m_timeoutTimer->startTimer(3000);
 	}
