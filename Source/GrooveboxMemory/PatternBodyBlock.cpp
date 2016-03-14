@@ -156,7 +156,7 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 
 		PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
 		m_sequenceBlocks.add(newPatternEvent);
-		DBG(newPatternEvent->toDebugString());
+		//DBG(newPatternEvent->toDebugString());
 		// sysex: min 2 byte (F0 + F7), default F0 + 12 more bytes (incl CHK + F7), max: F0 + 510 more (incl CHK & F7)
 		if (newPatternEvent->getType() == Evt_SysExSize)
 		{
