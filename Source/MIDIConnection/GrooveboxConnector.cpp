@@ -358,6 +358,7 @@ void GrooveboxConnector::SendBulkDumpThread::run()
 	for (int i = 0; i < sysExCompilation.size() && !threadShouldExit(); i++)
 	{
 		midiOutputDevice->sendMessageNow(sysExCompilation[i]->getAsMidiMessage());
+		setStatusMessage(SyxMsg::getDT1BlockName(sysExCompilation[i]->get32BitAddress()));
 		setProgress(((double)i + 1.0) / (double)sysExCompilation.size());
 		Thread::wait(40);
 	}
@@ -416,15 +417,15 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 		if (!afterFirstReceivedMsg)
 		{
 			afterFirstReceivedMsg = true;
-			setStatusMessage("");
 		}
+		setStatusMessage(SyxMsg::getDT1BlockName(sysexLine->get32BitAddress()));
 
 		if (sysexLine->get32BitAddress() == 0x30000000)
 		{
 			estimatedNumOfLinesToReceive = sysExCompilation.size() + 9;
 		}
 		double progress = (double)sysExCompilation.size() / (double)estimatedNumOfLinesToReceive;
-		DBG(String(sysExCompilation.size()) + " of " + String(estimatedNumOfLinesToReceive)+" "+String(progress,2));
+		//DBG(String(sysExCompilation.size()) + " of " + String(estimatedNumOfLinesToReceive)+" "+String(progress,2));
 		setProgress(progress);
 
 		m_timeoutTimer->startTimer(3000);

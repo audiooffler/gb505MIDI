@@ -389,8 +389,8 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, Midi
 	{
 		bytes[1] = 0x91;
 		int value = midiEventHolder->message.getPitchWheelValue();
-		bytes[5] = (uint8)(value >> 7);
-		bytes[6] = value & 0x7F;
+		bytes[6] = (uint8)(value >> 7);
+		bytes[5] = value & 0x7F;
 	}
 	absoluteTick = absTick;
 }
@@ -572,7 +572,7 @@ uint8 PatternBodyBlock::PatternEventData::getCAftPressure()
 
 uint16 PatternBodyBlock::PatternEventData::getPitchBendValue()
 {
-	return (uint16)bytes[5] << 7 | (uint16)bytes[6];
+	return (uint16)bytes[6] << 7 | (uint16)bytes[5];
 }
 
 String PatternBodyBlock::PatternEventData::getPitchBendString()

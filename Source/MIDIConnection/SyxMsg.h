@@ -79,6 +79,8 @@ public:
 	static uint8 calcRq1Checksum(const uint8* addressAndData, int addressAndDataSize);
 	static uint8 calcDt1Checksum(const uint8* addressBytes, uint8 addressSize, const uint8* dataBytes, uint32 dataSize);
 
+	static const String getDT1BlockName(const uint32 address);
+
 	MessageType getType();
 	String getTypeAsString();
 

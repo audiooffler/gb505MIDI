@@ -505,6 +505,62 @@ uint8 SyxMsg::calcDt1Checksum(const uint8* addressBytes, uint8 addressSize, cons
 	return (0x80 - (sum % 0x80)) % 0x80;
 }
 
+const String SyxMsg::getDT1BlockName(const uint32 address)
+{
+	uint8 addressBytes[4];
+	addressBytes[3] = (uint8)(address & 0xFF);
+	addressBytes[2] = (uint8)((address & 0xFF00) >> 8);
+	addressBytes[1] = (uint8)((address & 0xFF0000) >> 16);
+	addressBytes[0] = (uint8)((address & 0xFF000000) >> 24);
+
+	String result = "";
+	switch (addressBytes[0])
+	{
+	case 0x00:
+		result = "System Common";
+		break;
+	case 0x01:
+		result = "Part Info";
+		switch (addressBytes[2])
+		{
+		case 0x00: result += " Common"; break;
+		case 0x10: result += " Part 1"; break;
+		case 0x11: result += " Part 2"; break;
+		case 0x12: result += " Part 3"; break;
+		case 0x13: result += " Part 4"; break;
+		case 0x14: result += " Part 5"; break;
+		case 0x15: result += " Part 6"; break;
+		case 0x16: result += " Part 7"; break;
+		case 0x19: result += " Part R"; break;
+		default: break;
+		}
+		break;
+	case 0x02:
+		switch (addressBytes[1])
+		{
+		case 0x00: result = "Temporary Patch Part 1"; break;
+		case 0x01: result = "Temporary Patch Part 2"; break;
+		case 0x02: result = "Temporary Patch Part 3"; break;
+		case 0x03: result = "Temporary Patch Part 4"; break;
+		case 0x04: result = "Temporary Patch Part 5"; break;
+		case 0x05: result = "Temporary Patch Part 6"; break;
+		case 0x06: result = "Temporary Patch Part 7"; break;
+		case 0x09: result = "Temporary Rhythm Setup" + (addressBytes[2] > 0x23 ? " Key# " + String(addressBytes[2]) : " Common"); break;
+		default: break;
+		}
+		break;
+	case 0x30:
+		result = "Temporary Pattern Setup Sequencer";
+		break;
+	case 0x40:
+		result = "Temporary Pattern Body";
+		break;
+	default:
+		result = "";
+	}
+	return result;
+}
+
 SyxMsg::MessageType SyxMsg::getType()
 {
 	return m_type; 
