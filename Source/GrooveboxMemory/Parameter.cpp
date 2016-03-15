@@ -290,6 +290,11 @@ void Parameter::setDefault(uint8 default)
 	m_default = default;
 }
 
+void Parameter::resetToDefault()
+{
+	setValue(m_default, ChangeSource::GuiWidget);
+}
+
 void Parameter::setDisplayedValues(StringArray displayedValues)
 {
 	m_displayedValues = displayedValues;

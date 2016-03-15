@@ -25,18 +25,18 @@ public:
 		asciiCharacters.add(" ");
 		asciiCharacters.addTokens("! \" # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | }", false);
 
-		setupParameter("Rhythm Name  1", 0x00, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name  2", 0x01, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name  3", 0x02, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name  4", 0x03, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  1", 0x00, 32, 125, 'I', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  2", 0x01, 32, 125, 'n', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  3", 0x02, 32, 125, 'i', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  4", 0x03, 32, 125, 't', asciiCharacters, "Name assigned to the patch.");
 		setupParameter("Rhythm Name  5", 0x04, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name  6", 0x05, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name  7", 0x06, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name  8", 0x07, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  6", 0x05, 32, 125, 'R', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  7", 0x06, 32, 125, 'h', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name  8", 0x07, 32, 125, 'y', asciiCharacters, "Name assigned to the patch.");
 		setupParameter("Rhythm Name  9", 0x08, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name 10", 0x09, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name 11", 0x0A, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-		setupParameter("Rhythm Name 12", 0x0B, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name 10", 0x09, 32, 125, 'S', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name 11", 0x0A, 32, 125, 'e', asciiCharacters, "Name assigned to the patch.");
+		setupParameter("Rhythm Name 12", 0x0B, 32, 125, 't', asciiCharacters, "Name assigned to the patch.");
 	}
 
 	String getRhythmSetName()
@@ -73,11 +73,11 @@ public:
 		StringArray waveGainStrings(StringArray::fromTokens(" -6dB;  0dB; +6dB;+12dB", ";", String::empty));
 		StringArray bendRangeStrings;
 		for (int i = 0; i <= 12; i++) bendRangeStrings.add(String(CharPointer_UTF8("\xc2\xb1")) + String(i)); // +/-
-		setupParameter("Tone Switch", 0x00, 0, 1, 0, switchOnOffStrings, "Turn this \"ON\" if you want the tone to sound, or \"OFF\" if you do not want the tone to sound.");
+		setupParameter("Tone Switch", 0x00, 0, 1, 1, switchOnOffStrings, "Turn this \"ON\" if you want the tone to sound, or \"OFF\" if you do not want the tone to sound.");
 		setupParameter("Wave Group Type", 0x01, 0, 0, 0, StringArray::fromTokens("0", false));
 		setupParameter("Wave Group ID", 0x02, 1, 3, 1, waveGroupIdsStrings);
-		setupParameter("Wave Number", 0x03, 0, 254, 0);
-		setupParameter("Wave Gain", 0x05, 0, 3, 0, waveGainStrings, "This boosts the waveform. Raising this setting 6 dB will double the gain.");
+		setupParameter("Wave Number", 0x03, 0, 254, 202);
+		setupParameter("Wave Gain", 0x05, 0, 3, 1, waveGainStrings, "This boosts the waveform. Raising this setting 6 dB will double the gain.");
 		setupParameter("Bend Range", 0x06, 0, 12, 0, bendRangeStrings,"Specifies the amount of pitch change (in semitone units) that will occur when the pitch bend lever of an external MIDI device is operated.\r\n"
 			"Higher settings will result in a greater pitch change when the pitch bend lever is moved to the left or right.\r\n"
 			"For example, if Bend Range Up is set to \"+12\" the pitch will rise one octave when the pitch bend lever is moved to the right - most position.");
@@ -120,7 +120,7 @@ public:
 			else if (i == 0) modulationDepthStrings.add(String(i));
 			else if (i>0) modulationDepthStrings.add("+" + String(i));
 		}
-		setupParameter("Coarse Tune", 0x0C, 0, 120, 60, coarseTuneStrings, "Adjust the pitch of each tone in semitone steps. Higher settings will raise the pitch. Lower settings will lower the pitch.");
+		setupParameter("Coarse Tune", 0x0C, 0, 120, 0x44, coarseTuneStrings, "Adjust the pitch of each tone in semitone steps. Higher settings will raise the pitch. Lower settings will lower the pitch.");
 		setupParameter("Fine Tune", 0x0D, 0, 100, 50, fineTuneStrings, "You can adjust the pitch of each tone in 1-cent steps (1/000th of a semitone).\r\nThe greater the value, the higher the pitch, and the smaller value, the lower the pitch.");
 		setupParameter("Random Pitch Depth", 0x0E, 0, 30, 0, randomPitchFactors, "This applies a degree of randomness to the pitch of each note. As this value is increased, a greater degree of randomness will be applied. As this value is decreased, there will be less randomness.\r\nWith a value of \"0\" there will be no effect.");
 
@@ -142,12 +142,12 @@ public:
 		setupParameter("Pitch Envelope Level 4", 0x19, 0, 126, 63, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
 
 		StringArray filterTypes(StringArray::fromTokens("OFF LPF BPF HPF PKG", false));
-		setupParameter("Filter Type", 0x1A, 0, 4, 0, filterTypes, "- OFF: The filter will not be applied.\r\n"
+		setupParameter("Filter Type", 0x1A, 0, 4, 1, filterTypes, "- OFF: The filter will not be applied.\r\n"
 			"- LPF (Low Pass Filter): This type of filter is most commonly used and allows audio signals with frequencies lower than the cutoff frequency to pass through. It is used to make the sound more mellow.\r\n"
 			"- BPF (Band Pass Filter): This filter cuts off all audio signals except for those with frequencies around the cutoff frequency.\r\n"
 			"- HPF (High Pass Filter): This filter allows audio signals with frequencies exceeding the cutoff frequency to pass. It is effectively used to make sounds brighter and sharper.\r\n"
 			"- PKG (Peaking Filter): This filter enhances audio signals with frequencies around the cutoff frequency. It will emphasize the midrange, and is useful for creating a distinctive sound.\r\n");
-		setupParameter("Cutoff Frequency", 0x1B, 0, 127, 0, StringArray(), "Specifies the frequency at which the filter will begin to affect the frequency components of the waveform (the Cutoff Frequency). By changing the cutoff frequency, you can control the brightness of the sound. The effect will depend on the Filter Type.\r\n"
+		setupParameter("Cutoff Frequency", 0x1B, 0, 127, 127, StringArray(), "Specifies the frequency at which the filter will begin to affect the frequency components of the waveform (the Cutoff Frequency). By changing the cutoff frequency, you can control the brightness of the sound. The effect will depend on the Filter Type.\r\n"
 			"- LPF (Low Pass Filter): Increasing the value will brighten the sound, making it more similar to the original waveform, approaching the  original waveform. Lower settings will cut more of the high frequency overtones, making the sound darker. For some waveforms, you may not be able to hear any sound if you lower the value too far.\r\n"
 			"- BPF (Band Pass Filter): Higher settings will raise the frequency area that is heard. Lower settings will cause only a progressively lower frequency area to be heard.\r\n"
 			"- HPF (High Pass Filter): As this value is increased, the low frequency range will be cut more greatly, making the sound sharper. As this value is decreased, the original sound of the waveform will be heard. For some waveforms, you may hear no sound if this value is raised excessively.\r\n"
@@ -168,10 +168,10 @@ public:
 		setupParameter("Filter Envelope Time 2", 0x22, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
 		setupParameter("Filter Envelope Time 3", 0x23, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
 		setupParameter("Filter Envelope Time 4", 0x24, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
-		setupParameter("Filter Envelope Level 1", 0x25, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
-		setupParameter("Filter Envelope Level 2", 0x26, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
-		setupParameter("Filter Envelope Level 3", 0x27, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
-		setupParameter("Filter Envelope Level 4", 0x28, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+		setupParameter("Filter Envelope Level 1", 0x25, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+		setupParameter("Filter Envelope Level 2", 0x26, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+		setupParameter("Filter Envelope Level 3", 0x27, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+		setupParameter("Filter Envelope Level 4", 0x28, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
 
 		StringArray panPosStrings;
 		for (int i = -64; i <= 63; i++)
@@ -186,23 +186,23 @@ public:
 			if (i<63) randomPanSwitchStrings.add("OFF");
 			else randomPanSwitchStrings.add("ON");
 		}
-		setupParameter("Tone Level", 0x29, 0, 127, 0, StringArray(), "This setting adjusts the volume of each tone. This is used mainly to adjust the volume balance between tones.");
-		setupParameter("Amp Envelope Velocity Sens", 0x2A, 0, 125, 0, veloSensFactors, "Specifies how the depth of the amplifier envelope will be affected by the strength of your playing velocity.\r\n"
+		setupParameter("Tone Level", 0x29, 0, 127, 127, StringArray(), "This setting adjusts the volume of each tone. This is used mainly to adjust the volume balance between tones.");
+		setupParameter("Amp Envelope Velocity Sens", 0x2A, 0, 125, 0x64, veloSensFactors, "Specifies how the depth of the amplifier envelope will be affected by the strength of your playing velocity.\r\n"
 			"If velocity sensitivity is set to a positive (+) value, the volume will be loud when you play strongly and soft when you play softly. As this value is increased, the volume difference between strongly played and softly played notes will gradually increase.\r\n"
 			"With positive (+) settings, the volume will increase as you play more strongly on the keyboard. With negative (-) settings, the volume will decrease as you play more strongly on the keyboard. If this is set to \"0\", the volume will not be affected by the strength of your playing on the keyboard.");
-		setupParameter("Amp Envelope Velocity Time", 0x2B, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "Specifies how the dynamics of your playing will affect TIME1-4.\r\n"
+		setupParameter("Amp Envelope Velocity Time", 0x2B, 0, 14, 7, veloTimeFactorsAndEnvKeyFollow, "Specifies how the dynamics of your playing will affect TIME1-4.\r\n"
 			"Specifies the time until the next level is reached. You can make settings for the four parameters TIME 1-4."
 			"With positive (+) settings, time will become faster as you play the keyboard more strongly. With negative (-) settings, time will become slower as you play the keyboard more strongly.");
 		setupParameter("Amp Envelope Time 1", 0x2C, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
 		setupParameter("Amp Envelope Time 2", 0x2D, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
-		setupParameter("Amp Envelope Time 3", 0x2E, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
-		setupParameter("Amp Envelope Time 4", 0x2F, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
-		setupParameter("Amp Envelope Level 1", 0x30, 0, 127, 0, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
-		setupParameter("Amp Envelope Level 2", 0x31, 0, 127, 0, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
-		setupParameter("Amp Envelope Level 3", 0x32, 0, 127, 0, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
-		setupParameter("Tone Pan", 0x33, 0, 127, 64, panPosStrings, "This parameter sets the stereo location for each tone.\r\nThe pan of the overall patch can be modified and set for each pattern by the Setup parameter Part Pan. The Tone Pan value will be added to this setting.");
+		setupParameter("Amp Envelope Time 3", 0x2E, 0, 127, 4, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
+		setupParameter("Amp Envelope Time 4", 0x2F, 0, 127, 127, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
+		setupParameter("Amp Envelope Level 1", 0x30, 0, 127, 127, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
+		setupParameter("Amp Envelope Level 2", 0x31, 0, 127, 127, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
+		setupParameter("Amp Envelope Level 3", 0x32, 0, 127, 0x7A, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
+		setupParameter("Tone Pan", 0x33, 0, 127, 0x52, panPosStrings, "This parameter sets the stereo location for each tone.\r\nThe pan of the overall patch can be modified and set for each pattern by the Setup parameter Part Pan. The Tone Pan value will be added to this setting.");
 		setupParameter("Random Pan Switch", 0x34, 0, 127, 0, randomPanSwitchStrings, "This setting causes the stereo location to change randomly each time a note is played.\r\nThe Tone Pan setting will be ignored by Tones for which the Random Pan Switch is turned on.");	// TODO: make sure if slider only uses 0 and 63 correctly (set interval, max, after setting parameter!)
-		setupParameter("Alternate Pan Depth", 0x35, 0, 127, 0, panPosStrings, "This parameter causes the stereo location of the sound to alternate between left and right each time a note is played. When this parameter is set in the L direction, the sound will alternate in the order of left -> right-> left-> right. When set in the R direction, the sound will alternate in the order of right -> left-> right-> left.\r\n"
+		setupParameter("Alternate Pan Depth", 0x35, 0, 127, 0x40, panPosStrings, "This parameter causes the stereo location of the sound to alternate between left and right each time a note is played. When this parameter is set in the L direction, the sound will alternate in the order of left -> right-> left-> right. When set in the R direction, the sound will alternate in the order of right -> left-> right-> left.\r\n"
 			"Higher settings will cause greater change.\r\n");
 
 		setupParameter("M-FX Switch", 0x36, 0, 3, 0, StringArray::fromTokens("OFF,ON, , ", ",", ""),"This switch is used to specify M-FX on/off for each rhythm tone.\r\n"
@@ -215,7 +215,7 @@ public:
 
 		setupParameter("Delay Send Level", 0x38, 0, 127, 0, StringArray(), "Specifies the reverb volume for each rhythm tone. Higher settings will increase the reverb volume.\r\n"
 			"The Rhythm Tone Reverb Level setting is valid only if the Part M-FX SW setting of the rhythm part is set to \"RHY\".Also in this case, if the Reverb Level and the Part Reverb Level setting of the rhythm part are low, there will be no reverb even if the Rhythm Tone Reverb Level is raised.");
-		setupParameter("Reverb Send Level", 0x39, 0, 127, 0, StringArray(), "Specifies the amount of delay for each rhythm tone. Higher settings will increase the delay volume.\r\n"
+		setupParameter("Reverb Send Level", 0x39, 0, 127, 127, StringArray(), "Specifies the amount of delay for each rhythm tone. Higher settings will increase the delay volume.\r\n"
 			"The Rhythm Tone Delay Level setting is valid only when the Part M-FX SW setting of the rhythm part is set to \"RHY\". Also in this case, if the Delay Level and the Part Delay Level setting of the rhythm part are low, there will be no delay even if the Rhythm Tone Delay Level is raised.");
 	}
 

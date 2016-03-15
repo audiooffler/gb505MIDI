@@ -76,7 +76,7 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Delay Master Level", 0x22, 0, 127, 127, StringArray(), "This adjusts the volume of the delay sound for all eight parts (the rhythm part and parts 1-7).");
 	setupParameter("Delay Type", 0x23, 0, 1, 1, StringArray::fromTokens("SHORT LONG", false), "- SHORT: A delay which repeats at short intervals.\r\n- LONG: A delay which repeats at long intervals. You can also synchronize the spacing of the repeats to the BPM of the pattern.");
 	setupParameter("Delay HF Damp", 0x24, 0, 17, 17, hfFreqStrings, "Specifies the frequency at which the high frequency portions of the delay will be cut.Lowering this setting will cause more of the upper frequency content to be cut, making the delay more muted in tone. If 'BYPASS' is selected, the high frequency range will not be cut.");
-	setupParameter("Delay Time", 0x25, 0, 120);		// set by refreshParametersForDelayTypeValue
+	setupParameter("Delay Time", 0x25, 0, 120, 114);		// set by refreshParametersForDelayTypeValue
 	setupParameter("Delay Feedback Level", 0x26, 0, 98, 50, feedbackPercentageStrings, "Sets the amount of delayed sound to be repeated, as a proportion of the original sound.");
 	setupParameter("Delay Delay Output Assign", 0x27, 0, 2, 2, StringArray::fromTokens("LINE REV LINE+REV", false), "Allows you to select a destination for the sound after delay has been applied. Selecting LINE outputs the sound to the OUTPUT jacks on the rear panel; selecting REV outputs it to Reverb; or selecting LINE + REV outputs the sound to both the OUTPUT jacks and Reverb.");
 
@@ -701,7 +701,7 @@ PartInfoPartBlock::PartInfoPartBlock(AllParts part) :
 	setupParameter("Patch Number LS Nibble", 0x05, 0, 0xF);*/
 	String partCharacter(part == PartR ? String::charToString('R') : String::charToString((char)49 + (char)part));	// 49 is ascii character '1'
 
-	setupParameter("Part " + partCharacter + " Level", 0x06, 0, 127, 115, StringArray(), String::empty, 7, false);
+	setupParameter("Part " + partCharacter + " Level", 0x06, 0, 127, 127, StringArray(), String::empty, 7, false);
 	setupParameter("Part " + partCharacter + " Pan", 0x07, 0, 127, 64, panPosStrings, String::empty, 10, false);
 	setupParameter("Part " + partCharacter + " Key Shift", 0x08, 0, 96, 48, keyShiftStrings, String::empty, 85, true);
 	setupParameter("Part " + partCharacter + " Fine Tune", 0x09, 0, 100, 50, fineTuneStrings);

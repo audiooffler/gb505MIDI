@@ -109,6 +109,8 @@ void ParameterTextEditor::setParameter1(Parameter* paramPtr1)
 			}
 		}
 		setInputRestrictions(m_params.size(), " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}");
+		// refresh text
+		changeListenerCallback(m_params[0]);
 	}
 	else setVisible(false);
 }

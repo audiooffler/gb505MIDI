@@ -73,6 +73,7 @@ public:
 	void setMin(uint8 min);
 	void setMax(uint8 max);
 	void setDefault(uint8 default);
+	void resetToDefault();
 	void setDisplayedValues(StringArray displayedValues);
 	void setDescription(String description);
 	void setCC(uint8 cc = CC_NONE);	// leave empty to delete cc (sets to CC_NONE), else set parameter CC number

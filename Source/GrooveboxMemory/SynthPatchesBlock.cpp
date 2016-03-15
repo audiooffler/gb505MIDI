@@ -25,15 +25,15 @@ PatchCommonBlock::PatchCommonBlock(SynthParts part) :
 
 	// add, set (if addressOffset already used) or delete (if addressOffset already used and name is empty)
 	// void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String::empty, uint8 cc = 102, bool ccIsMode2Only = false);
-	setupParameter("Patch Name  1", 0x00, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-	setupParameter("Patch Name  2", 0x01, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-	setupParameter("Patch Name  3", 0x02, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-	setupParameter("Patch Name  4", 0x03, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  1", 0x00, 32, 125, 'L', asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  2", 0x01, 32, 125, 'e', asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  3", 0x02, 32, 125, 'a', asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  4", 0x03, 32, 125, 'd', asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name  5", 0x04, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-	setupParameter("Patch Name  6", 0x05, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-	setupParameter("Patch Name  7", 0x06, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  6", 0x05, 32, 125, 'T', asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  7", 0x06, 32, 125, 'B', asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name  8", 0x07, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
-	setupParameter("Patch Name  9", 0x08, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
+	setupParameter("Patch Name  9", 0x08, 32, 125, '1', asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name 10", 0x09, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name 11", 0x0A, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name 12", 0x0B, 32, 125, 32, asciiCharacters, "Name assigned to the patch.");
@@ -225,11 +225,11 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 		"- OFF: The modulation speed will be determined by the LFO Rate setting, regardless of the tempo(BPM).");
 
 	// void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String::empty, uint8 cc = 102, bool ccIsMode2Only = false);
-	setupParameter("Tone Switch", 0x00, 0, 1, 0, switchOnOffStrings, "Turn this \"ON\" if you want the tone to sound, or \"OFF\" if you do not want the tone to sound.\r\nIn order to make the best use of the available polyphony, unused tones should be turned \"OFF.\"");
+	setupParameter("Tone Switch", 0x00, 0, 1, (tone == Tone1 || tone == Tone2)?1:0, switchOnOffStrings, "Turn this \"ON\" if you want the tone to sound, or \"OFF\" if you do not want the tone to sound.\r\nIn order to make the best use of the available polyphony, unused tones should be turned \"OFF.\"");
 	setupParameter("Wave Group Type", 0x01, 0, 0, 0, StringArray::fromTokens("0", false));
 	setupParameter("Wave Group ID", 0x02, 1, 3, 1, waveGroupIdsStrings);
-	setupParameter("Wave Number", 0x03, 0, 254, 0);
-	setupParameter("Wave Gain", 0x05, 0, 3, 0, waveGainStrings, "This boosts the waveform. Raising this setting 6 dB will double the gain. If you are using the booster to distort the sound, setting this to the maximum value will be effective.");
+	setupParameter("Wave Number", 0x03, 0, 254, (tone == Tone2 || tone == Tone4) ? 1 : 3);
+	setupParameter("Wave Gain", 0x05, 0, 3, 2, waveGainStrings, "This boosts the waveform. Raising this setting 6 dB will double the gain. If you are using the booster to distort the sound, setting this to the maximum value will be effective.");
 	setupParameter("FXM Switch", 0x06, 0, 1, 0, switchOnOffStrings, "FXM (Frequency Cross Modulation) uses a specific waveform to apply frequency modulation to the selected waveform, creating complex overtones.This is useful for creating dramatic sounds or sound effects. When you wish to use FXM, turn this \"ON.\"");
 	setupParameter("FXM Color", 0x07, 0, 3, 0, StringArray(), "Select one of four types of frequency modulation for FXM to apply.\r\n As this value is increased, the sound will become rougher. Lower values will produce a metallic sound.");
 	setupParameter("FXM Depth", 0x08, 0, 15, 0, StringArray(), "Adjusts the depth of frequency modulation produced by FXM. As this value is increased, modulation will be applied more deeply.\r\nAs the value is decreased, modulation depth will decrease.");
@@ -274,17 +274,17 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	setupParameter("Aftertouch Destination 4", 0x2B, 0, 15, 0, controlDestinations, "Parameter 4 that will be controlled temporarily when the aftertouch controller of the external MIDI device is operated.");
 	setupParameter("Aftertouch Depth 4", 0x2C, 0, 126, 63, modulationDepthStrings, "Specifies the amount of change that will occur for Parameter 4.\r\nWith positive (+) settings, higher values will allow greater control. With negative (-) settings, the direction of the change will be inverted.");
 
-	setupParameter("LFO1 Waveform", 0x2D, 0, 7, 0, lfoWaveforms, lfoWaveformDescription);
+	setupParameter("LFO1 Waveform", 0x2D, 0, 7, 1, lfoWaveforms, lfoWaveformDescription);
 	setupParameter("LFO1 Key Sync", 0x2E, 0, 7, 0, switchOnOffStrings, lfoKeySyncDescription);
-	setupParameter("LFO1 Rate", 0x2F, 0, 127, 0, StringArray(), lfoRateDescription);	// TODO: change description by LFO Tempo Sync Setting
+	setupParameter("LFO1 Rate", 0x2F, 0, 127, 0x64, StringArray(), lfoRateDescription);	// TODO: change description by LFO Tempo Sync Setting
 	setupParameter("LFO1 Offset", 0x30, 0, 4, 2, lfoOffset, lfoOffsetDescription);
-	setupParameter("LFO1 Delay Time", 0x31, 0, 127, 0, StringArray(), lfoDelayTimeDescription);
+	setupParameter("LFO1 Delay Time", 0x31, 0, 127, 0x0A, StringArray(), lfoDelayTimeDescription);
 	setupParameter("LFO1 Fade Mode", 0x32, 0, 3, 0, lfoFadeModes, lfoFadeModeDescription);
 	setupParameter("LFO1 Fade Time", 0x33, 0, 127, 0, StringArray(), lfoFadeTimeDescription);
 	setupParameter("LFO1 Tempo Sync", 0x34, 0, 1, 0, switchOnOffStrings, lfoTempoSyncDescription);
 	setupParameter("LFO2 Waveform", 0x35, 0, 7, 0, lfoWaveforms, lfoWaveformDescription);
 	setupParameter("LFO2 Key Sync", 0x36, 0, 1, 0, switchOnOffStrings, lfoKeySyncDescription);
-	setupParameter("LFO2 Rate", 0x37, 0, 127, 0, StringArray(), lfoRateDescription);	// TODO: change description by LFO Tempo Sync Setting
+	setupParameter("LFO2 Rate", 0x37, 0, 127, 0x5c, StringArray(), lfoRateDescription);	// TODO: change description by LFO Tempo Sync Setting
 	setupParameter("LFO2 Offset", 0x38, 0, 4, 2, lfoOffset, lfoOffsetDescription);
 	setupParameter("LFO2 Delay Time", 0x39, 0, 127, 0, StringArray(), lfoDelayTimeDescription);
 	setupParameter("LFO2 Fade Mode", 0x3A, 0, 3, 0, lfoFadeModes, lfoFadeModeDescription);
@@ -318,25 +318,25 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	setupParameter("Pitch Envelope Time 2", 0x47, 0, 127, 0, StringArray(), "Specifies the time until the next pitch level is reached.\r\nHigher settings will result in a longer time until the next pitch level is reached.");
 	setupParameter("Pitch Envelope Time 3", 0x48, 0, 127, 0, StringArray(), "Specifies the time until the next pitch level is reached.\r\nHigher settings will result in a longer time until the next pitch level is reached.");
 	setupParameter("Pitch Envelope Time 4", 0x49, 0, 127, 0, StringArray(), "Specifies the time until the next pitch level is reached.\r\nHigher settings will result in a longer time until the next pitch level is reached.");
-	setupParameter("Pitch Envelope Level 1", 0x4A, 0, 126, 63, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
-	setupParameter("Pitch Envelope Level 2", 0x4B, 0, 126, 63, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
+	setupParameter("Pitch Envelope Level 1", 0x4A, 0, 126, (tone == Tone1 || tone == Tone2) ? 0x7E : 0x3F, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
+	setupParameter("Pitch Envelope Level 2", 0x4B, 0, 126, (tone == Tone1 || tone == Tone2) ? 0x7E : 0x3F, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
 	setupParameter("Pitch Envelope Level 3", 0x4C, 0, 126, 63, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
 	setupParameter("Pitch Envelope Level 4", 0x4D, 0, 126, 63, modulationDepthStrings, "Specifies the pitch difference relative to the normal pitch (as specified by Coarse Tune and Fine Tune).\r\nPositive (+) settings will raise the pitch above the normal pitch. Negative (-) settings will make the pitch lower than the normal pitch.");
-	setupParameter("Pitch LFO1 Depth", 0x4E, 0, 126, 63, modulationDepthStrings, "The pitch level wavers cyclically, creating a vibrato effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.\r\nBy giving two tones the same rate setting and setting their Pitch Depth to \"+30\" and \"-30\" respectively to apply opposite-phase LFO, you can create a vibrato effect in which the pitches change in opposite directions.");
+	setupParameter("Pitch LFO1 Depth", 0x4E, 0, 126, 0x49, modulationDepthStrings, "The pitch level wavers cyclically, creating a vibrato effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.\r\nBy giving two tones the same rate setting and setting their Pitch Depth to \"+30\" and \"-30\" respectively to apply opposite-phase LFO, you can create a vibrato effect in which the pitches change in opposite directions.");
 	setupParameter("Pitch LFO2 Depth", 0x4F, 0, 126, 63, modulationDepthStrings, "The pitch level wavers cyclically, creating a vibrato effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.\r\nBy giving two tones the same rate setting and setting their Pitch Depth to \"+30\" and \"-30\" respectively to apply opposite-phase LFO, you can create a vibrato effect in which the pitches change in opposite directions.");
 
-	setupParameter("Filter Type", 0x50, 0, 4, 0, filterTypes, "- OFF: The filter will not be applied.\r\n"
+	setupParameter("Filter Type", 0x50, 0, 4, 1, filterTypes, "- OFF: The filter will not be applied.\r\n"
 		"- LPF (Low Pass Filter): This type of filter is most commonly used and allows audio signals with frequencies lower than the cutoff frequency to pass through. It is used to make the sound more mellow.\r\n"
 		"- BPF (Band Pass Filter): This filter cuts off all audio signals except for those with frequencies around the cutoff frequency.\r\n"
 		"- HPF (High Pass Filter): This filter allows audio signals with frequencies exceeding the cutoff frequency to pass. It is effectively used to make sounds brighter and sharper.\r\n"
 		"- PKG (Peaking Filter): This filter enhances audio signals with frequencies around the cutoff frequency. It will emphasize the midrange, and is useful for creating a distinctive sound.\r\n"
 		"By selecting the Peaking Filter as the Filter Type and using the LFO to modulate the cutoff frequency, you can create a \"wah\" effect.");
-	setupParameter("Cutoff Frequency", 0x51, 0, 127, 0, StringArray(), "Specifies the frequency at which the filter will begin to affect the frequency components of the waveform (the Cutoff Frequency). By changing the cutoff frequency, you can control the brightness of the sound. The effect will depend on the Filter Type.\r\n"
+	setupParameter("Cutoff Frequency", 0x51, 0, 127, (tone == Tone1 || tone == Tone3) ? 0x7A : 0x4D, StringArray(), "Specifies the frequency at which the filter will begin to affect the frequency components of the waveform (the Cutoff Frequency). By changing the cutoff frequency, you can control the brightness of the sound. The effect will depend on the Filter Type.\r\n"
 		"- LPF (Low Pass Filter): Increasing the value will brighten the sound, making it more similar to the original waveform, approaching the  original waveform. Lower settings will cut more of the high frequency overtones, making the sound darker. For some waveforms, you may not be able to hear any sound if you lower the value too far.\r\n"
 		"- BPF (Band Pass Filter): Higher settings will raise the frequency area that is heard. Lower settings will cause only a progressively lower frequency area to be heard.\r\n"
 		"- HPF (High Pass Filter): As this value is increased, the low frequency range will be cut more greatly, making the sound sharper. As this value is decreased, the original sound of the waveform will be heard. For some waveforms, you may hear no sound if this value is raised excessively.\r\n"
 		"- PKG (Peaking Filter): As this value is increased, the frequency area that is emphasized will rise. As this value is decreased, the frequency area that is emphasized will fall.");
-	setupParameter("Cutoff Keyfollow", 0x52, 0, 15, 5, keyFollowFactors, "This setting causes the cutoff frequency to be affected by the keyboard pad position.\r\n"
+	setupParameter("Cutoff Keyfollow", 0x52, 0, 15, (tone == Tone1 || tone == Tone3) ? 7 : 5, keyFollowFactors, "This setting causes the cutoff frequency to be affected by the keyboard pad position.\r\n"
 		"With positive (+) settings, the cutoff frequency will also rise as you play higher notes. With negative (-) settings, the cutoff frequency will become lower as you play higher notes.\r\n"
 		"- +100: When you move 12 notes upward from C4 on the keyboard, the cutoff frequency will rise one octave.\r\n"
 		"- +200: When you move 12 notes upward from C4 on the keyboard, the cutoff frequency will rise two octaves.\r\n"
@@ -363,15 +363,15 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	setupParameter("Filter Envelope Time 2", 0x5C, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
 	setupParameter("Filter Envelope Time 3", 0x5D, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
 	setupParameter("Filter Envelope Time 4", 0x5E, 0, 127, 0, StringArray(), "Specifies the time until the next cutoff frequency is reached.\r\nHigher settings will lengthen the time until the next cutoff frequency is reached.");
-	setupParameter("Filter Envelope Level 1", 0x5F, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
-	setupParameter("Filter Envelope Level 2", 0x60, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
-	setupParameter("Filter Envelope Level 3", 0x61, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+	setupParameter("Filter Envelope Level 1", 0x5F, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+	setupParameter("Filter Envelope Level 2", 0x60, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
+	setupParameter("Filter Envelope Level 3", 0x61, 0, 127, 127, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
 	setupParameter("Filter Envelope Level 4", 0x62, 0, 127, 0, StringArray(), "Specifies the cutoff frequency at each level.\r\nRaising this setting will also raise the cutoff frequency.");
 	setupParameter("Filter LFO1 Depth", 0x63, 0, 126, 63, modulationDepthStrings, "The cutoff level wavers cyclically, creating wah effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.");
 	setupParameter("Filter LFO2 Depth", 0x64, 0, 126, 63, modulationDepthStrings, "The cutoff level wavers cyclically, creating wah effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.");
 
-	setupParameter("Tone Level", 0x65, 0, 127, 0, StringArray(), "This setting adjusts the volume of each tone. This is used mainly to adjust the volume balance between tones.");
-	setupParameter("Bias Direction", 0x66, 0, 3, 0, biasDirection, "The Bias parameters specify how the keyboard position will affect the Tone Level. This can be used to simulate the way in which the volume of an acoustic instrument changes according to the location (pitch) of the note.\r\n"
+	setupParameter("Tone Level", 0x65, 0, 127, (tone == Tone1 || tone == Tone3) ? 0x7F : 0x66, StringArray(), "This setting adjusts the volume of each tone. This is used mainly to adjust the volume balance between tones.");
+	setupParameter("Bias Direction", 0x66, 0, 3, 3, biasDirection, "The Bias parameters specify how the keyboard position will affect the Tone Level. This can be used to simulate the way in which the volume of an acoustic instrument changes according to the location (pitch) of the note.\r\n"
 		"Select the keyboard area(s) that will be affected above and/or below the specified Bias Point.\r\n"
 		"Available Settings:\r\n"
 		" - LWR: The volume will be modified for the keyboard area below the note specified as the Bias Point.\r\n"
@@ -380,33 +380,33 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 		" - ALL: The volume will be modified linearly from the note specified as the Bias Point.\r\n"
 		"If you use two tones and set a Bias Direction of \"UPR\" for one and \"LWR\" for the other, the two tones will fade smoothly into each other as you play across the Bias Point. (This is known as \"key crossfade\".)\r\n"
 		"By setting Bias Direction to \"L&U\", you can create sounds that are heard only in a specific area of the keyboard.");
-	setupParameter("Bias Point", 0x67, 0, 127, 0, noteNames, "Specifies the key relative to which the volume will be modified.");
-	setupParameter("Bias Level", 0x68, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "Adjusts the slope of the volume change that will occur in the direction specified by Bias Direction.\r\n"
+	setupParameter("Bias Point", 0x67, 0, 127, 0x3C, noteNames, "Specifies the key relative to which the volume will be modified.");
+	setupParameter("Bias Level", 0x68, 0, 14, 0x07, veloTimeFactorsAndEnvKeyFollow, "Adjusts the slope of the volume change that will occur in the direction specified by Bias Direction.\r\n"
 		"With positive (+) settings, the slope of volume change will increase in the positive (+) direction. With negative (-) settings, the slope of volume change will increase in the negative (-) direction.\r\n"
 		"Even with positive (+) settings of this parameter, the volume cannot exceed the maximum level.");
 	setupParameter("Amp Envelope Velocity Curve", 0x69, 0, 6, 0, velocityCurves, "Select the curve at which the strength of your playing on the external MIDI keyboard will affect the depth of the amplifier envelope.");
-	setupParameter("Amp Envelope Velocity Sens", 0x6A, 0, 125, 0, veloSensFactors, "Specifies how the depth of the amplifier envelope will be affected by the strength of your playing on the external MIDI keyboard.\r\n"
+	setupParameter("Amp Envelope Velocity Sens", 0x6A, 0, 125, 0x64, veloSensFactors, "Specifies how the depth of the amplifier envelope will be affected by the strength of your playing on the external MIDI keyboard.\r\n"
 		"If velocity sensitivity is set to a positive (+) value, the volume will be loud when you play strongly and soft when you play softly. As this value is increased, the volume difference between strongly played and softly played notes will gradually increase.\r\n"
 		"With positive (+) settings, the volume will increase as you play more strongly on the keyboard. With negative (-) settings, the volume will decrease as you play more strongly on the keyboard. If this is set to \"0\", the volume will not be affected by the strength of your playing on the keyboard.");
-	setupParameter("Amp Envelope Velocity Time1", 0x6B, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "The strength with which a keyboard key on an external MIDI keyboard is pressed is used to control TIME 1.\r\n"
+	setupParameter("Amp Envelope Velocity Time1", 0x6B, 0, 14, 7, veloTimeFactorsAndEnvKeyFollow, "The strength with which a keyboard key on an external MIDI keyboard is pressed is used to control TIME 1.\r\n"
 		"With positive (+) settings, TIME1 will become faster as you play the keyboard more strongly. With negative (-) settings, TIME1 will become slower as you play the keyboard more strongly.");
-	setupParameter("Amp Envelope Velocity Time4", 0x6C, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "The speed at which a keyboard key on an external MIDI keyboard is released is used to control TIME 4.\r\n"
+	setupParameter("Amp Envelope Velocity Time4", 0x6C, 0, 14, 7, veloTimeFactorsAndEnvKeyFollow, "The speed at which a keyboard key on an external MIDI keyboard is released is used to control TIME 4.\r\n"
 		"With positive (+) settings, releasing the keyboard more quickly will cause TIME4 to be faster. With negative (-) settings, releasing the keyboard more quickly will cause TIME4 to be slower.");
-	setupParameter("Amp Envelope Time Keyfollow", 0x6D, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "This setting causes the pitch envelope times (TIME 2/3/4) to be affected by the keyboard pad position. Higher settings will produce a greater change relative to the C4 key envelope.\r\n"
+	setupParameter("Amp Envelope Time Keyfollow", 0x6D, 0, 14, 7, veloTimeFactorsAndEnvKeyFollow, "This setting causes the pitch envelope times (TIME 2/3/4) to be affected by the keyboard pad position. Higher settings will produce a greater change relative to the C4 key envelope.\r\n"
 		"With positive (+) settings, times will become shorter as you play higher notes. With negative (-) settings, times will become longer as you play higher notes.");
 	setupParameter("Amp Envelope Time 1", 0x6E, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
 	setupParameter("Amp Envelope Time 2", 0x6F, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
-	setupParameter("Amp Envelope Time 3", 0x70, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
-	setupParameter("Amp Envelope Time 4", 0x71, 0, 127, 0, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
-	setupParameter("Amp Envelope Level 1", 0x72, 0, 127, 0, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
-	setupParameter("Amp Envelope Level 2", 0x73, 0, 127, 0, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
-	setupParameter("Amp Envelope Level 3", 0x74, 0, 127, 0, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
-	setupParameter("Amp LFO1 Depth", 0x75, 0, 126, 63, modulationDepthStrings, "The volume level wavers cyclically, creating a tremolo effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.");
+	setupParameter("Amp Envelope Time 3", 0x70, 0, 127, 0x5E, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
+	setupParameter("Amp Envelope Time 4", 0x71, 0, 127, 0x0A, StringArray(), "Specifies the time until the next level point is reached.\r\nHigher settings will lengthen the time until the next level point is reached.");
+	setupParameter("Amp Envelope Level 1", 0x72, 0, 127, 0x7F, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
+	setupParameter("Amp Envelope Level 2", 0x73, 0, 127, 0x7F, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
+	setupParameter("Amp Envelope Level 3", 0x74, 0, 127, 0x28, StringArray(), "Specifies the volume at each point. Higher settings will also raise the volume.");
+	setupParameter("Amp LFO1 Depth", 0x75, 0, 126, 0x41, modulationDepthStrings, "The volume level wavers cyclically, creating a tremolo effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.");
 	setupParameter("Amp LFO2 Depth", 0x76, 0, 126, 63, modulationDepthStrings, "The volume level wavers cyclically, creating a tremolo effect. The wavering increases the further from 0 the value becomes, and the effect is reversed by switching the - and + signs.");
 	setupParameter("Tone Pan", 0x77, 0, 127, 64, panPosStrings, "This parameter sets the stereo location for each tone.\r\nThe pan of the overall patch can be modified and set for each pattern by the Setup parameter Part Pan. The Tone Pan value will be added to this setting.");
-	setupParameter("Pan Key follow", 0x78, 0, 14, 0, veloTimeFactorsAndEnvKeyFollow, "This parameter causes the stereo location to change according to the keyboard pad that is played.\r\nWith positive (+) settings, the sound will move toward the right as you play higher notes. With negative (-) settings, the sound will move toward the left as you play higher notes.");
+	setupParameter("Pan Key follow", 0x78, 0, 14, 7, veloTimeFactorsAndEnvKeyFollow, "This parameter causes the stereo location to change according to the keyboard pad that is played.\r\nWith positive (+) settings, the sound will move toward the right as you play higher notes. With negative (-) settings, the sound will move toward the left as you play higher notes.");
 	setupParameter("Random Pan Switch", 0x79, 0, 127, 0, randomPanSwitchStrings, "This setting causes the stereo location to change randomly each time a note is played.\r\nThe Tone Pan setting will be ignored by Tones for which the Random Pan Switch is turned on.");	// TODO: make sure if slider only uses 0 and 63 correctly (set interval, max, after setting parameter!)
-	setupParameter("Alternate Pan Depth", 0x7A, 0, 127, 0, panPosStrings, "This parameter causes the stereo location of the sound to alternate between left and right each time a note is played. When this parameter is set in the L direction, the sound will alternate in the order of left -> right-> left-> right. When set in the R direction, the sound will alternate in the order of right -> left-> right-> left.\r\n"
+	setupParameter("Alternate Pan Depth", 0x7A, 0, 127, 0x40, panPosStrings, "This parameter causes the stereo location of the sound to alternate between left and right each time a note is played. When this parameter is set in the L direction, the sound will alternate in the order of left -> right-> left-> right. When set in the R direction, the sound will alternate in the order of right -> left-> right-> left.\r\n"
 		"Higher settings will cause greater change.\r\n"
 		"By using two tones and setting the Alternate Pan Depth of one to \"L63\" and of the other to \"R63\", you can make the two tones switch places alternately.");
 	setupParameter("Pan LFO1 Depth", 0x7B, 0, 126, 63, modulationDepthStrings, "Adjusts the effect that the LFO will have on pan (stereo location).\r\n As this value is increased in the positive(+) direction, the LFO will have a greater effect on pan.Negative(-) settings will invert the LFO waveform, causing the pan to change in the opposite direction.");

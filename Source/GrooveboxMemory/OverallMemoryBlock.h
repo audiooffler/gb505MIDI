@@ -41,6 +41,8 @@ public:
 	bool saveBinarySysExFile(const File& file);
 	bool saveHexTextSysExFile(const File&file);
 
+	void initAll(GrooveboxMemoryBlock* block);
+
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(OverallMemoryBlock);
 };

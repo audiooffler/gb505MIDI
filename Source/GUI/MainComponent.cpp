@@ -289,6 +289,7 @@ bool MainComponent::perform(const InvocationInfo& info)
 	{
 	case CommandIDs::createEmptyPattern:
 		grooveboxMemory->getPatternBodyBlock()->getPlayerThread()->signalThreadShouldExit();
+		grooveboxMemory->initAll(grooveboxMemory);
 		editorTab->newPattern();
 		return true;
 	case CommandIDs::fileOpenPattern:

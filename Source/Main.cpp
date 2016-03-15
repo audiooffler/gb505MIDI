@@ -53,15 +53,14 @@ public:
 
         // This method is where you should put your application's initialisation code..
 
-		splashScreen = new GrooveboxSplashScreen("STARTING UP " + String(getApplicationName()) + String(CharPointer_UTF8("\xe2\x80\xa6")), 480, 320, true);
-		
-
 		#if JUCE_OPENGL
 		if (openGlContext == nullptr)
 		{
 			openGlContext = new OpenGLContext();
 		}
 		#endif
+
+		splashScreen = new GrooveboxSplashScreen("STARTING UP " + String(getApplicationName()) + String(CharPointer_UTF8("\xe2\x80\xa6")), 480, 320, true);
 
 		applicationCommandManager = new ApplicationCommandManager();
 		applicationCommandManager->registerAllCommandsForTarget(this);
@@ -83,13 +82,13 @@ public:
 		lookAndFeel = new GrooveboxLookAndFeel();
 		LookAndFeel::setDefaultLookAndFeel(lookAndFeel);
         mainWindow = new MainWindow();
-		#if JUCE_OPENGL
-		if (openGlContext != nullptr) openGlContext->attachTo(*mainWindow);
-		#endif
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
 		mainWindow->getContentComponent()->grabKeyboardFocus();
 		deleteAndZero(splashScreen);
+#if JUCE_OPENGL
+		if (openGlContext != nullptr) openGlContext->attachTo(*mainWindow);
+#endif
     }
 
     void shutdown()

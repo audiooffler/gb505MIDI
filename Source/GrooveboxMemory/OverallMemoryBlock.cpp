@@ -282,3 +282,19 @@ bool OverallMemoryBlock::loadStandardMidiFile(const File& /*file*/)
 {
 	return false;
 }
+
+void OverallMemoryBlock::initAll(GrooveboxMemoryBlock* block)
+{
+	for (uint16 addOffset = 0x0; addOffset < block->getTotalSizeRealValue(); addOffset++)
+	{
+		if (Parameter* param = block->getParameter(addOffset))
+		{
+			param->resetToDefault();
+		}
+	}
+	OwnedArray<GrooveboxMemoryBlock, CriticalSection>* subBlocks = block->getSubBlocks();
+	for (int i = 0; i < subBlocks->size(); i++)
+	{
+		initAll((*subBlocks)[i]);
+	}
+}
