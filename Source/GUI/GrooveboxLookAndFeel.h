@@ -202,6 +202,7 @@ public:
 		ScopedPointer<Image> m_faderThumbImage;
 		AsciiWithNoteValuesTypeface* m_asciiWithNoteValuesTypeface = nullptr;	// // referece counted, don't delete manually
 		Font m_asciiWithNoteValuesFont;
+		JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(GrooveboxLookAndFeel);
 };
 
 

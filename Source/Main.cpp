@@ -134,6 +134,7 @@ public:
 private:
     ScopedPointer<MainWindow> mainWindow;
 	ScopedPointer<GrooveboxLookAndFeel> lookAndFeel;
+	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MC307SysExApplication);
 };
 
 //==============================================================================

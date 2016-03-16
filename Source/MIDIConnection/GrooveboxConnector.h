@@ -148,6 +148,7 @@ private:
 			void timerCallback() override; // for timeup after
 		private:
 			RecvBulkDumpThread* m_bulkDumpThread;
+			JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(TimeOutTimer);
 		};
 		friend class TimeOutTimer;
 		void addReceivedMidiMessage(const MidiMessage& msg);
