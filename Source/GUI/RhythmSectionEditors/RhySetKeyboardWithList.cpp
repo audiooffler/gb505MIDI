@@ -46,7 +46,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_tableHeader->addColumn("", OctaveC, 20, 20, 20, 1);
 	m_tableHeader->addColumn("Key", KeyNo, 30, 30, 30, 1);
 	m_tableHeader->addColumn("Rhy Group", RhyGrp, 80, 80, 80, 1);
-	m_tableHeader->addColumn("Waveform", RhyWave, 130, 130, 130, 1);
+	m_tableHeader->addColumn("Waveform", RhyWave, 140, 140, 140, 1);
 	m_tableHeader->addColumn("GM Standard Drum", GmDrum, 130, 130, 130, 9);
 	m_drumNamesTable->setHeader(m_tableHeader);
 	m_drumNamesTable->setHeaderHeight(24);
@@ -117,6 +117,11 @@ int RhySetKeyboardWithList::getNumRows()
 
 void RhySetKeyboardWithList::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
 {
+	if (rowIsSelected)
+	{
+		g.fillAll(GrooveboxLookAndFeel::Mc307LcdThumb);
+	}
+
 	int key = rowNumber + 35;
 	const Line<float> line(0.0f, 0.0f, (float)width, 0.0f);
 	const float dashLengths[2] = { 2.0f, 1.0f };
@@ -180,7 +185,9 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	case RhyGrp:
 		g.drawText(rhyGrpString, 4.0f, 0.0f, width-4.0f, (float)height, Justification::centredLeft, false);
 		break;
-	case RhyWave: g.drawText(waveText, 2.0f, 0, width-2.0f, height, Justification::centredLeft, false);
+	case RhyWave: 
+		if (rowIsSelected) g.setFont(Font((float)m_drumNamesTable->getRowHeight(),Font::bold));
+		g.drawText(waveText, 2.0f, 0, width-2.0f, height, Justification::centredLeft, false);
 		break;
 	case GmDrum: g.drawText(MidiMessage::getRhythmInstrumentName(key), 2.0f, 0, width-2.0f, height, Justification::centredLeft, false);
 		break;
