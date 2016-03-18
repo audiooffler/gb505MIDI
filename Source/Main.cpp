@@ -94,6 +94,13 @@ public:
     void shutdown()
     {
         // Add your application's shutdown code here..
+#if JUCE_OPENGL
+		if (openGlContext != nullptr) openGlContext->detach();
+		deleteAndZero(openGlContext);
+#endif
+		if (splashScreen != nullptr) deleteAndZero(splashScreen);
+		mainWindow = nullptr; // (deletes our window)
+		lookAndFeel = nullptr;
 		appProperties->saveIfNeeded();
 		deleteAndZero(appProperties);
 		deleteAndZero(midiInputDevice);
@@ -101,17 +108,10 @@ public:
 		deleteAndZero(toolTipWindow);
 		deleteAndZero(undoManager);
 		if (grooveboxConnector!=nullptr) deleteAndZero(grooveboxConnector);
-		#if JUCE_OPENGL
-		if (openGlContext != nullptr) openGlContext->detach();
-		deleteAndZero(openGlContext);
-		#endif
-        mainWindow = nullptr; // (deletes our window)
-		lookAndFeel = nullptr;
 		deleteAndZero(quickSysEx);
 		deleteAndZero(waveForms);
 		if (grooveboxMemory!=nullptr) deleteAndZero(grooveboxMemory);
 		deleteAndZero(applicationCommandManager);
-		if (splashScreen != nullptr) deleteAndZero(splashScreen);
 		// deletes itself, dont uncomment this!: deleteAndZero(splashScreen);
     }
 
