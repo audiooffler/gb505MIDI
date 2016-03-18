@@ -266,6 +266,12 @@
           <FILE id="bWIiWQ" name="WaveEditor.cpp" compile="1" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.cpp"/>
           <FILE id="iz4sHe" name="WaveEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.h"/>
         </GROUP>
+        <GROUP id="{7BF73D30-0C57-91C0-EBA4-D9129DB7D86B}" name="RhythmSectionEditors">
+          <FILE id="N0Bxxm" name="RhySetKeyboardWithList.cpp" compile="1" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhySetKeyboardWithList.cpp"/>
+          <FILE id="dcwGgd" name="RhySetKeyboardWithList.h" compile="0" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhySetKeyboardWithList.h"/>
+        </GROUP>
         <FILE id="IU9iK0" name="AsciiWithNoteValuesTypeface.cpp" compile="1"
               resource="0" file="Source/GUI/AsciiWithNoteValuesTypeface.cpp"/>
         <FILE id="VLmOQk" name="AsciiWithNoteValuesTypeface.h" compile="0"
@@ -297,6 +303,10 @@
               file="Source/GUI/PatternEditorTab.cpp"/>
         <FILE id="PJYBAJ" name="PatternEditorTab.h" compile="0" resource="0"
               file="Source/GUI/PatternEditorTab.h"/>
+        <FILE id="jjjOs1" name="RhythmSetEditorTab.cpp" compile="1" resource="0"
+              file="Source/GUI/RhythmSetEditorTab.cpp"/>
+        <FILE id="Y7EQbd" name="RhythmSetEditorTab.h" compile="0" resource="0"
+              file="Source/GUI/RhythmSetEditorTab.h"/>
         <FILE id="z4L3DQ" name="SystemTab.cpp" compile="1" resource="0" file="Source/GUI/SystemTab.cpp"/>
         <FILE id="wiNUil" name="SystemTab.h" compile="0" resource="0" file="Source/GUI/SystemTab.h"/>
         <FILE id="khOcWg" name="TabbedComponentWithMenu.h" compile="0" resource="0"
@@ -328,6 +338,8 @@
               file="Source/GrooveboxMemory/QuickSysExBlock.cpp"/>
         <FILE id="ndMYwY" name="QuickSysExBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/QuickSysExBlock.h"/>
+        <FILE id="ZjjxBt" name="RhythmSetBlock.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/RhythmSetBlock.cpp"/>
         <FILE id="BRrZZr" name="RhythmSetBlock.h" compile="0" resource="0"
               file="Source/GrooveboxMemory/RhythmSetBlock.h"/>
         <FILE id="HlD58O" name="SynthPatchesBlock.cpp" compile="1" resource="0"
@@ -351,18 +363,18 @@
                        isDebug="0" optimisation="3" targetName="gb505MIDI"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_gui_basics" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_graphics" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_events" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_data_structures" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_core" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_processors" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_formats" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_devices" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_utils" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_audio_basics" path="..\juce\modules\"/>
-        <MODULEPATH id="juce_opengl" path="..\juce\modules\"/>
+        <MODULEPATH id="juce_gui_extra" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_gui_basics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_graphics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_events" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_data_structures" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_core" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_processors" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_formats" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_devices" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_utils" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_audio_basics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
+        <MODULEPATH id="juce_opengl" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules\"/>
       </MODULEPATHS>
     </VS2013>
   </EXPORTFORMATS>

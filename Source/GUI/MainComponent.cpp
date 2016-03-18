@@ -20,6 +20,7 @@
 //[Headers] You can add your own extra header files here...
 #include "MixerTab.h"
 #include "SystemTab.h"
+#include "RhythmSetEditorTab.h"
 #include "PatchEditor.h"
 #include "MidiLoggerTab.h"
 #include "PatternEditorTab.h"
@@ -47,6 +48,7 @@ MainComponent::MainComponent ()
 	addTab(TRANS("System"), Colours::whitesmoke, new SystemTab(), true);
 	addTab(TRANS("Pattern"), Colours::whitesmoke, new PatternEditorTab(), true);
 	addTab(TRANS("Mixer"), Colours::whitesmoke, new MixerTab(), true);
+	addTab(TRANS("Rhythm"), Colours::whitesmoke, new RhythmSetEditorTab(), true);
 	SynthParts part(SynthPart1);
 	String partNameString;
 	for (int p = (int)SynthPart1; p <= (int)SynthPart7; p++)
@@ -228,6 +230,22 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo& 
 		//result.addDefaultKeypress('t', ModifierKeys::commandModifier);
 		result.setActive(grooveboxConnector->getActiveConnection() != nullptr && !grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
 		break;
+	case CommandIDs::gotoSystemTab:
+		result.setInfo("System", "Opens the system preferences", gotoTabCategory, 0);
+		result.addDefaultKeypress('p', ModifierKeys::commandModifier);
+		break;
+	case CommandIDs::gotoPatternEditorTab:
+		result.setInfo("Pattern Editor", "Opens the pattern event table", gotoTabCategory, 0);
+		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
+		break;
+	case CommandIDs::gotoMixerTab:
+		result.setInfo("Mixer", "Opens the mixer panel", gotoTabCategory, 0);
+		result.addDefaultKeypress('m', ModifierKeys::commandModifier);
+		break;
+	case CommandIDs::gotoPartRTab:
+		result.setInfo("Part R", "Opens the patch editor for part R", gotoTabCategory, 0);
+		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
+		break;
 	case CommandIDs::gotoPart1Tab:
 		result.setInfo("Part 1", "Opens the patch editor for part 1", gotoTabCategory, 0);
 		result.addDefaultKeypress('1', ModifierKeys::commandModifier);
@@ -255,22 +273,6 @@ void MainComponent::getCommandInfo(CommandID commandID, ApplicationCommandInfo& 
 	case CommandIDs::gotoPart7Tab:
 		result.setInfo("Part 7", "Opens the patch editor for part 7", gotoTabCategory, 0);
 		result.addDefaultKeypress('7', ModifierKeys::commandModifier);
-		break;
-	case CommandIDs::gotoPartRTab:
-		result.setInfo("Part R", "Opens the patch editor for part R", gotoTabCategory, 0);
-		result.addDefaultKeypress('r', ModifierKeys::commandModifier);
-		break;
-	case CommandIDs::gotoMixerTab:
-		result.setInfo("Mixer", "Opens the mixer panel", gotoTabCategory, 0);
-		result.addDefaultKeypress('m', ModifierKeys::commandModifier);
-		break;
-	case CommandIDs::gotoSystemTab:
-		result.setInfo("System", "Opens the system preferences", gotoTabCategory, 0);
-		result.addDefaultKeypress('p', ModifierKeys::commandModifier);
-		break;
-	case CommandIDs::gotoPatternEditorTab:
-		result.setInfo("Pattern Editor", "Opens the pattern event table", gotoTabCategory, 0);
-		result.addDefaultKeypress('e', ModifierKeys::commandModifier);
 		break;
 	case CommandIDs::showInfo:
 		result.setInfo("Info", "Show info about this application", "info", 0);
@@ -322,28 +324,28 @@ bool MainComponent::perform(const InvocationInfo& info)
 	case CommandIDs::gotoMixerTab:
 		setCurrentTabIndex(3, true);
 		break;
-	case CommandIDs::gotoPart1Tab:
+	case CommandIDs::gotoPartRTab:
 		setCurrentTabIndex(4, true);
 		break;
-	case CommandIDs::gotoPart2Tab:
+	case CommandIDs::gotoPart1Tab:
 		setCurrentTabIndex(5, true);
 		break;
-	case CommandIDs::gotoPart3Tab:
+	case CommandIDs::gotoPart2Tab:
 		setCurrentTabIndex(6, true);
 		break;
-	case CommandIDs::gotoPart4Tab:
+	case CommandIDs::gotoPart3Tab:
 		setCurrentTabIndex(7, true);
 		break;
-	case CommandIDs::gotoPart5Tab:
+	case CommandIDs::gotoPart4Tab:
 		setCurrentTabIndex(8, true);
 		break;
-	case CommandIDs::gotoPart6Tab:
+	case CommandIDs::gotoPart5Tab:
 		setCurrentTabIndex(9, true);
 		break;
-	case CommandIDs::gotoPart7Tab:
+	case CommandIDs::gotoPart6Tab:
 		setCurrentTabIndex(10, true);
 		break;
-	case CommandIDs::gotoPartRTab:
+	case CommandIDs::gotoPart7Tab:
 		setCurrentTabIndex(11, true);
 		break;
 	case CommandIDs::showInfo:
