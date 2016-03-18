@@ -363,76 +363,76 @@ void PatternSetupConfigBlock::setPartMute(PatternBodyBlock::PatternPart part, bo
 }
 
 // sets the mute state for a rhythm group (true) or unmutes it (false)
-void PatternSetupConfigBlock::setRyhGroupMute(PatternBodyBlock::RhythmGroup rhythmGroup, bool setMute/* = true*/)
+void PatternSetupConfigBlock::setRyhGroupMute(RhythmGroup rhythmGroup, bool setMute/* = true*/)
 {
 	switch (rhythmGroup)
 	{
-	case PatternBodyBlock::Rhythm_Group_BD:
+	case RhythmGroup::BD:
 		if (setMute) m_data[0x30] |= MUTE_FLAG_BD;
 		else  m_data[0x30] &= ~MUTE_FLAG_BD;
 		break;
-	case PatternBodyBlock::Rhythm_Group_SD:
+	case RhythmGroup::SD:
 		if (setMute) m_data[0x30] |= MUTE_FLAG_SD;
 		else  m_data[0x30] &= ~MUTE_FLAG_SD;
 		break;
-	case PatternBodyBlock::Rhythm_Group_HH:
+	case RhythmGroup::HH:
 		if (setMute) m_data[0x30] |= MUTE_FLAG_HH;
 		else  m_data[0x30] &= ~MUTE_FLAG_HH;
 		break;
-	case PatternBodyBlock::Rhythm_Group_CLP:
+	case RhythmGroup::CLP:
 		if (setMute) m_data[0x30] |= MUTE_FLAG_CLP;
 		else  m_data[0x30] &= ~MUTE_FLAG_CLP;
 		break;
-	case PatternBodyBlock::Rhythm_Group_CYM:
+	case RhythmGroup::CYM:
 		if (setMute) m_data[0x2F] |= MUTE_FLAG_CYM;
 		else  m_data[0x2F] &= ~MUTE_FLAG_CYM;
 		break;
-	case PatternBodyBlock::Rhythm_Group_TomPerc:
+	case RhythmGroup::TOM_PERC:
 		if (setMute) m_data[0x2F] |= MUTE_FLAG_TOMPERC;
 		else  m_data[0x2F] &= ~MUTE_FLAG_TOMPERC;
 		break;
-	case PatternBodyBlock::Rhythm_Group_Hit:
+	case RhythmGroup::HIT:
 		if (setMute) m_data[0x2F] |= MUTE_FLAG_HIT;
 		else  m_data[0x2F] &= ~MUTE_FLAG_HIT;
 		break;
-	case PatternBodyBlock::Rhythm_Group_Others:
+	case RhythmGroup::OTHERS:
 		if (setMute) m_data[0x2F] |= MUTE_FLAG_OTHERS;
 		else  m_data[0x2F] &= ~MUTE_FLAG_OTHERS;
 		break;
-	case PatternBodyBlock::Rhythm_Group_All:
+	case RhythmGroup::ALL:
 		if (setMute) { m_data[0x2F] = 15; m_data[0x30] = 15; }
 		else { m_data[0x2F] = 0; m_data[0x30] = 0; }
 		break;
-	case PatternBodyBlock::Rhythm_Group_Unknown:
+	case RhythmGroup::UNKNOWN:
 	default:
 		break;
 	}
 }
 
 // checks mute state for rhythm group, returns true if muted
-bool PatternSetupConfigBlock::isRyhGroupMute(PatternBodyBlock::RhythmGroup rhythmGroup)
+bool PatternSetupConfigBlock::isRyhGroupMute(RhythmGroup rhythmGroup)
 {
 	switch (rhythmGroup)
 	{
-	case PatternBodyBlock::Rhythm_Group_BD:
+	case RhythmGroup::BD:
 		return (m_data[0x30] & MUTE_FLAG_BD) == MUTE_FLAG_BD;
-	case PatternBodyBlock::Rhythm_Group_SD:
+	case RhythmGroup::SD:
 		return (m_data[0x30] & MUTE_FLAG_SD) == MUTE_FLAG_SD;
-	case PatternBodyBlock::Rhythm_Group_HH:
+	case RhythmGroup::HH:
 		return (m_data[0x30] & MUTE_FLAG_HH) == MUTE_FLAG_HH;
-	case PatternBodyBlock::Rhythm_Group_CLP:
+	case RhythmGroup::CLP:
 		return (m_data[0x30] & MUTE_FLAG_CLP) == MUTE_FLAG_CLP;
-	case PatternBodyBlock::Rhythm_Group_CYM:
+	case RhythmGroup::CYM:
 		return (m_data[0x2F] & MUTE_FLAG_CYM) == MUTE_FLAG_CYM;
-	case PatternBodyBlock::Rhythm_Group_TomPerc:
+	case RhythmGroup::TOM_PERC:
 		return (m_data[0x2F] & MUTE_FLAG_TOMPERC) == MUTE_FLAG_TOMPERC;
-	case PatternBodyBlock::Rhythm_Group_Hit:
+	case RhythmGroup::HIT:
 		return (m_data[0x2F] & MUTE_FLAG_HIT) == MUTE_FLAG_HIT;
-	case PatternBodyBlock::Rhythm_Group_Others:
+	case RhythmGroup::OTHERS:
 		return (m_data[0x2F] & MUTE_FLAG_OTHERS) == MUTE_FLAG_OTHERS;
-	case PatternBodyBlock::Rhythm_Group_All:
+	case RhythmGroup::ALL:
 		return (m_data[0x2F] == 15 && m_data[0x30] == 15);
-	case PatternBodyBlock::Rhythm_Group_Unknown:
+	case RhythmGroup::UNKNOWN:
 	default:
 		return false;
 	}
@@ -512,7 +512,7 @@ bool PatternSetupConfigBlock::handleSysEx(SyxMsg* sysExMsg)
 		// quick sysex seq: mute r part
 		quickSysEx->mutePart(PartR, !isPartMute(PatternBodyBlock::Pattern_Part_R), Parameter::LoadingFile);
 		// quick sysex seq: mute rhy groups
-		for (int i = 0; i < 8; i++) quickSysEx->muteRhytm((RhythmGroup)i, !isRyhGroupMute((PatternBodyBlock::RhythmGroup)i), Parameter::LoadingFile);
+		for (int i = 0; i < 8; i++) quickSysEx->muteRhytm((RhythmGroup)i, !isRyhGroupMute((RhythmGroup)i), Parameter::LoadingFile);
 	}
 	return success;
 }
@@ -526,7 +526,7 @@ MidiMessage PatternSetupConfigBlock::getPartMuteSysEx(uint8 deviceId, AllParts p
 	return msg->toMidiMessage();
 }
 
-MidiMessage PatternSetupConfigBlock::getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group)
+MidiMessage PatternSetupConfigBlock::getRhythmGroupMuteSysEx(uint8 deviceId, RhythmGroup group)
 {
 	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
 	uint8 quickSysExAddress[2]{0x70, 0x02};
@@ -557,8 +557,8 @@ MidiMessageSequence PatternSetupConfigBlock::getInitalMuteStates(uint8 deviceId)
 	// mute initial state for rhythm groups
 	for (int i = 0x00; i < 0x08; i++)
 	{
-		PatternBodyBlock::RhythmGroup rhyGrp = (PatternBodyBlock::RhythmGroup)i;
-		String rhyGrpName(PatternBodyBlock::PatternEventData::getRhythmGroupString(rhyGrp));
+		RhythmGroup rhyGrp = (RhythmGroup)i;
+		String rhyGrpName(RhythmNoteBlock::getRhythmGroupString(rhyGrp));
 		messages.addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, rhyGrpName + ": " + (patternSetupConfigPtr->isRyhGroupMute(rhyGrp) ? "MUTED" : "ON")), (double)i+9);
 		messages.addEvent(getRhythmGroupMuteSysEx(deviceId, rhyGrp), (double)i + 9);
 	}

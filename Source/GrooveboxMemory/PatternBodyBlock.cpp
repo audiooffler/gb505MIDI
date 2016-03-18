@@ -258,34 +258,6 @@ String PatternBodyBlock::PatternEventData::getPartString(PatternBodyBlock::Patte
 	}
 }
 
-String PatternBodyBlock::PatternEventData::getRhythmGroupString(RhythmGroup rhythmGroup)
-{
-	switch (rhythmGroup)
-	{
-	case PatternBodyBlock::Rhythm_Group_BD:
-		return "BD";
-	case PatternBodyBlock::Rhythm_Group_SD:
-		return "SD";
-	case PatternBodyBlock::Rhythm_Group_HH:
-		return "HH";
-	case PatternBodyBlock::Rhythm_Group_CLP:
-		return "CLP";
-	case PatternBodyBlock::Rhythm_Group_CYM:
-		return "CYM";
-	case PatternBodyBlock::Rhythm_Group_TomPerc:
-		return"TOM/PERC";
-	case PatternBodyBlock::Rhythm_Group_Hit:
-		return "HIT";
-	case PatternBodyBlock::Rhythm_Group_Others:
-		return "OTHERS";
-	case PatternBodyBlock::Rhythm_Group_All:
-		return "ALL";
-	case PatternBodyBlock::Rhythm_Group_Unknown:
-	default:
-		return "Unknown";
-	}
-}
-
 PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength) :
 	m_joinedSysexData(nullptr)
 {
@@ -586,9 +558,9 @@ PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getMutePart()
 	return (PatternBodyBlock::PatternPart)bytes[5];
 }
 
-PatternBodyBlock::RhythmGroup PatternBodyBlock::PatternEventData::getMuteRhythmGroup()
+RhythmGroup PatternBodyBlock::PatternEventData::getMuteRhythmGroup()
 {
-	return (PatternBodyBlock::RhythmGroup)bytes[5];
+	return (RhythmGroup)bytes[5];
 }
 
 bool PatternBodyBlock::PatternEventData::getMuteState()	// false=Mute, true=On
@@ -666,7 +638,7 @@ String PatternBodyBlock::PatternEventData::toDebugString()
 		result += String(getMuteState() ? +"Mute" : "On") + "\t";
 		break;
 	case PatternBodyBlock::Evt_RhyMute:
-		result += getRhythmGroupString(getMuteRhythmGroup()) + "\t";
+		result += RhythmNoteBlock::getRhythmGroupString(getMuteRhythmGroup()) + "\t";
 		result += String(getMuteState() ? +"Mute" : "On") + "\t";
 		break;
 	case PatternBodyBlock::Evt_SysExSize:
@@ -821,7 +793,7 @@ void PatternBodyBlock::paintCell(Graphics& g, int rowNumber, int columnId, int w
 				cellText = PatternEventData::getPartString(event->getMutePart());
 				break;
 			case PatternBodyBlock::Evt_RhyMute:
-				cellText = PatternEventData::getRhythmGroupString(event->getMuteRhythmGroup());
+				cellText = RhythmNoteBlock::getRhythmGroupString(event->getMuteRhythmGroup());
 				break;
 			case PatternBodyBlock::Evt_SysExSize:
 				cellText = String(event->getSysExSize());
@@ -1364,7 +1336,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 			}
 			else if (event->getType() == Evt_RhyMute)
 			{
-				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Mute " : "Unmute ") + event->getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
+				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Mute " : "Unmute ") + RhythmNoteBlock::getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
 				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
 			// igonore Evt_SysExSize, Evt_SysExData, Evt_TickInc, Evt_Unknown

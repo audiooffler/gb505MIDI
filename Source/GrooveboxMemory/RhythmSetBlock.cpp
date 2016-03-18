@@ -207,6 +207,33 @@ RhythmNoteBlock::RhythmNoteBlock(uint8 key) :
 		"The Rhythm Tone Delay Level setting is valid only when the Part M-FX SW setting of the rhythm part is set to \"RHY\". Also in this case, if the Delay Level and the Part Delay Level setting of the rhythm part are low, there will be no delay even if the Rhythm Tone Delay Level is raised.");
 }
 
+/*static*/ const String RhythmNoteBlock::getRhythmGroupString(RhythmGroup rhythmGroup)
+{
+	switch (rhythmGroup)
+	{
+	case RhythmGroup::BD:
+		return "BD";
+	case RhythmGroup::SD:
+		return "SD";
+	case RhythmGroup::HH:
+		return "HH";
+	case RhythmGroup::CLP:
+		return "CLP";
+	case RhythmGroup::CYM:
+		return "CYM";
+	case RhythmGroup::TOM_PERC:
+		return"TOM/PERC";
+	case RhythmGroup::HIT:
+		return "HIT";
+	case RhythmGroup::OTHERS:
+		return "OTHERS";
+	case RhythmGroup::ALL:
+		return "ALL";
+	case RhythmGroup::UNKNOWN:
+	default:
+		return "Unknown";
+	}
+}
 
 
 RhythmSetBlock::RhythmSetBlock() :
@@ -215,7 +242,7 @@ RhythmSetBlock::RhythmSetBlock() :
 	m_name = "Rhythm Setup";
 	addSubBlock(new RhythmCommonBlock());
 	// add address blocks for 64 keys
-	for (uint8 i = 0x23; i <= 0x62; i++)
+	for (uint8 i = 35; i <= 98; i++)
 	{
 		addSubBlock(new RhythmNoteBlock(i));
 	}
@@ -224,7 +251,7 @@ RhythmSetBlock::RhythmSetBlock() :
 	// key must be of 35..98 (64 keys)
 RhythmNoteBlock* RhythmSetBlock::getRhythmNoteBlockPtr(uint8 key)
 {
-	return dynamic_cast<RhythmNoteBlock*>(getSubBlock(key - 0x23));
+	return dynamic_cast<RhythmNoteBlock*>(getSubBlock(key - 35 + 1));
 }
 
 RhythmCommonBlock* RhythmSetBlock::getRhythmSetCommonBlockPtr()

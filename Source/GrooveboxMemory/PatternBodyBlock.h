@@ -33,20 +33,6 @@ public:
 		Pattern_Part_Unknown = 0xFF
 	};
 
-	enum RhythmGroup
-	{
-		Rhythm_Group_BD = 0x00,
-		Rhythm_Group_SD = 0x01,
-		Rhythm_Group_HH = 0x02,
-		Rhythm_Group_CLP = 0x03,
-		Rhythm_Group_CYM = 0x04,
-		Rhythm_Group_TomPerc = 0x05,
-		Rhythm_Group_Hit = 0x06,
-		Rhythm_Group_Others = 0x07,
-		Rhythm_Group_All = 0x09,
-		Rhythm_Group_Unknown = 0xFF
-	};
-
 	enum PatternEventType
 	{
 		Evt_Note = 0,
@@ -95,7 +81,6 @@ public:
 		// MM-BB-TT depends on beat signature. for gate times set asLength to true (conting beats and measures from 0 on instead beginning with number 1)
 		String getAbsoluteTickString(unsigned int absoluteTicks, bool asLength = false);
 		static String getPartString(PatternPart part);
-		static String getRhythmGroupString(RhythmGroup rhythmGroup);
 
 		PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength);
 		// constructor for joined sysex (not roland-standard)

@@ -440,7 +440,7 @@ bool QuickSysExBlock::handleSysEx(SyxMsg* msg)
 		{
 			muteRhytm((RhythmGroup)ccDataL, ddDataE == 1, Parameter::Init);
 			grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->setRyhGroupMute(
-				(PatternBodyBlock::RhythmGroup)ccDataL, ddDataE == 1);
+				(RhythmGroup)ccDataL, ddDataE == 1);
 		}
 		else if (bbAddressDataH == 3)
 		{

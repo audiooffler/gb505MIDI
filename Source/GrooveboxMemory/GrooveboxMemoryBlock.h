@@ -146,7 +146,8 @@ enum RhythmGroup
 	TOM_PERC = 5, 
 	HIT		 = 6, 
 	OTHERS	 = 7,
-	ALL		 = 9
+	ALL		 = 9,
+	UNKNOWN = 0xFF
 };
 
 #endif  // GrooveboxMemoryBlock_H_INCLUDED

@@ -89,9 +89,9 @@ public:
 	static const uint8 MUTE_FLAG_HIT = 4;
 	static const uint8 MUTE_FLAG_OTHERS = 8;
 	// sets the mute state for a rhythm group (true) or unmutes it (false)
-	void setRyhGroupMute(PatternBodyBlock::RhythmGroup rhythmGroup, bool setMute = true);
+	void setRyhGroupMute(RhythmGroup rhythmGroup, bool setMute = true);
 	// checks mute state for rhythm group, returns true if muted
-	bool isRyhGroupMute(PatternBodyBlock::RhythmGroup rhythmGroup);
+	bool isRyhGroupMute(RhythmGroup rhythmGroup);
 	// 0=INT,1=EXT,2=BOTH
 	uint8 getSeqOut(PatternBodyBlock::PatternPart part);
 	// 0=INT,1=EXT,2=BOTH
@@ -101,7 +101,7 @@ public:
 	bool handleSysEx(SyxMsg* sysExMsg) override;
 
 	MidiMessage getPartMuteSysEx(uint8 deviceId, AllParts part);
-	MidiMessage getRhythmGroupMuteSysEx(uint8 deviceId, PatternBodyBlock::RhythmGroup group);
+	MidiMessage getRhythmGroupMuteSysEx(uint8 deviceId, RhythmGroup group);
 	MidiMessageSequence getInitalMuteStates(uint8 deviceId);
 private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternSetupConfigBlock)

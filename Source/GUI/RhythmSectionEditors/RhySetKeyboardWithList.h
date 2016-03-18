@@ -22,6 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+#include "../../GrooveboxMemory/Waveforms.h"
 //[/Headers]
 
 
@@ -35,7 +36,8 @@
                                                                     //[/Comments]
 */
 class RhySetKeyboardWithList  : public Component,
-                                public TableListBoxModel
+                                public TableListBoxModel,
+                                public ChangeListener
 {
 public:
     //==============================================================================
@@ -55,6 +57,7 @@ public:
 		RhyWave = 4,
 		GmDrum = 5,
 	};
+	void changeListenerCallback(ChangeBroadcaster* source) override;
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -69,7 +72,8 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<TableListBox> m_drumNamesTable;	
+    ScopedPointer<TableListBox> m_drumNamesTable;
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (RhySetKeyboardWithList)
