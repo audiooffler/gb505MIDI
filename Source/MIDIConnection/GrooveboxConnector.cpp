@@ -428,7 +428,7 @@ void GrooveboxConnector::RecvBulkDumpThread::addReceivedMidiMessage(const MidiMe
 		//DBG(String(sysExCompilation.size()) + " of " + String(estimatedNumOfLinesToReceive)+" "+String(progress,2));
 		setProgress(progress);
 
-		m_timeoutTimer->startTimer(3000);
+		m_timeoutTimer->startTimer(sysexLine->get32BitAddress() == 0x30004700?50:3000);
 	}
 }
 
