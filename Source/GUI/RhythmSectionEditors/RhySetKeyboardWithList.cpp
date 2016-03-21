@@ -51,6 +51,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_drumNamesTable->setHeader(m_tableHeader);
 	m_drumNamesTable->setHeaderHeight(24);
 	m_drumNamesTable->setRowHeight(eachKeyRowHeight);
+	m_drumNamesTable->setOutlineThickness(1);
 	m_drumNamesTable->getViewport()->setSingleStepSizes(0, eachKeyRowHeight);
 
 	m_drumNamesTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);

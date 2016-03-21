@@ -92,7 +92,7 @@ void ParameterTextEditor::setParameter1(Parameter* paramPtr1)
 		GrooveboxMemoryBlock* block = m_params[0]->getBlock();
 		bool findMoreCharacterParametersInARow = true;
 		// register listener for other 11 parameters
-		for (uint16 i = 1; findMoreCharacterParametersInARow==true; i++)
+		for (uint16 i = 1; findMoreCharacterParametersInARow==true && i<block->getTotalSizeRealValue(); i++)
 		{
 			if (Parameter* paramPtrI = block->getParameter(m_params[0]->getAddressOffset() + i))
 			{

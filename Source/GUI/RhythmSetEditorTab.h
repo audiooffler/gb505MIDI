@@ -25,6 +25,8 @@
 //[/Headers]
 
 #include "RhythmSectionEditors/RhySetKeyboardWithList.h"
+#include "GroupWidgets/PanelGroupGrey.h"
+#include "MixerSectionsEditors/MixRhyTrack.h"
 
 
 //==============================================================================
@@ -35,7 +37,8 @@
     Describe your class and how it works here!
                                                                     //[/Comments]
 */
-class RhythmSetEditorTab  : public Component
+class RhythmSetEditorTab  : public Component,
+                            public ButtonListener
 {
 public:
     //==============================================================================
@@ -48,7 +51,11 @@ public:
 
     void paint (Graphics& g) override;
     void resized() override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
+    // Binary resources:
+    static const char* mixer_png;
+    static const int mixer_pngSize;
 
 
 private:
@@ -57,6 +64,13 @@ private:
 
     //==============================================================================
     ScopedPointer<RhySetKeyboardWithList> m_rhySetKeyboardWithList;
+    ScopedPointer<PanelGroupGrey> m_mixGrp;
+    ScopedPointer<MixRhyTrack> m_mixRhyTrack;
+    ScopedPointer<ImageButton> imageButton5;
+    ScopedPointer<Label> m_partNoLabel;
+    ScopedPointer<Label> m_patchNameLabel;
+    ScopedPointer<ParameterTextEditor> m_patchNameEditor;
+    ScopedPointer<Label> m_selectKeyLabel;
 
 
     //==============================================================================

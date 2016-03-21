@@ -48,7 +48,9 @@ MainComponent::MainComponent ()
 	addTab(TRANS("System"), Colours::whitesmoke, new SystemTab(), true);
 	addTab(TRANS("Pattern"), Colours::whitesmoke, new PatternEditorTab(), true);
 	addTab(TRANS("Mixer"), Colours::whitesmoke, new MixerTab(), true);
-	addTab(TRANS("Rhythm"), Colours::whitesmoke, new RhythmSetEditorTab(), true);
+	CustomViewport* rhythmSetViewPort = new CustomViewport("RhythmSetEditor");
+	rhythmSetViewPort->setViewedComponent(new RhythmSetEditorTab(), true);
+	addTab(TRANS("Rhythm"), Colours::whitesmoke, rhythmSetViewPort, true);
 	SynthParts part(SynthPart1);
 	String partNameString;
 	for (int p = (int)SynthPart1; p <= (int)SynthPart7; p++)

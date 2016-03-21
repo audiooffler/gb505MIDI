@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -36,13 +36,16 @@ extern QuickSysExBlock* quickSysEx;
 PatchEditor::PatchEditor (SynthParts part)
     : m_part(part)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_commonGrp3 = new RectangleGrey());
     addAndMakeVisible (m_commonGrp2 = new RectangleGrey());
     addAndMakeVisible (m_mixGrp = new PanelGroupGrey ("mixerGrp","PART "+String(m_part+1)));
     addAndMakeVisible (m_mixPartTrack = new MixPartTrack ((AllParts)m_part));
     addAndMakeVisible (m_commonGrp1 = new RectangleGrey());
     addAndMakeVisible (m_patchNameLabel = new Label ("patchNameLabel",
-                                                     "PATCH NAME"));
+                                                     TRANS("PATCH NAME")));
     m_patchNameLabel->setFont (Font (12.00f, Font::bold));
     m_patchNameLabel->setJustificationType (Justification::centredLeft);
     m_patchNameLabel->setEditable (false, false, false);
@@ -60,11 +63,11 @@ PatchEditor::PatchEditor (SynthParts part)
     m_patchNameEditor->setColour (TextEditor::textColourId, Colours::black);
     m_patchNameEditor->setColour (TextEditor::backgroundColourId, Colour (0xfff2f59b));
     m_patchNameEditor->setColour (TextEditor::outlineColourId, Colours::grey);
-    m_patchNameEditor->setText (String::empty);
+    m_patchNameEditor->setText (String());
 
     addAndMakeVisible (m_voicePriorityLabel = new Label ("voicePriorityLabel",
-                                                         "VOICE\n"
-                                                         "PRIORITY"));
+                                                         TRANS("VOICE\n"
+                                                         "PRIORITY")));
     m_voicePriorityLabel->setFont (Font (12.00f, Font::bold));
     m_voicePriorityLabel->setJustificationType (Justification::centredLeft);
     m_voicePriorityLabel->setEditable (false, false, false);
@@ -79,8 +82,8 @@ PatchEditor::PatchEditor (SynthParts part)
     m_struct34DisplaySlider->setName ("struct34DisplaySlider");
 
     addAndMakeVisible (m_struct12Label = new Label ("struct12Label",
-                                                    "STRUCTURE\n"
-                                                    "TONES 1 & 2"));
+                                                    TRANS("STRUCTURE\n"
+                                                    "TONES 1 & 2")));
     m_struct12Label->setFont (Font (12.00f, Font::bold));
     m_struct12Label->setJustificationType (Justification::centredRight);
     m_struct12Label->setEditable (false, false, false);
@@ -89,7 +92,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_struct12Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_boost12Label = new Label ("boost12Label",
-                                                   "BOOSTER GAIN"));
+                                                   TRANS("BOOSTER GAIN")));
     m_boost12Label->setFont (Font (12.00f, Font::bold));
     m_boost12Label->setJustificationType (Justification::centredRight);
     m_boost12Label->setEditable (false, false, false);
@@ -98,8 +101,8 @@ PatchEditor::PatchEditor (SynthParts part)
     m_boost12Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_struct34Label = new Label ("struct34Label",
-                                                    "STRUCTURE\n"
-                                                    "TONES 3 & 4"));
+                                                    TRANS("STRUCTURE\n"
+                                                    "TONES 3 & 4")));
     m_struct34Label->setFont (Font (12.00f, Font::bold));
     m_struct34Label->setJustificationType (Justification::centredLeft);
     m_struct34Label->setEditable (false, false, false);
@@ -108,7 +111,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_struct34Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_boost34Label = new Label ("boost34Label",
-                                                   "BOOSTER GAIN"));
+                                                   TRANS("BOOSTER GAIN")));
     m_boost34Label->setFont (Font (12.00f, Font::bold));
     m_boost34Label->setJustificationType (Justification::centredLeft);
     m_boost34Label->setEditable (false, false, false);
@@ -118,15 +121,15 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_voicePriorityToggle = new ParameterLedSwitch ("voicePriorityToggle"));
     addAndMakeVisible (m_soloLegatoEditButton = new TextWithArrowButton ("soloLegatoEditButton"));
-    m_soloLegatoEditButton->setButtonText ("SOLO / PORTAMENTO");
+    m_soloLegatoEditButton->setButtonText (TRANS("SOLO / PORTAMENTO"));
     m_soloLegatoEditButton->addListener (this);
 
     addAndMakeVisible (m_toneMixTableButton = new TextWithArrowButton ("toneMixTableButton"));
-    m_toneMixTableButton->setButtonText ("TONE MIX TABLE");
+    m_toneMixTableButton->setButtonText (TRANS("TONE MIX TABLE"));
     m_toneMixTableButton->addListener (this);
 
     addAndMakeVisible (m_partNoLabel = new Label ("partNoLabel",
-                                                  "PART 1"));
+                                                  TRANS("PART 1")));
     m_partNoLabel->setFont (Font (12.00f, Font::bold));
     m_partNoLabel->setJustificationType (Justification::centredLeft);
     m_partNoLabel->setEditable (false, false, false);
@@ -135,7 +138,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_partNoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (imageButton2 = new ImageButton ("new button"));
-    imageButton2->setButtonText (String::empty);
+    imageButton2->setButtonText (String());
     imageButton2->addListener (this);
 
     imageButton2->setImages (false, true, true,
@@ -143,7 +146,7 @@ PatchEditor::PatchEditor (SynthParts part)
                              Image(), 1.000f, Colour (0x4340454a),
                              Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (imageButton3 = new ImageButton ("new button"));
-    imageButton3->setButtonText (String::empty);
+    imageButton3->setButtonText (String());
     imageButton3->addListener (this);
 
     imageButton3->setImages (false, true, true,
@@ -152,7 +155,7 @@ PatchEditor::PatchEditor (SynthParts part)
                              Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (m_toneSelectToggle1 = new BlackToggle());
     addAndMakeVisible (m_toneSelectLabel1 = new Label ("toneSelectLabel",
-                                                       "1"));
+                                                       TRANS("1")));
     m_toneSelectLabel1->setFont (Font (12.00f, Font::bold));
     m_toneSelectLabel1->setJustificationType (Justification::centred);
     m_toneSelectLabel1->setEditable (false, false, false);
@@ -162,7 +165,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSelectToggle2 = new BlackToggle());
     addAndMakeVisible (m_toneSelectLabel2 = new Label ("toneSelectLabel",
-                                                       "2"));
+                                                       TRANS("2")));
     m_toneSelectLabel2->setFont (Font (12.00f, Font::bold));
     m_toneSelectLabel2->setJustificationType (Justification::centred);
     m_toneSelectLabel2->setEditable (false, false, false);
@@ -172,7 +175,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSelectToggle3 = new BlackToggle());
     addAndMakeVisible (m_toneSelectLabel3 = new Label ("toneSelectLabel",
-                                                       "3"));
+                                                       TRANS("3")));
     m_toneSelectLabel3->setFont (Font (12.00f, Font::bold));
     m_toneSelectLabel3->setJustificationType (Justification::centred);
     m_toneSelectLabel3->setEditable (false, false, false);
@@ -182,7 +185,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSelectToggle4 = new BlackToggle());
     addAndMakeVisible (m_toneSelectLabel4 = new Label ("toneSelectLabel",
-                                                       "4"));
+                                                       TRANS("4")));
     m_toneSelectLabel4->setFont (Font (12.00f, Font::bold));
     m_toneSelectLabel4->setJustificationType (Justification::centred);
     m_toneSelectLabel4->setEditable (false, false, false);
@@ -192,7 +195,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSwitchToggle1 = new BlackToggle());
     addAndMakeVisible (m_toneSwitchLabel1 = new Label ("toneSwitchLabel",
-                                                       "1"));
+                                                       TRANS("1")));
     m_toneSwitchLabel1->setFont (Font (12.00f, Font::bold));
     m_toneSwitchLabel1->setJustificationType (Justification::centred);
     m_toneSwitchLabel1->setEditable (false, false, false);
@@ -202,7 +205,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSwitchToggle2 = new BlackToggle());
     addAndMakeVisible (m_toneSwitchLabel2 = new Label ("toneSwitchLabel",
-                                                       "2"));
+                                                       TRANS("2")));
     m_toneSwitchLabel2->setFont (Font (12.00f, Font::bold));
     m_toneSwitchLabel2->setJustificationType (Justification::centred);
     m_toneSwitchLabel2->setEditable (false, false, false);
@@ -212,7 +215,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSwitchToggle3 = new BlackToggle());
     addAndMakeVisible (m_toneSwitchLabel3 = new Label ("toneSwitchLabel",
-                                                       "3"));
+                                                       TRANS("3")));
     m_toneSwitchLabel3->setFont (Font (12.00f, Font::bold));
     m_toneSwitchLabel3->setJustificationType (Justification::centred);
     m_toneSwitchLabel3->setEditable (false, false, false);
@@ -222,7 +225,7 @@ PatchEditor::PatchEditor (SynthParts part)
 
     addAndMakeVisible (m_toneSwitchToggle4 = new BlackToggle());
     addAndMakeVisible (m_toneSwitchLabel4 = new Label ("toneSwitchLabel",
-                                                       "4"));
+                                                       TRANS("4")));
     m_toneSwitchLabel4->setFont (Font (12.00f, Font::bold));
     m_toneSwitchLabel4->setJustificationType (Justification::centred);
     m_toneSwitchLabel4->setEditable (false, false, false);
@@ -231,7 +234,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_toneSwitchLabel4->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_toneSelectMasterLabel = new Label ("toneSelectMasterLabel",
-                                                            "SELECT EDIT TONE"));
+                                                            TRANS("SELECT EDIT TONE")));
     m_toneSelectMasterLabel->setFont (Font (12.00f, Font::bold));
     m_toneSelectMasterLabel->setJustificationType (Justification::centred);
     m_toneSelectMasterLabel->setEditable (false, false, false);
@@ -240,7 +243,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_toneSelectMasterLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_toneSwitchLabel = new Label ("toneSwitchLabel",
-                                                      "LINK TO SELECTED"));
+                                                      TRANS("LINK TO SELECTED")));
     m_toneSwitchLabel->setFont (Font (12.00f, Font::bold));
     m_toneSwitchLabel->setJustificationType (Justification::centred);
     m_toneSwitchLabel->setEditable (false, false, false);
@@ -249,7 +252,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_toneSwitchLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (imageButton4 = new ImageButton ("new button"));
-    imageButton4->setButtonText (String::empty);
+    imageButton4->setButtonText (String());
     imageButton4->addListener (this);
 
     imageButton4->setImages (false, true, true,
@@ -257,7 +260,7 @@ PatchEditor::PatchEditor (SynthParts part)
                              Image(), 1.000f, Colour (0x4340454a),
                              Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (imageButton5 = new ImageButton ("new button"));
-    imageButton5->setButtonText (String::empty);
+    imageButton5->setButtonText (String());
     imageButton5->addListener (this);
 
     imageButton5->setImages (false, true, true,
@@ -265,19 +268,19 @@ PatchEditor::PatchEditor (SynthParts part)
                              Image(), 1.000f, Colour (0x4340454a),
                              Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (m_editOverviewButton = new TextButton ("editOverviewButton"));
-    m_editOverviewButton->setButtonText ("OVERVIEW");
+    m_editOverviewButton->setButtonText (TRANS("OVERVIEW"));
     m_editOverviewButton->setConnectedEdges (Button::ConnectedOnRight);
     m_editOverviewButton->setRadioGroupId (1);
     m_editOverviewButton->addListener (this);
 
     addAndMakeVisible (m_editDetailButton = new TextButton ("editDetailButton"));
-    m_editDetailButton->setButtonText ("DETAIL");
+    m_editDetailButton->setButtonText (TRANS("DETAIL"));
     m_editDetailButton->setConnectedEdges (Button::ConnectedOnLeft);
     m_editDetailButton->setRadioGroupId (1);
     m_editDetailButton->addListener (this);
 
     addAndMakeVisible (m_editModeLabel = new Label ("editModeLabel",
-                                                    "SWITCH EDIT MODE"));
+                                                    TRANS("SWITCH EDIT MODE")));
     m_editModeLabel->setFont (Font (12.00f, Font::bold));
     m_editModeLabel->setJustificationType (Justification::centred);
     m_editModeLabel->setEditable (false, false, false);
@@ -285,7 +288,7 @@ PatchEditor::PatchEditor (SynthParts part)
     m_editModeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_editModeLabel2 = new Label ("editModeLabel",
-                                                     "(ALL TONES)  (EDIT TONE)"));
+                                                     TRANS("(ALL TONES)  (EDIT TONE)")));
     m_editModeLabel2->setFont (Font (12.00f, Font::bold));
     m_editModeLabel2->setJustificationType (Justification::centred);
     m_editModeLabel2->setEditable (false, false, false);
@@ -295,57 +298,57 @@ PatchEditor::PatchEditor (SynthParts part)
     addAndMakeVisible (m_boost12ComboBox = new ParameterComboBox ("boost12ComboBox"));
     m_boost12ComboBox->setEditableText (false);
     m_boost12ComboBox->setJustificationType (Justification::centredRight);
-    m_boost12ComboBox->setTextWhenNothingSelected ("0dB");
-    m_boost12ComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_boost12ComboBox->addItem ("0dB", 1);
-    m_boost12ComboBox->addItem ("+6dB", 2);
-    m_boost12ComboBox->addItem ("+12dB", 3);
-    m_boost12ComboBox->addItem ("+18dB", 4);
+    m_boost12ComboBox->setTextWhenNothingSelected (TRANS("0dB"));
+    m_boost12ComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_boost12ComboBox->addItem (TRANS("0dB"), 1);
+    m_boost12ComboBox->addItem (TRANS("+6dB"), 2);
+    m_boost12ComboBox->addItem (TRANS("+12dB"), 3);
+    m_boost12ComboBox->addItem (TRANS("+18dB"), 4);
     m_boost12ComboBox->addListener (this);
 
     addAndMakeVisible (m_struct12ComboBox = new ParameterComboBox ("struct12ComboBox"));
     m_struct12ComboBox->setEditableText (false);
     m_struct12ComboBox->setJustificationType (Justification::centredRight);
-    m_struct12ComboBox->setTextWhenNothingSelected ("TYPE 01");
-    m_struct12ComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_struct12ComboBox->addItem ("TYPE 01", 1);
-    m_struct12ComboBox->addItem ("TYPE 02", 2);
-    m_struct12ComboBox->addItem ("TYPE 03", 3);
-    m_struct12ComboBox->addItem ("TYPE 04", 4);
-    m_struct12ComboBox->addItem ("TYPE 05", 5);
-    m_struct12ComboBox->addItem ("TYPE 06", 6);
-    m_struct12ComboBox->addItem ("TYPE 07", 7);
-    m_struct12ComboBox->addItem ("TYPE 08", 8);
-    m_struct12ComboBox->addItem ("TYPE 09", 9);
-    m_struct12ComboBox->addItem ("TYPE 10", 10);
+    m_struct12ComboBox->setTextWhenNothingSelected (TRANS("TYPE 01"));
+    m_struct12ComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_struct12ComboBox->addItem (TRANS("TYPE 01"), 1);
+    m_struct12ComboBox->addItem (TRANS("TYPE 02"), 2);
+    m_struct12ComboBox->addItem (TRANS("TYPE 03"), 3);
+    m_struct12ComboBox->addItem (TRANS("TYPE 04"), 4);
+    m_struct12ComboBox->addItem (TRANS("TYPE 05"), 5);
+    m_struct12ComboBox->addItem (TRANS("TYPE 06"), 6);
+    m_struct12ComboBox->addItem (TRANS("TYPE 07"), 7);
+    m_struct12ComboBox->addItem (TRANS("TYPE 08"), 8);
+    m_struct12ComboBox->addItem (TRANS("TYPE 09"), 9);
+    m_struct12ComboBox->addItem (TRANS("TYPE 10"), 10);
     m_struct12ComboBox->addListener (this);
 
     addAndMakeVisible (m_boost34ComboBox = new ParameterComboBox ("boost34ComboBox"));
     m_boost34ComboBox->setEditableText (false);
     m_boost34ComboBox->setJustificationType (Justification::centredRight);
-    m_boost34ComboBox->setTextWhenNothingSelected ("0dB");
-    m_boost34ComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_boost34ComboBox->addItem ("0dB", 1);
-    m_boost34ComboBox->addItem ("+6dB", 2);
-    m_boost34ComboBox->addItem ("+12dB", 3);
-    m_boost34ComboBox->addItem ("+18dB", 4);
+    m_boost34ComboBox->setTextWhenNothingSelected (TRANS("0dB"));
+    m_boost34ComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_boost34ComboBox->addItem (TRANS("0dB"), 1);
+    m_boost34ComboBox->addItem (TRANS("+6dB"), 2);
+    m_boost34ComboBox->addItem (TRANS("+12dB"), 3);
+    m_boost34ComboBox->addItem (TRANS("+18dB"), 4);
     m_boost34ComboBox->addListener (this);
 
     addAndMakeVisible (m_struct34ComboBox = new ParameterComboBox ("struct34ComboBox"));
     m_struct34ComboBox->setEditableText (false);
     m_struct34ComboBox->setJustificationType (Justification::centredRight);
-    m_struct34ComboBox->setTextWhenNothingSelected ("TYPE 01");
-    m_struct34ComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_struct34ComboBox->addItem ("TYPE 01", 1);
-    m_struct34ComboBox->addItem ("TYPE 02", 2);
-    m_struct34ComboBox->addItem ("TYPE 03", 3);
-    m_struct34ComboBox->addItem ("TYPE 04", 4);
-    m_struct34ComboBox->addItem ("TYPE 05", 5);
-    m_struct34ComboBox->addItem ("TYPE 06", 6);
-    m_struct34ComboBox->addItem ("TYPE 07", 7);
-    m_struct34ComboBox->addItem ("TYPE 08", 8);
-    m_struct34ComboBox->addItem ("TYPE 09", 9);
-    m_struct34ComboBox->addItem ("TYPE 10", 10);
+    m_struct34ComboBox->setTextWhenNothingSelected (TRANS("TYPE 01"));
+    m_struct34ComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_struct34ComboBox->addItem (TRANS("TYPE 01"), 1);
+    m_struct34ComboBox->addItem (TRANS("TYPE 02"), 2);
+    m_struct34ComboBox->addItem (TRANS("TYPE 03"), 3);
+    m_struct34ComboBox->addItem (TRANS("TYPE 04"), 4);
+    m_struct34ComboBox->addItem (TRANS("TYPE 05"), 5);
+    m_struct34ComboBox->addItem (TRANS("TYPE 06"), 6);
+    m_struct34ComboBox->addItem (TRANS("TYPE 07"), 7);
+    m_struct34ComboBox->addItem (TRANS("TYPE 08"), 8);
+    m_struct34ComboBox->addItem (TRANS("TYPE 09"), 9);
+    m_struct34ComboBox->addItem (TRANS("TYPE 10"), 10);
     m_struct34ComboBox->addListener (this);
 
 
@@ -492,6 +495,9 @@ void PatchEditor::paint (Graphics& g)
 
 void PatchEditor::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_commonGrp3->setBounds (1076, 0, 248, 100);
     m_commonGrp2->setBounds (708, 0, 360, 100);
     m_mixGrp->setBounds (0, 103, 80, 572);
@@ -509,7 +515,7 @@ void PatchEditor::resized()
     m_voicePriorityToggle->setBounds (1244, 44, 72, 32);
     m_soloLegatoEditButton->setBounds (1088, 28, 140, 20);
     m_toneMixTableButton->setBounds (1088, 72, 140, 20);
-    m_partNoLabel->setBounds (4, 8, 72, 24);
+    m_partNoLabel->setBounds (4, 4, 72, 24);
     imageButton2->setBounds (1164, 8, 16, 16);
     imageButton3->setBounds (1152, 52, 16, 16);
     m_toneSelectToggle1->setBounds (220, 30, 25, 17);
@@ -795,7 +801,7 @@ BEGIN_JUCER_METADATA
               buttonText="TONE MIX TABLE" connectedEdges="0" needsCallback="1"
               radioGroupId="0"/>
   <LABEL name="partNoLabel" id="51143029c4acb8f6" memberName="m_partNoLabel"
-         virtualName="" explicitFocusOrder="0" pos="4 8 72 24" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="4 4 72 24" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PART 1" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="33"/>
