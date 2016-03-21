@@ -48,7 +48,6 @@ public:
 		Evt_SysExSize = 10,
 		Evt_SysExData = 11,
 		Evt_NoteOff = 12, // not in original roland format, but producable for conversion to midi
-		Evt_SysExJoined = 13, // not in original roland format, but producable for conversion to midi
 		Evt_Unknown = -1
 	};
 
@@ -83,8 +82,6 @@ public:
 		static String getPartString(PatternPart part);
 
 		PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength);
-		// constructor for joined sysex (not roland-standard)
-		PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex);
 		// constructor for note off
 		PatternEventData(unsigned long absTick, int8 key, uint8 part);
 		// constructor for free data enty
@@ -96,7 +93,6 @@ public:
 
 		uint8 bytes[8];
 		unsigned long absoluteTick;	// set on construction by mostRecentAbsoluteTick + lastRelativeTickIncrement
-		ScopedPointer<MemoryBlock> m_joinedSysexData;
 		bool isNoteOff = false;
 
 		uint8 getRelativeTickIncrement();
@@ -240,10 +236,6 @@ private:
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 	HashMap<int, String> m_midiCCNames;
 	HashMap<int, String> m_keyDrumGroupes;
-	//uint8 m_beatSigNumerator = 4; // = beats per measure
-	//uint8 m_beatSigDenominator = 4;
-	// temporary data accumulator for transcoding groovebox sequencer sysex (on mute ctrl part) data to midi sysex events
-	MemoryBlock sysExBuilder;
 	unsigned int sysExBuilderByteIndex = 0;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PatternBodyBlock)
 };

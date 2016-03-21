@@ -51,7 +51,7 @@ public:
 	void /*TableListBoxModel::*/paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	enum drumNamesTableColumnIds
 	{
-		OctaveC = 1,
+		NoteName = 1,
 		KeyNo = 2,
 		RhyGrp = 3,
 		RhyWave = 4,

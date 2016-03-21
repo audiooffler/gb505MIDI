@@ -43,7 +43,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 
     //[UserPreSize]
 	int eachKeyRowHeight = 15;
-	m_tableHeader->addColumn("", OctaveC, 20, 20, 20, 1);
+	m_tableHeader->addColumn("", NoteName, 25, 25, 25, 1);
 	m_tableHeader->addColumn("Key", KeyNo, 30, 30, 30, 1);
 	m_tableHeader->addColumn("Rhy Group", RhyGrp, 80, 80, 80, 1);
 	m_tableHeader->addColumn("Waveform", RhyWave, 140, 140, 140, 1);
@@ -51,6 +51,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_drumNamesTable->setHeader(m_tableHeader);
 	m_drumNamesTable->setHeaderHeight(24);
 	m_drumNamesTable->setRowHeight(eachKeyRowHeight);
+	m_drumNamesTable->getViewport()->setSingleStepSizes(0, eachKeyRowHeight);
 
 	m_drumNamesTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_drumNamesTable->setColour(TableListBox::outlineColourId, Colours::grey);
@@ -63,7 +64,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	RhythmSetBlock* rhythmSetBlock = grooveboxMemory->getRhythmSetBlock();
 	for (int key = 35; key <= 98; key++)
 	{
-		RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr(key);
+		RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)key);
 		Parameter* waveGroupId = rhythmNoteBlock->getParameter(0x02);
 		Parameter* waveNumber = rhythmNoteBlock->getParameter(0x03);
 		waveGroupId->addChangeListener(this);
@@ -102,7 +103,7 @@ void RhySetKeyboardWithList::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_drumNamesTable->setBounds (0, 0, getWidth() - 0, getHeight() - 8);
+    m_drumNamesTable->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -115,7 +116,7 @@ int RhySetKeyboardWithList::getNumRows()
 	return 64; // (35..98)
 }
 
-void RhySetKeyboardWithList::paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
+void RhySetKeyboardWithList::paintRowBackground(Graphics& g, int rowNumber, int width, int /*height*/, bool rowIsSelected)
 {
 	if (rowIsSelected)
 	{
@@ -148,16 +149,16 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	bool isBlack = MidiMessage::isMidiNoteBlack(key);
 
 	RhythmSetBlock* rhythmSetBlock = grooveboxMemory->getRhythmSetBlock();
-	RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr(key);
+	RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)key);
 	Parameter* waveGroupId = rhythmNoteBlock->getParameter(0x02);
 	Parameter* waveNumber = rhythmNoteBlock->getParameter(0x03);
 	String waveText = waveForms->getButtonText(waveForms->getGroupForId(waveGroupId->getValue()), waveNumber->getValue());
 
 	switch (columnId)
 	{
-	case OctaveC:
-		if (key % 12 == 0)
-			g.drawText(MidiMessage::getMidiNoteName(key,false,true,4), 0, 0, width-2, height, Justification::centredRight, false);
+	case NoteName:
+		if (key % 12 == 0) g.setFont(Font((float)m_drumNamesTable->getRowHeight(), Font::bold));
+		g.drawText(MidiMessage::getMidiNoteName(key, true, true, 4), 2, 0, width - 2, height, Justification::centredLeft, false);
 		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case KeyNo:
@@ -173,23 +174,23 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 		}
 		else
 		{
-			// between two white leys
-			if (!MidiMessage::isMidiNoteBlack(key - 1))
+			// between two white keys, but not between b and c (already dashed bg line)
+			if (!MidiMessage::isMidiNoteBlack(key - 1) && key % 12 != 0)
 			{
-				g.drawRect(1.0f, 0.0f, (float)width-1.0f, 0.5f);
+				g.drawRect(0.0f, 0.0f, (float)width, 0.5f);
 			}
 		}
 		g.drawText(String(key), 0, 0, width-2, height, Justification::centredRight, false);
 		g.drawRect((float)width-1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case RhyGrp:
-		g.drawText(rhyGrpString, 4.0f, 0.0f, width-4.0f, (float)height, Justification::centredLeft, false);
+		g.drawText(rhyGrpString, 4, 0, width-4, height, Justification::centred, false);
 		break;
-	case RhyWave: 
+	case RhyWave:
 		if (rowIsSelected) g.setFont(Font((float)m_drumNamesTable->getRowHeight(),Font::bold));
-		g.drawText(waveText, 2.0f, 0, width-2.0f, height, Justification::centredLeft, false);
+		g.drawText(waveText, 2, 0, width-2, height, Justification::centredLeft, false);
 		break;
-	case GmDrum: g.drawText(MidiMessage::getRhythmInstrumentName(key), 2.0f, 0, width-2.0f, height, Justification::centredLeft, false);
+	case GmDrum: g.drawText(MidiMessage::getRhythmInstrumentName(key), 2, 0, width, height, Justification::centredLeft, false);
 		break;
 	}
 }
@@ -229,7 +230,7 @@ BEGIN_JUCER_METADATA
           strokeColour="solid: ff000000"/>
   </BACKGROUND>
   <GENERICCOMPONENT name="drumNamesTable" id="92f14936e8fcfe4a" memberName="m_drumNamesTable"
-                    virtualName="" explicitFocusOrder="0" pos="0 0 0M 8M" posRelativeH="46feacaa0f470177"
+                    virtualName="" explicitFocusOrder="0" pos="0 0 0M 0M" posRelativeH="46feacaa0f470177"
                     class="TableListBox" params="&quot;drumNamesTable&quot;, this"/>
 </JUCER_COMPONENT>
 

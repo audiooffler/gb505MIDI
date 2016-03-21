@@ -125,7 +125,6 @@ PatternBodyBlock::PatternBodyBlock() :
 
 PatternBodyBlock::~PatternBodyBlock()
 {
-	sysExBuilder.reset();
 	m_playerThread->stopThread(500);
 }
 
@@ -156,30 +155,6 @@ bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)
 
 		PatternEventData* newPatternEvent = new PatternEventData(patternDataBlock+i, patternDataBlockSize-i);
 		m_sequenceBlocks.add(newPatternEvent);
-		//DBG(newPatternEvent->toDebugString());
-		// sysex: min 2 byte (F0 + F7), default F0 + 12 more bytes (incl CHK + F7), max: F0 + 510 more (incl CHK & F7)
-		if (newPatternEvent->getType() == Evt_SysExSize)
-		{
-			sysExBuilder.setSize(newPatternEvent->getSysExSize());
-			sysExBuilderByteIndex = 0;
-		}
-		else if (newPatternEvent->getType() == Evt_SysExData)
-		{
-			for (int b = 4; b < 8 && sysExBuilderByteIndex<sysExBuilder.getSize(); b++)
-			{
-				sysExBuilder[sysExBuilderByteIndex] = newPatternEvent->bytes[b];
-				sysExBuilderByteIndex++;
-				if (newPatternEvent->bytes[b] == 0xF7)	// SYSEX EOX --> create midi message
-				{
-					// add additional merged sysex
-					PatternEventData* joinedSysExEvent = new PatternEventData(newPatternEvent->absoluteTick, &sysExBuilder);
-					m_sequenceBlocks.add(joinedSysExEvent);
-					sysExBuilder.setSize(0);
-					sysExBuilderByteIndex = 0;
-					break;
-				}
-			}
-		}
 	}
 	refreshFilteredContent();
 	return true;
@@ -258,8 +233,7 @@ String PatternBodyBlock::PatternEventData::getPartString(PatternBodyBlock::Patte
 	}
 }
 
-PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength) :
-	m_joinedSysexData(nullptr)
+PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData, unsigned int pointedDataRestLength)
 {
 	for (unsigned int j = 0; j < 8; j++) 
 	{
@@ -270,17 +244,7 @@ PatternBodyBlock::PatternEventData::PatternEventData(const uint8* pointerToData,
 	PatternEventData::lastRelativeTickIncrement = getRelativeTickIncrement();
 }
 
-PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MemoryBlock* joinedSysex) :
-	m_joinedSysexData (new MemoryBlock)
-{
-	for (unsigned int j = 0; j < 8; j++) { bytes[j] = 0; }
-	absoluteTick = absTick;
-	m_joinedSysexData->setSize(joinedSysex->getSize());
-	m_joinedSysexData->copyFrom(joinedSysex->getData(), 0, joinedSysex->getSize());
-}
-
-PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8 key, uint8 part):
-	m_joinedSysexData(nullptr)
+PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8 key, uint8 part)
 {
 	bytes[0] = 0; // no valid tick inc for note-offs!
 	bytes[1] = key;
@@ -296,7 +260,6 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, int8
 
 // constructor for free data enty
 PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, const uint8 byte0, const uint8 byte1, const uint8 byte2, const uint8 byte3 /*= 0*/, const uint8 byte4 /*= 0*/, const uint8 byte5 /*= 0*/, const uint8 byte6 /*= 0*/, const uint8 byte7 /*= 0*/) :
-	m_joinedSysexData(nullptr),
 	isNoteOff(false)
 {
 	bytes[0] = byte0;
@@ -312,7 +275,6 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, cons
 
 // constructor from midi event, relative tick will be null, just absolue tick set. so in PatternBodyBlock ticks must be refreshed after adding these
 PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, MidiMessageSequence::MidiEventHolder* midiEventHolder):
-	m_joinedSysexData(nullptr),
 	isNoteOff(false)
 {
 	// init with zeroes
@@ -369,7 +331,6 @@ PatternBodyBlock::PatternEventData::PatternEventData(unsigned long absTick, Midi
 
 PatternBodyBlock::PatternEventData::~PatternEventData()
 {
-	if (m_joinedSysexData != nullptr)m_joinedSysexData->reset();
 }
 
 uint8 PatternBodyBlock::PatternEventData::getRelativeTickIncrement()
@@ -402,10 +363,6 @@ PatternBodyBlock::PatternEventType PatternBodyBlock::PatternEventData::getType()
 		if (bytes[1] >= 0x00 && bytes[1] <= 0x7F)	// note event
 		{
 			return Evt_Note;
-		}
-		else if (m_joinedSysexData!=nullptr && m_joinedSysexData->getSize() > 0)
-		{
-			return Evt_SysExJoined;
 		}
 		else
 		{
@@ -445,8 +402,6 @@ String PatternBodyBlock::PatternEventData::getTypeString()
 		return "SYX-SIZ";
 	case PatternBodyBlock::Evt_SysExData:
 		return "SYX-DAT";
-	case PatternBodyBlock::Evt_SysExJoined:
-		return "SYSEX";
 	case PatternBodyBlock::Evt_Unknown:
 	default:
 		return "TYPE?";
@@ -481,8 +436,7 @@ PatternBodyBlock::PatternPart PatternBodyBlock::PatternEventData::getPart()
 		case 0x09:	return Pattern_Part_R;
 		case 0x0E:	return Pattern_MuteCtrl;
 		default:	
-			if (getType() == Evt_SysExJoined) return Pattern_MuteCtrl;
-			else return Pattern_Part_Unknown;
+			return Pattern_Part_Unknown;
 		}
 	}
 }
@@ -658,11 +612,7 @@ MidiMessage PatternBodyBlock::PatternEventData::toMidiMessage()
 {
 	if (getType() == Evt_Unknown || getPart() == Pattern_Part_Unknown) return MidiMessage(); // just an active sense message (empty sysex)
 
-	if (getType() == PatternBodyBlock::Evt_SysExJoined)
-	{
-		return MidiMessage::createSysExMessage((m_joinedSysexData->getData()), m_joinedSysexData->getSize());
-	}
-	else if (getType() == PatternBodyBlock::Evt_PartMute)
+	if (getType() == PatternBodyBlock::Evt_PartMute)
 	{
 		uint8 quickSysExAddress[2]{0x70, 0x01};
 		uint8 quickSysExData[2]{bytes[5], bytes[7]};
@@ -1072,7 +1022,7 @@ bool PatternBodyBlock::filter(PatternEventData* event) const
 	{
 		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMute)->getValue() == 0) return false;
 	}
-	if (event->getType() == PatternEventType::Evt_SysExData || event->getType() == PatternEventType::Evt_SysExSize || event->getType() == PatternEventType::Evt_SysExJoined)
+	if (event->getType() == PatternEventType::Evt_SysExData || event->getType() == PatternEventType::Evt_SysExSize)
 	{
 		if (m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->getValue() == 0) return false;
 	}
@@ -1325,7 +1275,7 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 				c_trackPointer->addEvent(MidiMessage::noteOff(event->getMidiChannel(), event->getNoteNumber()), event->absoluteTick + (2.0*oneMeasure) + event->getNoteGateTicks());
 			}
-			else if (event->getType() == Evt_PAft || event->getType() == Evt_Cc || event->getType() == Evt_Pc || event->getType() == Evt_CAft || event->getType() == Evt_PBend || event->getType() == Evt_Tempo || event->getType() == Evt_SysExJoined)
+			else if (event->getType() == Evt_PAft || event->getType() == Evt_Cc || event->getType() == Evt_Pc || event->getType() == Evt_CAft || event->getType() == Evt_PBend || event->getType() == Evt_Tempo)
 			{
 				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
@@ -1339,7 +1289,29 @@ MidiFile* PatternBodyBlock::convertToMidiFile()
 				c_trackPointer->addEvent(SyxMsg::createTextMetaEvent(SyxMsg::TextEvent, String(event->getMuteState() ? "Mute " : "Unmute ") + RhythmNoteBlock::getRhythmGroupString(event->getMuteRhythmGroup()), event->absoluteTick + oneMeasure));
 				c_trackPointer->addEvent(event->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
 			}
-			// igonore Evt_SysExSize, Evt_SysExData, Evt_TickInc, Evt_Unknown
+			else if (event->getType() == Evt_SysExSize)
+			{
+				unsigned int sysExDataSize = event->getSysExSize();
+				if (sysExDataSize > 0)
+				{
+					unsigned int sysExDataBytesToWrite = sysExDataSize;
+					MemoryBlock sysExBuilderMemBlock;
+					// check the following events for SysExData;
+					while ((i + 1) < m_sequenceBlocks.size() && m_sequenceBlocks[i + 1]->getType() == Evt_SysExData && sysExDataBytesToWrite > 0)
+					{
+						event = m_sequenceBlocks[i + 1];
+						sysExBuilderMemBlock.append(&(event->bytes[4]), jmin<int>(sysExDataBytesToWrite, 4));
+						sysExDataBytesToWrite -= (sysExDataBytesToWrite > 3) ? 4 : sysExDataBytesToWrite;
+						i++;
+					}
+					if (sysExBuilderMemBlock.getSize() == sysExDataSize)
+					{
+						ScopedPointer<SyxMsg> msg = new SyxMsg((uint8*)sysExBuilderMemBlock.getData(), sysExDataSize, true);
+						c_trackPointer->addEvent(msg->toMidiMessage(), event->absoluteTick + (2.0*oneMeasure));
+					}
+				}
+			}
+			// igonore Evt_TickInc, Evt_Unknown
 		}
 	}
 	if (event!=nullptr)
@@ -1367,7 +1339,7 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 	{
 		event = m_sequenceBlocks[i];
 		// skip events that were built after loading
-		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
+		if (event->getType() == Evt_NoteOff) continue;
 		allEventsAs8Bit.append(event->bytes, 8);
 	}
 
@@ -1672,6 +1644,60 @@ void PatternBodyBlock::loadMidiFile(File &file)
 					if (current->message.isNoteOnOrOff()) beforeFirstNoteOnChannel[part] = false;
 				}
 			}
+			else if (current->message.isSysEx())
+			{	
+				ScopedPointer<SyxMsg> syx = new SyxMsg(current->message);
+				// quick sysex mute 
+				if (syx->getType() == SyxMsg::MessageType::Type_DT1_Quick && (syx->getAddressOffset() >> 8) == 0x70)
+				{
+					uint32 size;
+					uint8* data;
+					syx->getSysExDataArrayPtr(&data, size);
+					uint8 ccDataL = data[0];
+					uint8 ddDataE = data[1];
+					PatternEventData* newEvent = new PatternEventData((unsigned long)current->message.getTimeStamp() - patternBodyStartTickInMidi /*absTicks*/,0,0,0);
+					newEvent->bytes[1] = 0x93; // mute event type
+					newEvent->bytes[2] = 0x0E; // mute ctrl part
+					newEvent->bytes[3] = 0x0E; // mute ctrl part
+					newEvent->bytes[4] = syx->getAddressOffset() & 0xFF; // 1 = part mute, 2 = rhy mute
+					newEvent->bytes[5] = ccDataL; // part or rhythm group
+					newEvent->bytes[6] = 0;
+					newEvent->bytes[7] = ddDataE; // 0=mute, 1=on;
+					m_sequenceBlocks.add(newEvent);
+				}
+				
+				else
+				{
+					uint32 size;
+					uint8* data;
+					syx->getAsSysExData(&data, size);
+					PatternEventData* newSysExSizeEvent = new PatternEventData((unsigned long)current->message.getTimeStamp() - patternBodyStartTickInMidi /*absTicks*/, 0, 0, 0);
+					newSysExSizeEvent->bytes[1] = 0x95; // sysex size event type
+					newSysExSizeEvent->bytes[2] = 0x0E; // mute ctrl part
+					newSysExSizeEvent->bytes[3] = 0x0E; // mute ctrl part
+					newSysExSizeEvent->bytes[4] = (size >> 24) & 0xFF;
+					newSysExSizeEvent->bytes[5] = (size >> 16) & 0xFF;
+					newSysExSizeEvent->bytes[6] = (size >> 8) & 0xFF;
+					newSysExSizeEvent->bytes[7] = size & 0xFF;
+					m_sequenceBlocks.add(newSysExSizeEvent);
+					unsigned int sIdx = 0;
+					// create events of 4 data bytes
+					for (int d = 0; d < (int)(ceilf((float)size / 4)); d++)
+					{
+						PatternEventData* newSysExDataEvent = new PatternEventData((unsigned long)current->message.getTimeStamp() - patternBodyStartTickInMidi /*absTicks*/, 0, 0, 0);
+						newSysExDataEvent->bytes[1] = 0x96; // sysex data event type
+						newSysExDataEvent->bytes[2] = 0x0E; // mute ctrl part
+						newSysExDataEvent->bytes[3] = 0x0E; // mute ctrl part
+						// copy bytes from sysex to event (if exceeding size, fill up with zereos)
+						for (int b = 4; b < 8; b++)
+						{
+							newSysExDataEvent->bytes[(uint8)b] = sIdx < size ? data[sIdx] : 0;
+							sIdx++;
+						}
+						m_sequenceBlocks.add(newSysExDataEvent);
+					}
+				}
+			}
 		}
 	}
 
@@ -1691,7 +1717,7 @@ bool PatternBodyBlock::saveRawBinary(File& file)
 	{
 		event = m_sequenceBlocks[i];
 		// skip events that were built after loading
-		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
+		if (event->getType() == Evt_NoteOff) continue;
 		
 		file.appendData(event->bytes, 8);
 	}
@@ -1707,7 +1733,7 @@ bool PatternBodyBlock::saveRawCsv(File& file)
 	{
 		event = m_sequenceBlocks[i];
 		// skip events that were built after loading
-		if (event->getType() == Evt_SysExJoined || event->getType() == Evt_NoteOff) continue;
+		if (event->getType() == Evt_NoteOff) continue;
 
 		file.appendText(String::toHexString(event->bytes, 8).toUpperCase() + (i + 1 < m_sequenceBlocks.size() ? "\r\n" : ""));
 	}

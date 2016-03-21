@@ -73,7 +73,7 @@ void RhythmSetEditorTab::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_rhySetKeyboardWithList->setBounds (4, 4, 420, getHeight() - 8);
+    m_rhySetKeyboardWithList->setBounds (4, 4, 424, getHeight() - 8);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -99,7 +99,7 @@ BEGIN_JUCER_METADATA
                  fixedSize="1" initialWidth="1328" initialHeight="675">
   <BACKGROUND backgroundColour="ff303030"/>
   <JUCERCOMP name="rhySetKeyboardWithList" id="3c1035db3aaf52f0" memberName="m_rhySetKeyboardWithList"
-             virtualName="" explicitFocusOrder="0" pos="4 4 420 8M" sourceFile="RhythmSectionEditors/RhySetKeyboardWithList.cpp"
+             virtualName="" explicitFocusOrder="0" pos="4 4 424 8M" sourceFile="RhythmSectionEditors/RhySetKeyboardWithList.cpp"
              constructorParams=""/>
 </JUCER_COMPONENT>
 

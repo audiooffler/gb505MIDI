@@ -1038,18 +1038,18 @@ ApplicationCommandTarget* PatternEditorTab::getNextCommandTarget()
 }
 
 // This must return a complete list of commands that this target can handle.
-void PatternEditorTab::getAllCommands(Array< CommandID > &commands)
+void PatternEditorTab::getAllCommands(Array< CommandID > &/*commands*/)
 {
 	// this returns the set of all commands that this target can perform..
 }
 
 //This must provide details about one of the commands that this target can perform.
-void PatternEditorTab::getCommandInfo(CommandID commandID, ApplicationCommandInfo &result)
+void PatternEditorTab::getCommandInfo(CommandID /*commandID*/, ApplicationCommandInfo &/*result*/)
 {
 }
 
 // This must actually perform the specified command.
-bool PatternEditorTab::perform(const InvocationInfo &info)
+bool PatternEditorTab::perform(const InvocationInfo &/*info*/)
 {
 	return false;
 }
