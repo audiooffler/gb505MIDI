@@ -42,7 +42,7 @@ PatchToneEditorAdvanced::PatchToneEditorAdvanced (SynthParts part, Tone tone)
     addAndMakeVisible (m_controlMatrix = new PatchControllerMatrixEditor ("CONTROL MATRIX", m_part, m_tone));
     addAndMakeVisible (m_fxm = new FxmEditor ("FXM", m_part, m_tone));
     addAndMakeVisible (m_delay = new ToneDelayEditor ("DELAY", m_part, m_tone));
-    addAndMakeVisible (m_wave = new WaveEditor ("WAVE", m_part, m_tone));
+    addAndMakeVisible (m_wave = new WaveEditor ("WAVE", (AllParts) m_part, m_tone));
     addAndMakeVisible (component = new RectangleTransp());
 
     //[UserPreSize]
@@ -168,7 +168,7 @@ BEGIN_JUCER_METADATA
              constructorParams="&quot;DELAY&quot;, m_part, m_tone"/>
   <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
              explicitFocusOrder="0" pos="0 172 104 136" sourceFile="WaveEditor.cpp"
-             constructorParams="&quot;WAVE&quot;, m_part, m_tone"/>
+             constructorParams="&quot;WAVE&quot;, (AllParts) m_part, m_tone"/>
   <JUCERCOMP name="" id="587e664fd3d5400a" memberName="component" virtualName=""
              explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/RectangleTransp.cpp"
              constructorParams=""/>

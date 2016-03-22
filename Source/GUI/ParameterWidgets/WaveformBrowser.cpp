@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -31,12 +31,15 @@ extern Waveforms* waveForms;
 //[/MiscUserDefs]
 
 //==============================================================================
-WaveformBrowser::WaveformBrowser (SynthParts part, Tone tone, Waveforms::WaveGroup group, int waveIndexInGroup)
-    : m_part (part), m_tone (tone), m_initialGroup(group), m_initialIndexInGroup(waveIndexInGroup)
+WaveformBrowser::WaveformBrowser (AllParts part, int toneNumber, Waveforms::WaveGroup group, int waveIndexInGroup)
+    : m_part (part), m_toneNumber (toneNumber), m_initialGroup(group), m_initialIndexInGroup(waveIndexInGroup)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_waveformsAllGroupsViewport = new Viewport ("waveformsAllGroupsViewport"));
     m_waveformsAllGroupsViewport->setScrollBarsShown (true, false);
-    m_waveformsAllGroupsViewport->setViewedComponent (new WaveformsAllGroups (grooveboxConnector->getActiveConnectionGrooveboxModel(), m_part, m_tone));
+    m_waveformsAllGroupsViewport->setViewedComponent (new WaveformsAllGroups (grooveboxConnector->getActiveConnectionGrooveboxModel(), m_part, m_toneNumber));
 
     addAndMakeVisible (m_cancelButton = new TextButton ("cancelButton"));
     m_cancelButton->setTooltip (TRANS("Restore previously selected waveform and return."));
@@ -56,7 +59,7 @@ WaveformBrowser::WaveformBrowser (SynthParts part, Tone tone, Waveforms::WaveGro
     m_highlightTextEditor->setScrollbarsShown (true);
     m_highlightTextEditor->setCaretVisible (true);
     m_highlightTextEditor->setPopupMenuEnabled (true);
-    m_highlightTextEditor->setText (String::empty);
+    m_highlightTextEditor->setText (String());
 
     addAndMakeVisible (m_highlightLabel = new Label ("highlightLabel",
                                                      TRANS("Find and Highlight Tags:")));
@@ -82,7 +85,7 @@ WaveformBrowser::WaveformBrowser (SynthParts part, Tone tone, Waveforms::WaveGro
     m_prevWaveformText->setCaretVisible (false);
     m_prevWaveformText->setPopupMenuEnabled (true);
     m_prevWaveformText->setColour (TextEditor::backgroundColourId, Colour (0xffe5e5e5));
-    m_prevWaveformText->setText (String::empty);
+    m_prevWaveformText->setText (String());
 
     addAndMakeVisible (m_prevWaveformLabel2 = new Label ("prevWaveformLabel",
                                                          TRANS("New Selected Waveform:")));
@@ -100,7 +103,7 @@ WaveformBrowser::WaveformBrowser (SynthParts part, Tone tone, Waveforms::WaveGro
     m_newWaveformText->setCaretVisible (false);
     m_newWaveformText->setPopupMenuEnabled (true);
     m_newWaveformText->setColour (TextEditor::backgroundColourId, Colour (0xffe5e5e5));
-    m_newWaveformText->setText (String::empty);
+    m_newWaveformText->setText (String());
 
 
     //[UserPreSize]
@@ -182,6 +185,9 @@ void WaveformBrowser::paint (Graphics& g)
 
 void WaveformBrowser::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_waveformsAllGroupsViewport->setBounds (8, 8, 854, 660);
     m_cancelButton->setBounds (972, 640, 92, 24);
     m_okButton->setBounds (872, 640, 92, 24);
@@ -265,8 +271,8 @@ WaveformsAllGroups* WaveformBrowser::getWaveformsAllGroupsComponent()
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="WaveformBrowser" componentName=""
-                 parentClasses="public Component" constructorParams="SynthParts part, Tone tone, Waveforms::WaveGroup group, int waveIndexInGroup"
-                 variableInitialisers="m_part (part), m_tone (tone), m_initialGroup(group), m_initialIndexInGroup(waveIndexInGroup)"
+                 parentClasses="public Component" constructorParams="AllParts part, int toneNumber, Waveforms::WaveGroup group, int waveIndexInGroup"
+                 variableInitialisers="m_part (part), m_toneNumber (toneNumber), m_initialGroup(group), m_initialIndexInGroup(waveIndexInGroup)"
                  snapPixels="2" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="1070" initialHeight="676">
   <BACKGROUND backgroundColour="ffeeddff">

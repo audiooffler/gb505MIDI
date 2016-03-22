@@ -27,6 +27,7 @@
 #include "RhythmSectionEditors/RhySetKeyboardWithList.h"
 #include "GroupWidgets/PanelGroupGrey.h"
 #include "MixerSectionsEditors/MixRhyTrack.h"
+#include "PatchSectionEditors/WaveEditor.h"
 
 
 //==============================================================================
@@ -38,6 +39,7 @@
                                                                     //[/Comments]
 */
 class RhythmSetEditorTab  : public Component,
+                            public ChangeListener,
                             public ButtonListener
 {
 public:
@@ -47,6 +49,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+    void changeListenerCallback(ChangeBroadcaster* source) override;
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -60,6 +63,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
+    uint8 m_currentKey=35;
     //[/UserVariables]
 
     //==============================================================================
@@ -71,6 +75,7 @@ private:
     ScopedPointer<Label> m_patchNameLabel;
     ScopedPointer<ParameterTextEditor> m_patchNameEditor;
     ScopedPointer<Label> m_selectKeyLabel;
+    ScopedPointer<WaveEditor> m_wave;
 
 
     //==============================================================================

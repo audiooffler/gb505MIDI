@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -30,7 +30,6 @@
 #include "../ParameterWidgets/ParameterEnvelopeSlider.h"
 #include "../ParameterWidgets/ParameterVelCurveDisplay.h"
 #include "../ParameterWidgets/TextWithArrowButton.h"
-#include "LfoEditorAdvanced.h"
 //[/Headers]
 
 #include "../GroupWidgets/PanelGroupGrey.h"
@@ -52,11 +51,12 @@ class WaveEditor  : public Component,
 {
 public:
     //==============================================================================
-    WaveEditor (const String &componentName, SynthParts part, Tone tone);
+    WaveEditor (const String &componentName, AllParts part, int toneNumber);
     ~WaveEditor();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
+	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
 	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
 	class WaveFormDlgCallback : public ModalComponentManager::Callback
 	{
@@ -76,10 +76,10 @@ public:
 	};
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void buttonClicked (Button* buttonThatWasClicked);
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
 
     // Binary resources:
     static const char* wave_png;
@@ -88,8 +88,9 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	SynthParts m_part;
-	Tone m_tone;
+	AllParts m_part;
+	// Tone m_tone;
+	int m_toneNumber; // allowed values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
 	Parameter* m_waveGroupType;
 	Parameter* m_waveGroupId;
 	Parameter* m_waveNumber;

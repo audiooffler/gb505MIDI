@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -32,23 +32,26 @@ extern Waveforms* waveForms;
 //[/MiscUserDefs]
 
 //==============================================================================
-WaveEditor::WaveEditor (const String &componentName, SynthParts part, Tone tone)
-    : Component (componentName), m_part(part), m_tone(tone)
+WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumber)
+    : Component (componentName), m_part(part), m_toneNumber(toneNumber)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_fxmGrp = new PanelGroupGrey ("waveGrp","WAVE"));
     addAndMakeVisible (m_imageButton = new ImageButton ("new button"));
-    m_imageButton->setButtonText (String::empty);
+    m_imageButton->setButtonText (String());
 
     m_imageButton->setImages (false, true, true,
                               ImageCache::getFromMemory (wave_png, wave_pngSize), 1.000f, Colour (0x4340454a),
                               Image(), 1.000f, Colour (0x4340454a),
                               Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (m_waveButton = new TextButton ("new button"));
-    m_waveButton->setButtonText ("A:001 Dist TB 303a");
+    m_waveButton->setButtonText (TRANS("A:001 Dist TB 303a"));
     m_waveButton->addListener (this);
 
     addAndMakeVisible (m_waveLabel = new Label ("waveLabel",
-                                                "WAVEFORM"));
+                                                TRANS("WAVEFORM")));
     m_waveLabel->setFont (Font (12.00f, Font::bold));
     m_waveLabel->setJustificationType (Justification::centred);
     m_waveLabel->setEditable (false, false, false);
@@ -57,7 +60,7 @@ WaveEditor::WaveEditor (const String &componentName, SynthParts part, Tone tone)
     m_waveLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_onLabel2 = new Label ("onLabel",
-                                               "GAIN"));
+                                               TRANS("GAIN")));
     m_onLabel2->setFont (Font (12.00f, Font::bold));
     m_onLabel2->setJustificationType (Justification::centredRight);
     m_onLabel2->setEditable (false, false, false);
@@ -67,7 +70,7 @@ WaveEditor::WaveEditor (const String &componentName, SynthParts part, Tone tone)
 
     addAndMakeVisible (m_onToggle = new BlackToggle());
     addAndMakeVisible (m_onLabel = new Label ("onLabel",
-                                              "ON"));
+                                              TRANS("ON")));
     m_onLabel->setFont (Font (12.00f, Font::bold));
     m_onLabel->setJustificationType (Justification::centredRight);
     m_onLabel->setEditable (false, false, false);
@@ -78,12 +81,12 @@ WaveEditor::WaveEditor (const String &componentName, SynthParts part, Tone tone)
     addAndMakeVisible (m_waveGainComboBox = new ParameterComboBox ("waveGainComboBox"));
     m_waveGainComboBox->setEditableText (false);
     m_waveGainComboBox->setJustificationType (Justification::centredRight);
-    m_waveGainComboBox->setTextWhenNothingSelected ("-6 dB");
-    m_waveGainComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_waveGainComboBox->addItem ("-6dB", 1);
-    m_waveGainComboBox->addItem ("0dB", 2);
-    m_waveGainComboBox->addItem ("+6dB", 3);
-    m_waveGainComboBox->addItem ("+12dB", 4);
+    m_waveGainComboBox->setTextWhenNothingSelected (TRANS("-6 dB"));
+    m_waveGainComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_waveGainComboBox->addItem (TRANS("-6dB"), 1);
+    m_waveGainComboBox->addItem (TRANS("0dB"), 2);
+    m_waveGainComboBox->addItem (TRANS("+6dB"), 3);
+    m_waveGainComboBox->addItem (TRANS("+12dB"), 4);
     m_waveGainComboBox->addListener (this);
 
 
@@ -97,48 +100,7 @@ WaveEditor::WaveEditor (const String &componentName, SynthParts part, Tone tone)
 
 
     //[Constructor] You can add your own custom stuff here..
-	if (grooveboxMemory != nullptr)
-	{
-		SynthPatchesBlock* synthPatches = grooveboxMemory->getSynthPatchesBlock();
-		if (synthPatches != nullptr)
-		{
-			PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr(m_part);
-			if (patchPart != nullptr)
-			{
-				if (PatchCommonBlock* patchCommon = patchPart->getPatchCommonBlockPtr())
-				{
-				}
-				PatchToneBlock* tone = nullptr;
-				switch (m_tone)
-				{
-				case Tone1:
-					if (PatchToneBlock* tone1 = patchPart->getPatchToneBlockPtr(Tone1)) tone = tone1;
-					break;
-				case Tone2:
-					if (PatchToneBlock* tone2 = patchPart->getPatchToneBlockPtr(Tone2)) tone = tone2;
-					break;
-				case Tone3:
-					if (PatchToneBlock* tone3 = patchPart->getPatchToneBlockPtr(Tone3)) tone = tone3;
-					break;
-				case Tone4:
-					if (PatchToneBlock* tone4 = patchPart->getPatchToneBlockPtr(Tone4)) tone = tone4;
-					break;
-				}
-				if (tone != nullptr)
-				{
-					m_onToggle->setParameter(tone->getParameter(0x00));
-					m_waveGroupType = tone->getParameter(0x01);
-					m_waveGroupId = tone->getParameter(0x02);
-					m_waveNumber = tone->getParameter(0x03);
-					changeListenerCallback(m_waveNumber);
-					m_waveGroupType->addChangeListener(this);
-					m_waveGroupId->addChangeListener(this);
-					m_waveNumber->addChangeListener(this);
-					m_waveGainComboBox->setParameter(tone->getParameter(0x05));
-				}
-			}
-		}
-	}
+	setupParameters(part, toneNumber);
     //[/Constructor]
 }
 
@@ -179,6 +141,9 @@ void WaveEditor::paint (Graphics& g)
 
 void WaveEditor::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_fxmGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_imageButton->setBounds (3, 1, 16, 16);
     m_waveButton->setBounds (8, 84, 92, 34);
@@ -200,8 +165,8 @@ void WaveEditor::buttonClicked (Button* buttonThatWasClicked)
     {
         //[UserButtonCode_m_waveButton] -- add your button handler code here..
 		DialogWindow::LaunchOptions dialogLaunch;
-		dialogLaunch.dialogTitle = "Select Waveform for PART " + String((int)m_part + 1) + ", TONE " + String(((int)m_tone - 0x1000) / 0x200 + 1);
-		WaveformBrowser* waveformBrowser = new WaveformBrowser(m_part, m_tone, waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue());
+		dialogLaunch.dialogTitle = "Select Waveform for PART " + String(m_part == PartR ? "R" : String((int)m_part + 1)) + ", TONE " + String(m_part == PartR ? String(m_toneNumber) : String((m_toneNumber - 0x1000) / 0x200 + 1));
+		WaveformBrowser* waveformBrowser = new WaveformBrowser(m_part, m_toneNumber, waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue());
 		WaveFormDlgCallback* callbackObject = new WaveFormDlgCallback();
 		callbackObject->setWaveformSelectParameters(m_waveGroupType, m_waveGroupId, m_waveNumber);
 		callbackObject->m_restorable32BitIntForWaveformDuringBrowserDialog =
@@ -238,6 +203,79 @@ void WaveEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+// allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
+void WaveEditor::setupParameters(AllParts part, int toneNumber)
+{
+	if (grooveboxMemory == nullptr) return;
+	
+	m_part = part;
+
+	if (part == AllParts::PartR)
+	{
+		if (toneNumber >= 35 && toneNumber <= 98)
+		{
+			if (grooveboxMemory != nullptr)
+			{
+				if (RhythmSetBlock* rhyhtmSet = grooveboxMemory->getRhythmSetBlock())
+				{
+					if (RhythmNoteBlock* noteBlock = rhyhtmSet->getRhythmNoteBlockPtr((uint8)toneNumber))
+					{
+						m_toneNumber = toneNumber;
+						m_onToggle->setParameter(noteBlock->getParameter(0x00));
+						m_waveGroupType = noteBlock->getParameter(0x01);
+						m_waveGroupId = noteBlock->getParameter(0x02);
+						m_waveNumber = noteBlock->getParameter(0x03);
+						changeListenerCallback(m_waveNumber);
+						m_waveGroupType->addChangeListener(this);
+						m_waveGroupId->addChangeListener(this);
+						m_waveNumber->addChangeListener(this);
+						m_waveGainComboBox->setParameter(noteBlock->getParameter(0x05));
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		if (SynthPatchesBlock* synthPatches = grooveboxMemory->getSynthPatchesBlock())
+		{
+			if (PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr((SynthParts)m_part))
+			{
+				PatchToneBlock* tone = nullptr;
+				switch (toneNumber)
+				{
+				case Tone1:
+					if (PatchToneBlock* tone1 = patchPart->getPatchToneBlockPtr(Tone1)) tone = tone1;
+					break;
+				case Tone2:
+					if (PatchToneBlock* tone2 = patchPart->getPatchToneBlockPtr(Tone2)) tone = tone2;
+					break;
+				case Tone3:
+					if (PatchToneBlock* tone3 = patchPart->getPatchToneBlockPtr(Tone3)) tone = tone3;
+					break;
+				case Tone4:
+					if (PatchToneBlock* tone4 = patchPart->getPatchToneBlockPtr(Tone4)) tone = tone4;
+					break;
+				}
+				if (tone != nullptr)
+				{
+					m_toneNumber = toneNumber;
+					m_onToggle->setParameter(tone->getParameter(0x00));
+					m_waveGroupType = tone->getParameter(0x01);
+					m_waveGroupId = tone->getParameter(0x02);
+					m_waveNumber = tone->getParameter(0x03);
+					changeListenerCallback(m_waveNumber);
+					m_waveGroupType->addChangeListener(this);
+					m_waveGroupId->addChangeListener(this);
+					m_waveNumber->addChangeListener(this);
+					m_waveGainComboBox->setParameter(tone->getParameter(0x05));
+				}
+			}
+		}
+	}
+}
+
+
 void WaveEditor::WaveFormDlgCallback::modalStateFinished(int returnValue)
 {
 	uint8 groupType;
@@ -285,8 +323,8 @@ void WaveEditor::changeListenerCallback(ChangeBroadcaster *source)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="WaveEditor" componentName=""
-                 parentClasses="public Component, public ChangeListener" constructorParams="const String &amp;componentName, SynthParts part, Tone tone"
-                 variableInitialisers="Component (componentName), m_part(part), m_tone(tone)"
+                 parentClasses="public Component, public ChangeListener" constructorParams="const String &amp;componentName, AllParts part, int toneNumber"
+                 variableInitialisers="Component (componentName), m_part(part), m_toneNumber(toneNumber)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="104" initialHeight="128">
   <BACKGROUND backgroundColour="0"/>

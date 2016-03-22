@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -44,7 +44,7 @@ class WaveformsAllGroups  : public Component,
 {
 public:
     //==============================================================================
-    WaveformsAllGroups (GrooveboxConnector::GrooveboxModel grooveboxModel, SynthParts part, Tone tone);
+    WaveformsAllGroups (GrooveboxConnector::GrooveboxModel grooveboxModel, AllParts part, int toneNumber);
     ~WaveformsAllGroups();
 
     //==============================================================================
@@ -56,17 +56,18 @@ public:
 	void tryScrollToSelectedButton();
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void mouseDoubleClick (const MouseEvent& e);
-    bool keyPressed (const KeyPress& key);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void mouseDoubleClick (const MouseEvent& e) override;
+    bool keyPressed (const KeyPress& key) override;
 
 
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	SynthParts m_part;
-	Tone m_tone;
+	AllParts m_part;
+	//Tone m_tone;
+	int m_toneNumber;
 	Parameter* m_waveGroupType;
 	Parameter* m_waveGroupId;
 	Parameter* m_waveNumber;

@@ -46,6 +46,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_tableHeader->addColumn("", NoteName, 25, 25, 25, 1);
 	m_tableHeader->addColumn("Key", KeyNo, 30, 30, 30, 1);
 	m_tableHeader->addColumn("Rhy Group", RhyGrp, 80, 80, 80, 1);
+	m_tableHeader->addColumn("Mut", MuteGrp, 27, 27, 27, 1);
 	m_tableHeader->addColumn("Waveform", RhyWave, 140, 140, 140, 1);
 	m_tableHeader->addColumn("GM Standard Drum", GmDrum, 130, 130, 130, 9);
 	m_drumNamesTable->setHeader(m_tableHeader);
@@ -56,9 +57,10 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 
 	m_drumNamesTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_drumNamesTable->setColour(TableListBox::outlineColourId, Colours::grey);
+	m_drumNamesTable->selectRow(0);
     //[/UserPreSize]
 
-    setSize (600, 400);
+    setSize (425, 622);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -68,8 +70,10 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 		RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)key);
 		Parameter* waveGroupId = rhythmNoteBlock->getParameter(0x02);
 		Parameter* waveNumber = rhythmNoteBlock->getParameter(0x03);
+		Parameter* muteGroup = rhythmNoteBlock->getParameter(0x07);
 		waveGroupId->addChangeListener(this);
 		waveNumber->addChangeListener(this);
+		muteGroup->addChangeListener(this);
 	}
     //[/Constructor]
 }
@@ -153,6 +157,7 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)key);
 	Parameter* waveGroupId = rhythmNoteBlock->getParameter(0x02);
 	Parameter* waveNumber = rhythmNoteBlock->getParameter(0x03);
+	Parameter* muteGroup = rhythmNoteBlock->getParameter(0x07);
 	String waveText = waveForms->getButtonText(waveForms->getGroupForId(waveGroupId->getValue()), waveNumber->getValue());
 
 	switch (columnId)
@@ -187,6 +192,9 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	case RhyGrp:
 		g.drawText(rhyGrpString, 4, 0, width-4, height, Justification::centred, false);
 		break;
+	case MuteGrp:
+		g.drawText(muteGroup->getDisplayedValue().replace("OFF",""), 2, 0, width - 2, height, Justification::centred, false);
+		break;
 	case RhyWave:
 		if (rowIsSelected) g.setFont(Font((float)m_drumNamesTable->getRowHeight(),Font::bold));
 		g.drawText(waveText, 2, 0, width-2, height, Justification::centredLeft, false);
@@ -196,16 +204,30 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	}
 }
 
+void RhySetKeyboardWithList::selectedRowsChanged(int lastRowSelected)
+{
+	m_lastRowSelected = lastRowSelected;
+    sendChangeMessage();
+}
+
 void RhySetKeyboardWithList::changeListenerCallback(ChangeBroadcaster* source)
 {
 	if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
-		if (param->getAddressOffset() == 0x02 || param->getAddressOffset() == 0x03)
-			if(RhythmNoteBlock* block = dynamic_cast<RhythmNoteBlock*>(param->getBlock()))
+		if (RhythmNoteBlock* block = dynamic_cast<RhythmNoteBlock*>(param->getBlock()))
 		{
-			int key = block->getKey();
-			int rowNumber = key - 35;
-			repaint(m_drumNamesTable->getCellPosition(drumNamesTableColumnIds::RhyWave, rowNumber, true));
+			if (param->getAddressOffset() == 0x02 || param->getAddressOffset() == 0x03)
+			{
+				int key = block->getKey();
+				int rowNumber = key - 35;
+				repaint(m_drumNamesTable->getCellPosition(drumNamesTableColumnIds::RhyWave, rowNumber, true));
+			}
+			else if (param->getAddressOffset() == 0x07)
+			{
+				int key = block->getKey();
+				int rowNumber = key - 35;
+				repaint(m_drumNamesTable->getCellPosition(drumNamesTableColumnIds::MuteGrp, rowNumber, true));
+			}
 		}
 	}
 }
@@ -222,10 +244,10 @@ void RhySetKeyboardWithList::changeListenerCallback(ChangeBroadcaster* source)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="RhySetKeyboardWithList" componentName=""
-                 parentClasses="public Component, public TableListBoxModel, public ChangeListener"
+                 parentClasses="public Component, public TableListBoxModel, public ChangeListener, public ChangeBroadcaster"
                  constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
-                 snapShown="1" overlayOpacity="0.330" fixedSize="0" initialWidth="600"
-                 initialHeight="400">
+                 snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="425"
+                 initialHeight="622">
   <BACKGROUND backgroundColour="0">
     <RECT pos="0 0 0M 0M" fill="solid: 0" hasStroke="1" stroke="1, mitered, butt"
           strokeColour="solid: ff000000"/>

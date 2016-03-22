@@ -517,7 +517,7 @@ void PatchToneEditor::buttonClicked (Button* buttonThatWasClicked)
 		//ScopedPointer<DialogWindow> dw = contentComponent->findParentComponentOfClass<DialogWindow>();*/
 		DialogWindow::LaunchOptions dialogLaunch;
 		dialogLaunch.dialogTitle = "Select Waveform for PART " + String((int)m_part + 1) + ", TONE " + String(((int)m_tone - 0x1000)/0x200 + 1);
-		WaveformBrowser* waveformBrowser = new WaveformBrowser(m_part, m_tone, waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue());
+		WaveformBrowser* waveformBrowser = new WaveformBrowser((AllParts)m_part, m_tone, waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue());
 		WaveFormDlgCallback* callbackObject = new WaveFormDlgCallback();
 		callbackObject->setWaveformSelectParameters(m_waveGroupType, m_waveGroupId, m_waveNumber);
 		callbackObject->m_restorable32BitIntForWaveformDuringBrowserDialog =

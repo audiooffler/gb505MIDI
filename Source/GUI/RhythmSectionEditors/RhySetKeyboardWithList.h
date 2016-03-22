@@ -30,14 +30,13 @@
 //==============================================================================
 /**
                                                                     //[Comments]
-    An auto-generated component, created by the Introjucer.
-
-    Describe your class and how it works here!
+    Broadcasts a change event on selection
                                                                     //[/Comments]
 */
 class RhySetKeyboardWithList  : public Component,
                                 public TableListBoxModel,
-                                public ChangeListener
+                                public ChangeListener,
+                                public ChangeBroadcaster
 {
 public:
     //==============================================================================
@@ -49,15 +48,18 @@ public:
 	int /*TableListBoxModel::*/getNumRows() override;
 	void /*TableListBoxModel::*/paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void /*TableListBoxModel::*/paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
+	void /*TableListBoxModel::*/selectedRowsChanged(int lastRowSelected) override;
 	enum drumNamesTableColumnIds
 	{
 		NoteName = 1,
 		KeyNo = 2,
 		RhyGrp = 3,
-		RhyWave = 4,
-		GmDrum = 5,
+		MuteGrp = 4,
+		RhyWave = 5,
+		GmDrum = 6
 	};
 	void changeListenerCallback(ChangeBroadcaster* source) override;
+	int getSelectedRow() { return m_lastRowSelected; }
     //[/UserMethods]
 
     void paint (Graphics& g) override;
@@ -69,6 +71,7 @@ private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     MidiKeyboardState m_keyboardStateDummy;
 	TableHeaderComponent* m_tableHeader;
+	int m_lastRowSelected = 0;
     //[/UserVariables]
 
     //==============================================================================

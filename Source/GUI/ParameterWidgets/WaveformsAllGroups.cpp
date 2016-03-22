@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -33,9 +33,12 @@ extern Waveforms* waveForms;
 //[/MiscUserDefs]
 
 //==============================================================================
-WaveformsAllGroups::WaveformsAllGroups (GrooveboxConnector::GrooveboxModel grooveboxModel, SynthParts part, Tone tone)
-    : m_grooveboxModel (grooveboxModel), m_part (part), m_tone (tone)
+WaveformsAllGroups::WaveformsAllGroups (GrooveboxConnector::GrooveboxModel grooveboxModel, AllParts part, int toneNumber)
+    : m_grooveboxModel (grooveboxModel), m_part (part), m_toneNumber (toneNumber)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_waveformsGroupA = new WaveformsGroup (Waveforms::WAVES_A));
     addAndMakeVisible (m_waveformsGroupB = new WaveformsGroup (Waveforms::WAVES_B));
 
@@ -70,40 +73,63 @@ WaveformsAllGroups::WaveformsAllGroups (GrooveboxConnector::GrooveboxModel groov
 		}
 	}
 
-	SynthPatchesBlock* synthPatches = grooveboxMemory->getSynthPatchesBlock();
-	if (synthPatches != nullptr)
+	if (part == AllParts::PartR)
 	{
-		PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr(m_part);
-		if (patchPart != nullptr)
+		if (toneNumber >= 35 && toneNumber <= 98)
 		{
-			if (PatchCommonBlock* patchCommon = patchPart->getPatchCommonBlockPtr())
+			if (grooveboxMemory != nullptr)
 			{
+				if (RhythmSetBlock* rhyhtmSet = grooveboxMemory->getRhythmSetBlock())
+				{
+					if (RhythmNoteBlock* noteBlock = rhyhtmSet->getRhythmNoteBlockPtr((uint8)m_toneNumber))
+					{
+						m_toneNumber = toneNumber;
+						m_waveGroupType = noteBlock->getParameter(0x01);
+						m_waveGroupId = noteBlock->getParameter(0x02);
+						m_waveNumber = noteBlock->getParameter(0x03);
+						changeListenerCallback(m_waveNumber);
+						m_waveGroupType->addChangeListener(this);
+						m_waveGroupId->addChangeListener(this);
+						m_waveNumber->addChangeListener(this);
+					}
+				}
 			}
-			PatchToneBlock* tone = nullptr;
-			switch (m_tone)
+		}
+	}
+	else
+	{
+		SynthPatchesBlock* synthPatches = grooveboxMemory->getSynthPatchesBlock();
+		if (synthPatches != nullptr)
+		{
+			if (PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr((SynthParts)m_part))
 			{
-			case Tone1:
-				if (PatchToneBlock* tone1 = patchPart->getPatchToneBlockPtr(Tone1)) tone = tone1;
-				break;
-			case Tone2:
-				if (PatchToneBlock* tone2 = patchPart->getPatchToneBlockPtr(Tone2)) tone = tone2;
-				break;
-			case Tone3:
-				if (PatchToneBlock* tone3 = patchPart->getPatchToneBlockPtr(Tone3)) tone = tone3;
-				break;
-			case Tone4:
-				if (PatchToneBlock* tone4 = patchPart->getPatchToneBlockPtr(Tone4)) tone = tone4;
-				break;
-			}
-			if (tone != nullptr)
-			{
-				m_waveGroupType = tone->getParameter(0x01);
-				m_waveGroupId = tone->getParameter(0x02);
-				m_waveNumber = tone->getParameter(0x03);
-				changeListenerCallback(m_waveGroupType);
-				m_waveGroupType->addChangeListener(this);
-				m_waveGroupId->addChangeListener(this);
-				m_waveNumber->addChangeListener(this);
+				PatchToneBlock* tone = nullptr;
+				switch (toneNumber)
+				{
+				case Tone1:
+					if (PatchToneBlock* tone1 = patchPart->getPatchToneBlockPtr(Tone1)) tone = tone1;
+					break;
+				case Tone2:
+					if (PatchToneBlock* tone2 = patchPart->getPatchToneBlockPtr(Tone2)) tone = tone2;
+					break;
+				case Tone3:
+					if (PatchToneBlock* tone3 = patchPart->getPatchToneBlockPtr(Tone3)) tone = tone3;
+					break;
+				case Tone4:
+					if (PatchToneBlock* tone4 = patchPart->getPatchToneBlockPtr(Tone4)) tone = tone4;
+					break;
+				}
+				if (tone != nullptr)
+				{
+					m_toneNumber = toneNumber;
+					m_waveGroupType = tone->getParameter(0x01);
+					m_waveGroupId = tone->getParameter(0x02);
+					m_waveNumber = tone->getParameter(0x03);
+					changeListenerCallback(m_waveGroupType);
+					m_waveGroupType->addChangeListener(this);
+					m_waveGroupId->addChangeListener(this);
+					m_waveNumber->addChangeListener(this);
+				}
 			}
 		}
 	}
@@ -141,6 +167,9 @@ void WaveformsAllGroups::paint (Graphics& g)
 
 void WaveformsAllGroups::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_waveformsGroupA->setBounds (0, 0, 836, 660);
     m_waveformsGroupB->setBounds (0, 660, 836, 660);
     //[UserResized] Add your own custom resize handling here..
@@ -414,8 +443,8 @@ BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="WaveformsAllGroups" componentName=""
                  parentClasses="public Component, public Button::Listener, public ChangeListener, public TextEditor::Listener"
-                 constructorParams="GrooveboxConnector::GrooveboxModel grooveboxModel, SynthParts part, Tone tone"
-                 variableInitialisers="m_grooveboxModel (grooveboxModel), m_part (part), m_tone (tone)"
+                 constructorParams="GrooveboxConnector::GrooveboxModel grooveboxModel, AllParts part, int toneNumber"
+                 variableInitialisers="m_grooveboxModel (grooveboxModel), m_part (part), m_toneNumber (toneNumber)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="836" initialHeight="1320">
   <METHODS>

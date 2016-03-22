@@ -86,6 +86,7 @@ RhythmSetEditorTab::RhythmSetEditorTab ()
     m_selectKeyLabel->setColour (TextEditor::textColourId, Colours::black);
     m_selectKeyLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (m_wave = new WaveEditor ("WAVE", AllParts::PartR, m_currentKey));
 
     //[UserPreSize]
 	if (grooveboxMemory != nullptr)
@@ -98,6 +99,7 @@ RhythmSetEditorTab::RhythmSetEditorTab ()
 			}
 		}
 	}
+	m_rhySetKeyboardWithList->addChangeListener(this);
     //[/UserPreSize]
 
     setSize (1328, 675);
@@ -120,6 +122,7 @@ RhythmSetEditorTab::~RhythmSetEditorTab()
     m_patchNameLabel = nullptr;
     m_patchNameEditor = nullptr;
     m_selectKeyLabel = nullptr;
+    m_wave = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -130,6 +133,9 @@ RhythmSetEditorTab::~RhythmSetEditorTab()
 void RhythmSetEditorTab::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
+#if JUCE_MSVC
+	g;
+#endif
     //[/UserPrePaint]
 
     //[UserPaint] Add your own custom painting code here..
@@ -141,7 +147,7 @@ void RhythmSetEditorTab::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_rhySetKeyboardWithList->setBounds (84, 52, 425, getHeight() - 53);
+    m_rhySetKeyboardWithList->setBounds (84, 52, 452, getHeight() - 53);
     m_mixGrp->setBounds (0, 103, 80, 572);
     m_mixRhyTrack->setBounds (4, 124, 72, 548);
     imageButton5->setBounds (3, 104, 16, 16);
@@ -149,6 +155,7 @@ void RhythmSetEditorTab::resized()
     m_patchNameLabel->setBounds (88, 4, 120, 24);
     m_patchNameEditor->setBounds (88, 24, 116, 22);
     m_selectKeyLabel->setBounds (228, 30, 140, 24);
+    m_wave->setBounds (520, 32, 104, 136);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -171,8 +178,18 @@ void RhythmSetEditorTab::buttonClicked (Button* buttonThatWasClicked)
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
-
-
+void RhythmSetEditorTab::changeListenerCallback(ChangeBroadcaster* source)
+{
+	if (source == m_rhySetKeyboardWithList)
+	{
+		int row = m_rhySetKeyboardWithList->getSelectedRow();
+		if (row < 64)
+		{
+			m_currentKey = (uint8)row + 35;
+			m_wave->setupParameters(AllParts::PartR, m_currentKey);
+		}
+    }
+}
 //[/MiscUserCode]
 
 
@@ -186,12 +203,12 @@ void RhythmSetEditorTab::buttonClicked (Button* buttonThatWasClicked)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="RhythmSetEditorTab" componentName=""
-                 parentClasses="public Component" constructorParams="" variableInitialisers=""
-                 snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="1328" initialHeight="675">
+                 parentClasses="public Component, public ChangeListener" constructorParams=""
+                 variableInitialisers="" snapPixels="4" snapActive="1" snapShown="1"
+                 overlayOpacity="0.330" fixedSize="1" initialWidth="1328" initialHeight="675">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="rhySetKeyboardWithList" id="3c1035db3aaf52f0" memberName="m_rhySetKeyboardWithList"
-             virtualName="" explicitFocusOrder="0" pos="84 52 425 53M" sourceFile="RhythmSectionEditors/RhySetKeyboardWithList.cpp"
+             virtualName="" explicitFocusOrder="0" pos="84 52 452 53M" sourceFile="RhythmSectionEditors/RhySetKeyboardWithList.cpp"
              constructorParams=""/>
   <JUCERCOMP name="mixGrp" id="46883b20b70a0a85" memberName="m_mixGrp" virtualName=""
              explicitFocusOrder="0" pos="0 103 80 572" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
@@ -225,6 +242,9 @@ BEGIN_JUCER_METADATA
          edTextCol="ff000000" edBkgCol="0" labelText="SELECT KEY TO EDIT:"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
+  <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
+             explicitFocusOrder="0" pos="520 32 104 136" sourceFile="PatchSectionEditors/WaveEditor.cpp"
+             constructorParams="&quot;WAVE&quot;, AllParts::PartR, m_currentKey"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
