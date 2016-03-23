@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -32,6 +32,9 @@ extern OverallMemoryBlock* grooveboxMemory;
 FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthParts part, Tone tone)
     : Component (componentName), m_part(part), m_tone(tone)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_filterGrp = new PanelGroupGrey ("filterGrp", getName()));
     addAndMakeVisible (m_filterGrp2 = new PanelGroupGrey ("filterEnvGrp", getName().toUpperCase()+" ENVELOPE"));
     addAndMakeVisible (m_cutoffSlider = new Knob ("cutoffSlider"));
@@ -42,7 +45,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_cutoffSlider->addListener (this);
 
     addAndMakeVisible (m_cutoffLabel = new Label ("cutoffLabel",
-                                                  "CUTOFF"));
+                                                  TRANS("CUTOFF")));
     m_cutoffLabel->setFont (Font (12.00f, Font::bold));
     m_cutoffLabel->setJustificationType (Justification::centred);
     m_cutoffLabel->setEditable (false, false, false);
@@ -50,9 +53,9 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_cutoffLabel->setColour (TextEditor::textColourId, Colours::black);
     m_cutoffLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (m_filterEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Filter, false));
+    addAndMakeVisible (m_filterEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Filter, false));
     addAndMakeVisible (m_cutoffKeyfollowLabel = new Label ("cutoffKeyfollowLabel",
-                                                           "KEYFOLLOW"));
+                                                           TRANS("KEYFOLLOW")));
     m_cutoffKeyfollowLabel->setFont (Font (12.00f, Font::bold));
     m_cutoffKeyfollowLabel->setJustificationType (Justification::centred);
     m_cutoffKeyfollowLabel->setEditable (false, false, false);
@@ -77,7 +80,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_filterEnvelopeDepthSlider->addListener (this);
 
     addAndMakeVisible (m_filterEnvelopeDepthLabel = new Label ("filterEnvelopeDepthLabel",
-                                                               "DEPTH"));
+                                                               TRANS("DEPTH")));
     m_filterEnvelopeDepthLabel->setFont (Font (12.00f, Font::bold));
     m_filterEnvelopeDepthLabel->setJustificationType (Justification::centred);
     m_filterEnvelopeDepthLabel->setEditable (false, false, false);
@@ -94,7 +97,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_filterVelocitySensSlider->addListener (this);
 
     addAndMakeVisible (m_filterEnvVelocitySensLabel = new Label ("filterEnvVelocitySensLabel",
-                                                                 "VELO SENS"));
+                                                                 TRANS("VELO SENS")));
     m_filterEnvVelocitySensLabel->setFont (Font (12.00f, Font::bold));
     m_filterEnvVelocitySensLabel->setJustificationType (Justification::centred);
     m_filterEnvVelocitySensLabel->setEditable (false, false, false);
@@ -111,7 +114,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_filterEnvVelocityTime1Slider->addListener (this);
 
     addAndMakeVisible (m_filterEnvVelocityTime1Label = new Label ("filterEnvVelocityTime1Label",
-                                                                  "VELO SENS TIME 1"));
+                                                                  TRANS("VELO SENS TIME 1")));
     m_filterEnvVelocityTime1Label->setFont (Font (12.00f, Font::bold));
     m_filterEnvVelocityTime1Label->setJustificationType (Justification::centred);
     m_filterEnvVelocityTime1Label->setEditable (false, false, false);
@@ -128,7 +131,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_filterEnvVelocityTime4Slider->addListener (this);
 
     addAndMakeVisible (m_filterEnvVelocityTime4Label = new Label ("filterEnvVelocityTime4Label",
-                                                                  "VELO SENS TIME 4"));
+                                                                  TRANS("VELO SENS TIME 4")));
     m_filterEnvVelocityTime4Label->setFont (Font (12.00f, Font::bold));
     m_filterEnvVelocityTime4Label->setJustificationType (Justification::centred);
     m_filterEnvVelocityTime4Label->setEditable (false, false, false);
@@ -137,7 +140,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_filterEnvVelocityTime4Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_filterEnvTimeKeyfollow = new Label ("filterEnvTimeKeyfollow",
-                                                             "KEYFOLLOW TIME 2/3/4 "));
+                                                             TRANS("KEYFOLLOW TIME 2/3/4 ")));
     m_filterEnvTimeKeyfollow->setFont (Font (12.00f, Font::bold));
     m_filterEnvTimeKeyfollow->setJustificationType (Justification::centred);
     m_filterEnvTimeKeyfollow->setEditable (false, false, false);
@@ -161,7 +164,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_resonanceSlider->addListener (this);
 
     addAndMakeVisible (m_resonanceLabel = new Label ("resonanceLabel",
-                                                     "RESONANCE"));
+                                                     TRANS("RESONANCE")));
     m_resonanceLabel->setFont (Font (12.00f, Font::bold));
     m_resonanceLabel->setJustificationType (Justification::centred);
     m_resonanceLabel->setEditable (false, false, false);
@@ -172,8 +175,8 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     addAndMakeVisible (m_filterEnvVelCurveComboBox = new ParameterComboBox ("filterEnvVelCurveComboBox"));
     m_filterEnvVelCurveComboBox->setEditableText (false);
     m_filterEnvVelCurveComboBox->setJustificationType (Justification::centred);
-    m_filterEnvVelCurveComboBox->setTextWhenNothingSelected ("Normal");
-    m_filterEnvVelCurveComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
+    m_filterEnvVelCurveComboBox->setTextWhenNothingSelected (TRANS("Normal"));
+    m_filterEnvVelCurveComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_filterEnvVelCurveComboBox->addListener (this);
 
     addAndMakeVisible (m_filterEnvVelCurveDisplay = new ParameterVelCurveDisplay ("filterEnvVelCurveDisplay"));
@@ -183,7 +186,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_filterEnvVelCurveDisplay->addListener (this);
 
     addAndMakeVisible (m_resonanceVelocitySensLabel = new Label ("resonanceVelocitySensLabel",
-                                                                 "VELOCITY SENS"));
+                                                                 TRANS("VELOCITY SENS")));
     m_resonanceVelocitySensLabel->setFont (Font (12.00f, Font::bold));
     m_resonanceVelocitySensLabel->setJustificationType (Justification::centred);
     m_resonanceVelocitySensLabel->setEditable (false, false, false);
@@ -200,7 +203,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_resonanceVelocitySensSlider->addListener (this);
 
     addAndMakeVisible (m_filterTypeLabel = new Label ("filterTypeLabel",
-                                                      "FILTER TYPE"));
+                                                      TRANS("FILTER TYPE")));
     m_filterTypeLabel->setFont (Font (12.00f, Font::bold));
     m_filterTypeLabel->setJustificationType (Justification::centred);
     m_filterTypeLabel->setEditable (false, false, false);
@@ -211,12 +214,12 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     addAndMakeVisible (m_filterTypeComboBox = new ParameterComboBox ("filterTypeComboBox"));
     m_filterTypeComboBox->setEditableText (false);
     m_filterTypeComboBox->setJustificationType (Justification::centred);
-    m_filterTypeComboBox->setTextWhenNothingSelected (String::empty);
-    m_filterTypeComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
+    m_filterTypeComboBox->setTextWhenNothingSelected (String());
+    m_filterTypeComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_filterTypeComboBox->addListener (this);
 
     addAndMakeVisible (m_filterEnvVelocityCurveLabel = new Label ("filterEnvVelocityCurveLabel",
-                                                                  "VELO CURVE"));
+                                                                  TRANS("VELO CURVE")));
     m_filterEnvVelocityCurveLabel->setFont (Font (12.00f, Font::bold));
     m_filterEnvVelocityCurveLabel->setJustificationType (Justification::centred);
     m_filterEnvVelocityCurveLabel->setEditable (false, false, false);
@@ -233,7 +236,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_lfo1FilterDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo1FilterDepthLabel = new Label ("lfo1FilterDepthLabel",
-                                                           "LFO 1 DEPTH"));
+                                                           TRANS("LFO 1 DEPTH")));
     m_lfo1FilterDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo1FilterDepthLabel->setJustificationType (Justification::centred);
     m_lfo1FilterDepthLabel->setEditable (false, false, false);
@@ -249,7 +252,7 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_lfo2FilterDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo2FilterDepthLabel = new Label ("lfo2FilterDepthLabel",
-                                                           "LFO 2 DEPTH"));
+                                                           TRANS("LFO 2 DEPTH")));
     m_lfo2FilterDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo2FilterDepthLabel->setJustificationType (Justification::centred);
     m_lfo2FilterDepthLabel->setEditable (false, false, false);
@@ -258,20 +261,35 @@ FilterEditorAdvanced::FilterEditorAdvanced (const String &componentName, SynthPa
     m_lfo2FilterDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_lfo1AdvancedButton = new TextWithArrowButton ("lfo1AdvancedButton"));
-    m_lfo1AdvancedButton->setButtonText ("LFO 1");
+    m_lfo1AdvancedButton->setButtonText (TRANS("LFO 1"));
     m_lfo1AdvancedButton->addListener (this);
 
     addAndMakeVisible (m_lfo2AdvancedButton = new TextWithArrowButton ("lfo2AdvancedButton"));
-    m_lfo2AdvancedButton->setButtonText ("LFO 2");
+    m_lfo2AdvancedButton->setButtonText (TRANS("LFO 2"));
     m_lfo2AdvancedButton->addListener (this);
 
     addAndMakeVisible (m_imageButton = new ImageButton ("imageButton"));
-    m_imageButton->setButtonText (String::empty);
+    m_imageButton->setButtonText (String());
 
     m_imageButton->setImages (false, true, true,
                               ImageCache::getFromMemory (filter_png, filter_pngSize), 1.000f, Colour (0x4340454a),
                               Image(), 1.000f, Colour (0x4340454a),
                               Image(), 1.000f, Colour (0x4340454a));
+    addAndMakeVisible (m_imageButton2 = new ImageButton ("imageButton"));
+    m_imageButton2->setButtonText (String());
+
+    m_imageButton2->setImages (false, true, true,
+                               ImageCache::getFromMemory (filter_png, filter_pngSize), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a));
+    addAndMakeVisible (m_imageButton3 = new ImageButton ("imageButton"));
+    m_imageButton3->setButtonText (String());
+    m_imageButton3->addListener (this);
+
+    m_imageButton3->setImages (false, true, true,
+                               ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, Colour (0x4340454a),
+                               ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a));
 
     //[UserPreSize]
     m_filterGrp->setText("FILTER OF PART "+ String(part+1) + " TONE "+ String(((tone-4096)/512)+1));
@@ -383,6 +401,8 @@ FilterEditorAdvanced::~FilterEditorAdvanced()
     m_lfo1AdvancedButton = nullptr;
     m_lfo2AdvancedButton = nullptr;
     m_imageButton = nullptr;
+    m_imageButton2 = nullptr;
+    m_imageButton3 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -404,6 +424,9 @@ void FilterEditorAdvanced::paint (Graphics& g)
 
 void FilterEditorAdvanced::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_filterGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_filterGrp2->setBounds (0, 140, getWidth() - 0, 260);
     m_cutoffSlider->setBounds (128, 36, 48, 60);
@@ -438,6 +461,8 @@ void FilterEditorAdvanced::resized()
     m_lfo1AdvancedButton->setBounds (96, 464, 96, 21);
     m_lfo2AdvancedButton->setBounds (268, 464, 96, 21);
     m_imageButton->setBounds (3, 1, 16, 16);
+    m_imageButton2->setBounds (3, 141, 16, 16);
+    m_imageButton3->setBounds (3, 405, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -551,6 +576,11 @@ void FilterEditorAdvanced::buttonClicked (Button* buttonThatWasClicked)
 		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo2AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo2AdvancedButton]
     }
+    else if (buttonThatWasClicked == m_imageButton3)
+    {
+        //[UserButtonCode_m_imageButton3] -- add your button handler code here..
+        //[/UserButtonCode_m_imageButton3]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -579,7 +609,7 @@ BEGIN_JUCER_METADATA
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="filterGrp" id="52e00682f746b888" memberName="m_filterGrp"
              virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 0 0M 0M"
-             sourceFile="../GroupWidgets/PanelGroupTransp.cpp" constructorParams="&quot;filterGrp&quot;, getName() "/>
+             sourceFile="../GroupWidgets/PanelGroupGrey.cpp" constructorParams="&quot;filterGrp&quot;, getName() "/>
   <JUCERCOMP name="filterGrp" id="f94b4c6bc1e7a151" memberName="m_filterGrp2"
              virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 140 0M 260"
              sourceFile="../GroupWidgets/PanelGroupTransp.cpp" constructorParams="&quot;filterEnvGrp&quot;, getName().toUpperCase()+&quot; ENVELOPE&quot;"/>
@@ -595,7 +625,7 @@ BEGIN_JUCER_METADATA
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="filterEnv" id="99a40d72d7ad1e22" memberName="m_filterEnv"
              virtualName="" explicitFocusOrder="0" pos="72 156 296 156" sourceFile="Envelope.cpp"
-             constructorParams="m_part, m_tone, EnvelopeTypes::Filter, false"/>
+             constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Filter, false"/>
   <LABEL name="cutoffKeyfollowLabel" id="3a52299341c28960" memberName="m_cutoffKeyfollowLabel"
          virtualName="" explicitFocusOrder="0" pos="112 100 80 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="KEYFOLLOW" editableSingleClick="0"
@@ -733,6 +763,18 @@ BEGIN_JUCER_METADATA
                resourceNormal="filter_png" opacityNormal="1" colourNormal="4340454a"
                resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
                opacityDown="1" colourDown="4340454a"/>
+  <IMAGEBUTTON name="imageButton" id="8358952004a90b6b" memberName="m_imageButton2"
+               virtualName="" explicitFocusOrder="0" pos="3 141 16 16" buttonText=""
+               connectedEdges="0" needsCallback="0" radioGroupId="0" keepProportions="1"
+               resourceNormal="filter_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
+               opacityDown="1" colourDown="4340454a"/>
+  <IMAGEBUTTON name="imageButton" id="570f3b3b741de5e4" memberName="m_imageButton3"
+               virtualName="" explicitFocusOrder="0" pos="3 405 16 16" buttonText=""
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="lfo_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="lfo_png" opacityOver="1" colourOver="4340454a"
+               resourceDown="" opacityDown="1" colourDown="4340454a"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -750,6 +792,16 @@ static const unsigned char resource_FilterEditorAdvanced_filter_png[] = { 137,80
 
 const char* FilterEditorAdvanced::filter_png = (const char*) resource_FilterEditorAdvanced_filter_png;
 const int FilterEditorAdvanced::filter_pngSize = 216;
+
+// JUCER_RESOURCE: lfo_png, 235, "../../../Resources/PatchEditSectionIcons/lfo.png"
+static const unsigned char resource_FilterEditorAdvanced_lfo_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,16,0,0,0,16,8,6,0,0,0,31,243,255,97,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,
+0,6,98,75,71,68,0,255,0,255,0,255,160,189,167,147,0,0,0,9,112,72,89,115,0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,7,116,73,77,69,7,222,12,10,20,17,26,251,57,11,92,0,0,0,107,73,68,65,84,56,203,165,83,91,
+14,192,32,8,163,141,247,191,50,251,153,9,16,22,6,240,37,216,242,168,8,121,77,85,85,26,6,0,50,37,59,206,132,108,147,176,3,78,139,253,233,192,98,226,153,178,181,170,131,236,254,198,92,7,83,49,89,85,119,
+239,157,236,192,153,140,106,19,208,6,163,194,23,24,201,214,103,119,125,163,86,231,11,144,205,158,9,205,172,74,36,87,254,234,51,97,251,157,31,197,207,111,229,235,115,88,252,0,0,0,0,73,69,78,68,174,66,96,
+130,0,0};
+
+const char* FilterEditorAdvanced::lfo_png = (const char*) resource_FilterEditorAdvanced_lfo_png;
+const int FilterEditorAdvanced::lfo_pngSize = 235;
 
 
 //[EndFile] You can add extra defines here...

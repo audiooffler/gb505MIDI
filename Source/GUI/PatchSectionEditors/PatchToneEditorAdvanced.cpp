@@ -43,7 +43,6 @@ PatchToneEditorAdvanced::PatchToneEditorAdvanced (SynthParts part, Tone tone)
     addAndMakeVisible (m_fxm = new FxmEditor ("FXM", m_part, m_tone));
     addAndMakeVisible (m_delay = new ToneDelayEditor ("DELAY", m_part, m_tone));
     addAndMakeVisible (m_wave = new WaveEditor ("WAVE", (AllParts) m_part, m_tone));
-    addAndMakeVisible (component = new RectangleTransp());
 
     //[UserPreSize]
     //[/UserPreSize]
@@ -69,7 +68,6 @@ PatchToneEditorAdvanced::~PatchToneEditorAdvanced()
     m_fxm = nullptr;
     m_delay = nullptr;
     m_wave = nullptr;
-    component = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -85,16 +83,6 @@ void PatchToneEditorAdvanced::paint (Graphics& g)
 	#endif
     //[/UserPrePaint]
 
-    g.setGradientFill (ColourGradient (Colour (0xff969a9d),
-                                       48.0f, static_cast<float> (proportionOfHeight (0.0127f)),
-                                       Colour (0xff767b7d),
-                                       56.0f, static_cast<float> (proportionOfHeight (0.7722f)),
-                                       false));
-    g.fillRoundedRectangle (0.0f, 0.0f, static_cast<float> (getWidth() - 0), static_cast<float> (getHeight() - 0), 5.000f);
-
-    g.setColour (Colour (0xff888b90));
-    g.drawRoundedRectangle (0.0f, 0.0f, static_cast<float> (getWidth() - 0), static_cast<float> (getHeight() - 0), 5.000f, 2.000f);
-
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
@@ -104,16 +92,15 @@ void PatchToneEditorAdvanced::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_amp->setBounds (868, 172, 376, 400);
-    m_filter->setBounds (488, 172, 376, 400);
-    m_pitch->setBounds (108, 172, 376, 400);
-    m_lfo1->setBounds (108, 0, 304, 168);
-    m_lfo2->setBounds (416, 0, 304, 168);
-    m_controlMatrix->setBounds (724, 0, 520, 168);
+    m_amp->setBounds (868, 0, 376, 400);
+    m_filter->setBounds (488, 0, 376, 400);
+    m_pitch->setBounds (108, 0, 376, 400);
+    m_lfo1->setBounds (108, 404, 304, 168);
+    m_lfo2->setBounds (416, 404, 304, 168);
+    m_controlMatrix->setBounds (724, 404, 520, 168);
     m_fxm->setBounds (0, 312, 104, 108);
     m_delay->setBounds (0, 424, 104, 148);
-    m_wave->setBounds (0, 172, 104, 136);
-    component->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
+    m_wave->setBounds (0, 0, 104, 136);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -138,27 +125,24 @@ BEGIN_JUCER_METADATA
                  constructorParams="SynthParts part, Tone tone" variableInitialisers="m_part (part),&#10;m_tone (tone)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="1244" initialHeight="572">
-  <BACKGROUND backgroundColour="0">
-    <ROUNDRECT pos="0 0 0M 0M" cornerSize="5" fill="linear: 48 1.266%, 56 77.215%, 0=ff969a9d, 1=ff767b7d"
-               hasStroke="1" stroke="2, mitered, butt" strokeColour="solid: ff888b90"/>
-  </BACKGROUND>
+  <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="amp" id="8967d26b44494c0c" memberName="m_amp" virtualName=""
-             explicitFocusOrder="0" pos="868 172 376 400" sourceFile="AmpEditorAdvanced.cpp"
+             explicitFocusOrder="0" pos="868 0 376 400" sourceFile="AmpEditorAdvanced.cpp"
              constructorParams="&quot;AMP&quot;, m_part, m_tone"/>
   <JUCERCOMP name="filter" id="24ccf964906b3d92" memberName="m_filter" virtualName=""
-             explicitFocusOrder="0" pos="488 172 376 400" sourceFile="FilterEditorAdvanced.cpp"
+             explicitFocusOrder="0" pos="488 0 376 400" sourceFile="FilterEditorAdvanced.cpp"
              constructorParams="&quot;FILTER&quot;, m_part, m_tone"/>
   <JUCERCOMP name="pitch" id="40e1a57b38902512" memberName="m_pitch" virtualName=""
-             explicitFocusOrder="0" pos="108 172 376 400" sourceFile="PitchEditorAdvanced.cpp"
+             explicitFocusOrder="0" pos="108 0 376 400" sourceFile="PitchEditorAdvanced.cpp"
              constructorParams="&quot;PITCH&quot;, m_part, m_tone"/>
   <JUCERCOMP name="lfo1" id="bd92e80a5eddb70a" memberName="m_lfo1" virtualName=""
-             explicitFocusOrder="0" pos="108 0 304 168" sourceFile="LfoEditorAdvanced.cpp"
+             explicitFocusOrder="0" pos="108 404 304 168" sourceFile="LfoEditorAdvanced.cpp"
              constructorParams="&quot;LFO&quot;, m_part, m_tone, false"/>
   <JUCERCOMP name="lfo2" id="f4e7393c36d04316" memberName="m_lfo2" virtualName=""
-             explicitFocusOrder="0" pos="416 0 304 168" sourceFile="LfoEditorAdvanced.cpp"
+             explicitFocusOrder="0" pos="416 404 304 168" sourceFile="LfoEditorAdvanced.cpp"
              constructorParams="&quot;LFO&quot;, m_part, m_tone, true"/>
   <JUCERCOMP name="" id="8539adf5ee9f16e9" memberName="m_controlMatrix" virtualName=""
-             explicitFocusOrder="0" pos="724 0 520 168" sourceFile="PatchControllerMatrixEditor.cpp"
+             explicitFocusOrder="0" pos="724 404 520 168" sourceFile="PatchControllerMatrixEditor.cpp"
              constructorParams="&quot;CONTROL MATRIX&quot;, m_part, m_tone"/>
   <JUCERCOMP name="fxm" id="137c15769c7a126a" memberName="m_fxm" virtualName=""
              explicitFocusOrder="0" pos="0 312 104 108" sourceFile="FxmEditor.cpp"
@@ -167,11 +151,8 @@ BEGIN_JUCER_METADATA
              explicitFocusOrder="0" pos="0 424 104 148" sourceFile="ToneDelayEditor.cpp"
              constructorParams="&quot;DELAY&quot;, m_part, m_tone"/>
   <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
-             explicitFocusOrder="0" pos="0 172 104 136" sourceFile="WaveEditor.cpp"
+             explicitFocusOrder="0" pos="0 0 104 136" sourceFile="WaveEditor.cpp"
              constructorParams="&quot;WAVE&quot;, (AllParts) m_part, m_tone"/>
-  <JUCERCOMP name="" id="587e664fd3d5400a" memberName="component" virtualName=""
-             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/RectangleTransp.cpp"
-             constructorParams=""/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

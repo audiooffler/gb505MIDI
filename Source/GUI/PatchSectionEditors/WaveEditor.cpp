@@ -53,7 +53,7 @@ WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumb
     addAndMakeVisible (m_waveLabel = new Label ("waveLabel",
                                                 TRANS("WAVEFORM")));
     m_waveLabel->setFont (Font (12.00f, Font::bold));
-    m_waveLabel->setJustificationType (Justification::centred);
+    m_waveLabel->setJustificationType (Justification::centredLeft);
     m_waveLabel->setEditable (false, false, false);
     m_waveLabel->setColour (Label::textColourId, Colours::black);
     m_waveLabel->setColour (TextEditor::textColourId, Colours::black);
@@ -62,7 +62,7 @@ WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumb
     addAndMakeVisible (m_onLabel2 = new Label ("onLabel",
                                                TRANS("GAIN")));
     m_onLabel2->setFont (Font (12.00f, Font::bold));
-    m_onLabel2->setJustificationType (Justification::centredRight);
+    m_onLabel2->setJustificationType (Justification::centredLeft);
     m_onLabel2->setEditable (false, false, false);
     m_onLabel2->setColour (Label::textColourId, Colours::black);
     m_onLabel2->setColour (TextEditor::textColourId, Colours::black);
@@ -72,7 +72,7 @@ WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumb
     addAndMakeVisible (m_onLabel = new Label ("onLabel",
                                               TRANS("ON")));
     m_onLabel->setFont (Font (12.00f, Font::bold));
-    m_onLabel->setJustificationType (Justification::centredRight);
+    m_onLabel->setJustificationType (Justification::centredLeft);
     m_onLabel->setEditable (false, false, false);
     m_onLabel->setColour (Label::textColourId, Colours::black);
     m_onLabel->setColour (TextEditor::textColourId, Colours::black);
@@ -89,14 +89,45 @@ WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumb
     m_waveGainComboBox->addItem (TRANS("+12dB"), 4);
     m_waveGainComboBox->addListener (this);
 
+    addAndMakeVisible (m_envModeToggle = new ParameterLedSwitch ("envModeToggle"));
+    addAndMakeVisible (m_envModeLabel = new Label ("envModeLabel",
+                                                   TRANS("ENVELOPE MODE")));
+    m_envModeLabel->setFont (Font (12.00f, Font::bold));
+    m_envModeLabel->setJustificationType (Justification::centredRight);
+    m_envModeLabel->setEditable (false, false, false);
+    m_envModeLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_envModeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_muteGrpSlider = new MicroParameterSlider ("muteGrpSlider"));
+    m_muteGrpSlider->setRange (0, 31, 1);
+    m_muteGrpSlider->setSliderStyle (Slider::LinearBar);
+    m_muteGrpSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 80, 20);
+    m_muteGrpSlider->addListener (this);
+
+    addAndMakeVisible (m_muteGrpLabel = new Label ("muteGrpLabel",
+                                                   TRANS("MUTE GROUP")));
+    m_muteGrpLabel->setFont (Font (12.00f, Font::bold));
+    m_muteGrpLabel->setJustificationType (Justification::centredLeft);
+    m_muteGrpLabel->setEditable (false, false, false);
+    m_muteGrpLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_muteGrpLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
 
     //[UserPreSize]
 	m_waveGroupType = nullptr;
 	m_waveGroupId = nullptr;
 	m_waveNumber = nullptr;
+
+	if (part != PartR)
+	{
+		m_muteGrpLabel->setVisible(false);
+		m_muteGrpSlider->setVisible(false);
+		m_envModeLabel->setVisible(false);
+		m_envModeToggle->setVisible(false);
+	}
     //[/UserPreSize]
 
-    setSize (104, 128);
+    setSize (240, 128);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -120,6 +151,10 @@ WaveEditor::~WaveEditor()
     m_onToggle = nullptr;
     m_onLabel = nullptr;
     m_waveGainComboBox = nullptr;
+    m_envModeToggle = nullptr;
+    m_envModeLabel = nullptr;
+    m_muteGrpSlider = nullptr;
+    m_muteGrpLabel = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -146,12 +181,16 @@ void WaveEditor::resized()
 
     m_fxmGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_imageButton->setBounds (3, 1, 16, 16);
-    m_waveButton->setBounds (8, 84, 92, 34);
-    m_waveLabel->setBounds (0, 68, 104, 16);
-    m_onLabel2->setBounds (-2, 44, 44, 16);
+    m_waveButton->setBounds (8, 86, getWidth() - 12, 34);
+    m_waveLabel->setBounds (0, 70, 104, 16);
+    m_onLabel2->setBounds (0, 44, 42, 16);
     m_onToggle->setBounds (40, 20, 25, 17);
-    m_onLabel->setBounds (-2, 20, 44, 16);
+    m_onLabel->setBounds (0, 20, 42, 16);
     m_waveGainComboBox->setBounds (40, 44, 60, 17);
+    m_envModeToggle->setBounds (168, 44, 80, 32);
+    m_envModeLabel->setBounds (104, 44, 68, 32);
+    m_muteGrpSlider->setBounds (192, 20, 43, 16);
+    m_muteGrpLabel->setBounds (104, 20, 84, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -200,6 +239,21 @@ void WaveEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     //[/UsercomboBoxChanged_Post]
 }
 
+void WaveEditor::sliderValueChanged (Slider* sliderThatWasMoved)
+{
+    //[UsersliderValueChanged_Pre]
+    //[/UsersliderValueChanged_Pre]
+
+    if (sliderThatWasMoved == m_muteGrpSlider)
+    {
+        //[UserSliderCode_m_muteGrpSlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_muteGrpSlider]
+    }
+
+    //[UsersliderValueChanged_Post]
+    //[/UsersliderValueChanged_Post]
+}
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -207,7 +261,7 @@ void WaveEditor::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
 void WaveEditor::setupParameters(AllParts part, int toneNumber)
 {
 	if (grooveboxMemory == nullptr) return;
-	
+
 	m_part = part;
 
 	if (part == AllParts::PartR)
@@ -230,6 +284,10 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 						m_waveGroupId->addChangeListener(this);
 						m_waveNumber->addChangeListener(this);
 						m_waveGainComboBox->setParameter(noteBlock->getParameter(0x05));
+
+						m_muteGrpSlider->setParameter(noteBlock->getParameter(0x07));
+						m_envModeToggle->setParameter(noteBlock->getParameter(0x08));
+						m_fxmGrp->setText("WAVE OF KEY " + String(toneNumber));
 					}
 				}
 			}
@@ -242,19 +300,24 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 			if (PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr((SynthParts)m_part))
 			{
 				PatchToneBlock* tone = nullptr;
+				int toneNumberLabel = 1;
 				switch (toneNumber)
 				{
 				case Tone1:
 					if (PatchToneBlock* tone1 = patchPart->getPatchToneBlockPtr(Tone1)) tone = tone1;
+					toneNumberLabel = 1;
 					break;
 				case Tone2:
 					if (PatchToneBlock* tone2 = patchPart->getPatchToneBlockPtr(Tone2)) tone = tone2;
+					toneNumberLabel = 2;
 					break;
 				case Tone3:
 					if (PatchToneBlock* tone3 = patchPart->getPatchToneBlockPtr(Tone3)) tone = tone3;
+					toneNumberLabel = 3;
 					break;
 				case Tone4:
 					if (PatchToneBlock* tone4 = patchPart->getPatchToneBlockPtr(Tone4)) tone = tone4;
+					toneNumberLabel = 4;
 					break;
 				}
 				if (tone != nullptr)
@@ -269,6 +332,7 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 					m_waveGroupId->addChangeListener(this);
 					m_waveNumber->addChangeListener(this);
 					m_waveGainComboBox->setParameter(tone->getParameter(0x05));
+					m_fxmGrp->setText("WAVE T" + String(toneNumberLabel));
 				}
 			}
 		}
@@ -326,7 +390,7 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component, public ChangeListener" constructorParams="const String &amp;componentName, AllParts part, int toneNumber"
                  variableInitialisers="Component (componentName), m_part(part), m_toneNumber(toneNumber)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="104" initialHeight="128">
+                 fixedSize="1" initialWidth="240" initialHeight="128">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="fxmGrp" id="ae3eed65b8ca1538" memberName="m_fxmGrp" virtualName=""
              explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
@@ -338,30 +402,47 @@ BEGIN_JUCER_METADATA
                resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
                opacityDown="1" colourDown="4340454a"/>
   <TEXTBUTTON name="new button" id="603fab9f912b12cf" memberName="m_waveButton"
-              virtualName="" explicitFocusOrder="0" pos="8 84 92 34" buttonText="A:001 Dist TB 303a"
+              virtualName="" explicitFocusOrder="0" pos="8 86 12M 34" buttonText="A:001 Dist TB 303a"
               connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <LABEL name="waveLabel" id="77636cfe920d8c67" memberName="m_waveLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 68 104 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="0 70 104 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="WAVEFORM" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12" bold="1" italic="0" justification="33"/>
   <LABEL name="onLabel" id="622e567326097c53" memberName="m_onLabel2"
-         virtualName="" explicitFocusOrder="0" pos="-2 44 44 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="0 44 42 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="GAIN" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="34"/>
+         fontsize="12" bold="1" italic="0" justification="33"/>
   <JUCERCOMP name="onToggle" id="b0e7322ed6fe4133" memberName="m_onToggle"
              virtualName="" explicitFocusOrder="0" pos="40 20 25 17" sourceFile="../ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
   <LABEL name="onLabel" id="a5103dfa4b0cded3" memberName="m_onLabel" virtualName=""
-         explicitFocusOrder="0" pos="-2 20 44 16" textCol="ff000000" edTextCol="ff000000"
+         explicitFocusOrder="0" pos="0 20 42 16" textCol="ff000000" edTextCol="ff000000"
          edBkgCol="0" labelText="ON" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="34"/>
+         bold="1" italic="0" justification="33"/>
   <COMBOBOX name="waveGainComboBox" id="1615d6307f31d1e" memberName="m_waveGainComboBox"
             virtualName="ParameterComboBox" explicitFocusOrder="0" pos="40 44 60 17"
             editable="0" layout="34" items="-6dB&#10;0dB&#10;+6dB&#10;+12dB"
             textWhenNonSelected="-6 dB" textWhenNoItems="(no choices)"/>
+  <JUCERCOMP name="" id="6a490656457f331d" memberName="m_envModeToggle" virtualName=""
+             explicitFocusOrder="0" pos="168 44 80 32" sourceFile="../ParameterWidgets/ParameterLedSwitch.cpp"
+             constructorParams="&quot;envModeToggle&quot;"/>
+  <LABEL name="envModeLabel" id="188a8fc929628232" memberName="m_envModeLabel"
+         virtualName="" explicitFocusOrder="0" pos="104 44 68 32" edTextCol="ff000000"
+         edBkgCol="0" labelText="ENVELOPE MODE" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="34"/>
+  <SLIDER name="muteGrpSlider" id="457081b73f98531d" memberName="m_muteGrpSlider"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="192 20 43 16"
+          min="0" max="31" int="1" style="LinearBar" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="80" textBoxHeight="20" skewFactor="1"/>
+  <LABEL name="muteGrpLabel" id="9f4f0cd222ed55fb" memberName="m_muteGrpLabel"
+         virtualName="" explicitFocusOrder="0" pos="104 20 84 16" edTextCol="ff000000"
+         edBkgCol="0" labelText="MUTE GROUP" editableSingleClick="0" editableDoubleClick="0"
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
+         bold="1" italic="0" justification="33"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

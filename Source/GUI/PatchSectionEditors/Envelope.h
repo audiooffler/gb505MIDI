@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -42,17 +42,18 @@ class Envelope  : public Component,
 {
 public:
     //==============================================================================
-    Envelope (SynthParts part, Tone tone, EnvelopeTypes type, bool fullSize);
+    Envelope (AllParts part, int toneNumber, EnvelopeTypes type, bool fullSize);
     ~Envelope();
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	void changeListenerCallback(ChangeBroadcaster *source);
+	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
 
 
@@ -102,8 +103,9 @@ private:
 	float m_minLevel;
 	float m_maxLevel;
 	bool m_level4Always0;
-	SynthParts m_part;
-	Tone m_tone;
+	AllParts m_part;
+	//Tone m_tone;
+	int m_toneNumber;
 	EnvelopeTypes m_type;
 	Parameter* m_timePrm1;
 	Parameter* m_timePrm2;

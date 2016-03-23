@@ -47,11 +47,11 @@ PatchToneEditor::PatchToneEditor (SynthParts part, Tone tone)
 
     addAndMakeVisible (m_ampGrp = new PanelGroupGrey ("AmpGrp","AMP OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
     addAndMakeVisible (m_filterGrp = new PanelGroupGrey ("FilterGrp","FILTER OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
-    addAndMakeVisible (m_filterEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Filter, true));
+    addAndMakeVisible (m_filterEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Filter, true));
     addAndMakeVisible (m_pitchGrp = new PanelGroupGrey ("PitchGrp","PITCH OF TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
     addAndMakeVisible (m_waveGrp = new PanelGroupGrey ("WAVEGrp","TONE "+String(((int)m_tone - 0x1000)/0x200 + 1)));
-    addAndMakeVisible (m_pitchEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Pitch, true));
-    addAndMakeVisible (m_ampEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Amp, true));
+    addAndMakeVisible (m_pitchEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Pitch, true));
+    addAndMakeVisible (m_ampEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Amp, true));
     addAndMakeVisible (m_onToggle = new BlackToggle());
     addAndMakeVisible (m_onLabel = new Label ("onLabel",
                                               TRANS("ON")));
@@ -731,7 +731,7 @@ BEGIN_JUCER_METADATA
              constructorParams="&quot;FilterGrp&quot;,&quot;FILTER OF TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
   <JUCERCOMP name="filterEnv" id="bca85c8be5cf169c" memberName="m_filterEnv"
              virtualName="" explicitFocusOrder="0" pos="4 367 296 72" sourceFile="Envelope.cpp"
-             constructorParams="m_part, m_tone, EnvelopeTypes::Filter, true"/>
+             constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Filter, true"/>
   <JUCERCOMP name="pitchGrp" id="e06439a01507ceb3" memberName="m_pitchGrp"
              virtualName="" explicitFocusOrder="0" pos="0 172 304 132" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;PitchGrp&quot;,&quot;PITCH OF TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
@@ -740,10 +740,10 @@ BEGIN_JUCER_METADATA
              constructorParams="&quot;WAVEGrp&quot;,&quot;TONE &quot;+String(((int)m_tone - 0x1000)/0x200 + 1)"/>
   <JUCERCOMP name="pitchEnv" id="99a40d72d7ad1e22" memberName="m_pitchEnv"
              virtualName="" explicitFocusOrder="0" pos="4 229 296 72" sourceFile="Envelope.cpp"
-             constructorParams="m_part, m_tone, EnvelopeTypes::Pitch, true"/>
+             constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Pitch, true"/>
   <JUCERCOMP name="ampEnv" id="f84b427a83f125de" memberName="m_ampEnv" virtualName=""
              explicitFocusOrder="0" pos="4 500 296 72" sourceFile="Envelope.cpp"
-             constructorParams="m_part, m_tone, EnvelopeTypes::Amp, true"/>
+             constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Amp, true"/>
   <JUCERCOMP name="onToggle" id="b0e7322ed6fe4133" memberName="m_onToggle"
              virtualName="" explicitFocusOrder="0" pos="39 20 25 17" sourceFile="../ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>

@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -32,6 +32,7 @@
 #include "LfoEditorAdvanced.h"
 //[/Headers]
 
+#include "../GroupWidgets/PanelGroupGrey.h"
 #include "../GroupWidgets/PanelGroupTransp.h"
 #include "Envelope.h"
 
@@ -57,19 +58,20 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void labelTextChanged (Label* labelThatHasChanged);
-    void buttonClicked (Button* buttonThatWasClicked);
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void labelTextChanged (Label* labelThatHasChanged) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
 
     // Binary resources:
     static const char* pitch_png;
     static const int pitch_pngSize;
+    static const char* lfo_png;
+    static const int lfo_pngSize;
 
 
 private:
@@ -116,6 +118,8 @@ private:
     ScopedPointer<Label> m_stretchTuneDepthLabel2;
     ScopedPointer<ImageButton> imageButton5;
     ScopedPointer<ParameterComboBox> m_stretchTuneDepthComboBox;
+    ScopedPointer<ImageButton> imageButton2;
+    ScopedPointer<ImageButton> m_imageButton3;
 
 
     //==============================================================================

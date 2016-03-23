@@ -39,6 +39,7 @@ PatchEditor::PatchEditor (SynthParts part)
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
+    addAndMakeVisible (m_commonGrp4 = new RectangleGrey());
     addAndMakeVisible (m_commonGrp3 = new RectangleGrey());
     addAndMakeVisible (m_commonGrp2 = new RectangleGrey());
     addAndMakeVisible (m_mixGrp = new PanelGroupGrey ("mixerGrp","PART "+String(m_part+1)));
@@ -423,6 +424,7 @@ PatchEditor::~PatchEditor()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
+    m_commonGrp4 = nullptr;
     m_commonGrp3 = nullptr;
     m_commonGrp2 = nullptr;
     m_mixGrp = nullptr;
@@ -486,6 +488,8 @@ void PatchEditor::paint (Graphics& g)
 	#endif
     //[/UserPrePaint]
 
+    g.fillAll (Colour (0xff303030));
+
     g.setColour (Colour (0xff303030));
     g.drawRoundedRectangle (346.0f, 2.0f, static_cast<float> (getWidth() - 348), static_cast<float> (getHeight() - 579), 5.000f, 0.100f);
 
@@ -498,6 +502,7 @@ void PatchEditor::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
+    m_commonGrp4->setBounds (0, 0, 332, 100);
     m_commonGrp3->setBounds (1076, 0, 248, 100);
     m_commonGrp2->setBounds (708, 0, 360, 100);
     m_mixGrp->setBounds (0, 103, 80, 572);
@@ -729,10 +734,13 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="m_part(part)" snapPixels="4" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="1328"
                  initialHeight="675">
-  <BACKGROUND backgroundColour="b1afaf">
+  <BACKGROUND backgroundColour="ff303030">
     <ROUNDRECT pos="346 2 348M 579M" cornerSize="5" fill="solid: 0" hasStroke="1"
                stroke="0.1, mitered, butt" strokeColour="solid: ff303030"/>
   </BACKGROUND>
+  <JUCERCOMP name="commonGrp1" id="b95f1f3b55f39c2b" memberName="m_commonGrp4"
+             virtualName="" explicitFocusOrder="0" pos="0 0 332 100" sourceFile="GroupWidgets/RectangleGrey.cpp"
+             constructorParams=""/>
   <JUCERCOMP name="commonGrp3" id="a6da69a2b4215128" memberName="m_commonGrp3"
              virtualName="" explicitFocusOrder="0" pos="1076 0 248 100" sourceFile="GroupWidgets/RectangleGrey.cpp"
              constructorParams=""/>

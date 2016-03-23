@@ -267,6 +267,17 @@
           <FILE id="iz4sHe" name="WaveEditor.h" compile="0" resource="0" file="Source/GUI/PatchSectionEditors/WaveEditor.h"/>
         </GROUP>
         <GROUP id="{7BF73D30-0C57-91C0-EBA4-D9129DB7D86B}" name="RhythmSectionEditors">
+          <FILE id="XwmVdc" name="RhyAmpEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyAmpEditor.cpp"/>
+          <FILE id="GpMBYa" name="RhyAmpEditor.h" compile="0" resource="0" file="Source/GUI/RhythmSectionEditors/RhyAmpEditor.h"/>
+          <FILE id="npHf6k" name="RhyFilterEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyFilterEditor.cpp"/>
+          <FILE id="QBLSx9" name="RhyFilterEditor.h" compile="0" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyFilterEditor.h"/>
+          <FILE id="g313Hr" name="RhyPitchEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyPitchEditor.cpp"/>
+          <FILE id="woZL3L" name="RhyPitchEditor.h" compile="0" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyPitchEditor.h"/>
           <FILE id="N0Bxxm" name="RhySetKeyboardWithList.cpp" compile="1" resource="0"
                 file="Source/GUI/RhythmSectionEditors/RhySetKeyboardWithList.cpp"/>
           <FILE id="dcwGgd" name="RhySetKeyboardWithList.h" compile="0" resource="0"

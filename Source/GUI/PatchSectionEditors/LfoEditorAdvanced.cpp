@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -32,9 +32,12 @@ extern OverallMemoryBlock* grooveboxMemory;
 LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts part, Tone tone, bool lfo2)
     : Component (componentName), m_part(part), m_tone(tone), m_lfo2(lfo2)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_lfoGrp = new PanelGroupGrey ("lfoGrp", getName ()));
     addAndMakeVisible (m_waveformLabel = new Label ("waveformLabel",
-                                                    "WAVEFORM"));
+                                                    TRANS("WAVEFORM")));
     m_waveformLabel->setFont (Font (12.00f, Font::bold));
     m_waveformLabel->setJustificationType (Justification::centred);
     m_waveformLabel->setEditable (false, false, false);
@@ -45,21 +48,21 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     addAndMakeVisible (m_waveformComboBox = new ParameterComboBox ("waveformComboBox"));
     m_waveformComboBox->setEditableText (false);
     m_waveformComboBox->setJustificationType (Justification::centred);
-    m_waveformComboBox->setTextWhenNothingSelected ("TRI");
-    m_waveformComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_waveformComboBox->addItem ("TRI", 1);
-    m_waveformComboBox->addItem ("SIN", 2);
-    m_waveformComboBox->addItem ("SAW", 3);
-    m_waveformComboBox->addItem ("SQR", 4);
-    m_waveformComboBox->addItem ("TRP", 5);
-    m_waveformComboBox->addItem ("S+H", 6);
-    m_waveformComboBox->addItem ("RND", 7);
-    m_waveformComboBox->addItem ("Chaos", 8);
+    m_waveformComboBox->setTextWhenNothingSelected (TRANS("TRI"));
+    m_waveformComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_waveformComboBox->addItem (TRANS("TRI"), 1);
+    m_waveformComboBox->addItem (TRANS("SIN"), 2);
+    m_waveformComboBox->addItem (TRANS("SAW"), 3);
+    m_waveformComboBox->addItem (TRANS("SQR"), 4);
+    m_waveformComboBox->addItem (TRANS("TRP"), 5);
+    m_waveformComboBox->addItem (TRANS("S+H"), 6);
+    m_waveformComboBox->addItem (TRANS("RND"), 7);
+    m_waveformComboBox->addItem (TRANS("Chaos"), 8);
     m_waveformComboBox->addListener (this);
 
     addAndMakeVisible (m_tempoSyncToggle = new BlackToggle());
     addAndMakeVisible (m_offsetLabel = new Label ("offsetLabel",
-                                                  "OFFSET"));
+                                                  TRANS("OFFSET")));
     m_offsetLabel->setFont (Font (12.00f, Font::bold));
     m_offsetLabel->setJustificationType (Justification::centred);
     m_offsetLabel->setEditable (false, false, false);
@@ -77,7 +80,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_offsetSlider->addListener (this);
 
     addAndMakeVisible (m_fadeModeLabel = new Label ("fadeModeLabel",
-                                                    "FADE MODE"));
+                                                    TRANS("FADE MODE")));
     m_fadeModeLabel->setFont (Font (12.00f, Font::bold));
     m_fadeModeLabel->setJustificationType (Justification::centred);
     m_fadeModeLabel->setEditable (false, false, false);
@@ -88,16 +91,16 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     addAndMakeVisible (m_fadeModeComboBox = new ParameterComboBox ("fadeModeComboBox"));
     m_fadeModeComboBox->setEditableText (false);
     m_fadeModeComboBox->setJustificationType (Justification::centred);
-    m_fadeModeComboBox->setTextWhenNothingSelected ("On-In");
-    m_fadeModeComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_fadeModeComboBox->addItem ("On-In", 1);
-    m_fadeModeComboBox->addItem ("On-Out", 2);
-    m_fadeModeComboBox->addItem ("Off-In", 3);
-    m_fadeModeComboBox->addItem ("Off-Out", 4);
+    m_fadeModeComboBox->setTextWhenNothingSelected (TRANS("On-In"));
+    m_fadeModeComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_fadeModeComboBox->addItem (TRANS("On-In"), 1);
+    m_fadeModeComboBox->addItem (TRANS("On-Out"), 2);
+    m_fadeModeComboBox->addItem (TRANS("Off-In"), 3);
+    m_fadeModeComboBox->addItem (TRANS("Off-Out"), 4);
     m_fadeModeComboBox->addListener (this);
 
     addAndMakeVisible (m_delayTimeLabel = new Label ("delayTimeLabel",
-                                                     "DELAY TIME"));
+                                                     TRANS("DELAY TIME")));
     m_delayTimeLabel->setFont (Font (12.00f, Font::bold));
     m_delayTimeLabel->setJustificationType (Justification::centred);
     m_delayTimeLabel->setEditable (false, false, false);
@@ -114,8 +117,8 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_delayTimeSlider->addListener (this);
 
     addAndMakeVisible (m_fadeTimeLabel = new Label ("fadeTimeLabel",
-                                                    "FADE\n"
-                                                    "TIME"));
+                                                    TRANS("FADE\n"
+                                                    "TIME")));
     m_fadeTimeLabel->setFont (Font (12.00f, Font::bold));
     m_fadeTimeLabel->setJustificationType (Justification::centred);
     m_fadeTimeLabel->setEditable (false, false, false);
@@ -124,7 +127,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_fadeTimeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_tempoLabel = new Label ("tempoLabel",
-                                                 "TEMPO SYNC"));
+                                                 TRANS("TEMPO SYNC")));
     m_tempoLabel->setFont (Font (12.00f, Font::bold));
     m_tempoLabel->setJustificationType (Justification::centred);
     m_tempoLabel->setEditable (false, false, false);
@@ -133,7 +136,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_tempoLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_keyLabel = new Label ("keyLabel",
-                                               "KEY SYNC"));
+                                               TRANS("KEY SYNC")));
     m_keyLabel->setFont (Font (12.00f, Font::bold));
     m_keyLabel->setJustificationType (Justification::centred);
     m_keyLabel->setEditable (false, false, false);
@@ -148,7 +151,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_rateSlider->addListener (this);
 
     addAndMakeVisible (m_rateLabel = new Label ("rateLabel",
-                                                "RATE"));
+                                                TRANS("RATE")));
     m_rateLabel->setFont (Font (12.00f, Font::bold));
     m_rateLabel->setJustificationType (Justification::centred);
     m_rateLabel->setEditable (false, false, false);
@@ -163,7 +166,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_fadeTimeSlider->addListener (this);
 
     addAndMakeVisible (m_line = new Label ("line",
-                                           String::empty));
+                                           String()));
     m_line->setFont (Font (15.00f, Font::plain));
     m_line->setJustificationType (Justification::centredLeft);
     m_line->setEditable (false, false, false);
@@ -178,7 +181,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_pitchSlider->addListener (this);
 
     addAndMakeVisible (m_pitchLabel = new Label ("pitchLabel",
-                                                 "TO PITCH"));
+                                                 TRANS("TO PITCH")));
     m_pitchLabel->setFont (Font (12.00f, Font::bold));
     m_pitchLabel->setJustificationType (Justification::centred);
     m_pitchLabel->setEditable (false, false, false);
@@ -193,7 +196,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_filterSlider->addListener (this);
 
     addAndMakeVisible (m_filterLabel = new Label ("pitchLabel",
-                                                  "TO FILTER"));
+                                                  TRANS("TO FILTER")));
     m_filterLabel->setFont (Font (12.00f, Font::bold));
     m_filterLabel->setJustificationType (Justification::centred);
     m_filterLabel->setEditable (false, false, false);
@@ -208,7 +211,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_ampSlider->addListener (this);
 
     addAndMakeVisible (m_ampLabel = new Label ("ampLabel",
-                                               "TO AMP"));
+                                               TRANS("TO AMP")));
     m_ampLabel->setFont (Font (12.00f, Font::bold));
     m_ampLabel->setJustificationType (Justification::centred);
     m_ampLabel->setEditable (false, false, false);
@@ -223,7 +226,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_panSlider->addListener (this);
 
     addAndMakeVisible (m_panLabel = new Label ("panLabel",
-                                               "TO PAN"));
+                                               TRANS("TO PAN")));
     m_panLabel->setFont (Font (12.00f, Font::bold));
     m_panLabel->setJustificationType (Justification::centred);
     m_panLabel->setEditable (false, false, false);
@@ -232,7 +235,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
     m_panLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_imageButton = new ImageButton ("imageButton"));
-    m_imageButton->setButtonText (String::empty);
+    m_imageButton->setButtonText (String());
     m_imageButton->addListener (this);
 
     m_imageButton->setImages (false, true, true,
@@ -352,6 +355,9 @@ void LfoEditorAdvanced::paint (Graphics& g)
 
 void LfoEditorAdvanced::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_lfoGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_waveformLabel->setBounds (-4, 16, 80, 16);
     m_waveformComboBox->setBounds (2, 32, 72, 16);
@@ -500,7 +506,7 @@ BEGIN_JUCER_METADATA
                  fixedSize="1" initialWidth="304" initialHeight="168">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="lfoGrp" id="52e00682f746b888" memberName="m_lfoGrp" virtualName="PanelGroupGrey"
-             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
+             explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
              constructorParams="&quot;lfoGrp&quot;, getName () "/>
   <LABEL name="waveformLabel" id="c41c307042cbea72" memberName="m_waveformLabel"
          virtualName="" explicitFocusOrder="0" pos="-4 16 80 16" textCol="ff000000"

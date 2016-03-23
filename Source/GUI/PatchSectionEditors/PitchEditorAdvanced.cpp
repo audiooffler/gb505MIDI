@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -32,6 +32,9 @@ extern OverallMemoryBlock* grooveboxMemory;
 PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthParts part, Tone tone)
     : Component (componentName), m_part(part), m_tone(tone)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_pitchGrp = new PanelGroupGrey ("pitchGrp", getName()));
     addAndMakeVisible (m_lfoGrp = new PanelGroupGrey ("lfoGrp", "LFO MODULATION"));
     addAndMakeVisible (m_pitchGrp2 = new PanelGroupGrey ("pitchEnvGrp", getName().toUpperCase()+" ENVELOPE"));
@@ -43,7 +46,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_coarseTuneSlider->addListener (this);
 
     addAndMakeVisible (m_coarseTuneLabel = new Label ("coarseTuneLabel",
-                                                      "COARSE"));
+                                                      TRANS("COARSE")));
     m_coarseTuneLabel->setFont (Font (12.00f, Font::bold));
     m_coarseTuneLabel->setJustificationType (Justification::centred);
     m_coarseTuneLabel->setEditable (false, false, false);
@@ -51,7 +54,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_coarseTuneLabel->setColour (TextEditor::textColourId, Colours::black);
     m_coarseTuneLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (m_pitchEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Pitch, false));
+    addAndMakeVisible (m_pitchEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Pitch, false));
     addAndMakeVisible (m_randomPitchDepthSlider = new MicroParameterSlider ("randomPitchDepthLabel"));
     m_randomPitchDepthSlider->setRange (0, 127, 1);
     m_randomPitchDepthSlider->setSliderStyle (Slider::LinearBar);
@@ -61,7 +64,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_randomPitchDepthSlider->addListener (this);
 
     addAndMakeVisible (m_randomPitchDepthLabel = new Label ("randomPitchDepthLabel",
-                                                            "RANDOMNESS"));
+                                                            TRANS("RANDOMNESS")));
     m_randomPitchDepthLabel->setFont (Font (12.00f, Font::bold));
     m_randomPitchDepthLabel->setJustificationType (Justification::centred);
     m_randomPitchDepthLabel->setEditable (true, true, false);
@@ -71,7 +74,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_randomPitchDepthLabel->addListener (this);
 
     addAndMakeVisible (m_pitchKeyfollowLabel = new Label ("pitchKeyfollowLabel",
-                                                          "KEYFOLLOW"));
+                                                          TRANS("KEYFOLLOW")));
     m_pitchKeyfollowLabel->setFont (Font (12.00f, Font::bold));
     m_pitchKeyfollowLabel->setJustificationType (Justification::centred);
     m_pitchKeyfollowLabel->setEditable (false, false, false);
@@ -96,7 +99,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_pitchEnvelopeDepthSlider->addListener (this);
 
     addAndMakeVisible (m_pitchEnvelopeDepthLabel = new Label ("pitchEnvelopeDepthLabel",
-                                                              "DEPTH"));
+                                                              TRANS("DEPTH")));
     m_pitchEnvelopeDepthLabel->setFont (Font (12.00f, Font::bold));
     m_pitchEnvelopeDepthLabel->setJustificationType (Justification::centred);
     m_pitchEnvelopeDepthLabel->setEditable (false, false, false);
@@ -113,7 +116,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_pitchVelocitySensSlider->addListener (this);
 
     addAndMakeVisible (m_pitchEnvVelocitySensLabel = new Label ("pitchEnvVelocitySensLabel",
-                                                                "VELO SENS"));
+                                                                TRANS("VELO SENS")));
     m_pitchEnvVelocitySensLabel->setFont (Font (12.00f, Font::bold));
     m_pitchEnvVelocitySensLabel->setJustificationType (Justification::centred);
     m_pitchEnvVelocitySensLabel->setEditable (false, false, false);
@@ -130,7 +133,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_pitchEnvVelocityTime1Slider->addListener (this);
 
     addAndMakeVisible (m_pitchEnvVelocityTime1Label = new Label ("pitchEnvVelocityTime1Label",
-                                                                 "VELO SENS TIME 1"));
+                                                                 TRANS("VELO SENS TIME 1")));
     m_pitchEnvVelocityTime1Label->setFont (Font (12.00f, Font::bold));
     m_pitchEnvVelocityTime1Label->setJustificationType (Justification::centred);
     m_pitchEnvVelocityTime1Label->setEditable (false, false, false);
@@ -147,7 +150,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_pitchEnvVelocityTime4Slider->addListener (this);
 
     addAndMakeVisible (m_pitchEnvVelocityTime4Label = new Label ("pitchEnvVelocityTime4Label",
-                                                                 "VELO SENS TIME 4"));
+                                                                 TRANS("VELO SENS TIME 4")));
     m_pitchEnvVelocityTime4Label->setFont (Font (12.00f, Font::bold));
     m_pitchEnvVelocityTime4Label->setJustificationType (Justification::centred);
     m_pitchEnvVelocityTime4Label->setEditable (false, false, false);
@@ -156,7 +159,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_pitchEnvVelocityTime4Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_pitchEnvTimeKeyfollow = new Label ("pitchEnvTimeKeyfollow",
-                                                            "KEYFOLLOW TIME 2/3/4 "));
+                                                            TRANS("KEYFOLLOW TIME 2/3/4 ")));
     m_pitchEnvTimeKeyfollow->setFont (Font (12.00f, Font::bold));
     m_pitchEnvTimeKeyfollow->setJustificationType (Justification::centred);
     m_pitchEnvTimeKeyfollow->setEditable (false, false, false);
@@ -180,7 +183,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_fineTuneSlider->addListener (this);
 
     addAndMakeVisible (m_fineTuneLabel = new Label ("fineTuneLabel",
-                                                    "FINE TUNE"));
+                                                    TRANS("FINE TUNE")));
     m_fineTuneLabel->setFont (Font (12.00f, Font::bold));
     m_fineTuneLabel->setJustificationType (Justification::centred);
     m_fineTuneLabel->setEditable (false, false, false);
@@ -196,7 +199,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_lfo1PitchDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo1PitchDepthLabel = new Label ("lfo1PitchDepthLabel",
-                                                          "LFO 1 DEPTH"));
+                                                          TRANS("LFO 1 DEPTH")));
     m_lfo1PitchDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo1PitchDepthLabel->setJustificationType (Justification::centred);
     m_lfo1PitchDepthLabel->setEditable (false, false, false);
@@ -212,7 +215,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_lfo2PitchDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo2PitchDepthLabel = new Label ("lfo2PitchDepthLabel",
-                                                          "LFO 2 DEPTH"));
+                                                          TRANS("LFO 2 DEPTH")));
     m_lfo2PitchDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo2PitchDepthLabel->setJustificationType (Justification::centred);
     m_lfo2PitchDepthLabel->setEditable (false, false, false);
@@ -221,16 +224,16 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_lfo2PitchDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_lfo1AdvancedButton = new TextWithArrowButton ("lfo1AdvancedButton"));
-    m_lfo1AdvancedButton->setButtonText ("LFO 1");
+    m_lfo1AdvancedButton->setButtonText (TRANS("LFO 1"));
     m_lfo1AdvancedButton->addListener (this);
 
     addAndMakeVisible (m_lfo2AdvancedButton = new TextWithArrowButton ("lfo2AdvancedButton"));
-    m_lfo2AdvancedButton->setButtonText ("LFO 2");
+    m_lfo2AdvancedButton->setButtonText (TRANS("LFO 2"));
     m_lfo2AdvancedButton->addListener (this);
 
     addAndMakeVisible (m_pitchCmnGrp = new PanelGroupGrey ("pitchCmnGrp", "COMMON PITCH (TONES 1-4)"));
     addAndMakeVisible (m_bendDownLabel = new Label ("bendDownLabel",
-                                                    "DOWN"));
+                                                    TRANS("DOWN")));
     m_bendDownLabel->setFont (Font (12.00f, Font::bold));
     m_bendDownLabel->setJustificationType (Justification::centredRight);
     m_bendDownLabel->setEditable (false, false, false);
@@ -255,7 +258,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_bendUpSlider->addListener (this);
 
     addAndMakeVisible (m_bendUpLabel = new Label ("bendUpLabel",
-                                                  "UP"));
+                                                  TRANS("UP")));
     m_bendUpLabel->setFont (Font (12.00f, Font::bold));
     m_bendUpLabel->setJustificationType (Justification::centredRight);
     m_bendUpLabel->setEditable (false, false, false);
@@ -264,9 +267,9 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_bendUpLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_stretchTuneDepthLabel = new Label ("stretchTuneDepthLabel",
-                                                            "STRETCH\n"
+                                                            TRANS("STRETCH\n"
                                                             "TUNE\n"
-                                                            "DEPTH"));
+                                                            "DEPTH")));
     m_stretchTuneDepthLabel->setFont (Font (12.00f, Font::bold));
     m_stretchTuneDepthLabel->setJustificationType (Justification::centred);
     m_stretchTuneDepthLabel->setEditable (false, false, false);
@@ -275,7 +278,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_stretchTuneDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_stretchTuneDepthLabel2 = new Label ("stretchTuneDepthLabel",
-                                                             "BEND RANGE"));
+                                                             TRANS("BEND RANGE")));
     m_stretchTuneDepthLabel2->setFont (Font (12.00f, Font::bold));
     m_stretchTuneDepthLabel2->setJustificationType (Justification::centred);
     m_stretchTuneDepthLabel2->setEditable (false, false, false);
@@ -284,7 +287,7 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     m_stretchTuneDepthLabel2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (imageButton5 = new ImageButton ("new button"));
-    imageButton5->setButtonText (String::empty);
+    imageButton5->setButtonText (String());
 
     imageButton5->setImages (false, true, true,
                              ImageCache::getFromMemory (pitch_png, pitch_pngSize), 1.000f, Colour (0x4340454a),
@@ -293,14 +296,29 @@ PitchEditorAdvanced::PitchEditorAdvanced (const String &componentName, SynthPart
     addAndMakeVisible (m_stretchTuneDepthComboBox = new ParameterComboBox ("stretchTuneDepthComboBox"));
     m_stretchTuneDepthComboBox->setEditableText (false);
     m_stretchTuneDepthComboBox->setJustificationType (Justification::centred);
-    m_stretchTuneDepthComboBox->setTextWhenNothingSelected ("OFF");
-    m_stretchTuneDepthComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
-    m_stretchTuneDepthComboBox->addItem ("OFF", 1);
-    m_stretchTuneDepthComboBox->addItem ("1", 2);
-    m_stretchTuneDepthComboBox->addItem ("2", 3);
-    m_stretchTuneDepthComboBox->addItem ("3", 4);
+    m_stretchTuneDepthComboBox->setTextWhenNothingSelected (TRANS("OFF"));
+    m_stretchTuneDepthComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
+    m_stretchTuneDepthComboBox->addItem (TRANS("OFF"), 1);
+    m_stretchTuneDepthComboBox->addItem (TRANS("1"), 2);
+    m_stretchTuneDepthComboBox->addItem (TRANS("2"), 3);
+    m_stretchTuneDepthComboBox->addItem (TRANS("3"), 4);
     m_stretchTuneDepthComboBox->addListener (this);
 
+    addAndMakeVisible (imageButton2 = new ImageButton ("new button"));
+    imageButton2->setButtonText (String());
+
+    imageButton2->setImages (false, true, true,
+                             ImageCache::getFromMemory (pitch_png, pitch_pngSize), 1.000f, Colour (0x4340454a),
+                             Image(), 1.000f, Colour (0x4340454a),
+                             Image(), 1.000f, Colour (0x4340454a));
+    addAndMakeVisible (m_imageButton3 = new ImageButton ("imageButton"));
+    m_imageButton3->setButtonText (String());
+    m_imageButton3->addListener (this);
+
+    m_imageButton3->setImages (false, true, true,
+                               ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, Colour (0x4340454a),
+                               ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a));
 
     //[UserPreSize]
     m_pitchGrp->setText("PITCH OF PART "+ String(part+1) + " TONE "+ String(((tone-4096)/512)+1));
@@ -413,6 +431,8 @@ PitchEditorAdvanced::~PitchEditorAdvanced()
     m_stretchTuneDepthLabel2 = nullptr;
     imageButton5 = nullptr;
     m_stretchTuneDepthComboBox = nullptr;
+    imageButton2 = nullptr;
+    m_imageButton3 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -434,6 +454,9 @@ void PitchEditorAdvanced::paint (Graphics& g)
 
 void PitchEditorAdvanced::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_pitchGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_lfoGrp->setBounds (0, 404, getWidth() - 0, 88);
     m_pitchGrp2->setBounds (0, 140, getWidth() - 0, 260);
@@ -471,6 +494,8 @@ void PitchEditorAdvanced::resized()
     m_stretchTuneDepthLabel2->setBounds (256, 72, 112, 16);
     imageButton5->setBounds (3, 1, 16, 16);
     m_stretchTuneDepthComboBox->setBounds (184, 110, 56, 16);
+    imageButton2->setBounds (3, 141, 16, 16);
+    m_imageButton3->setBounds (3, 405, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -584,6 +609,11 @@ void PitchEditorAdvanced::buttonClicked (Button* buttonThatWasClicked)
 		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo2AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo2AdvancedButton]
     }
+    else if (buttonThatWasClicked == m_imageButton3)
+    {
+        //[UserButtonCode_m_imageButton3] -- add your button handler code here..
+        //[/UserButtonCode_m_imageButton3]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -627,7 +657,7 @@ BEGIN_JUCER_METADATA
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="pitchGrp" id="52e00682f746b888" memberName="m_pitchGrp"
              virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 0 0M 0M"
-             sourceFile="../GroupWidgets/PanelGroupTransp.cpp" constructorParams="&quot;pitchGrp&quot;, getName() "/>
+             sourceFile="../GroupWidgets/PanelGroupGrey.cpp" constructorParams="&quot;pitchGrp&quot;, getName() "/>
   <JUCERCOMP name="lfoGrp" id="5d2169b0330e13c6" memberName="m_lfoGrp" virtualName="PanelGroupGrey"
              explicitFocusOrder="0" pos="0 404 0M 88" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
              constructorParams="&quot;lfoGrp&quot;, &quot;LFO MODULATION&quot;"/>
@@ -646,7 +676,7 @@ BEGIN_JUCER_METADATA
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="pitchEnv" id="99a40d72d7ad1e22" memberName="m_pitchEnv"
              virtualName="" explicitFocusOrder="0" pos="72 156 296 156" sourceFile="Envelope.cpp"
-             constructorParams="m_part, m_tone, EnvelopeTypes::Pitch, false"/>
+             constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Pitch, false"/>
   <SLIDER name="randomPitchDepthLabel" id="579dec6fe706db7d" memberName="m_randomPitchDepthSlider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="196 36 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
@@ -796,6 +826,18 @@ BEGIN_JUCER_METADATA
             virtualName="ParameterComboBox" explicitFocusOrder="0" pos="184 110 56 16"
             editable="0" layout="36" items="OFF&#10;1&#10;2&#10;3" textWhenNonSelected="OFF"
             textWhenNoItems="(no choices)"/>
+  <IMAGEBUTTON name="new button" id="a00a2f40d870e3e2" memberName="imageButton2"
+               virtualName="" explicitFocusOrder="0" pos="3 141 16 16" buttonText=""
+               connectedEdges="0" needsCallback="0" radioGroupId="0" keepProportions="1"
+               resourceNormal="pitch_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
+               opacityDown="1" colourDown="4340454a"/>
+  <IMAGEBUTTON name="imageButton" id="570f3b3b741de5e4" memberName="m_imageButton3"
+               virtualName="" explicitFocusOrder="0" pos="3 405 16 16" buttonText=""
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="lfo_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="lfo_png" opacityOver="1" colourOver="4340454a"
+               resourceDown="" opacityDown="1" colourDown="4340454a"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -813,6 +855,16 @@ static const unsigned char resource_PitchEditorAdvanced_pitch_png[] = { 137,80,7
 
 const char* PitchEditorAdvanced::pitch_png = (const char*) resource_PitchEditorAdvanced_pitch_png;
 const int PitchEditorAdvanced::pitch_pngSize = 225;
+
+// JUCER_RESOURCE: lfo_png, 235, "../../../Resources/PatchEditSectionIcons/lfo.png"
+static const unsigned char resource_PitchEditorAdvanced_lfo_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,16,0,0,0,16,8,6,0,0,0,31,243,255,97,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,
+0,6,98,75,71,68,0,255,0,255,0,255,160,189,167,147,0,0,0,9,112,72,89,115,0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,7,116,73,77,69,7,222,12,10,20,17,26,251,57,11,92,0,0,0,107,73,68,65,84,56,203,165,83,91,
+14,192,32,8,163,141,247,191,50,251,153,9,16,22,6,240,37,216,242,168,8,121,77,85,85,26,6,0,50,37,59,206,132,108,147,176,3,78,139,253,233,192,98,226,153,178,181,170,131,236,254,198,92,7,83,49,89,85,119,
+239,157,236,192,153,140,106,19,208,6,163,194,23,24,201,214,103,119,125,163,86,231,11,144,205,158,9,205,172,74,36,87,254,234,51,97,251,157,31,197,207,111,229,235,115,88,252,0,0,0,0,73,69,78,68,174,66,96,
+130,0,0};
+
+const char* PitchEditorAdvanced::lfo_png = (const char*) resource_PitchEditorAdvanced_lfo_png;
+const int PitchEditorAdvanced::lfo_pngSize = 235;
 
 
 //[EndFile] You can add extra defines here...

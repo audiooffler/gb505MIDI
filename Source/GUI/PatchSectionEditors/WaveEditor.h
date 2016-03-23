@@ -34,6 +34,7 @@
 
 #include "../GroupWidgets/PanelGroupGrey.h"
 #include "../ParameterWidgets/BlackToggle.h"
+#include "../ParameterWidgets/ParameterLedSwitch.h"
 
 
 //==============================================================================
@@ -47,7 +48,8 @@ Describe your class and how it works here!
 class WaveEditor  : public Component,
                     public ChangeListener,
                     public ButtonListener,
-                    public ComboBoxListener
+                    public ComboBoxListener,
+                    public SliderListener
 {
 public:
     //==============================================================================
@@ -80,6 +82,7 @@ public:
     void resized() override;
     void buttonClicked (Button* buttonThatWasClicked) override;
     void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
 
     // Binary resources:
     static const char* wave_png;
@@ -105,6 +108,10 @@ private:
     ScopedPointer<BlackToggle> m_onToggle;
     ScopedPointer<Label> m_onLabel;
     ScopedPointer<ParameterComboBox> m_waveGainComboBox;
+    ScopedPointer<ParameterLedSwitch> m_envModeToggle;
+    ScopedPointer<Label> m_envModeLabel;
+    ScopedPointer<MicroParameterSlider> m_muteGrpSlider;
+    ScopedPointer<Label> m_muteGrpLabel;
 
 
     //==============================================================================

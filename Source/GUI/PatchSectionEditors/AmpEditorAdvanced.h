@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -59,18 +59,19 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void sliderValueChanged (Slider* sliderThatWasMoved);
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged);
-    void buttonClicked (Button* buttonThatWasClicked);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* amp_png;
     static const int amp_pngSize;
+    static const char* lfo_png;
+    static const int lfo_pngSize;
 
 
 private:
@@ -84,7 +85,6 @@ private:
     ScopedPointer<PanelGroupGrey> m_ampEnvGrp;
     ScopedPointer<PanelGroupGrey> m_panGrp;
     ScopedPointer<PanelGroupGrey> m_biasGrp;
-    ScopedPointer<Label> m_toneLevelLabel;
     ScopedPointer<Knob> m_tonePanSlider;
     ScopedPointer<Label> m_tonePanLabel;
     ScopedPointer<Envelope> m_ampEnv;
@@ -107,7 +107,6 @@ private:
     ScopedPointer<MicroParameterSlider> m_biasPointSlider;
     ScopedPointer<Label> m_biasLevelLabel;
     ScopedPointer<MicroParameterSlider> m_biasLevelSlider;
-    ScopedPointer<MixPartLevelFader> m_toneLevelSlider;
     ScopedPointer<BlackToggle> m_panRandomToggle;
     ScopedPointer<Label> m_panRandomLabel;
     ScopedPointer<MicroParameterSlider> m_panAlternateSlider;
@@ -124,6 +123,10 @@ private:
     ScopedPointer<Knob> m_lfo2PanDepthSlider;
     ScopedPointer<Label> m_lfo2PanDepthLabel;
     ScopedPointer<ImageButton> m_imageButton;
+    ScopedPointer<ParameterEnvelopeSlider> m_toneLevelSlider;
+    ScopedPointer<Label> m_filterEnvelopeDepthLabel;
+    ScopedPointer<ImageButton> m_imageButton2;
+    ScopedPointer<ImageButton> m_imageButton3;
 
 
     //==============================================================================

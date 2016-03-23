@@ -24,10 +24,15 @@
 #include "JuceHeader.h"
 //[/Headers]
 
+#include "GroupWidgets/RectangleGrey.h"
+#include "PatchSectionEditors/WaveEditor.h"
+#include "RhythmSectionEditors/RhyPitchEditor.h"
+#include "RhythmSectionEditors/RhyFilterEditor.h"
+#include "RhythmSectionEditors/RhyAmpEditor.h"
 #include "RhythmSectionEditors/RhySetKeyboardWithList.h"
+#include "GroupWidgets/RectangleDark.h"
 #include "GroupWidgets/PanelGroupGrey.h"
 #include "MixerSectionsEditors/MixRhyTrack.h"
-#include "PatchSectionEditors/WaveEditor.h"
 
 
 //==============================================================================
@@ -67,15 +72,20 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<RhySetKeyboardWithList> m_rhySetKeyboardWithList;
-    ScopedPointer<PanelGroupGrey> m_mixGrp;
-    ScopedPointer<MixRhyTrack> m_mixRhyTrack;
-    ScopedPointer<ImageButton> imageButton5;
+    ScopedPointer<RectangleGrey> m_commonGrp4;
     ScopedPointer<Label> m_partNoLabel;
     ScopedPointer<Label> m_patchNameLabel;
     ScopedPointer<ParameterTextEditor> m_patchNameEditor;
     ScopedPointer<Label> m_selectKeyLabel;
     ScopedPointer<WaveEditor> m_wave;
+    ScopedPointer<RhyPitchEditor> m_rhyPitchEditor;
+    ScopedPointer<RhyFilterEditor> m_rhyFilterEditor;
+    ScopedPointer<RhyAmpEditor> m_rhyAmpEditor;
+    ScopedPointer<RhySetKeyboardWithList> m_rhySetKeyboardWithList;
+    ScopedPointer<RectangleDark> m_darkSepRect3;
+    ScopedPointer<PanelGroupGrey> m_mixGrp;
+    ScopedPointer<MixRhyTrack> m_mixRhyTrack;
+    ScopedPointer<ImageButton> imageButton5;
 
 
     //==============================================================================

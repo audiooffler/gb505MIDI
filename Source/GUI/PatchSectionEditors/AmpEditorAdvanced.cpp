@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -32,20 +32,13 @@ extern OverallMemoryBlock* grooveboxMemory;
 AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts part, Tone tone)
     : Component (componentName), m_part(part), m_tone(tone)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_ampGrp = new PanelGroupGrey ("ampGrp", getName()));
     addAndMakeVisible (m_ampEnvGrp = new PanelGroupGrey ("ampEnvGrp", getName().toUpperCase()+" ENVELOPE"));
     addAndMakeVisible (m_panGrp = new PanelGroupGrey ("panGrp", "PAN"));
     addAndMakeVisible (m_biasGrp = new PanelGroupGrey ("biasGrp", "BIAS"));
-    addAndMakeVisible (m_toneLevelLabel = new Label ("toneLevelLabel",
-                                                     "TONE\n"
-                                                     "LEVEL"));
-    m_toneLevelLabel->setFont (Font (12.00f, Font::bold));
-    m_toneLevelLabel->setJustificationType (Justification::centred);
-    m_toneLevelLabel->setEditable (false, false, false);
-    m_toneLevelLabel->setColour (Label::textColourId, Colours::black);
-    m_toneLevelLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_toneLevelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
-
     addAndMakeVisible (m_tonePanSlider = new Knob ("tonePanSlider"));
     m_tonePanSlider->setRange (0, 127, 1);
     m_tonePanSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
@@ -54,7 +47,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_tonePanSlider->addListener (this);
 
     addAndMakeVisible (m_tonePanLabel = new Label ("tonePanLabel",
-                                                   "TONE PAN"));
+                                                   TRANS("TONE PAN")));
     m_tonePanLabel->setFont (Font (12.00f, Font::bold));
     m_tonePanLabel->setJustificationType (Justification::centred);
     m_tonePanLabel->setEditable (false, false, false);
@@ -62,9 +55,9 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_tonePanLabel->setColour (TextEditor::textColourId, Colours::black);
     m_tonePanLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
-    addAndMakeVisible (m_ampEnv = new Envelope (m_part, m_tone, EnvelopeTypes::Amp, false));
+    addAndMakeVisible (m_ampEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Amp, false));
     addAndMakeVisible (m_panKeyfollowLabel = new Label ("panKeyfollowLabel",
-                                                        "KEYFOLLOW"));
+                                                        TRANS("KEYFOLLOW")));
     m_panKeyfollowLabel->setFont (Font (12.00f, Font::bold));
     m_panKeyfollowLabel->setJustificationType (Justification::centred);
     m_panKeyfollowLabel->setEditable (false, false, false);
@@ -89,7 +82,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_ampVelocitySensSlider->addListener (this);
 
     addAndMakeVisible (m_ampEnvVelocitySensLabel = new Label ("ampEnvVelocitySensLabel",
-                                                              "VELO SENS"));
+                                                              TRANS("VELO SENS")));
     m_ampEnvVelocitySensLabel->setFont (Font (12.00f, Font::bold));
     m_ampEnvVelocitySensLabel->setJustificationType (Justification::centred);
     m_ampEnvVelocitySensLabel->setEditable (false, false, false);
@@ -106,7 +99,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_ampEnvVelocityTime1Slider->addListener (this);
 
     addAndMakeVisible (m_ampEnvVelocityTime1Label = new Label ("ampEnvVelocityTime1Label",
-                                                               "VELO SENS TIME 1"));
+                                                               TRANS("VELO SENS TIME 1")));
     m_ampEnvVelocityTime1Label->setFont (Font (12.00f, Font::bold));
     m_ampEnvVelocityTime1Label->setJustificationType (Justification::centred);
     m_ampEnvVelocityTime1Label->setEditable (false, false, false);
@@ -123,7 +116,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_ampEnvVelocityTime4Slider->addListener (this);
 
     addAndMakeVisible (m_ampEnvVelocityTime4Label = new Label ("ampEnvVelocityTime4Label",
-                                                               "VELO SENS TIME 4"));
+                                                               TRANS("VELO SENS TIME 4")));
     m_ampEnvVelocityTime4Label->setFont (Font (12.00f, Font::bold));
     m_ampEnvVelocityTime4Label->setJustificationType (Justification::centred);
     m_ampEnvVelocityTime4Label->setEditable (false, false, false);
@@ -132,7 +125,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_ampEnvVelocityTime4Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_ampEnvTimeKeyfollow = new Label ("ampEnvTimeKeyfollow",
-                                                          "KEYFOLLOW TIME 2/3/4 "));
+                                                          TRANS("KEYFOLLOW TIME 2/3/4 ")));
     m_ampEnvTimeKeyfollow->setFont (Font (12.00f, Font::bold));
     m_ampEnvTimeKeyfollow->setJustificationType (Justification::centred);
     m_ampEnvTimeKeyfollow->setEditable (false, false, false);
@@ -151,8 +144,8 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     addAndMakeVisible (m_ampEnvVelCurveComboBox = new ParameterComboBox ("ampEnvVelCurveComboBox"));
     m_ampEnvVelCurveComboBox->setEditableText (false);
     m_ampEnvVelCurveComboBox->setJustificationType (Justification::centred);
-    m_ampEnvVelCurveComboBox->setTextWhenNothingSelected ("Normal");
-    m_ampEnvVelCurveComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
+    m_ampEnvVelCurveComboBox->setTextWhenNothingSelected (TRANS("Normal"));
+    m_ampEnvVelCurveComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_ampEnvVelCurveComboBox->addListener (this);
 
     addAndMakeVisible (m_ampEnvVelCurveDisplay = new ParameterVelCurveDisplay ("ampEnvVelCurveDisplay"));
@@ -162,7 +155,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_ampEnvVelCurveDisplay->addListener (this);
 
     addAndMakeVisible (m_ampBiasDirectionLabel = new Label ("ampBiasDirectionLabel",
-                                                            "DIRECTION"));
+                                                            TRANS("DIRECTION")));
     m_ampBiasDirectionLabel->setFont (Font (12.00f, Font::bold));
     m_ampBiasDirectionLabel->setJustificationType (Justification::centred);
     m_ampBiasDirectionLabel->setEditable (false, false, false);
@@ -173,12 +166,12 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     addAndMakeVisible (m_ampBiasDirectionComboBox = new ParameterComboBox ("ampBiasDirectionComboBox"));
     m_ampBiasDirectionComboBox->setEditableText (false);
     m_ampBiasDirectionComboBox->setJustificationType (Justification::centred);
-    m_ampBiasDirectionComboBox->setTextWhenNothingSelected (String::empty);
-    m_ampBiasDirectionComboBox->setTextWhenNoChoicesAvailable ("(no choices)");
+    m_ampBiasDirectionComboBox->setTextWhenNothingSelected (String());
+    m_ampBiasDirectionComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_ampBiasDirectionComboBox->addListener (this);
 
     addAndMakeVisible (m_ampEnvVelocityCurveLabel = new Label ("ampEnvVelocityCurveLabel",
-                                                               "VELO CURVE"));
+                                                               TRANS("VELO CURVE")));
     m_ampEnvVelocityCurveLabel->setFont (Font (12.00f, Font::bold));
     m_ampEnvVelocityCurveLabel->setJustificationType (Justification::centred);
     m_ampEnvVelocityCurveLabel->setEditable (false, false, false);
@@ -187,7 +180,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_ampEnvVelocityCurveLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_biasPointLabel = new Label ("biasPointLabel",
-                                                     "POINT"));
+                                                     TRANS("POINT")));
     m_biasPointLabel->setFont (Font (12.00f, Font::bold));
     m_biasPointLabel->setJustificationType (Justification::centred);
     m_biasPointLabel->setEditable (false, false, false);
@@ -204,7 +197,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_biasPointSlider->addListener (this);
 
     addAndMakeVisible (m_biasLevelLabel = new Label ("biasLevelLabel",
-                                                     "LEVEL"));
+                                                     TRANS("LEVEL")));
     m_biasLevelLabel->setFont (Font (12.00f, Font::bold));
     m_biasLevelLabel->setJustificationType (Justification::centred);
     m_biasLevelLabel->setEditable (false, false, false);
@@ -220,15 +213,9 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_biasLevelSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_biasLevelSlider->addListener (this);
 
-    addAndMakeVisible (m_toneLevelSlider = new MixPartLevelFader ("toneLevelSlider"));
-    m_toneLevelSlider->setRange (0, 127, 1);
-    m_toneLevelSlider->setSliderStyle (Slider::LinearVertical);
-    m_toneLevelSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 32, 16);
-    m_toneLevelSlider->addListener (this);
-
     addAndMakeVisible (m_panRandomToggle = new BlackToggle());
     addAndMakeVisible (m_panRandomLabel = new Label ("panRandomLabel",
-                                                     "RANDOM"));
+                                                     TRANS("RANDOM")));
     m_panRandomLabel->setFont (Font (12.00f, Font::bold));
     m_panRandomLabel->setJustificationType (Justification::centred);
     m_panRandomLabel->setEditable (false, false, false);
@@ -245,7 +232,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_panAlternateSlider->addListener (this);
 
     addAndMakeVisible (m_panAlternateLabel = new Label ("panAlternateLabel",
-                                                        "ALTERNATE"));
+                                                        TRANS("ALTERNATE")));
     m_panAlternateLabel->setFont (Font (12.00f, Font::bold));
     m_panAlternateLabel->setJustificationType (Justification::centred);
     m_panAlternateLabel->setEditable (false, false, false);
@@ -262,7 +249,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_lfo1AmpDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo1AmpDepthLabel = new Label ("lfo1AmpDepthLabel",
-                                                        "LVL LFO 1"));
+                                                        TRANS("LVL LFO 1")));
     m_lfo1AmpDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo1AmpDepthLabel->setJustificationType (Justification::centred);
     m_lfo1AmpDepthLabel->setEditable (false, false, false);
@@ -278,7 +265,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_lfo2AmpDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo2AmpDepthLabel = new Label ("lfo2AmpDepthLabel",
-                                                        "LVL LFO 2"));
+                                                        TRANS("LVL LFO 2")));
     m_lfo2AmpDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo2AmpDepthLabel->setJustificationType (Justification::centred);
     m_lfo2AmpDepthLabel->setEditable (false, false, false);
@@ -287,11 +274,11 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_lfo2AmpDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_lfo1AdvancedButton = new TextWithArrowButton ("lfo1AdvancedButton"));
-    m_lfo1AdvancedButton->setButtonText ("LFO 1");
+    m_lfo1AdvancedButton->setButtonText (TRANS("LFO 1"));
     m_lfo1AdvancedButton->addListener (this);
 
     addAndMakeVisible (m_lfo2AdvancedButton = new TextWithArrowButton ("lfo2AdvancedButton"));
-    m_lfo2AdvancedButton->setButtonText ("LFO 2");
+    m_lfo2AdvancedButton->setButtonText (TRANS("LFO 2"));
     m_lfo2AdvancedButton->addListener (this);
 
     addAndMakeVisible (m_lfo1PanDepthSlider = new Knob ("lfo1PanDepthSlider"));
@@ -302,7 +289,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_lfo1PanDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo1PanDepthLabel = new Label ("lfo1PanDepthLabel",
-                                                        "PAN LFO 1"));
+                                                        TRANS("PAN LFO 1")));
     m_lfo1PanDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo1PanDepthLabel->setJustificationType (Justification::centred);
     m_lfo1PanDepthLabel->setEditable (false, false, false);
@@ -318,7 +305,7 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_lfo2PanDepthSlider->addListener (this);
 
     addAndMakeVisible (m_lfo2PanDepthLabel = new Label ("lfo2PanDepthLabel",
-                                                        "PAN LFO 2"));
+                                                        TRANS("PAN LFO 2")));
     m_lfo2PanDepthLabel->setFont (Font (12.00f, Font::bold));
     m_lfo2PanDepthLabel->setJustificationType (Justification::centred);
     m_lfo2PanDepthLabel->setEditable (false, false, false);
@@ -327,15 +314,47 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     m_lfo2PanDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_imageButton = new ImageButton ("imageButton"));
-    m_imageButton->setButtonText (String::empty);
+    m_imageButton->setButtonText (String());
 
     m_imageButton->setImages (false, true, true,
                               ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, Colour (0x4340454a),
                               Image(), 1.000f, Colour (0x4340454a),
                               Image(), 1.000f, Colour (0x4340454a));
+    addAndMakeVisible (m_toneLevelSlider = new ParameterEnvelopeSlider ("toneLevelSlider"));
+    m_toneLevelSlider->setRange (0, 127, 1);
+    m_toneLevelSlider->setSliderStyle (Slider::LinearVertical);
+    m_toneLevelSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 56, 16);
+    m_toneLevelSlider->setColour (Slider::backgroundColourId, Colour (0x00f2f59b));
+    m_toneLevelSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_toneLevelSlider->addListener (this);
+
+    addAndMakeVisible (m_filterEnvelopeDepthLabel = new Label ("filterEnvelopeDepthLabel",
+                                                               TRANS("TONE LEVEL")));
+    m_filterEnvelopeDepthLabel->setFont (Font (12.00f, Font::bold));
+    m_filterEnvelopeDepthLabel->setJustificationType (Justification::centred);
+    m_filterEnvelopeDepthLabel->setEditable (false, false, false);
+    m_filterEnvelopeDepthLabel->setColour (Label::textColourId, Colours::black);
+    m_filterEnvelopeDepthLabel->setColour (TextEditor::textColourId, Colours::black);
+    m_filterEnvelopeDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+
+    addAndMakeVisible (m_imageButton2 = new ImageButton ("imageButton"));
+    m_imageButton2->setButtonText (String());
+
+    m_imageButton2->setImages (false, true, true,
+                               ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a));
+    addAndMakeVisible (m_imageButton3 = new ImageButton ("imageButton"));
+    m_imageButton3->setButtonText (String());
+    m_imageButton3->addListener (this);
+
+    m_imageButton3->setImages (false, true, true,
+                               ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a),
+                               Image(), 1.000f, Colour (0x4340454a));
 
     //[UserPreSize]
-	m_ampGrp->setText("FILTER OF PART " + String(part + 1) + " TONE " + String(((tone - 4096) / 512) + 1));
+	m_ampGrp->setText("AMP OF PART " + String(part + 1) + " TONE " + String(((tone - 4096) / 512) + 1));
     //[/UserPreSize]
 
     setSize (376, 492);
@@ -409,7 +428,6 @@ AmpEditorAdvanced::~AmpEditorAdvanced()
     m_ampEnvGrp = nullptr;
     m_panGrp = nullptr;
     m_biasGrp = nullptr;
-    m_toneLevelLabel = nullptr;
     m_tonePanSlider = nullptr;
     m_tonePanLabel = nullptr;
     m_ampEnv = nullptr;
@@ -432,7 +450,6 @@ AmpEditorAdvanced::~AmpEditorAdvanced()
     m_biasPointSlider = nullptr;
     m_biasLevelLabel = nullptr;
     m_biasLevelSlider = nullptr;
-    m_toneLevelSlider = nullptr;
     m_panRandomToggle = nullptr;
     m_panRandomLabel = nullptr;
     m_panAlternateSlider = nullptr;
@@ -449,6 +466,10 @@ AmpEditorAdvanced::~AmpEditorAdvanced()
     m_lfo2PanDepthSlider = nullptr;
     m_lfo2PanDepthLabel = nullptr;
     m_imageButton = nullptr;
+    m_toneLevelSlider = nullptr;
+    m_filterEnvelopeDepthLabel = nullptr;
+    m_imageButton2 = nullptr;
+    m_imageButton3 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -470,11 +491,13 @@ void AmpEditorAdvanced::paint (Graphics& g)
 
 void AmpEditorAdvanced::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     m_ampGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_ampEnvGrp->setBounds (0, 140, getWidth() - 0, 260);
     m_panGrp->setBounds (272, 18, getWidth() - 280, 118);
     m_biasGrp->setBounds (84, 18, getWidth() - 268, 118);
-    m_toneLevelLabel->setBounds (0, 20, 48, 36);
     m_tonePanSlider->setBounds (208, 40, 48, 60);
     m_tonePanLabel->setBounds (196, 20, 72, 16);
     m_ampEnv->setBounds (72, 156, 296, 156);
@@ -497,7 +520,6 @@ void AmpEditorAdvanced::resized()
     m_biasPointSlider->setBounds (88, 84, 48, 16);
     m_biasLevelLabel->setBounds (140, 68, 48, 16);
     m_biasLevelSlider->setBounds (140, 84, 48, 16);
-    m_toneLevelSlider->setBounds (47, 16, 26, 120);
     m_panRandomToggle->setBounds (307, 82, 25, 17);
     m_panRandomLabel->setBounds (287, 66, 64, 16);
     m_panAlternateSlider->setBounds (292, 116, 56, 16);
@@ -514,6 +536,10 @@ void AmpEditorAdvanced::resized()
     m_lfo2PanDepthSlider->setBounds (272, 436, 32, 48);
     m_lfo2PanDepthLabel->setBounds (256, 420, 68, 16);
     m_imageButton->setBounds (3, 1, 16, 16);
+    m_toneLevelSlider->setBounds (8, 168, 56, 116);
+    m_filterEnvelopeDepthLabel->setBounds (0, 156, 72, 16);
+    m_imageButton2->setBounds (3, 141, 16, 16);
+    m_imageButton3->setBounds (3, 405, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -568,11 +594,6 @@ void AmpEditorAdvanced::sliderValueChanged (Slider* sliderThatWasMoved)
         //[UserSliderCode_m_biasLevelSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_biasLevelSlider]
     }
-    else if (sliderThatWasMoved == m_toneLevelSlider)
-    {
-        //[UserSliderCode_m_toneLevelSlider] -- add your slider handling code here..
-        //[/UserSliderCode_m_toneLevelSlider]
-    }
     else if (sliderThatWasMoved == m_panAlternateSlider)
     {
         //[UserSliderCode_m_panAlternateSlider] -- add your slider handling code here..
@@ -597,6 +618,11 @@ void AmpEditorAdvanced::sliderValueChanged (Slider* sliderThatWasMoved)
     {
         //[UserSliderCode_m_lfo2PanDepthSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_lfo2PanDepthSlider]
+    }
+    else if (sliderThatWasMoved == m_toneLevelSlider)
+    {
+        //[UserSliderCode_m_toneLevelSlider] -- add your slider handling code here..
+        //[/UserSliderCode_m_toneLevelSlider]
     }
 
     //[UsersliderValueChanged_Post]
@@ -642,6 +668,11 @@ void AmpEditorAdvanced::buttonClicked (Button* buttonThatWasClicked)
 		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo2AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo2AdvancedButton]
     }
+    else if (buttonThatWasClicked == m_imageButton3)
+    {
+        //[UserButtonCode_m_imageButton3] -- add your button handler code here..
+        //[/UserButtonCode_m_imageButton3]
+    }
 
     //[UserbuttonClicked_Post]
     //[/UserbuttonClicked_Post]
@@ -680,11 +711,6 @@ BEGIN_JUCER_METADATA
   <JUCERCOMP name="biasGrp" id="f33a7f17bedf43c1" memberName="m_biasGrp" virtualName="PanelGroupGrey"
              explicitFocusOrder="0" pos="84 18 268M 118" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
              constructorParams="&quot;biasGrp&quot;, &quot;BIAS&quot;"/>
-  <LABEL name="toneLevelLabel" id="b84ecb9c2183ffaf" memberName="m_toneLevelLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 20 48 36" textCol="ff000000"
-         edTextCol="ff000000" edBkgCol="0" labelText="TONE&#10;LEVEL"
-         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="tonePanSlider" id="533842793459863a" memberName="m_tonePanSlider"
           virtualName="Knob" explicitFocusOrder="0" pos="208 40 48 60"
           textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
@@ -697,7 +723,7 @@ BEGIN_JUCER_METADATA
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="ampEnv" id="99a40d72d7ad1e22" memberName="m_ampEnv" virtualName=""
              explicitFocusOrder="0" pos="72 156 296 156" sourceFile="Envelope.cpp"
-             constructorParams="m_part, m_tone, EnvelopeTypes::Amp, false"/>
+             constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Amp, false"/>
   <LABEL name="panKeyfollowLabel" id="3a52299341c28960" memberName="m_panKeyfollowLabel"
          virtualName="" explicitFocusOrder="0" pos="280 32 80 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="KEYFOLLOW" editableSingleClick="0"
@@ -790,10 +816,6 @@ BEGIN_JUCER_METADATA
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
-  <SLIDER name="toneLevelSlider" id="1b5918ef3651954f" memberName="m_toneLevelSlider"
-          virtualName="MixPartLevelFader" explicitFocusOrder="0" pos="47 16 26 120"
-          min="0" max="127" int="1" style="LinearVertical" textBoxPos="TextBoxBelow"
-          textBoxEditable="1" textBoxWidth="32" textBoxHeight="16" skewFactor="1"/>
   <JUCERCOMP name="panRandomToggle" id="1dee3cc7cfd57bb1" memberName="m_panRandomToggle"
              virtualName="" explicitFocusOrder="0" pos="307 82 25 17" sourceFile="../ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
@@ -867,6 +889,28 @@ BEGIN_JUCER_METADATA
                resourceNormal="amp_png" opacityNormal="1" colourNormal="4340454a"
                resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
                opacityDown="1" colourDown="4340454a"/>
+  <SLIDER name="toneLevelSlider" id="b0bd5a61181f569c" memberName="m_toneLevelSlider"
+          virtualName="ParameterEnvelopeSlider" explicitFocusOrder="0"
+          pos="8 168 56 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0"
+          max="127" int="1" style="LinearVertical" textBoxPos="TextBoxBelow"
+          textBoxEditable="1" textBoxWidth="56" textBoxHeight="16" skewFactor="1"/>
+  <LABEL name="filterEnvelopeDepthLabel" id="611da7e96f52143f" memberName="m_filterEnvelopeDepthLabel"
+         virtualName="" explicitFocusOrder="0" pos="0 156 72 16" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="TONE LEVEL" editableSingleClick="0"
+         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
+         fontsize="12" bold="1" italic="0" justification="36"/>
+  <IMAGEBUTTON name="imageButton" id="3a50d5aaabf6910d" memberName="m_imageButton2"
+               virtualName="" explicitFocusOrder="0" pos="3 141 16 16" buttonText=""
+               connectedEdges="0" needsCallback="0" radioGroupId="0" keepProportions="1"
+               resourceNormal="amp_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
+               opacityDown="1" colourDown="4340454a"/>
+  <IMAGEBUTTON name="imageButton" id="570f3b3b741de5e4" memberName="m_imageButton3"
+               virtualName="" explicitFocusOrder="0" pos="3 405 16 16" buttonText=""
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="lfo_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
+               opacityDown="1" colourDown="4340454a"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -885,6 +929,16 @@ static const unsigned char resource_AmpEditorAdvanced_amp_png[] = { 137,80,78,71
 
 const char* AmpEditorAdvanced::amp_png = (const char*) resource_AmpEditorAdvanced_amp_png;
 const int AmpEditorAdvanced::amp_pngSize = 238;
+
+// JUCER_RESOURCE: lfo_png, 235, "../../../Resources/PatchEditSectionIcons/lfo.png"
+static const unsigned char resource_AmpEditorAdvanced_lfo_png[] = { 137,80,78,71,13,10,26,10,0,0,0,13,73,72,68,82,0,0,0,16,0,0,0,16,8,6,0,0,0,31,243,255,97,0,0,0,1,115,82,71,66,0,174,206,28,233,0,0,0,
+6,98,75,71,68,0,255,0,255,0,255,160,189,167,147,0,0,0,9,112,72,89,115,0,0,11,19,0,0,11,19,1,0,154,156,24,0,0,0,7,116,73,77,69,7,222,12,10,20,17,26,251,57,11,92,0,0,0,107,73,68,65,84,56,203,165,83,91,14,
+192,32,8,163,141,247,191,50,251,153,9,16,22,6,240,37,216,242,168,8,121,77,85,85,26,6,0,50,37,59,206,132,108,147,176,3,78,139,253,233,192,98,226,153,178,181,170,131,236,254,198,92,7,83,49,89,85,119,239,
+157,236,192,153,140,106,19,208,6,163,194,23,24,201,214,103,119,125,163,86,231,11,144,205,158,9,205,172,74,36,87,254,234,51,97,251,157,31,197,207,111,229,235,115,88,252,0,0,0,0,73,69,78,68,174,66,96,130,
+0,0};
+
+const char* AmpEditorAdvanced::lfo_png = (const char*) resource_AmpEditorAdvanced_lfo_png;
+const int AmpEditorAdvanced::lfo_pngSize = 235;
 
 
 //[EndFile] You can add extra defines here...

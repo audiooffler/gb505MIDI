@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -406,9 +406,12 @@ void Envelope::EnvVis::mouseUp(const MouseEvent& e)
 //[/MiscUserDefs]
 
 //==============================================================================
-Envelope::Envelope (SynthParts part, Tone tone, EnvelopeTypes type, bool fullSize)
-    : m_part (part), m_tone (tone), m_type (type), m_fullSize (fullSize), m_name("Pitch Envelope"), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false)
+Envelope::Envelope (AllParts part, int toneNumber, EnvelopeTypes type, bool fullSize)
+    : m_part (part), m_toneNumber (toneNumber), m_type (type), m_fullSize (fullSize), m_name("Pitch Envelope"), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
     addAndMakeVisible (m_level3Label = new Label ("level3Label",
                                                   TRANS("S")));
     m_level3Label->setFont (Font (12.00f, Font::bold));
@@ -574,16 +577,245 @@ Envelope::Envelope (SynthParts part, Tone tone, EnvelopeTypes type, bool fullSiz
 
 
     //[Constructor] You can add your own custom stuff here..
-	if (grooveboxMemory != nullptr)
+	setupParameters(part, toneNumber);
+    //[/Constructor]
+}
+
+Envelope::~Envelope()
+{
+    //[Destructor_pre]. You can add your own custom destruction code here..
+	if (m_timePrm1 != nullptr) m_timePrm1->removeChangeListener(this);
+	if (m_timePrm2 != nullptr) m_timePrm2->removeChangeListener(this);
+	if (m_timePrm3 != nullptr) m_timePrm3->removeChangeListener(this);
+	if (m_timePrm4 != nullptr) m_timePrm4->removeChangeListener(this);
+	if (m_levelPrm1 != nullptr) m_levelPrm1->removeChangeListener(this);
+	if (m_levelPrm2 != nullptr) m_levelPrm2->removeChangeListener(this);
+	if (m_levelPrm3 != nullptr) m_levelPrm3->removeChangeListener(this);
+	if (m_levelPrm4 != nullptr) m_levelPrm4->removeChangeListener(this);
+    //[/Destructor_pre]
+
+    m_level3Label = nullptr;
+    m_time1 = nullptr;
+    m_time1Label = nullptr;
+    m_level1 = nullptr;
+    m_time2 = nullptr;
+    m_level2 = nullptr;
+    m_time3 = nullptr;
+    m_time3Label = nullptr;
+    m_level3 = nullptr;
+    m_time4 = nullptr;
+    m_time4Label = nullptr;
+    m_level4 = nullptr;
+    m_timeLabel = nullptr;
+    m_levelLabel = nullptr;
+    m_envVisComponent = nullptr;
+
+
+    //[Destructor]. You can add your own custom destruction code here..
+    //[/Destructor]
+}
+
+//==============================================================================
+void Envelope::paint (Graphics& g)
+{
+    //[UserPrePaint] Add your own custom painting code here..
+	#if JUCE_MSVC
+	g;
+	#endif
+    //[/UserPrePaint]
+
+    //[UserPaint] Add your own custom painting code here..
+    //[/UserPaint]
+}
+
+void Envelope::resized()
+{
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
+    m_level3Label->setBounds (174, getHeight() - 20 - 16, 48, 16);
+    m_time1->setBounds (50, getHeight() - 34 - 16, 56, 16);
+    m_time1Label->setBounds (54, getHeight() - 48 - 16, 48, 16);
+    m_level1->setBounds (50, getHeight() - 6 - 16, 56, 16);
+    m_time2->setBounds (110, getHeight() - 34 - 16, 56, 16);
+    m_level2->setBounds (110, getHeight() - 6 - 16, 56, 16);
+    m_time3->setBounds (170, getHeight() - 34 - 16, 56, 16);
+    m_time3Label->setBounds (174, getHeight() - 48 - 16, 48, 16);
+    m_level3->setBounds (170, getHeight() - 6 - 16, 56, 16);
+    m_time4->setBounds (230, getHeight() - 34 - 16, 56, 16);
+    m_time4Label->setBounds (234, getHeight() - 48 - 16, 48, 16);
+    m_level4->setBounds (230, getHeight() - 6 - 16, 56, 16);
+    m_timeLabel->setBounds (4, getHeight() - 34 - 16, 44, 16);
+    m_levelLabel->setBounds (4, getHeight() - 6 - 16, 44, 16);
+    m_envVisComponent->setBounds (4, 4, getWidth() - 8, getHeight() - 68);
+    //[UserResized] Add your own custom resize handling here..
+	if (m_fullSize) m_envVisComponent->setBounds(4, 4, getWidth() - 8, getHeight() - 8);
+    //[/UserResized]
+}
+
+void Envelope::sliderValueChanged (Slider* sliderThatWasMoved)
+{
+    //[UsersliderValueChanged_Pre]
+    //[/UsersliderValueChanged_Pre]
+
+    if (sliderThatWasMoved == m_time1)
+    {
+        //[UserSliderCode_m_time1] -- add your slider handling code here..
+        //[/UserSliderCode_m_time1]
+    }
+    else if (sliderThatWasMoved == m_level1)
+    {
+        //[UserSliderCode_m_level1] -- add your slider handling code here..
+        //[/UserSliderCode_m_level1]
+    }
+    else if (sliderThatWasMoved == m_time2)
+    {
+        //[UserSliderCode_m_time2] -- add your slider handling code here..
+        //[/UserSliderCode_m_time2]
+    }
+    else if (sliderThatWasMoved == m_level2)
+    {
+        //[UserSliderCode_m_level2] -- add your slider handling code here..
+        //[/UserSliderCode_m_level2]
+    }
+    else if (sliderThatWasMoved == m_time3)
+    {
+        //[UserSliderCode_m_time3] -- add your slider handling code here..
+        //[/UserSliderCode_m_time3]
+    }
+    else if (sliderThatWasMoved == m_level3)
+    {
+        //[UserSliderCode_m_level3] -- add your slider handling code here..
+        //[/UserSliderCode_m_level3]
+    }
+    else if (sliderThatWasMoved == m_time4)
+    {
+        //[UserSliderCode_m_time4] -- add your slider handling code here..
+        //[/UserSliderCode_m_time4]
+    }
+    else if (sliderThatWasMoved == m_level4)
+    {
+        //[UserSliderCode_m_level4] -- add your slider handling code here..
+        //[/UserSliderCode_m_level4]
+    }
+
+    //[UsersliderValueChanged_Post]
+	//m_envVisComponent->refreshEnvVisShapes();
+	//m_envVisComponent->repaint();
+    //[/UsersliderValueChanged_Post]
+}
+
+
+
+//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
+
+// allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
+void Envelope::setupParameters(AllParts part, int toneNumber)
+{
+	if (grooveboxMemory == nullptr) return;
+
+	m_part = part;
+
+	if (part == AllParts::PartR)
 	{
-		SynthPatchesBlock* synthPatches = grooveboxMemory->getSynthPatchesBlock();
-		if (synthPatches != nullptr)
+		if (toneNumber >= 35 && toneNumber <= 98)
 		{
-			PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr(m_part);
-			if (patchPart != nullptr)
+			if (grooveboxMemory != nullptr)
+			{
+				if (RhythmSetBlock* rhyhtmSet = grooveboxMemory->getRhythmSetBlock())
+				{
+					if (RhythmNoteBlock* noteBlock = rhyhtmSet->getRhythmNoteBlockPtr((uint8)toneNumber))
+					{
+						m_toneNumber = toneNumber;
+						switch (m_type)
+						{
+						case Pitch:
+							m_timePrm1 = noteBlock->getParameter(0x12);
+							m_timePrm2 = noteBlock->getParameter(0x13);
+							m_timePrm3 = noteBlock->getParameter(0x14);
+							m_timePrm4 = noteBlock->getParameter(0x15);
+							m_levelPrm1 = noteBlock->getParameter(0x16);
+							m_levelPrm2 = noteBlock->getParameter(0x17);
+							m_levelPrm3 = noteBlock->getParameter(0x18);
+							m_levelPrm4 = noteBlock->getParameter(0x19);
+							break;
+						case Filter:
+							m_timePrm1 = noteBlock->getParameter(0x21);
+							m_timePrm2 = noteBlock->getParameter(0x22);
+							m_timePrm3 = noteBlock->getParameter(0x23);
+							m_timePrm4 = noteBlock->getParameter(0x24);
+							m_levelPrm1 = noteBlock->getParameter(0x25);
+							m_levelPrm2 = noteBlock->getParameter(0x26);
+							m_levelPrm3 = noteBlock->getParameter(0x27);
+							m_levelPrm4 = noteBlock->getParameter(0x28);
+							break;
+						case Amp:
+							m_timePrm1 = noteBlock->getParameter(0x2C);
+							m_timePrm2 = noteBlock->getParameter(0x2D);
+							m_timePrm3 = noteBlock->getParameter(0x2E);
+							m_timePrm4 = noteBlock->getParameter(0x2F);
+							m_levelPrm1 = noteBlock->getParameter(0x30);
+							m_levelPrm2 = noteBlock->getParameter(0x31);
+							m_levelPrm3 = noteBlock->getParameter(0x32);
+							break;
+						default:
+							break;
+						}
+						if (m_timePrm1 != nullptr)
+						{
+							m_time1->setParameter(m_timePrm1);
+							m_timePrm1->addChangeListener(this);
+						}
+						if (m_timePrm2 != nullptr)
+						{
+							m_time2->setParameter(m_timePrm2);
+							m_timePrm2->addChangeListener(this);
+						}
+						if (m_timePrm3 != nullptr)
+						{
+							m_time3->setParameter(m_timePrm3);
+							m_timePrm3->addChangeListener(this);
+						}
+						if (m_timePrm4 != nullptr)
+						{
+							m_time4->setParameter(m_timePrm4);
+							m_timePrm4->addChangeListener(this);
+						}
+						if (m_levelPrm1 != nullptr)
+						{
+							m_level1->setParameter(m_levelPrm1);
+							m_levelPrm1->addChangeListener(this);
+						}
+						if (m_levelPrm2 != nullptr)
+						{
+							m_level2->setParameter(m_levelPrm2);
+							m_levelPrm2->addChangeListener(this);
+						}
+						if (m_levelPrm3 != nullptr)
+						{
+							m_level3->setParameter(m_levelPrm3);
+							m_levelPrm3->addChangeListener(this);
+						}
+						if (m_levelPrm4 != nullptr)
+						{
+							m_level4->setParameter(m_levelPrm4);
+							m_levelPrm4->addChangeListener(this);
+						}
+						m_envVisComponent->refreshEnvVisShapes();
+						m_envVisComponent->repaint();
+					}
+				}
+			}
+		}
+	}
+	else
+	{
+		if (SynthPatchesBlock* synthPatches = grooveboxMemory->getSynthPatchesBlock())
+		{
+			if (PatchPartBlock* patchPart = synthPatches->getPatchPartBlockPtr((SynthParts)m_part))
 			{
 				PatchToneBlock* tone = nullptr;
-				switch (m_tone)
+				switch (toneNumber)
 				{
 				case Tone1:
 					if (PatchToneBlock* tone1 = patchPart->getPatchToneBlockPtr(Tone1)) tone = tone1;
@@ -600,6 +832,7 @@ Envelope::Envelope (SynthParts part, Tone tone, EnvelopeTypes type, bool fullSiz
 				}
 				if (tone != nullptr)
 				{
+					m_toneNumber = toneNumber;
 					switch (m_type)
 					{
 					case Pitch:
@@ -680,133 +913,8 @@ Envelope::Envelope (SynthParts part, Tone tone, EnvelopeTypes type, bool fullSiz
 			}
 		}
 	}
-    //[/Constructor]
 }
 
-Envelope::~Envelope()
-{
-    //[Destructor_pre]. You can add your own custom destruction code here..
-	if (m_timePrm1 != nullptr) m_timePrm1->removeChangeListener(this);
-	if (m_timePrm2 != nullptr) m_timePrm2->removeChangeListener(this);
-	if (m_timePrm3 != nullptr) m_timePrm3->removeChangeListener(this);
-	if (m_timePrm4 != nullptr) m_timePrm4->removeChangeListener(this);
-	if (m_levelPrm1 != nullptr) m_levelPrm1->removeChangeListener(this);
-	if (m_levelPrm2 != nullptr) m_levelPrm2->removeChangeListener(this);
-	if (m_levelPrm3 != nullptr) m_levelPrm3->removeChangeListener(this);
-	if (m_levelPrm4 != nullptr) m_levelPrm4->removeChangeListener(this);
-    //[/Destructor_pre]
-
-    m_level3Label = nullptr;
-    m_time1 = nullptr;
-    m_time1Label = nullptr;
-    m_level1 = nullptr;
-    m_time2 = nullptr;
-    m_level2 = nullptr;
-    m_time3 = nullptr;
-    m_time3Label = nullptr;
-    m_level3 = nullptr;
-    m_time4 = nullptr;
-    m_time4Label = nullptr;
-    m_level4 = nullptr;
-    m_timeLabel = nullptr;
-    m_levelLabel = nullptr;
-    m_envVisComponent = nullptr;
-
-
-    //[Destructor]. You can add your own custom destruction code here..
-    //[/Destructor]
-}
-
-//==============================================================================
-void Envelope::paint (Graphics& g)
-{
-    //[UserPrePaint] Add your own custom painting code here..
-	#if JUCE_MSVC
-	g;
-	#endif
-    //[/UserPrePaint]
-
-    //[UserPaint] Add your own custom painting code here..
-    //[/UserPaint]
-}
-
-void Envelope::resized()
-{
-    m_level3Label->setBounds (174, getHeight() - 20 - 16, 48, 16);
-    m_time1->setBounds (50, getHeight() - 34 - 16, 56, 16);
-    m_time1Label->setBounds (54, getHeight() - 48 - 16, 48, 16);
-    m_level1->setBounds (50, getHeight() - 6 - 16, 56, 16);
-    m_time2->setBounds (110, getHeight() - 34 - 16, 56, 16);
-    m_level2->setBounds (110, getHeight() - 6 - 16, 56, 16);
-    m_time3->setBounds (170, getHeight() - 34 - 16, 56, 16);
-    m_time3Label->setBounds (174, getHeight() - 48 - 16, 48, 16);
-    m_level3->setBounds (170, getHeight() - 6 - 16, 56, 16);
-    m_time4->setBounds (230, getHeight() - 34 - 16, 56, 16);
-    m_time4Label->setBounds (234, getHeight() - 48 - 16, 48, 16);
-    m_level4->setBounds (230, getHeight() - 6 - 16, 56, 16);
-    m_timeLabel->setBounds (4, getHeight() - 34 - 16, 44, 16);
-    m_levelLabel->setBounds (4, getHeight() - 6 - 16, 44, 16);
-    m_envVisComponent->setBounds (4, 4, getWidth() - 8, getHeight() - 68);
-    //[UserResized] Add your own custom resize handling here..
-	if (m_fullSize) m_envVisComponent->setBounds(4, 4, getWidth() - 8, getHeight() - 8);
-    //[/UserResized]
-}
-
-void Envelope::sliderValueChanged (Slider* sliderThatWasMoved)
-{
-    //[UsersliderValueChanged_Pre]
-    //[/UsersliderValueChanged_Pre]
-
-    if (sliderThatWasMoved == m_time1)
-    {
-        //[UserSliderCode_m_time1] -- add your slider handling code here..
-        //[/UserSliderCode_m_time1]
-    }
-    else if (sliderThatWasMoved == m_level1)
-    {
-        //[UserSliderCode_m_level1] -- add your slider handling code here..
-        //[/UserSliderCode_m_level1]
-    }
-    else if (sliderThatWasMoved == m_time2)
-    {
-        //[UserSliderCode_m_time2] -- add your slider handling code here..
-        //[/UserSliderCode_m_time2]
-    }
-    else if (sliderThatWasMoved == m_level2)
-    {
-        //[UserSliderCode_m_level2] -- add your slider handling code here..
-        //[/UserSliderCode_m_level2]
-    }
-    else if (sliderThatWasMoved == m_time3)
-    {
-        //[UserSliderCode_m_time3] -- add your slider handling code here..
-        //[/UserSliderCode_m_time3]
-    }
-    else if (sliderThatWasMoved == m_level3)
-    {
-        //[UserSliderCode_m_level3] -- add your slider handling code here..
-        //[/UserSliderCode_m_level3]
-    }
-    else if (sliderThatWasMoved == m_time4)
-    {
-        //[UserSliderCode_m_time4] -- add your slider handling code here..
-        //[/UserSliderCode_m_time4]
-    }
-    else if (sliderThatWasMoved == m_level4)
-    {
-        //[UserSliderCode_m_level4] -- add your slider handling code here..
-        //[/UserSliderCode_m_level4]
-    }
-
-    //[UsersliderValueChanged_Post]
-	//m_envVisComponent->refreshEnvVisShapes();
-	//m_envVisComponent->repaint();
-    //[/UsersliderValueChanged_Post]
-}
-
-
-
-//[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 void Envelope::changeListenerCallback(ChangeBroadcaster* source)
 {
 	// update slider values, envVis depends on them
@@ -834,8 +942,8 @@ void Envelope::changeListenerCallback(ChangeBroadcaster* source)
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="Envelope" componentName=""
-                 parentClasses="public Component, public ChangeListener" constructorParams="SynthParts part, Tone tone, EnvelopeTypes type, bool fullSize"
-                 variableInitialisers="m_part (part), m_tone (tone), m_type (type), m_fullSize (fullSize), m_name(&quot;Pitch Envelope&quot;), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false)"
+                 parentClasses="public Component, public ChangeListener" constructorParams="AllParts part, int toneNumber, EnvelopeTypes type, bool fullSize"
+                 variableInitialisers="m_part (part), m_toneNumber (toneNumber), m_type (type), m_fullSize (fullSize), m_name(&quot;Pitch Envelope&quot;), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false)"
                  snapPixels="2" snapActive="1" snapShown="1" overlayOpacity="0.330"
                  fixedSize="1" initialWidth="296" initialHeight="140">
   <BACKGROUND backgroundColour="ffffff"/>

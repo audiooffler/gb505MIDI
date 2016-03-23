@@ -85,14 +85,15 @@ public:
 		CustomViewport(const String &componentName = String::empty) : Viewport(componentName) {}
 		void paint(Graphics &g)
 		{
-			g.fillAll(Colour(0xffb1afaf));
+			g.fillAll(Colour(0xff303030));
+			/*g.fillAll(Colour(0xffb1afaf));
 
 			g.setGradientFill(ColourGradient(Colour(0xffcdcccc),
 				120.0f, 248.0f,
 				Colour(0xff979797),
 				224.0f, 720.0f,
 				false));
-			g.fillRect(0, 0, getWidth() - 0, getHeight() - 0);
+			g.fillRect(0, 0, getWidth() - 0, getHeight() - 0);*/
 
 			Viewport::paint(g);
 		}

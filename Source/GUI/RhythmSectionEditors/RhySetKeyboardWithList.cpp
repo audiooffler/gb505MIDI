@@ -46,7 +46,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_tableHeader->addColumn("", NoteName, 25, 25, 25, 1);
 	m_tableHeader->addColumn("Key", KeyNo, 30, 30, 30, 1);
 	m_tableHeader->addColumn("Rhy Group", RhyGrp, 80, 80, 80, 1);
-	m_tableHeader->addColumn("Mut", MuteGrp, 27, 27, 27, 1);
+	m_tableHeader->addColumn("MtG", MuteGrp, 27, 27, 27, 1);
 	m_tableHeader->addColumn("Waveform", RhyWave, 140, 140, 140, 1);
 	m_tableHeader->addColumn("GM Standard Drum", GmDrum, 130, 130, 130, 9);
 	m_drumNamesTable->setHeader(m_tableHeader);

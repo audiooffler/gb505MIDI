@@ -45,12 +45,14 @@ MainComponent::MainComponent ()
 
 
     //[UserPreSize]
-	addTab(TRANS("System"), Colours::whitesmoke, new SystemTab(), true);
-	addTab(TRANS("Pattern"), Colours::whitesmoke, new PatternEditorTab(), true);
-	addTab(TRANS("Mixer"), Colours::whitesmoke, new MixerTab(), true);
+	Colour tabGrey = Colour(0xD6, 0xDA, 0xDD);
+
+	addTab(TRANS("System"), tabGrey, new SystemTab(), true);
+	addTab(TRANS("Pattern"), tabGrey, new PatternEditorTab(), true);
+	addTab(TRANS("Mixer"), tabGrey, new MixerTab(), true);
 	CustomViewport* rhythmSetViewPort = new CustomViewport("RhythmSetEditor");
 	rhythmSetViewPort->setViewedComponent(new RhythmSetEditorTab(), true);
-	addTab(TRANS("Rhythm"), Colours::whitesmoke, rhythmSetViewPort, true);
+	addTab(TRANS("Rhythm"), tabGrey, rhythmSetViewPort, true);
 	SynthParts part(SynthPart1);
 	String partNameString;
 	for (int p = (int)SynthPart1; p <= (int)SynthPart7; p++)
@@ -59,13 +61,12 @@ MainComponent::MainComponent ()
 		partNameString = "Patch Part "+String(p+1);
 		CustomViewport* patchPartViewPort = new CustomViewport(partNameString);
 		patchPartViewPort->setViewedComponent(new PatchEditor(part), true);
-		addTab(partNameString, Colours::whitesmoke, patchPartViewPort, true);
+		addTab(partNameString, tabGrey, patchPartViewPort, true);
 	}
-	//addTab(TRANS("Patch Part 1"), Colours::whitesmoke, new PatchEditor(SynthPart1), true);
-
+	
 	MidiLoggerTab* loggerTab = new MidiLoggerTab();
 	Logger::setCurrentLogger(loggerTab);
-	addTab(TRANS("MIDI Logger"), Colours::whitesmoke, loggerTab, true);
+	addTab(TRANS("MIDI Logger"), tabGrey, loggerTab, true);
 
 	getMenuButton()->setTriggeredOnMouseDown(true);
 	getMenuButton()->addListener(this);

@@ -33,7 +33,6 @@
 #include "FxmEditor.h"
 #include "ToneDelayEditor.h"
 #include "WaveEditor.h"
-#include "../GroupWidgets/RectangleTransp.h"
 
 
 //==============================================================================
@@ -76,7 +75,6 @@ private:
     ScopedPointer<FxmEditor> m_fxm;
     ScopedPointer<ToneDelayEditor> m_delay;
     ScopedPointer<WaveEditor> m_wave;
-    ScopedPointer<RectangleTransp> component;
 
 
     //==============================================================================

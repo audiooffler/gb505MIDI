@@ -85,6 +85,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
+    ScopedPointer<RectangleGrey> m_commonGrp4;
     ScopedPointer<RectangleGrey> m_commonGrp3;
     ScopedPointer<RectangleGrey> m_commonGrp2;
     ScopedPointer<PanelGroupGrey> m_mixGrp;

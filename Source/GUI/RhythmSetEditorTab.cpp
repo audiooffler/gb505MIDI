@@ -36,17 +36,7 @@ RhythmSetEditorTab::RhythmSetEditorTab ()
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (m_rhySetKeyboardWithList = new RhySetKeyboardWithList());
-    addAndMakeVisible (m_mixGrp = new PanelGroupGrey ("mixerGrp","PART R"));
-    addAndMakeVisible (m_mixRhyTrack = new MixRhyTrack());
-    addAndMakeVisible (imageButton5 = new ImageButton ("new button"));
-    imageButton5->setButtonText (String());
-    imageButton5->addListener (this);
-
-    imageButton5->setImages (false, true, true,
-                             ImageCache::getFromMemory (mixer_png, mixer_pngSize), 1.000f, Colour (0x4340454a),
-                             ImageCache::getFromMemory (mixer_png, mixer_pngSize), 1.000f, Colour (0x4340454a),
-                             ImageCache::getFromMemory (mixer_png, mixer_pngSize), 1.000f, Colour (0x4340454a));
+    addAndMakeVisible (m_commonGrp4 = new RectangleGrey());
     addAndMakeVisible (m_partNoLabel = new Label ("partNoLabel",
                                                   TRANS("PART R")));
     m_partNoLabel->setFont (Font (12.00f, Font::bold));
@@ -87,6 +77,21 @@ RhythmSetEditorTab::RhythmSetEditorTab ()
     m_selectKeyLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_wave = new WaveEditor ("WAVE", AllParts::PartR, m_currentKey));
+    addAndMakeVisible (m_rhyPitchEditor = new RhyPitchEditor ("PITCH", m_currentKey));
+    addAndMakeVisible (m_rhyFilterEditor = new RhyFilterEditor ("FILTER", m_currentKey));
+    addAndMakeVisible (m_rhyAmpEditor = new RhyAmpEditor ("AMP", m_currentKey));
+    addAndMakeVisible (m_rhySetKeyboardWithList = new RhySetKeyboardWithList());
+    addAndMakeVisible (m_darkSepRect3 = new RectangleDark());
+    addAndMakeVisible (m_mixGrp = new PanelGroupGrey ("mixerGrp","PART R"));
+    addAndMakeVisible (m_mixRhyTrack = new MixRhyTrack());
+    addAndMakeVisible (imageButton5 = new ImageButton ("new button"));
+    imageButton5->setButtonText (String());
+    imageButton5->addListener (this);
+
+    imageButton5->setImages (false, true, true,
+                             ImageCache::getFromMemory (mixer_png, mixer_pngSize), 1.000f, Colour (0x4340454a),
+                             ImageCache::getFromMemory (mixer_png, mixer_pngSize), 1.000f, Colour (0x4340454a),
+                             ImageCache::getFromMemory (mixer_png, mixer_pngSize), 1.000f, Colour (0x4340454a));
 
     //[UserPreSize]
 	if (grooveboxMemory != nullptr)
@@ -114,15 +119,20 @@ RhythmSetEditorTab::~RhythmSetEditorTab()
     //[Destructor_pre]. You can add your own custom destruction code here..
     //[/Destructor_pre]
 
-    m_rhySetKeyboardWithList = nullptr;
-    m_mixGrp = nullptr;
-    m_mixRhyTrack = nullptr;
-    imageButton5 = nullptr;
+    m_commonGrp4 = nullptr;
     m_partNoLabel = nullptr;
     m_patchNameLabel = nullptr;
     m_patchNameEditor = nullptr;
     m_selectKeyLabel = nullptr;
     m_wave = nullptr;
+    m_rhyPitchEditor = nullptr;
+    m_rhyFilterEditor = nullptr;
+    m_rhyAmpEditor = nullptr;
+    m_rhySetKeyboardWithList = nullptr;
+    m_darkSepRect3 = nullptr;
+    m_mixGrp = nullptr;
+    m_mixRhyTrack = nullptr;
+    imageButton5 = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -138,6 +148,8 @@ void RhythmSetEditorTab::paint (Graphics& g)
 #endif
     //[/UserPrePaint]
 
+    g.fillAll (Colour (0xff303030));
+
     //[UserPaint] Add your own custom painting code here..
     //[/UserPaint]
 }
@@ -147,15 +159,20 @@ void RhythmSetEditorTab::resized()
     //[UserPreResize] Add your own custom resize code here..
     //[/UserPreResize]
 
-    m_rhySetKeyboardWithList->setBounds (84, 52, 452, getHeight() - 53);
-    m_mixGrp->setBounds (0, 103, 80, 572);
-    m_mixRhyTrack->setBounds (4, 124, 72, 548);
-    imageButton5->setBounds (3, 104, 16, 16);
+    m_commonGrp4->setBounds (0, 0, 552, 675);
     m_partNoLabel->setBounds (4, 4, 72, 24);
     m_patchNameLabel->setBounds (88, 4, 120, 24);
     m_patchNameEditor->setBounds (88, 24, 116, 22);
     m_selectKeyLabel->setBounds (228, 30, 140, 24);
-    m_wave->setBounds (520, 32, 104, 136);
+    m_wave->setBounds (560, 20, 244, 136);
+    m_rhyPitchEditor->setBounds (944, 20, 376, 324);
+    m_rhyFilterEditor->setBounds (560, 351, 376, 324);
+    m_rhyAmpEditor->setBounds (944, 351, 376, 324);
+    m_rhySetKeyboardWithList->setBounds (92, 52, 452, getHeight() - 59);
+    m_darkSepRect3->setBounds (0, 100, 84, 575);
+    m_mixGrp->setBounds (0, 103, 80, 572);
+    m_mixRhyTrack->setBounds (4, 124, 72, 548);
+    imageButton5->setBounds (3, 104, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -187,6 +204,9 @@ void RhythmSetEditorTab::changeListenerCallback(ChangeBroadcaster* source)
 		{
 			m_currentKey = (uint8)row + 35;
 			m_wave->setupParameters(AllParts::PartR, m_currentKey);
+			m_rhyPitchEditor->setupParameters(m_currentKey);
+			m_rhyFilterEditor->setupParameters(m_currentKey);
+			m_rhyAmpEditor->setupParameters(m_currentKey);
 		}
     }
 }
@@ -206,22 +226,10 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component, public ChangeListener" constructorParams=""
                  variableInitialisers="" snapPixels="4" snapActive="1" snapShown="1"
                  overlayOpacity="0.330" fixedSize="1" initialWidth="1328" initialHeight="675">
-  <BACKGROUND backgroundColour="0"/>
-  <JUCERCOMP name="rhySetKeyboardWithList" id="3c1035db3aaf52f0" memberName="m_rhySetKeyboardWithList"
-             virtualName="" explicitFocusOrder="0" pos="84 52 452 53M" sourceFile="RhythmSectionEditors/RhySetKeyboardWithList.cpp"
+  <BACKGROUND backgroundColour="ff303030"/>
+  <JUCERCOMP name="commonGrp1" id="b95f1f3b55f39c2b" memberName="m_commonGrp4"
+             virtualName="" explicitFocusOrder="0" pos="0 0 552 675" sourceFile="GroupWidgets/RectangleGrey.cpp"
              constructorParams=""/>
-  <JUCERCOMP name="mixGrp" id="46883b20b70a0a85" memberName="m_mixGrp" virtualName=""
-             explicitFocusOrder="0" pos="0 103 80 572" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
-             constructorParams="&quot;mixerGrp&quot;,&quot;PART R&quot;"/>
-  <JUCERCOMP name="mixRhyTrack" id="83fd3ebb8d9abefe" memberName="m_mixRhyTrack"
-             virtualName="" explicitFocusOrder="0" pos="4 124 72 548" sourceFile="MixerSectionsEditors/MixRhyTrack.cpp"
-             constructorParams=""/>
-  <IMAGEBUTTON name="new button" id="941a767f4267791c" memberName="imageButton5"
-               virtualName="" explicitFocusOrder="0" pos="3 104 16 16" buttonText=""
-               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="mixer_png" opacityNormal="1" colourNormal="4340454a"
-               resourceOver="mixer_png" opacityOver="1" colourOver="4340454a"
-               resourceDown="mixer_png" opacityDown="1" colourDown="4340454a"/>
   <LABEL name="partNoLabel" id="51143029c4acb8f6" memberName="m_partNoLabel"
          virtualName="" explicitFocusOrder="0" pos="4 4 72 24" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PART R" editableSingleClick="0"
@@ -243,8 +251,35 @@ BEGIN_JUCER_METADATA
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
-             explicitFocusOrder="0" pos="520 32 104 136" sourceFile="PatchSectionEditors/WaveEditor.cpp"
+             explicitFocusOrder="0" pos="560 20 244 136" sourceFile="PatchSectionEditors/WaveEditor.cpp"
              constructorParams="&quot;WAVE&quot;, AllParts::PartR, m_currentKey"/>
+  <JUCERCOMP name="rhyPitchEditor" id="d20a8b4840ab1ef4" memberName="m_rhyPitchEditor"
+             virtualName="" explicitFocusOrder="0" pos="944 20 376 324" sourceFile="RhythmSectionEditors/RhyPitchEditor.cpp"
+             constructorParams="&quot;PITCH&quot;, m_currentKey"/>
+  <JUCERCOMP name="rhyFilterEditor" id="2ab70c00d446197a" memberName="m_rhyFilterEditor"
+             virtualName="" explicitFocusOrder="0" pos="560 351 376 324" sourceFile="RhythmSectionEditors/RhyFilterEditor.cpp"
+             constructorParams="&quot;FILTER&quot;, m_currentKey"/>
+  <JUCERCOMP name="rhyAmpEditor" id="ace1a038c1b06814" memberName="m_rhyAmpEditor"
+             virtualName="" explicitFocusOrder="0" pos="944 351 376 324" sourceFile="RhythmSectionEditors/RhyAmpEditor.cpp"
+             constructorParams="&quot;AMP&quot;, m_currentKey"/>
+  <JUCERCOMP name="rhySetKeyboardWithList" id="3c1035db3aaf52f0" memberName="m_rhySetKeyboardWithList"
+             virtualName="" explicitFocusOrder="0" pos="92 52 452 59M" sourceFile="RhythmSectionEditors/RhySetKeyboardWithList.cpp"
+             constructorParams=""/>
+  <JUCERCOMP name="" id="7b14f61a14009b5d" memberName="m_darkSepRect3" virtualName=""
+             explicitFocusOrder="0" pos="0 100 84 575" posRelativeH="156795e5be1d9d51"
+             sourceFile="GroupWidgets/RectangleDark.cpp" constructorParams=""/>
+  <JUCERCOMP name="mixGrp" id="46883b20b70a0a85" memberName="m_mixGrp" virtualName=""
+             explicitFocusOrder="0" pos="0 103 80 572" sourceFile="GroupWidgets/PanelGroupGrey.cpp"
+             constructorParams="&quot;mixerGrp&quot;,&quot;PART R&quot;"/>
+  <JUCERCOMP name="mixRhyTrack" id="83fd3ebb8d9abefe" memberName="m_mixRhyTrack"
+             virtualName="" explicitFocusOrder="0" pos="4 124 72 548" sourceFile="MixerSectionsEditors/MixRhyTrack.cpp"
+             constructorParams=""/>
+  <IMAGEBUTTON name="new button" id="941a767f4267791c" memberName="imageButton5"
+               virtualName="" explicitFocusOrder="0" pos="3 104 16 16" buttonText=""
+               connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
+               resourceNormal="mixer_png" opacityNormal="1" colourNormal="4340454a"
+               resourceOver="mixer_png" opacityOver="1" colourOver="4340454a"
+               resourceDown="mixer_png" opacityDown="1" colourDown="4340454a"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
