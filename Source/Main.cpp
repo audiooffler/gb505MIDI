@@ -81,11 +81,11 @@ public:
 			GrooveboxConnector::Model_Unknown);
 		lookAndFeel = new GrooveboxLookAndFeel();
 		LookAndFeel::setDefaultLookAndFeel(lookAndFeel);
-		deleteAndZero(splashScreen);
         mainWindow = new MainWindow();
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
 		mainWindow->getContentComponent()->grabKeyboardFocus();
+		deleteAndZero(splashScreen);
 #if JUCE_OPENGL
 		if (openGlContext != nullptr) openGlContext->attachTo(*mainWindow);
 #endif

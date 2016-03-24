@@ -20,6 +20,7 @@
 //[Headers] You can add your own extra header files here...
 #include "../../GrooveboxMemory/OverallMemoryBlock.h"
 #include "../GrooveboxLookAndFeel.h"
+#include "../ParameterWidgets/WaveformSearchComboBox.h"
 //[/Headers]
 
 #include "RhySetKeyboardWithList.h"
@@ -42,7 +43,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 
 
     //[UserPreSize]
-	int eachKeyRowHeight = 15;
+	int eachKeyRowHeight = 17;
 	m_tableHeader->addColumn("", NoteName, 25, 25, 25, 1);
 	m_tableHeader->addColumn("Key", KeyNo, 30, 30, 30, 1);
 	m_tableHeader->addColumn("Rhy Group", RhyGrp, 80, 80, 80, 1);
@@ -57,7 +58,8 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 
 	m_drumNamesTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_drumNamesTable->setColour(TableListBox::outlineColourId, Colours::grey);
-	m_drumNamesTable->selectRow(0);
+	m_drumNamesTable->selectRow(0); 
+	m_drumNamesTable->addMouseListener(this, true);
     //[/UserPreSize]
 
     setSize (425, 622);
@@ -113,6 +115,23 @@ void RhySetKeyboardWithList::resized()
     //[/UserResized]
 }
 
+void RhySetKeyboardWithList::mouseMove (const MouseEvent& e)
+{
+    //[UserCode_mouseMove] -- Add your code here...
+	if (dynamic_cast<WaveformSearchComboBox*>(e.eventComponent) || dynamic_cast<WaveformSearchComboBox*>(e.eventComponent->getParentComponent()))
+	{
+		if (getMouseCursor() != MouseCursor::PointingHandCursor && m_tableHeader->getColumnIdAtX(e.x) == RhyGrp)
+		{
+			e.eventComponent->setMouseCursor(MouseCursor::PointingHandCursor);
+		}
+		else if (getMouseCursor() == MouseCursor::PointingHandCursor && m_tableHeader->getColumnIdAtX(e.x) != RhyGrp)
+		{
+			e.eventComponent->setMouseCursor(MouseCursor::NormalCursor);
+		}
+	}
+    //[/UserCode_mouseMove]
+}
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -150,7 +169,7 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	else if (key >= 89 && key <= 93) rhyGroup = RhythmGroup::OTHERS;
 	String rhyGrpString = (rhyGroup != RhythmGroup::UNKNOWN && rhyGroup !=RhythmGroup::ALL) ? RhythmNoteBlock::getRhythmGroupString(rhyGroup) : "";
 	g.setColour(Colours::black);
-	g.setFont(Font((float)m_drumNamesTable->getRowHeight()));
+	g.setFont(Font(14.0f));
 	bool isBlack = MidiMessage::isMidiNoteBlack(key);
 
 	RhythmSetBlock* rhythmSetBlock = grooveboxMemory->getRhythmSetBlock();
@@ -163,7 +182,7 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	switch (columnId)
 	{
 	case NoteName:
-		if (key % 12 == 0) g.setFont(Font((float)m_drumNamesTable->getRowHeight(), Font::bold));
+		if (key % 12 == 0) g.setFont(Font(14.0f, Font::bold));
 		g.drawText(MidiMessage::getMidiNoteName(key, true, true, 4), 2, 0, width - 2, height, Justification::centredLeft, false);
 		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
@@ -196,7 +215,7 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 		g.drawText(muteGroup->getDisplayedValue().replace("OFF",""), 2, 0, width - 2, height, Justification::centred, false);
 		break;
 	case RhyWave:
-		if (rowIsSelected) g.setFont(Font((float)m_drumNamesTable->getRowHeight(),Font::bold));
+		if (rowIsSelected) g.setFont(Font(14.0f, Font::bold));
 		g.drawText(waveText, 2, 0, width-2, height, Justification::centredLeft, false);
 		break;
 	case GmDrum: g.drawText(MidiMessage::getRhythmInstrumentName(key), 2, 0, width, height, Justification::centredLeft, false);
@@ -231,6 +250,27 @@ void RhySetKeyboardWithList::changeListenerCallback(ChangeBroadcaster* source)
 		}
 	}
 }
+
+Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
+{
+	if (columnId == drumNamesTableColumnIds::RhyWave)
+	{
+		if (existingComponentToUpdate == nullptr)
+		{
+			WaveformSearchComboBox* newCombo = new WaveformSearchComboBox("waveformSearchComboBox", PartR, rowNumber + 35, true);
+			newCombo->setColour(ComboBox::outlineColourId, Colours::transparentBlack);
+			newCombo->setColour(ComboBox::backgroundColourId, Colours::transparentBlack);
+			newCombo->setWantsKeyboardFocus(true);
+			return newCombo;
+		}
+		else
+		{
+			if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+			return existingComponentToUpdate;
+		}
+	}
+	else return nullptr;
+}
 //[/MiscUserCode]
 
 
@@ -248,6 +288,9 @@ BEGIN_JUCER_METADATA
                  constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="425"
                  initialHeight="622">
+  <METHODS>
+    <METHOD name="mouseMove (const MouseEvent&amp; e)"/>
+  </METHODS>
   <BACKGROUND backgroundColour="0">
     <RECT pos="0 0 0M 0M" fill="solid: 0" hasStroke="1" stroke="1, mitered, butt"
           strokeColour="solid: ff000000"/>

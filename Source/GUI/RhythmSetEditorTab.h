@@ -22,6 +22,7 @@
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
+#include "ParameterWidgets/WaveformSearchComboBox.h"
 //[/Headers]
 
 #include "GroupWidgets/RectangleGrey.h"

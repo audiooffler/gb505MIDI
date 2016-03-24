@@ -186,6 +186,10 @@
                 file="Source/GUI/ParameterWidgets/WaveformsAllGroups.cpp"/>
           <FILE id="WtNuI5" name="WaveformsAllGroups.h" compile="0" resource="0"
                 file="Source/GUI/ParameterWidgets/WaveformsAllGroups.h"/>
+          <FILE id="oDX0za" name="WaveformSearchComboBox.cpp" compile="1" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformSearchComboBox.cpp"/>
+          <FILE id="l3u79v" name="WaveformSearchComboBox.h" compile="0" resource="0"
+                file="Source/GUI/ParameterWidgets/WaveformSearchComboBox.h"/>
           <FILE id="eHUzKS" name="WaveformsGroup.cpp" compile="1" resource="0"
                 file="Source/GUI/ParameterWidgets/WaveformsGroup.cpp"/>
           <FILE id="xM2uBG" name="WaveformsGroup.h" compile="0" resource="0"

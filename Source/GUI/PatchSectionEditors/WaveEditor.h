@@ -35,6 +35,7 @@
 #include "../GroupWidgets/PanelGroupGrey.h"
 #include "../ParameterWidgets/BlackToggle.h"
 #include "../ParameterWidgets/ParameterLedSwitch.h"
+#include "../ParameterWidgets/WaveformSearchComboBox.h"
 
 
 //==============================================================================
@@ -92,7 +93,6 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
 	AllParts m_part;
-	// Tone m_tone;
 	int m_toneNumber; // allowed values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
 	Parameter* m_waveGroupType;
 	Parameter* m_waveGroupId;
@@ -112,6 +112,7 @@ private:
     ScopedPointer<Label> m_envModeLabel;
     ScopedPointer<MicroParameterSlider> m_muteGrpSlider;
     ScopedPointer<Label> m_muteGrpLabel;
+    ScopedPointer<WaveformSearchComboBox> m_waveformSearchComboBox;
 
 
     //==============================================================================

@@ -112,6 +112,7 @@ WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumb
     m_muteGrpLabel->setColour (TextEditor::textColourId, Colours::black);
     m_muteGrpLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
+    addAndMakeVisible (m_waveformSearchComboBox = new WaveformSearchComboBox ("waveformSearchComboBox", PartR, m_toneNumber, false));
 
     //[UserPreSize]
 	m_waveGroupType = nullptr;
@@ -127,7 +128,7 @@ WaveEditor::WaveEditor (const String &componentName, AllParts part, int toneNumb
 	}
     //[/UserPreSize]
 
-    setSize (240, 128);
+    setSize (241, 152);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -155,6 +156,7 @@ WaveEditor::~WaveEditor()
     m_envModeLabel = nullptr;
     m_muteGrpSlider = nullptr;
     m_muteGrpLabel = nullptr;
+    m_waveformSearchComboBox = nullptr;
 
 
     //[Destructor]. You can add your own custom destruction code here..
@@ -191,6 +193,7 @@ void WaveEditor::resized()
     m_envModeLabel->setBounds (104, 44, 68, 32);
     m_muteGrpSlider->setBounds (192, 20, 43, 16);
     m_muteGrpLabel->setBounds (104, 20, 84, 16);
+    m_waveformSearchComboBox->setBounds (4, 128, getWidth() - 8, 17);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -275,6 +278,11 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 					if (RhythmNoteBlock* noteBlock = rhyhtmSet->getRhythmNoteBlockPtr((uint8)toneNumber))
 					{
 						m_toneNumber = toneNumber;
+
+						if (m_waveGroupType != nullptr) m_waveGroupType->removeChangeListener(this);
+						if (m_waveGroupId != nullptr) m_waveGroupId->removeChangeListener(this);
+						if (m_waveNumber != nullptr) m_waveNumber->removeChangeListener(this);
+
 						m_onToggle->setParameter(noteBlock->getParameter(0x00));
 						m_waveGroupType = noteBlock->getParameter(0x01);
 						m_waveGroupId = noteBlock->getParameter(0x02);
@@ -287,6 +295,7 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 
 						m_muteGrpSlider->setParameter(noteBlock->getParameter(0x07));
 						m_envModeToggle->setParameter(noteBlock->getParameter(0x08));
+						m_waveformSearchComboBox->setupParameters(m_part, m_toneNumber);
 						m_fxmGrp->setText("WAVE OF KEY " + String(toneNumber));
 					}
 				}
@@ -323,6 +332,11 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 				if (tone != nullptr)
 				{
 					m_toneNumber = toneNumber;
+
+					if (m_waveGroupType != nullptr) m_waveGroupType->removeChangeListener(this);
+					if (m_waveGroupId != nullptr) m_waveGroupId->removeChangeListener(this);
+					if (m_waveNumber != nullptr) m_waveNumber->removeChangeListener(this);
+
 					m_onToggle->setParameter(tone->getParameter(0x00));
 					m_waveGroupType = tone->getParameter(0x01);
 					m_waveGroupId = tone->getParameter(0x02);
@@ -332,6 +346,7 @@ void WaveEditor::setupParameters(AllParts part, int toneNumber)
 					m_waveGroupId->addChangeListener(this);
 					m_waveNumber->addChangeListener(this);
 					m_waveGainComboBox->setParameter(tone->getParameter(0x05));
+					m_waveformSearchComboBox->setupParameters(m_part, m_toneNumber);
 					m_fxmGrp->setText("WAVE T" + String(toneNumberLabel));
 				}
 			}
@@ -390,7 +405,7 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component, public ChangeListener" constructorParams="const String &amp;componentName, AllParts part, int toneNumber"
                  variableInitialisers="Component (componentName), m_part(part), m_toneNumber(toneNumber)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="240" initialHeight="128">
+                 fixedSize="1" initialWidth="241" initialHeight="152">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="fxmGrp" id="ae3eed65b8ca1538" memberName="m_fxmGrp" virtualName=""
              explicitFocusOrder="0" pos="0 0 0M 0M" sourceFile="../GroupWidgets/PanelGroupGrey.cpp"
@@ -443,6 +458,9 @@ BEGIN_JUCER_METADATA
          edBkgCol="0" labelText="MUTE GROUP" editableSingleClick="0" editableDoubleClick="0"
          focusDiscardsChanges="0" fontname="Default font" fontsize="12"
          bold="1" italic="0" justification="33"/>
+  <JUCERCOMP name="" id="db2be71c65eb8969" memberName="m_waveformSearchComboBox"
+             virtualName="" explicitFocusOrder="0" pos="4 128 8M 17" sourceFile="../ParameterWidgets/WaveformSearchComboBox.cpp"
+             constructorParams="&quot;waveformSearchComboBox&quot;, PartR, m_toneNumber, false"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA

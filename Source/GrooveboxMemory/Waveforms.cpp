@@ -40,18 +40,26 @@ void Waveforms::loadWaveforms(WaveGroup group)
 	switch (group)
 	{
 	case Waveforms::WAVES_A:
+		m_aWaveNames.clear();
+		m_aWaveLongNames.clear();
 		rawTextFile = BinaryData::WAVES_A_txt;
 		sizeInBytes = BinaryData::WAVES_A_txtSize;
 		break;
 	case Waveforms::WAVES_B:
+		m_bWaveNames.clear();
+		m_bWaveLongNames.clear();
 		rawTextFile = BinaryData::WAVES_B_txt;
 		sizeInBytes = BinaryData::WAVES_B_txtSize;
 		break;
 	case Waveforms::WAVES_C_JX305:
+		m_cWaveNames.clear();
+		m_cWaveLongNames.clear();
 		rawTextFile = BinaryData::WAVES_C_JX305_txt;
 		sizeInBytes = BinaryData::WAVES_C_JX305_txtSize;
 		break;
 	case Waveforms::WAVES_C_MC307:
+		m_cWaveNames.clear();
+		m_cWaveLongNames.clear();
 		rawTextFile = BinaryData::WAVES_C_MC307_txt;
 		sizeInBytes = BinaryData::WAVES_C_MC307_txtSize;
 		break;

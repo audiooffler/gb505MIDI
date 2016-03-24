@@ -48,11 +48,11 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	ParameterComboBox(Parameter* paramPtr = nullptr);
-	void setParameter(Parameter* param);
-	Parameter* getParamPtr();
-	String getTooltip() override;
-	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
-	void comboBoxChanged(ComboBox *comboBoxThatHasChanged);
+	virtual void setParameter(Parameter* param);
+	virtual Parameter* getParamPtr();
+	virtual void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
+	virtual void comboBoxChanged(ComboBox *comboBoxThatHasChanged); // gui combobox selection change
+	virtual String getTooltip() override;
     //[/UserMethods]
 
     void paint (Graphics& g);

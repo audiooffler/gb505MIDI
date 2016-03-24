@@ -727,6 +727,14 @@ void Envelope::setupParameters(AllParts part, int toneNumber)
 					if (RhythmNoteBlock* noteBlock = rhyhtmSet->getRhythmNoteBlockPtr((uint8)toneNumber))
 					{
 						m_toneNumber = toneNumber;
+						if (m_timePrm1 != nullptr) m_timePrm1->removeChangeListener(this);
+						if (m_timePrm2 != nullptr) m_timePrm2->removeChangeListener(this);
+						if (m_timePrm3 != nullptr) m_timePrm3->removeChangeListener(this);
+						if (m_timePrm4 != nullptr) m_timePrm4->removeChangeListener(this);
+						if (m_levelPrm1 != nullptr) m_levelPrm1->removeChangeListener(this);
+						if (m_levelPrm2 != nullptr) m_levelPrm2->removeChangeListener(this);
+						if (m_levelPrm3 != nullptr) m_levelPrm3->removeChangeListener(this);
+						if (m_levelPrm4 != nullptr) m_levelPrm4->removeChangeListener(this);
 						switch (m_type)
 						{
 						case Pitch:
@@ -833,6 +841,14 @@ void Envelope::setupParameters(AllParts part, int toneNumber)
 				if (tone != nullptr)
 				{
 					m_toneNumber = toneNumber;
+					if (m_timePrm1 != nullptr) m_timePrm1->removeChangeListener(this);
+					if (m_timePrm2 != nullptr) m_timePrm2->removeChangeListener(this);
+					if (m_timePrm3 != nullptr) m_timePrm3->removeChangeListener(this);
+					if (m_timePrm4 != nullptr) m_timePrm4->removeChangeListener(this);
+					if (m_levelPrm1 != nullptr) m_levelPrm1->removeChangeListener(this);
+					if (m_levelPrm2 != nullptr) m_levelPrm2->removeChangeListener(this);
+					if (m_levelPrm3 != nullptr) m_levelPrm3->removeChangeListener(this);
+					if (m_levelPrm4 != nullptr) m_levelPrm4->removeChangeListener(this);
 					switch (m_type)
 					{
 					case Pitch:

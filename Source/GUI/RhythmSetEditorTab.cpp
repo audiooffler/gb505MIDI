@@ -164,7 +164,7 @@ void RhythmSetEditorTab::resized()
     m_patchNameLabel->setBounds (88, 4, 120, 24);
     m_patchNameEditor->setBounds (88, 24, 116, 22);
     m_selectKeyLabel->setBounds (228, 30, 140, 24);
-    m_wave->setBounds (560, 20, 244, 136);
+    m_wave->setBounds (560, 20, 244, 156);
     m_rhyPitchEditor->setBounds (944, 20, 376, 324);
     m_rhyFilterEditor->setBounds (560, 351, 376, 324);
     m_rhyAmpEditor->setBounds (944, 351, 376, 324);
@@ -251,7 +251,7 @@ BEGIN_JUCER_METADATA
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
-             explicitFocusOrder="0" pos="560 20 244 136" sourceFile="PatchSectionEditors/WaveEditor.cpp"
+             explicitFocusOrder="0" pos="560 20 244 156" sourceFile="PatchSectionEditors/WaveEditor.cpp"
              constructorParams="&quot;WAVE&quot;, AllParts::PartR, m_currentKey"/>
   <JUCERCOMP name="rhyPitchEditor" id="d20a8b4840ab1ef4" memberName="m_rhyPitchEditor"
              virtualName="" explicitFocusOrder="0" pos="944 20 376 324" sourceFile="RhythmSectionEditors/RhyPitchEditor.cpp"

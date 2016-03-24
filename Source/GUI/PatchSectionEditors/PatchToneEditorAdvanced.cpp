@@ -100,7 +100,7 @@ void PatchToneEditorAdvanced::resized()
     m_controlMatrix->setBounds (724, 404, 520, 168);
     m_fxm->setBounds (0, 312, 104, 108);
     m_delay->setBounds (0, 424, 104, 148);
-    m_wave->setBounds (0, 0, 104, 136);
+    m_wave->setBounds (0, 0, 104, 156);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -151,7 +151,7 @@ BEGIN_JUCER_METADATA
              explicitFocusOrder="0" pos="0 424 104 148" sourceFile="ToneDelayEditor.cpp"
              constructorParams="&quot;DELAY&quot;, m_part, m_tone"/>
   <JUCERCOMP name="wave" id="18daa831771a006a" memberName="m_wave" virtualName=""
-             explicitFocusOrder="0" pos="0 0 104 136" sourceFile="WaveEditor.cpp"
+             explicitFocusOrder="0" pos="0 0 104 156" sourceFile="WaveEditor.cpp"
              constructorParams="&quot;WAVE&quot;, (AllParts) m_part, m_tone"/>
 </JUCER_COMPONENT>
 

@@ -49,6 +49,7 @@ public:
 	void /*TableListBoxModel::*/paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void /*TableListBoxModel::*/paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	void /*TableListBoxModel::*/selectedRowsChanged(int lastRowSelected) override;
+	Component* /*TableListBoxModel::*/refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
 	enum drumNamesTableColumnIds
 	{
 		NoteName = 1,
@@ -64,6 +65,7 @@ public:
 
     void paint (Graphics& g) override;
     void resized() override;
+    void mouseMove (const MouseEvent& e) override;
 
 
 
