@@ -36,7 +36,6 @@
 #include "../GroupWidgets/PanelGroupTransp.h"
 #include "../PatchSectionEditors/Envelope.h"
 #include "../ParameterWidgets/BlackToggle.h"
-#include "../ParameterWidgets/GrabSwitch.h"
 
 
 //==============================================================================
@@ -76,7 +75,6 @@ private:
 
     //==============================================================================
     ScopedPointer<PanelGroupGrey> m_ampGrp;
-    ScopedPointer<PanelGroupGrey> m_sendFXGrp;
     ScopedPointer<PanelGroupGrey> m_ampEnvGrp;
     ScopedPointer<Knob> m_tonePanSlider;
     ScopedPointer<Label> m_tonePanLabel;
@@ -92,12 +90,6 @@ private:
     ScopedPointer<ImageButton> m_imageButton;
     ScopedPointer<ParameterEnvelopeSlider> m_toneLevelSlider;
     ScopedPointer<Label> m_filterEnvelopeDepthLabel;
-    ScopedPointer<Knob> m_delaySlider;
-    ScopedPointer<Knob> m_ReverbSlider;
-    ScopedPointer<Label> m_mfxLabel;
-    ScopedPointer<Label> m_delayLabel;
-    ScopedPointer<Label> m_reverbLabel;
-    ScopedPointer<GrabSwitch> m_mfxGrab;
 
 
     //==============================================================================

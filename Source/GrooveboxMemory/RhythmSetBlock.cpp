@@ -207,6 +207,20 @@ RhythmNoteBlock::RhythmNoteBlock(uint8 key) :
 		"The Rhythm Tone Delay Level setting is valid only when the Part M-FX SW setting of the rhythm part is set to \"RHY\". Also in this case, if the Delay Level and the Part Delay Level setting of the rhythm part are low, there will be no delay even if the Rhythm Tone Delay Level is raised.");
 }
 
+/*static */const RhythmGroup RhythmNoteBlock::getRhythmGroup(uint8 key)
+{
+	RhythmGroup rhyGroup = RhythmGroup::UNKNOWN;
+	if ((key >= 35 && key <= 36) || (key >= 47 && key <= 48) || (key >= 95 && key <= 96)) rhyGroup = RhythmGroup::BD;
+	else if (key == 38 || key == 40 || key == 50 || key == 52 || key == 97 || key == 98) rhyGroup = RhythmGroup::SD;
+	else if (key == 39 || key == 51 || key == 94) rhyGroup = RhythmGroup::CLP;
+	else if (key == 42 || key == 42 || key == 44 || key == 46 || key == 54 || key == 56 || key == 58) rhyGroup = RhythmGroup::HH;
+	else if (key == 61 || key == 63 || key == 64 || key == 65 || key == 67 || key == 69 || key == 71) rhyGroup = RhythmGroup::CYM;
+	else if (key == 37 || key == 41 || key == 43 || key == 45 || key == 41 || key == 49 || key == 41 || key == 53 || key == 55 || key == 57 || key == 59 || key == 60 || key == 62 || key == 66 || key == 68 || key == 70 || (key >= 72 && key <= 82)) rhyGroup = RhythmGroup::TOM_PERC;
+	else if (key >= 83 && key <= 88) rhyGroup = RhythmGroup::HIT;
+	else if (key >= 89 && key <= 93) rhyGroup = RhythmGroup::OTHERS;
+	return rhyGroup;
+}
+
 /*static*/ const String RhythmNoteBlock::getRhythmGroupString(RhythmGroup rhythmGroup)
 {
 	switch (rhythmGroup)

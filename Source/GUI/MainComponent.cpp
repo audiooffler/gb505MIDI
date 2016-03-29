@@ -52,13 +52,13 @@ MainComponent::MainComponent ()
 	addTab(TRANS("Mixer"), tabGrey, new MixerTab(), true);
 	CustomViewport* rhythmSetViewPort = new CustomViewport("RhythmSetEditor");
 	rhythmSetViewPort->setViewedComponent(new RhythmSetEditorTab(), true);
-	addTab(TRANS("Rhythm"), tabGrey, rhythmSetViewPort, true);
+	addTab(TRANS("Rhythm Set PART R"), tabGrey, rhythmSetViewPort, true);
 	SynthParts part(SynthPart1);
 	String partNameString;
 	for (int p = (int)SynthPart1; p <= (int)SynthPart7; p++)
 	{
 		part = (SynthParts)p;
-		partNameString = "Patch Part "+String(p+1);
+		partNameString = "Patch PART "+String(p+1);
 		CustomViewport* patchPartViewPort = new CustomViewport(partNameString);
 		patchPartViewPort->setViewedComponent(new PatchEditor(part), true);
 		addTab(partNameString, tabGrey, patchPartViewPort, true);

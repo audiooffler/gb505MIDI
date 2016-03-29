@@ -30,6 +30,7 @@ public:
 	// key must be of 35=0x23..98=0x62 (64 keys)
 	RhythmNoteBlock(uint8 key);
 	uint8 getKey(){ return m_key; }
+	static const RhythmGroup getRhythmGroup(uint8 key);
 	static const String getRhythmGroupString(RhythmGroup rhythmGroup);
 
 private:

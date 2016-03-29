@@ -357,6 +357,15 @@ void WaveformSearchComboBox::mouseWheelMove(const MouseEvent& e, const MouseWhee
 	else ComboBox::mouseWheelMove(e, d);
 }
 
+void WaveformSearchComboBox::mouseDown(const MouseEvent& e)
+{
+	if (m_isInTable)
+	{
+		getParentComponent()->mouseDown(e);
+	}
+	ComboBox::mouseDown(e);
+}
+
 bool WaveformSearchComboBox::keyPressed(const KeyPress& k)
 {
 	if (m_isInTable && (k == KeyPress::upKey || k == KeyPress::downKey))

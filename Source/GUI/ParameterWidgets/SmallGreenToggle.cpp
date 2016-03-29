@@ -31,6 +31,12 @@ SmallGreenToggle::SmallGreenToggle()
 	cachedImage_smallGreenToggleOn_png = ImageCache::getFromMemory(smallGreenToggleOn_png, smallGreenToggleOn_pngSize);
 	setSize(12, 12);
 }
+
+SmallGreenToggle::SmallGreenToggle(const String& componentName, bool isInTable)
+	:SmallGreenToggle(componentName)
+{
+	m_isInTable = isInTable;
+}
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -68,7 +74,7 @@ SmallGreenToggle::~SmallGreenToggle()
 void SmallGreenToggle::paint (Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
-	ToggleButton::paint(g);
+	//ToggleButton::paint(g);
     //[/UserPrePaint]
 
     g.setColour (Colours::black);
@@ -97,6 +103,14 @@ void SmallGreenToggle::resized()
     //[/UserResized]
 }
 
+void SmallGreenToggle::mouseDown (const MouseEvent& e)
+{
+    //[UserCode_mouseDown] -- Add your code here...
+    if (m_isInTable) getParentComponent()->mouseDown(e);
+	ParameterToggle::mouseDown(e);
+    //[/UserCode_mouseDown]
+}
+
 
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
@@ -117,6 +131,9 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="ParameterToggle(componentName)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="12" initialHeight="12">
+  <METHODS>
+    <METHOD name="mouseDown (const MouseEvent&amp; e)"/>
+  </METHODS>
   <BACKGROUND backgroundColour="0">
     <IMAGE pos="0Cc 0Cc 12 12" resource="smallOrangeToggleOff_png" opacity="1"
            mode="0"/>

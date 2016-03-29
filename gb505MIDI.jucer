@@ -278,6 +278,10 @@
                 file="Source/GUI/RhythmSectionEditors/RhyFilterEditor.cpp"/>
           <FILE id="QBLSx9" name="RhyFilterEditor.h" compile="0" resource="0"
                 file="Source/GUI/RhythmSectionEditors/RhyFilterEditor.h"/>
+          <FILE id="ggSsoA" name="RhyFxSendEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyFxSendEditor.cpp"/>
+          <FILE id="Wma2pa" name="RhyFxSendEditor.h" compile="0" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyFxSendEditor.h"/>
           <FILE id="g313Hr" name="RhyPitchEditor.cpp" compile="1" resource="0"
                 file="Source/GUI/RhythmSectionEditors/RhyPitchEditor.cpp"/>
           <FILE id="woZL3L" name="RhyPitchEditor.h" compile="0" resource="0"
@@ -286,6 +290,9 @@
                 file="Source/GUI/RhythmSectionEditors/RhySetKeyboardWithList.cpp"/>
           <FILE id="dcwGgd" name="RhySetKeyboardWithList.h" compile="0" resource="0"
                 file="Source/GUI/RhythmSectionEditors/RhySetKeyboardWithList.h"/>
+          <FILE id="DO4ECX" name="RhyWaveEditor.cpp" compile="1" resource="0"
+                file="Source/GUI/RhythmSectionEditors/RhyWaveEditor.cpp"/>
+          <FILE id="HCWOD4" name="RhyWaveEditor.h" compile="0" resource="0" file="Source/GUI/RhythmSectionEditors/RhyWaveEditor.h"/>
         </GROUP>
         <FILE id="IU9iK0" name="AsciiWithNoteValuesTypeface.cpp" compile="1"
               resource="0" file="Source/GUI/AsciiWithNoteValuesTypeface.cpp"/>

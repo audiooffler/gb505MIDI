@@ -57,7 +57,12 @@ public:
 		RhyGrp = 3,
 		MuteGrp = 4,
 		RhyWave = 5,
-		GmDrum = 6
+		GmDrum = 6,
+		Level = 7, 
+		Pan = 8,
+		Rev = 9,
+		Dly = 10,
+		MFX = 11
 	};
 	void changeListenerCallback(ChangeBroadcaster* source) override;
 	int getSelectedRow() { return m_lastRowSelected; }

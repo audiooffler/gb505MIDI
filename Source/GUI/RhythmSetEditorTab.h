@@ -26,7 +26,7 @@
 //[/Headers]
 
 #include "GroupWidgets/RectangleGrey.h"
-#include "PatchSectionEditors/WaveEditor.h"
+#include "RhythmSectionEditors/RhyWaveEditor.h"
 #include "RhythmSectionEditors/RhyPitchEditor.h"
 #include "RhythmSectionEditors/RhyFilterEditor.h"
 #include "RhythmSectionEditors/RhyAmpEditor.h"
@@ -34,6 +34,7 @@
 #include "GroupWidgets/RectangleDark.h"
 #include "GroupWidgets/PanelGroupGrey.h"
 #include "MixerSectionsEditors/MixRhyTrack.h"
+#include "RhythmSectionEditors/RhyFxSendEditor.h"
 
 
 //==============================================================================
@@ -63,6 +64,8 @@ public:
     void buttonClicked (Button* buttonThatWasClicked) override;
 
     // Binary resources:
+    static const char* partNameR_png;
+    static const int partNameR_pngSize;
     static const char* mixer_png;
     static const int mixer_pngSize;
 
@@ -74,11 +77,10 @@ private:
 
     //==============================================================================
     ScopedPointer<RectangleGrey> m_commonGrp4;
-    ScopedPointer<Label> m_partNoLabel;
     ScopedPointer<Label> m_patchNameLabel;
     ScopedPointer<ParameterTextEditor> m_patchNameEditor;
     ScopedPointer<Label> m_selectKeyLabel;
-    ScopedPointer<WaveEditor> m_wave;
+    ScopedPointer<RhyWaveEditor> m_wave;
     ScopedPointer<RhyPitchEditor> m_rhyPitchEditor;
     ScopedPointer<RhyFilterEditor> m_rhyFilterEditor;
     ScopedPointer<RhyAmpEditor> m_rhyAmpEditor;
@@ -87,6 +89,8 @@ private:
     ScopedPointer<PanelGroupGrey> m_mixGrp;
     ScopedPointer<MixRhyTrack> m_mixRhyTrack;
     ScopedPointer<ImageButton> imageButton5;
+    ScopedPointer<RhyFxSendEditor> m_rhyFxSendEditor;
+    ScopedPointer<ImageButton> m_partNoLabel;
 
 
     //==============================================================================

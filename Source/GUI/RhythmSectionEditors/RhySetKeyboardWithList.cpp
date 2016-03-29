@@ -21,6 +21,8 @@
 #include "../../GrooveboxMemory/OverallMemoryBlock.h"
 #include "../GrooveboxLookAndFeel.h"
 #include "../ParameterWidgets/WaveformSearchComboBox.h"
+#include "../ParameterWidgets/MicroParameterSlider.h"
+#include "../ParameterWidgets/SmallGreenToggle.h"
 //[/Headers]
 
 #include "RhySetKeyboardWithList.h"
@@ -50,6 +52,12 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_tableHeader->addColumn("MtG", MuteGrp, 27, 27, 27, 1);
 	m_tableHeader->addColumn("Waveform", RhyWave, 140, 140, 140, 1);
 	m_tableHeader->addColumn("GM Standard Drum", GmDrum, 130, 130, 130, 9);
+	m_tableHeader->addColumn("LEVEL", Level, 48, 48, 48, 1);
+	m_tableHeader->addColumn("PAN", Pan, 48, 48, 48, 1);
+	m_tableHeader->addColumn("REVERB", Rev, 48, 48, 48, 1);
+	m_tableHeader->addColumn("DELAY", Dly, 48, 48, 48, 1);
+	m_tableHeader->addColumn("M-FX", MFX, 48, 48, 48, 1);
+	m_tableHeader->setColumnVisible(GmDrum, false);
 	m_drumNamesTable->setHeader(m_tableHeader);
 	m_drumNamesTable->setHeaderHeight(24);
 	m_drumNamesTable->setRowHeight(eachKeyRowHeight);
@@ -158,15 +166,7 @@ void RhySetKeyboardWithList::paintRowBackground(Graphics& g, int rowNumber, int 
 void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected)
 {
 	int key = rowNumber + 35;
-	RhythmGroup rhyGroup = RhythmGroup::UNKNOWN;
-	if ((key >= 35 && key <= 36) || (key >= 47 && key <= 48) || (key >= 95 && key <= 96)) rhyGroup = RhythmGroup::BD;
-	else if (key == 38 || key == 40 || key == 50 || key == 52 || key == 97 || key == 98) rhyGroup = RhythmGroup::SD;
-	else if (key == 39 || key == 51 || key == 94) rhyGroup = RhythmGroup::CLP;
-	else if (key == 42 || key == 42 || key == 44 || key == 46 || key == 54 || key == 56 || key == 58) rhyGroup = RhythmGroup::HH;
-	else if (key == 61 || key == 63 || key == 64 || key == 65 || key == 67 || key == 69 || key == 71) rhyGroup = RhythmGroup::CYM;
-	else if (key == 37 || key == 41 || key == 43 || key == 45 || key == 41 || key == 49 || key == 41 || key == 53 || key == 55 || key == 57 || key == 59 || key == 60 || key == 62 || key == 66 || key == 68 || key == 70 || (key >= 72 && key <= 82)) rhyGroup = RhythmGroup::TOM_PERC;
-	else if (key >= 83 && key <= 88) rhyGroup = RhythmGroup::HIT;
-	else if (key >= 89 && key <= 93) rhyGroup = RhythmGroup::OTHERS;
+	RhythmGroup rhyGroup = RhythmNoteBlock::getRhythmGroup((uint8) key);
 	String rhyGrpString = (rhyGroup != RhythmGroup::UNKNOWN && rhyGroup !=RhythmGroup::ALL) ? RhythmNoteBlock::getRhythmGroupString(rhyGroup) : "";
 	g.setColour(Colours::black);
 	g.setFont(Font(14.0f));
@@ -205,20 +205,40 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 				g.drawRect(0.0f, 0.0f, (float)width, 0.5f);
 			}
 		}
-		g.drawText(String(key), 0, 0, width-2, height, Justification::centredRight, false);
-		g.drawRect((float)width-1.0f, 0.0f, 0.5f, (float)height);
+		g.drawText(String(key), 0, 0, width - 2, height, Justification::centredRight, false);
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case RhyGrp:
-		g.drawText(rhyGrpString, 4, 0, width-4, height, Justification::centred, false);
+		g.drawText(rhyGrpString, 4, 0, width - 4, height, Justification::centred, false);
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case MuteGrp:
-		g.drawText(muteGroup->getDisplayedValue().replace("OFF",""), 2, 0, width - 2, height, Justification::centred, false);
+		g.drawText(muteGroup->getDisplayedValue().replace("OFF", ""), 2, 0, width - 2, height, Justification::centred, false);
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case RhyWave:
 		if (rowIsSelected) g.setFont(Font(14.0f, Font::bold));
-		g.drawText(waveText, 2, 0, width-2, height, Justification::centredLeft, false);
+		g.drawText(waveText, 2, 0, width - 2, height, Justification::centredLeft, false);
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
-	case GmDrum: g.drawText(MidiMessage::getRhythmInstrumentName(key), 2, 0, width, height, Justification::centredLeft, false);
+	case GmDrum:
+		g.drawText(MidiMessage::getRhythmInstrumentName(key), 2, 0, width, height, Justification::centredLeft, false);
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
+		break;
+	case Level:
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
+		break;
+	case Pan:
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
+		break;
+	case Rev:
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
+		break;
+	case Dly:
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
+		break;
+	case MFX:
+		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	}
 }
@@ -253,21 +273,164 @@ void RhySetKeyboardWithList::changeListenerCallback(ChangeBroadcaster* source)
 
 Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate)
 {
-	if (columnId == drumNamesTableColumnIds::RhyWave)
+	RhythmSetBlock* rhythmSetBlock = grooveboxMemory->getRhythmSetBlock();
+	RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)rowNumber + 35);
+	if (columnId == drumNamesTableColumnIds::MuteGrp)
 	{
-		if (existingComponentToUpdate == nullptr)
+		if (existingComponentToUpdate != nullptr)
 		{
-			WaveformSearchComboBox* newCombo = new WaveformSearchComboBox("waveformSearchComboBox", PartR, rowNumber + 35, true);
-			newCombo->setColour(ComboBox::outlineColourId, Colours::transparentBlack);
-			newCombo->setColour(ComboBox::backgroundColourId, Colours::transparentBlack);
-			newCombo->setWantsKeyboardFocus(true);
-			return newCombo;
+			if (MicroParameterSlider* existingSlider = static_cast<MicroParameterSlider*>(existingComponentToUpdate))
+			{
+				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingSlider->setParameter(rhythmNoteBlock->getParameter(0x07));
+					return existingSlider;
+				}
+			}
 		}
-		else
+		MicroParameterSlider* slider = new MicroParameterSlider("muteGrpSlider", true);
+		slider->setParameter(rhythmNoteBlock->getParameter(0x07));
+		return slider;
+	}
+	else if (columnId == drumNamesTableColumnIds::RhyWave)
+	{
+		if (existingComponentToUpdate != nullptr)
 		{
-			if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
-			return existingComponentToUpdate;
+			if (WaveformSearchComboBox* existingCombo = static_cast<WaveformSearchComboBox*>(existingComponentToUpdate))
+			{
+				if (existingCombo->getParamPtr() != nullptr && existingCombo->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingCombo->setupParameters(PartR, rowNumber + 35);
+					return existingCombo;
+				}
+			}
 		}
+		WaveformSearchComboBox* newCombo = new WaveformSearchComboBox("waveformSearchComboBox", PartR, rowNumber + 35, true);
+		newCombo->setColour(ComboBox::outlineColourId, Colours::transparentBlack);
+		newCombo->setColour(ComboBox::backgroundColourId, Colours::transparentBlack);
+		newCombo->setWantsKeyboardFocus(true);
+		return newCombo;
+	}
+	else if (columnId == drumNamesTableColumnIds::Level)
+	{
+		if (existingComponentToUpdate != nullptr)
+		{
+			if (MicroParameterSlider* existingSlider = static_cast<MicroParameterSlider*>(existingComponentToUpdate))
+			{
+				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingSlider->setParameter(rhythmNoteBlock->getParameter(0x29));
+					return existingSlider;
+				}
+			}
+		}
+		MicroParameterSlider* slider = new MicroParameterSlider("levelSlider", true);
+		slider->setParameter(rhythmNoteBlock->getParameter(0x29));
+		return slider;
+	}
+	else if (columnId == drumNamesTableColumnIds::Pan)
+	{
+		if (existingComponentToUpdate != nullptr)
+		{
+			if (MicroParameterSlider* existingSlider = static_cast<MicroParameterSlider*>(existingComponentToUpdate))
+			{
+				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingSlider->setParameter(rhythmNoteBlock->getParameter(0x33));
+					return existingSlider;
+				}
+			}
+		}
+		MicroParameterSlider* slider = new MicroParameterSlider("panSlider", true);
+		slider->setParameter(rhythmNoteBlock->getParameter(0x33));
+		return slider;
+	}
+	else if (columnId == drumNamesTableColumnIds::Rev)
+	{
+		if (existingComponentToUpdate != nullptr)
+		{
+			if (MicroParameterSlider* existingSlider = static_cast<MicroParameterSlider*>(existingComponentToUpdate))
+			{
+				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingSlider->setParameter(rhythmNoteBlock->getParameter(0x39));
+					return existingSlider;
+				}
+			}
+		}
+		MicroParameterSlider* slider = new MicroParameterSlider("revSlider", true);
+		slider->setParameter(rhythmNoteBlock->getParameter(0x39));
+		return slider;
+	}
+	else if (columnId == drumNamesTableColumnIds::Dly)
+	{
+		if (existingComponentToUpdate != nullptr)
+		{
+			if (MicroParameterSlider* existingSlider = static_cast<MicroParameterSlider*>(existingComponentToUpdate))
+			{
+				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingSlider->setParameter(rhythmNoteBlock->getParameter(0x38));
+					return existingSlider;
+				}
+			}
+		}
+		MicroParameterSlider* slider = new MicroParameterSlider("dlySlider", true);
+		slider->setParameter(rhythmNoteBlock->getParameter(0x38));
+		return slider;
+	}
+	else if (columnId == drumNamesTableColumnIds::MFX)
+	{
+		if (existingComponentToUpdate != nullptr)
+		{
+			if (SmallGreenToggle* existingToggle = static_cast<SmallGreenToggle*>(existingComponentToUpdate))
+			{
+				if (existingToggle->getParamPtr() != nullptr && existingToggle->getParamPtr()->getBlock() == rhythmNoteBlock)
+				{
+					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					return existingComponentToUpdate;
+				}
+				else
+				{
+					existingToggle->setParameter(rhythmNoteBlock->getParameter(0x36));
+					return existingToggle;
+				}
+			}
+		}
+		SmallGreenToggle* toggle = new SmallGreenToggle("mfxToggle", true);
+		toggle->setBounds(toggle->getBounds().withWidth(12));
+		toggle->setParameter(rhythmNoteBlock->getParameter(0x36));
+		return toggle;
 	}
 	else return nullptr;
 }

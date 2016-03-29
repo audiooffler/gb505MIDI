@@ -76,6 +76,20 @@ public:
     static const int tonemixtable_pngSize;
     static const char* mixer_png;
     static const int mixer_pngSize;
+    static const char* partName1_png;
+    static const int partName1_pngSize;
+    static const char* partName2_png;
+    static const int partName2_pngSize;
+    static const char* partName3_png;
+    static const int partName3_pngSize;
+    static const char* partName4_png;
+    static const int partName4_pngSize;
+    static const char* partName5_png;
+    static const int partName5_pngSize;
+    static const char* partName6_png;
+    static const int partName6_pngSize;
+    static const char* partName7_png;
+    static const int partName7_pngSize;
 
 
 private:
@@ -103,7 +117,6 @@ private:
     ScopedPointer<ParameterLedSwitch> m_voicePriorityToggle;
     ScopedPointer<TextWithArrowButton> m_soloLegatoEditButton;
     ScopedPointer<TextWithArrowButton> m_toneMixTableButton;
-    ScopedPointer<Label> m_partNoLabel;
     ScopedPointer<ImageButton> imageButton2;
     ScopedPointer<ImageButton> imageButton3;
     ScopedPointer<BlackToggle> m_toneSelectToggle1;
@@ -134,6 +147,7 @@ private:
     ScopedPointer<ParameterComboBox> m_struct12ComboBox;
     ScopedPointer<ParameterComboBox> m_boost34ComboBox;
     ScopedPointer<ParameterComboBox> m_struct34ComboBox;
+    ScopedPointer<ImageButton> m_partNoLabel;
 
 
     //==============================================================================

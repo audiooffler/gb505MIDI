@@ -98,7 +98,7 @@ RhyPitchEditor::RhyPitchEditor (const String &componentName, int toneNumber)
     m_pitchVelocitySensSlider->addListener (this);
 
     addAndMakeVisible (m_pitchEnvVelocitySensLabel = new Label ("pitchEnvVelocitySensLabel",
-                                                                TRANS("VELO SENS")));
+                                                                TRANS("VELO SENS ENVELOPE")));
     m_pitchEnvVelocitySensLabel->setFont (Font (12.00f, Font::bold));
     m_pitchEnvVelocitySensLabel->setJustificationType (Justification::centred);
     m_pitchEnvVelocitySensLabel->setEditable (false, false, false);
@@ -168,7 +168,7 @@ RhyPitchEditor::RhyPitchEditor (const String &componentName, int toneNumber)
     setupParameters(toneNumber);
     //[/UserPreSize]
 
-    setSize (376, 324);
+    setSize (334, 334);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -229,22 +229,22 @@ void RhyPitchEditor::resized()
     //[/UserPreResize]
 
     m_pitchGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
-    m_pitchGrp2->setBounds (0, 104, getWidth() - 0, 220);
-    m_coarseTuneSlider->setBounds (24, 36, 48, 60);
-    m_coarseTuneLabel->setBounds (4, 20, 88, 16);
-    m_pitchEnv->setBounds (72, 120, 296, 156);
-    m_randomPitchDepthSlider->setBounds (188, 80, 56, 16);
-    m_randomPitchDepthLabel->setBounds (172, 60, 88, 16);
-    m_pitchEnvelopeDepthSlider->setBounds (8, 132, 56, 116);
-    m_pitchEnvelopeDepthLabel->setBounds (12, 120, 48, 16);
-    m_pitchVelocitySensSlider->setBounds (8, 270, 56, 16);
-    m_pitchEnvVelocitySensLabel->setBounds (0, 254, 72, 16);
-    m_pitchEnvVelocityTime1Slider->setBounds (124, 296, 56, 16);
-    m_pitchEnvVelocityTime1Label->setBounds (84, 280, 152, 16);
+    m_pitchGrp2->setBounds (0, 104, getWidth() - 0, getHeight() - 104);
+    m_coarseTuneSlider->setBounds (16, 36, 48, 60);
+    m_coarseTuneLabel->setBounds (-4, 20, 88, 16);
+    m_pitchEnv->setBounds (40, 120, 292, 156);
+    m_randomPitchDepthSlider->setBounds (172, 80, 56, 16);
+    m_randomPitchDepthLabel->setBounds (156, 60, 88, 16);
+    m_pitchEnvelopeDepthSlider->setBounds (4, 132, 36, 116);
+    m_pitchEnvelopeDepthLabel->setBounds (-4, 120, 52, 16);
+    m_pitchVelocitySensSlider->setBounds (64, 304, 56, 16);
+    m_pitchEnvVelocitySensLabel->setBounds (24, 288, 136, 16);
+    m_pitchEnvVelocityTime1Slider->setBounds (216, 304, 56, 16);
+    m_pitchEnvVelocityTime1Label->setBounds (176, 288, 152, 16);
     m_fineTuneSlider->setBounds (99, 36, 48, 60);
     m_fineTuneLabel->setBounds (79, 20, 88, 16);
-    m_bendRangeSlider->setBounds (296, 80, 56, 16);
-    m_stretchTuneDepthLabel2->setBounds (280, 60, 88, 16);
+    m_bendRangeSlider->setBounds (260, 80, 56, 16);
+    m_stretchTuneDepthLabel2->setBounds (244, 60, 88, 16);
     imageButton5->setBounds (3, 1, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
@@ -355,64 +355,64 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component" constructorParams="const String &amp;componentName, int toneNumber"
                  variableInitialisers="Component (componentName),  m_toneNumber(toneNumber)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="376" initialHeight="324">
+                 fixedSize="1" initialWidth="334" initialHeight="334">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="pitchGrp" id="52e00682f746b888" memberName="m_pitchGrp"
              virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 0 0M 0M"
              sourceFile="../GroupWidgets/PanelGroupGrey.cpp" constructorParams="&quot;pitchGrp&quot;, getName() "/>
   <JUCERCOMP name="pitchGrp" id="f94b4c6bc1e7a151" memberName="m_pitchGrp2"
-             virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 104 0M 220"
+             virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 104 0M 104M"
              sourceFile="../GroupWidgets/PanelGroupTransp.cpp" constructorParams="&quot;pitchEnvGrp&quot;, getName().toUpperCase()+&quot; ENVELOPE&quot;"/>
   <SLIDER name="coarseTuneSlider" id="533842793459863a" memberName="m_coarseTuneSlider"
-          virtualName="Knob" explicitFocusOrder="0" pos="24 36 48 60" textboxbkgd="fff2f59b"
+          virtualName="Knob" explicitFocusOrder="0" pos="16 36 48 60" textboxbkgd="fff2f59b"
           min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="16" skewFactor="1"/>
   <LABEL name="coarseTuneLabel" id="b464bd3cbdae27fd" memberName="m_coarseTuneLabel"
-         virtualName="" explicitFocusOrder="0" pos="4 20 88 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="-4 20 88 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="COARSE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="pitchEnv" id="99a40d72d7ad1e22" memberName="m_pitchEnv"
-             virtualName="" explicitFocusOrder="0" pos="72 120 296 156" sourceFile="../PatchSectionEditors/Envelope.cpp"
+             virtualName="" explicitFocusOrder="0" pos="40 120 292 156" sourceFile="../PatchSectionEditors/Envelope.cpp"
              constructorParams="PartR, m_toneNumber, EnvelopeTypes::Pitch, false"/>
   <SLIDER name="randomPitchDepthLabel" id="579dec6fe706db7d" memberName="m_randomPitchDepthSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="188 80 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="172 80 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="randomPitchDepthLabel" id="cd360160053c8317" memberName="m_randomPitchDepthLabel"
-         virtualName="" explicitFocusOrder="0" pos="172 60 88 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="156 60 88 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="RANDOMNESS" editableSingleClick="1"
          editableDoubleClick="1" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="pitchEnvelopeDepthSlider" id="b0bd5a61181f569c" memberName="m_pitchEnvelopeDepthSlider"
           virtualName="ParameterEnvelopeSlider" explicitFocusOrder="0"
-          pos="8 132 56 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0"
+          pos="4 132 36 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0"
           max="127" int="1" style="LinearVertical" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="56" textBoxHeight="16" skewFactor="1"/>
   <LABEL name="pitchEnvelopeDepthLabel" id="611da7e96f52143f" memberName="m_pitchEnvelopeDepthLabel"
-         virtualName="" explicitFocusOrder="0" pos="12 120 48 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="-4 120 52 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="DEPTH" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="pitchVelocitySensSlider" id="ce3036a9c9d2d09a" memberName="m_pitchVelocitySensSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="8 270 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="64 304 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="pitchEnvVelocitySensLabel" id="da6b2f045679c497" memberName="m_pitchEnvVelocitySensLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 254 72 16" textCol="ff000000"
-         edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         virtualName="" explicitFocusOrder="0" pos="24 288 136 16" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS ENVELOPE"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="pitchEnvVelocityTime1Slider" id="26e8b1e9ec956faf" memberName="m_pitchEnvVelocityTime1Slider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="124 296 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="216 304 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="pitchEnvVelocityTime1Label" id="fcf555c7750e1905" memberName="m_pitchEnvVelocityTime1Label"
-         virtualName="" explicitFocusOrder="0" pos="84 280 152 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="176 288 152 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS ATTACK TIME"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
@@ -427,12 +427,12 @@ BEGIN_JUCER_METADATA
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="bendRangeSlider" id="c55451f652b9879b" memberName="m_bendRangeSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="296 80 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="260 80 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="stretchTuneDepthLabel" id="492759f4bd90a4a3" memberName="m_stretchTuneDepthLabel2"
-         virtualName="" explicitFocusOrder="0" pos="280 60 88 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="244 60 88 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="BEND RANGE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>

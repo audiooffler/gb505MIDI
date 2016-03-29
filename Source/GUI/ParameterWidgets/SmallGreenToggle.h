@@ -45,10 +45,12 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	SmallGreenToggle();
+	SmallGreenToggle(const String& componentName, bool isInTable);
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
+    void mouseDown (const MouseEvent& e) override;
 
     // Binary resources:
     static const char* smallOrangeToggleOff_png;
@@ -60,6 +62,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     Image cachedImage_smallGreenToggleOn_png;
+	bool m_isInTable = false;
     //[/UserVariables]
 
     //==============================================================================

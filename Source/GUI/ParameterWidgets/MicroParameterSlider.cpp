@@ -7,12 +7,12 @@
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Introjucer version: 4.1.0
 
   ------------------------------------------------------------------------------
 
   The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  Copyright (c) 2015 - ROLI Ltd.
 
   ==============================================================================
 */
@@ -25,12 +25,20 @@
 
 
 //[MiscUserDefs] You can add your own user definitions and misc code here...
+MicroParameterSlider::MicroParameterSlider(const String &componentName, bool isInTable)
+	: MicroParameterSlider(componentName)
+{
+	m_isInTable = isInTable;
+}
 //[/MiscUserDefs]
 
 //==============================================================================
 MicroParameterSlider::MicroParameterSlider (const String &componentName)
     : ParameterSlider(componentName)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
 
     //[UserPreSize]
     setRange (0, 127, 1);
@@ -74,9 +82,20 @@ void MicroParameterSlider::paint (Graphics& g)
 
 void MicroParameterSlider::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     //[UserResized] Add your own custom resize handling here..
     ParameterSlider::resized();
     //[/UserResized]
+}
+
+void MicroParameterSlider::mouseDown (const MouseEvent& e)
+{
+    //[UserCode_mouseDown] -- Add your code here...
+	if (m_isInTable) getParentComponent()->mouseDown(e);
+	ParameterSlider::mouseDown(e);
+    //[/UserCode_mouseDown]
 }
 
 
@@ -99,6 +118,9 @@ BEGIN_JUCER_METADATA
                  variableInitialisers="ParameterSlider(componentName)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="56" initialHeight="16">
+  <METHODS>
+    <METHOD name="mouseDown (const MouseEvent&amp; e)"/>
+  </METHODS>
   <BACKGROUND backgroundColour="0"/>
 </JUCER_COMPONENT>
 

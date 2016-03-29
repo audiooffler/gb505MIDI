@@ -76,6 +76,7 @@ public:
 		grooveboxConnector = new GrooveboxConnector();
 		grooveboxMemory = /*nullptr;*/ new OverallMemoryBlock();
 		quickSysEx = new QuickSysExBlock();
+		Thread::sleep(500);
 		waveForms = new Waveforms((grooveboxConnector->getActiveConnection() != nullptr) ?
 			grooveboxConnector->getActiveConnection()->deviceFamilyNumberCode :
 			GrooveboxConnector::Model_Unknown);

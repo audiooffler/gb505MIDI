@@ -49,12 +49,13 @@ public:
 	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
 	void showPopup() override;
 	void setParameter(Parameter* /*param*/) override { return; }
-	Parameter* getParamPtr() override { return nullptr; }
+	Parameter* getParamPtr() override { return m_waveNumber; }
 	void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override; // gui combobox selection change
 	String getTooltip() override { return ""; }
 	void labelTextChanged(Label *label) override;
 	void mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& d) override;
+	void mouseDown(const MouseEvent &e) override;
 	bool keyPressed(const KeyPress &) override;
 
     //[/UserMethods]

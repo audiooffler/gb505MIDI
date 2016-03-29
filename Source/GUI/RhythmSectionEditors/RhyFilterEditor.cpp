@@ -80,7 +80,7 @@ RhyFilterEditor::RhyFilterEditor (const String &componentName, int toneNumber)
     m_filterVelocitySensSlider->addListener (this);
 
     addAndMakeVisible (m_filterEnvVelocitySensLabel = new Label ("filterEnvVelocitySensLabel",
-                                                                 TRANS("VELO SENS")));
+                                                                 TRANS("VELO SENS ENVELOPE")));
     m_filterEnvVelocitySensLabel->setFont (Font (12.00f, Font::bold));
     m_filterEnvVelocitySensLabel->setJustificationType (Justification::centred);
     m_filterEnvVelocitySensLabel->setEditable (false, false, false);
@@ -167,7 +167,7 @@ RhyFilterEditor::RhyFilterEditor (const String &componentName, int toneNumber)
     setupParameters(toneNumber);
     //[/UserPreSize]
 
-    setSize (376, 324);
+    setSize (334, 334);
 
 
     //[Constructor] You can add your own custom stuff here..
@@ -229,22 +229,22 @@ void RhyFilterEditor::resized()
     //[/UserPreResize]
 
     m_filterGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
-    m_filterGrp2->setBounds (0, 104, getWidth() - 0, 220);
-    m_cutoffSlider->setBounds (112, 36, 48, 60);
-    m_cutoffLabel->setBounds (108, 20, 56, 16);
-    m_filterEnv->setBounds (72, 120, 296, 156);
-    m_filterEnvelopeDepthSlider->setBounds (8, 132, 56, 116);
-    m_filterEnvelopeDepthLabel->setBounds (12, 120, 48, 16);
-    m_filterVelocitySensSlider->setBounds (8, 270, 56, 16);
-    m_filterEnvVelocitySensLabel->setBounds (0, 254, 72, 16);
-    m_filterEnvVelocityTime1Slider->setBounds (124, 296, 56, 16);
-    m_filterEnvVelocityTime1Label->setBounds (84, 280, 152, 16);
-    m_resonanceSlider->setBounds (204, 36, 48, 60);
-    m_resonanceLabel->setBounds (188, 20, 80, 16);
-    m_resonanceVelocitySensLabel->setBounds (268, 48, 100, 28);
-    m_resonanceVelocitySensSlider->setBounds (292, 80, 48, 16);
-    m_filterTypeLabel->setBounds (4, 20, 84, 16);
-    m_filterTypeComboBox->setBounds (8, 48, 76, 16);
+    m_filterGrp2->setBounds (0, 104, getWidth() - 0, getHeight() - 104);
+    m_cutoffSlider->setBounds (104, 36, 48, 60);
+    m_cutoffLabel->setBounds (100, 20, 56, 16);
+    m_filterEnv->setBounds (40, 120, 292, 156);
+    m_filterEnvelopeDepthSlider->setBounds (4, 132, 36, 116);
+    m_filterEnvelopeDepthLabel->setBounds (-4, 120, 52, 16);
+    m_filterVelocitySensSlider->setBounds (64, 304, 56, 16);
+    m_filterEnvVelocitySensLabel->setBounds (24, 288, 136, 16);
+    m_filterEnvVelocityTime1Slider->setBounds (216, 304, 56, 16);
+    m_filterEnvVelocityTime1Label->setBounds (176, 288, 152, 16);
+    m_resonanceSlider->setBounds (172, 36, 48, 60);
+    m_resonanceLabel->setBounds (156, 20, 80, 16);
+    m_resonanceVelocitySensLabel->setBounds (228, 48, 100, 28);
+    m_resonanceVelocitySensSlider->setBounds (252, 80, 48, 16);
+    m_filterTypeLabel->setBounds (12, 20, 84, 16);
+    m_filterTypeComboBox->setBounds (16, 48, 76, 16);
     m_imageButton->setBounds (3, 1, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
@@ -350,84 +350,84 @@ BEGIN_JUCER_METADATA
                  parentClasses="public Component" constructorParams="const String &amp;componentName, int toneNumber"
                  variableInitialisers="Component (componentName),  m_toneNumber(toneNumber)"
                  snapPixels="4" snapActive="1" snapShown="1" overlayOpacity="0.330"
-                 fixedSize="1" initialWidth="376" initialHeight="324">
+                 fixedSize="1" initialWidth="334" initialHeight="334">
   <BACKGROUND backgroundColour="0"/>
   <JUCERCOMP name="filterGrp" id="52e00682f746b888" memberName="m_filterGrp"
              virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 0 0M 0M"
              sourceFile="../GroupWidgets/PanelGroupGrey.cpp" constructorParams="&quot;filterGrp&quot;, getName() "/>
   <JUCERCOMP name="filterGrp" id="f94b4c6bc1e7a151" memberName="m_filterGrp2"
-             virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 104 0M 220"
+             virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 104 0M 104M"
              sourceFile="../GroupWidgets/PanelGroupTransp.cpp" constructorParams="&quot;filterEnvGrp&quot;, getName().toUpperCase()+&quot; ENVELOPE&quot;"/>
   <SLIDER name="cutoffSlider" id="533842793459863a" memberName="m_cutoffSlider"
-          virtualName="Knob" explicitFocusOrder="0" pos="112 36 48 60"
+          virtualName="Knob" explicitFocusOrder="0" pos="104 36 48 60"
           textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="16" skewFactor="1"/>
   <LABEL name="cutoffLabel" id="b464bd3cbdae27fd" memberName="m_cutoffLabel"
-         virtualName="" explicitFocusOrder="0" pos="108 20 56 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="100 20 56 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="CUTOFF" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <JUCERCOMP name="filterEnv" id="99a40d72d7ad1e22" memberName="m_filterEnv"
-             virtualName="" explicitFocusOrder="0" pos="72 120 296 156" sourceFile="../PatchSectionEditors/Envelope.cpp"
+             virtualName="" explicitFocusOrder="0" pos="40 120 292 156" sourceFile="../PatchSectionEditors/Envelope.cpp"
              constructorParams="(AllParts)PartR, m_toneNumber, EnvelopeTypes::Filter, false"/>
   <SLIDER name="filterEnvelopeDepthSlider" id="b0bd5a61181f569c" memberName="m_filterEnvelopeDepthSlider"
           virtualName="ParameterEnvelopeSlider" explicitFocusOrder="0"
-          pos="8 132 56 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0"
+          pos="4 132 36 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0"
           max="127" int="1" style="LinearVertical" textBoxPos="TextBoxBelow"
           textBoxEditable="1" textBoxWidth="56" textBoxHeight="16" skewFactor="1"/>
   <LABEL name="filterEnvelopeDepthLabel" id="611da7e96f52143f" memberName="m_filterEnvelopeDepthLabel"
-         virtualName="" explicitFocusOrder="0" pos="12 120 48 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="-4 120 52 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="DEPTH" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="filterVelocitySensSlider" id="ce3036a9c9d2d09a" memberName="m_filterVelocitySensSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="8 270 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="64 304 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="filterEnvVelocitySensLabel" id="da6b2f045679c497" memberName="m_filterEnvVelocitySensLabel"
-         virtualName="" explicitFocusOrder="0" pos="0 254 72 16" textCol="ff000000"
-         edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS" editableSingleClick="0"
-         editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         virtualName="" explicitFocusOrder="0" pos="24 288 136 16" textCol="ff000000"
+         edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS ENVELOPE"
+         editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
+         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="filterEnvVelocityTime1Slider" id="26e8b1e9ec956faf" memberName="m_filterEnvVelocityTime1Slider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="124 296 56 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="216 304 56 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="filterEnvVelocityTime1Label" id="fcf555c7750e1905" memberName="m_filterEnvVelocityTime1Label"
-         virtualName="" explicitFocusOrder="0" pos="84 280 152 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="176 288 152 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS ATTACK TIME"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="resonanceSlider" id="323e25f12b9bcb4d" memberName="m_resonanceSlider"
-          virtualName="Knob" explicitFocusOrder="0" pos="204 36 48 60"
+          virtualName="Knob" explicitFocusOrder="0" pos="172 36 48 60"
           textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="16" skewFactor="1"/>
   <LABEL name="resonanceLabel" id="4a6481529e07d2e7" memberName="m_resonanceLabel"
-         virtualName="" explicitFocusOrder="0" pos="188 20 80 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="156 20 80 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="RESONANCE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <LABEL name="resonanceVelocitySensLabel" id="cd7bd760659858dc" memberName="m_resonanceVelocitySensLabel"
-         virtualName="" explicitFocusOrder="0" pos="268 48 100 28" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="228 48 100 28" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="RESONANCE&#10;VELOCITY SENS"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
          fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
   <SLIDER name="resonanceVelocitySensSlider" id="e85bd80388f15147" memberName="m_resonanceVelocitySensSlider"
-          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="292 80 48 16"
+          virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="252 80 48 16"
           bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
           textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
   <LABEL name="filterTypeLabel" id="c41c307042cbea72" memberName="m_filterTypeLabel"
-         virtualName="" explicitFocusOrder="0" pos="4 20 84 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="12 20 84 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="FILTER TYPE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>
   <COMBOBOX name="filterTypeComboBox" id="e8c10ecedfc6fd9e" memberName="m_filterTypeComboBox"
-            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="8 48 76 16"
+            virtualName="ParameterComboBox" explicitFocusOrder="0" pos="16 48 76 16"
             editable="0" layout="36" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
   <IMAGEBUTTON name="imageButton" id="fe0600a05b8279fe" memberName="m_imageButton"
                virtualName="" explicitFocusOrder="0" pos="3 1 16 16" buttonText=""
