@@ -216,6 +216,7 @@ LfoEditor::LfoEditor (const String &componentName, SynthParts part, Tone tone, b
 LfoEditor::~LfoEditor()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+	if (m_tempoSync!=nullptr) m_tempoSync->removeChangeListener(this);
     //[/Destructor_pre]
 
     m_lfoGrp = nullptr;

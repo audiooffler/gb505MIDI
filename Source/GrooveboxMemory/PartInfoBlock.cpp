@@ -111,9 +111,6 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	setupParameter("Reserved", 0x42, 0, 15, 0, jv2080EfxSources, "JV-2080 Performance EFX-B Source");
 	setupParameter("Reserved", 0x43, 0, 15, 3, jv2080EfxSources, "JV-2080 Performance EFX-C Source");
 
-	refreshParametersForMFXTypeValue(getParameter(0x0D)->getValue());
-	refreshParametersForDelayTypeValue(getParameter(0x23)->getValue());
-
 	getParameter(0x0D)->addChangeListener(this);
 	getParameter(0x23)->addChangeListener(this);
 }
@@ -174,7 +171,7 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 
 	StringArray dryWetBalanceStrings(StringArray::fromTokens("D100 : 0W,D99 : 1W,D98 : 2W,D97 : 3W,D96 : 4W,D95 : 5W,D94 : 6W,D93 : 7W,D92 : 8W,D91 : 9W,D90 : 10W,D89 : 11W,D88 : 12W,D87 : 13W,D86 : 14W,D85 : 15W,D84 : 16W,D83 : 17W,D82 : 18W,D81 : 19W,D80 : 20W,D79 : 21W,D78 : 22W,D77 : 23W,D76 : 24W,D75 : 25W,D74 : 26W,D73 : 27W,D72 : 28W,D71 : 29W,D70 : 30W,D69 : 31W,D68 : 32W,D67 : 33W,D66 : 34W,D65 : 35W,D64 : 36W,D63 : 37W,D62 : 38W,D61 : 39W,D60 : 40W,D59 : 41W,D58 : 42W,D57 : 43W,D56 : 44W,D55 : 45W,D54 : 46W,D53 : 47W,D52 : 48W,D51 : 49W,D50 : 50W,D49 : 51W,D48 : 52W,D47 : 53W,D46 : 54W,D45 : 55W,D44 : 56W,D43 : 57W,D42 : 58W,D41 : 59W,D40 : 60W,D39 : 61W,D38 : 62W,D37 : 63W,D36 : 64W,D35 : 65W,D34 : 66W,D33 : 67W,D32 : 68W,D31 : 69W,D30 : 70W,D29 : 71W,D28 : 72W,D27 : 73W,D26 : 74W,D25 : 75W,D24 : 76W,D23 : 77W,D22 : 78W,D21 : 79W,D20 : 80W,D19 : 81W,D18 : 82W,D17 : 83W,D16 : 84W,D15 : 85W,D14 : 86W,D13 : 87W,D12 : 88W,D11 : 89W,D10 : 90W,D9 : 91W,D8 : 92W,D7 : 93W,D6 : 94W,D5 : 95W,D4 : 96W,D3 : 97W,D2 : 98W,D1 : 99W,D0 : 100W", ",", ""));
 	StringArray manualFrequencyStrings(StringArray::fromTokens("100 Hz,110 Hz,120 Hz,130 Hz,140 Hz,150 Hz,160 Hz,170 Hz,180 Hz,190 Hz,200 Hz,210 Hz,220 Hz,230 Hz,240 Hz,250 Hz,260 Hz,270 Hz,280 Hz,290 Hz,300 Hz,320 Hz,340 Hz,360 Hz,380 Hz,400 Hz,420 Hz,440 Hz,460 Hz,480 Hz,500 Hz,520 Hz,540 Hz,560 Hz,580 Hz,600 Hz,620 Hz,640 Hz,660 Hz,680 Hz,700 Hz,720 Hz,740 Hz,760 Hz,780 Hz,800 Hz,820 Hz,840 Hz,860 Hz,880 Hz,900 Hz,920 Hz,940 Hz,960 Hz,980 Hz,1000 Hz,1100 Hz,1200 Hz,1300 Hz,1400 Hz,1500 Hz,1600 Hz,1700 Hz,1800 Hz,1900 Hz,2000 Hz,2100 Hz,2200 Hz,2300 Hz,2400 Hz,2500 Hz,2600 Hz,2700 Hz,2800 Hz,2900 Hz,3000 Hz,3100 Hz,3200 Hz,3300 Hz,3400 Hz,3500 Hz,3600 Hz,3700 Hz,3800 Hz,3900 Hz,4000 Hz,4100 Hz,4200 Hz,4300 Hz,4400 Hz,4500 Hz,4600 Hz,4700 Hz,4800 Hz,4900 Hz,5000 Hz,5100 Hz,5200 Hz,5300 Hz,5400 Hz,5500 Hz,5600 Hz,5700 Hz,5800 Hz,5900 Hz,6000 Hz,6100 Hz,6200 Hz,6300 Hz,6400 Hz,6500 Hz,6600 Hz,6700 Hz,6800 Hz,6900 Hz,7000 Hz,7100 Hz,7200 Hz,7300 Hz,7400 Hz,7500 Hz,7600 Hz,7700 Hz,7800 Hz,7900 Hz,8000 Hz", ",", ""));
-	StringArray preDelayTimeStrings(StringArray::fromTokens("0.02 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1.0 1.1 1.2 1.3 1.4 1.5 1.6 1.7 1.8 1.9 2.0 2.1 2.2 2.3 2.4 2.5 2.6 2.7 2.8 2.9 3.0 3.1 3.2 3.3 3.4 3.5 3.6 3.7 3.8 3.9 4.0 4.1 4.2 4.3 4.4 4.5 4.6 4.7 4.8 4.9 5.0 5.5 6.0 6.5 7.0 7.5 8.0 8.5 9.0 9.5 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 52 54 56 58 60 62 64 66 68 70 72 74 76 78 80 82 84 86 88 90 92 94 96 98 100", false));
+	StringArray preDelayTimeStrings(StringArray::fromTokens("0.02,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,1.9,2.0,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,2.9,3.0,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,3.9,4.0,4.1,4.2,4.3,4.4,4.5,4.6,4.7,4.8,4.9,5.0,5.5,6.0,6.5,7.0,7.5,8.0,8.5,9.0,9.5,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,52,54,56,58,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96,98,100", ",", ""));
 	StringArray phaseStrings(StringArray::fromTokens("00 20 40 60 80 100 120 140 160 180 200 220 240 260 280 300 320 340 360 380 400 420 440 460 480 500 520 540 560 580 600 620 640 660 680 700 720 740 760 780 800 820 840 860 880 900 920 940 960 980 1000 1020 1040 1060 1080 1100 1120 1140 1160 1180 1200 1220 1240 1260 1280 1300 1320 1340 1360 1380 1400 1420 1440 1460 1480 1500 1520 1540 1560 1580 1600 1620 1640 1660 1680 1700 1720 1740 1760 1780 1800", false));
 	StringArray filterTypeStrings(StringArray::fromTokens("OFF LPF HPF", false));
 	StringArray feedbackPercentageStrings(StringArray::fromTokens("0% +1% +2% +3% +4% +5% +6% +7% +8% +9% +10% +11% +12% +13% +14% +15% +16% +17% +18% +19% +20% +21% +22% +23% +24% +25% +26% +27% +28% +29% +30% +31% +32% +33% +34% +35% +36% +37% +38% +39% +40% +41% +42% +43% +44% +45% +46% +47% +48% +49% +50% +51% +52% +53% +54% +55% +56% +57% +58% +59% +60% +61% +62% +63% +64% +65% +66% +67% +68% +69% +70% +71% +72% +73% +74% +75% +76% +77% +78% +79% +80% +81% +82% +83% +84% +85% +86% +87% +88% +89% +90% +91% +92% +93% +94% +95% +96% +97% +98%", false));
@@ -1030,7 +1027,12 @@ PartInfoBlock::PartInfoBlock() :
 	GrooveboxMemoryBlock(0x01000000, "Part Info Common Block and 7 + R Part Info Common Blocks", "1-2")
 {
 	m_name = "Part Info";
-	addSubBlock(new PartInfoCommonBlock());
+	PartInfoCommonBlock* partInfoCommonBlock = new PartInfoCommonBlock();
+	addSubBlock(partInfoCommonBlock);
+	// typeIndex must by of 0..24
+	//partInfoCommonBlock->refreshParametersForMFXTypeValue(partInfoCommonBlock->getParameter(0x0D)->getValue());
+	// delayType must by of 0..1 (short / long)
+	partInfoCommonBlock->refreshParametersForDelayTypeValue(partInfoCommonBlock->getParameter(0x23)->getValue());
 	addSubBlock(new PartInfoPartBlock(Part1));
 	addSubBlock(new PartInfoPartBlock(Part2));
 	addSubBlock(new PartInfoPartBlock(Part3));

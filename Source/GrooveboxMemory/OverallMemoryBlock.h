@@ -24,6 +24,7 @@ class OverallMemoryBlock : public GrooveboxMemoryBlock
 public:
 
 	OverallMemoryBlock();
+	~OverallMemoryBlock();
 
 	SystemBlock* getSystemBlock();
 	PartInfoBlock* getPartInfoBlock();

@@ -221,9 +221,11 @@ String ParameterLedSwitch::getTooltip()
 
 void ParameterLedSwitch::setParameter(Parameter* param)
 {
-	m_paramPtr = param;
 	if (param != nullptr)
 	{
+		if (m_paramPtr != nullptr) m_paramPtr->removeChangeListener(this);
+		m_paramPtr = param;
+
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);
 		setTooltip(m_paramPtr->getDescription());

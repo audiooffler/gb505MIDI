@@ -126,6 +126,36 @@ PatternBodyBlock::PatternBodyBlock() :
 PatternBodyBlock::~PatternBodyBlock()
 {
 	m_playerThread->stopThread(500);
+	if (m_patternTableFilterParams != nullptr)
+	{
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart1)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart2)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart3)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart4)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart5)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart6)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPart7)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPartR)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMuteCtrl)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSingeParts)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotes)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMin)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesMax)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPC)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCC)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCCMin)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCCMax)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewBend)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAft)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAftMin)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewPAftMax)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewCAft)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewTempo)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewMute)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewSysEx)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewNotesOff)->removeChangeListener(this);
+		m_patternTableFilterParams->getParameter(VirtualPatternTableFilterBlock::ViewInc)->removeChangeListener(this);
+	}
 }
 
 bool PatternBodyBlock::handleSysEx(SyxMsg* sysExMsg)

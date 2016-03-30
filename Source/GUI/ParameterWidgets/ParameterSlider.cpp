@@ -80,14 +80,14 @@ ParameterSlider::ParameterSlider(Parameter* paramPtr)
     : Slider(),
 	  m_paramPtr(paramPtr)
 {
-	if (m_paramPtr!=nullptr) m_paramPtr->addChangeListener(this);
-	updateText();
+	if (m_paramPtr!=nullptr) setParameter(m_paramPtr);
 }
 
 void ParameterSlider::setParameter(Parameter* param)
 {
-	if (param != nullptr && m_paramPtr != param)
+	if (param != nullptr)
 	{
+		if (m_paramPtr != nullptr) m_paramPtr->removeChangeListener(this);
 		m_paramPtr = param;
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);

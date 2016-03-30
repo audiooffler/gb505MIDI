@@ -69,7 +69,7 @@ RhythmNoteBlock::RhythmNoteBlock(uint8 key) :
 	setupParameter("Bend Range", 0x06, 0, 12, 0, bendRangeStrings, "Specifies the amount of pitch change (in semitone units) that will occur when the pitch bend lever of an external MIDI device is operated.\r\n"
 		"Higher settings will result in a greater pitch change when the pitch bend lever is moved to the left or right.\r\n"
 		"For example, if Bend Range Up is set to \"+12\" the pitch will rise one octave when the pitch bend lever is moved to the right - most position.");
-	setupParameter("Mute Group", 0x07, 0, 31, 0, StringArray::fromTokens("OFF 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31", false), "The Mute Group function lets you prevent percussion instruments in the same mute group from sounding simultaneously.\r\n"
+	setupParameter("Mute Group", 0x07, 0, 31, 0, StringArray::fromTokens(" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31",false), "The Mute Group function lets you prevent percussion instruments in the same mute group from sounding simultaneously.\r\n"
 		"If you are not using the mute group function, set this OFF.\r\n"
 		"For example, on an acoustic drum set, it is physically impossible for the open hi-hat sound to be heard at the same time as the closed hi-hat sound. To simulate this, you can specify the same mute group number for both hi-hat sounds.");
 	setupParameter("Envelope Mode", 0x08, 0, 1, 0, StringArray::fromTokens("NO-SUS SUSTAIN", false), "Specifies how the sound will play when a sustained-type waveform such as a whistle (a looped waveform) is selected. Range:\r\n"

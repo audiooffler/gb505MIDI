@@ -566,6 +566,12 @@ PatternEditorTab::~PatternEditorTab()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
 	grooveboxMemory->getPatternBodyBlock()->removeChangeListener(this);
+	grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x10)->removeChangeListener(this);
+	grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x11)->removeChangeListener(this);
+	grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x13)->removeChangeListener(this);
+	grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x14)->removeChangeListener(this);
+	grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x15)->removeChangeListener(this);
+	grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr()->getParameter(0x16)->removeChangeListener(this);
     //[/Destructor_pre]
 
     m_patternPanel = nullptr;

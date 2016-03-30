@@ -49,7 +49,7 @@ MainComponent::MainComponent ()
 
 	addTab(TRANS("System"), tabGrey, new SystemTab(), true);
 	addTab(TRANS("Pattern"), tabGrey, new PatternEditorTab(), true);
-	addTab(TRANS("Mixer"), tabGrey, new MixerTab(), true);
+	addTab(TRANS("Mixer & Effects"), tabGrey, new MixerTab(), true);
 	CustomViewport* rhythmSetViewPort = new CustomViewport("RhythmSetEditor");
 	rhythmSetViewPort->setViewedComponent(new RhythmSetEditorTab(), true);
 	addTab(TRANS("Rhythm Set PART R"), tabGrey, rhythmSetViewPort, true);

@@ -87,13 +87,14 @@ ParameterToggle::ParameterToggle(Parameter* paramPtr)
 	  m_paramPtr(paramPtr)
 {
 	setSize(32, 32);
-	if (m_paramPtr != nullptr) m_paramPtr->addChangeListener(this);
+	if (m_paramPtr != nullptr) setParameter(m_paramPtr);
 }
 
 void ParameterToggle::setParameter(Parameter* param)
 {
-	if (param != nullptr && param != m_paramPtr)
+	if (param != nullptr )
 	{
+		if (m_paramPtr != nullptr) m_paramPtr->removeChangeListener(this);
 		m_paramPtr = param;
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);

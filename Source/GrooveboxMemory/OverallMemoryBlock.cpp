@@ -131,6 +131,60 @@ OverallMemoryBlock::OverallMemoryBlock() : GrooveboxMemoryBlock(0x00000000, "Gro
 	}
 }
 
+OverallMemoryBlock::~OverallMemoryBlock()
+{
+	if (PartInfoBlock* performance = getPartInfoBlock())
+	{
+		if (PatternSetupBlock* patternSetup = getPatternSetupBlock())
+		{
+			for (uint16 i = 0x02; i <= 0x0E; i++) patternSetup->getPatternSetupEffectsBlockPtr()->getParameter(i)->removeChangeListener(performance->getPartInfoCommonBlockPtr());
+			// m-fx dly send parameter in setup --> performance
+			patternSetup->getPatternSetupEffectsBlockPtr()->getParameter(0x11)->removeChangeListener(performance->getPartInfoCommonBlockPtr());
+			// m-fx rev send parameter in setup --> performance
+			patternSetup->getPatternSetupEffectsBlockPtr()->getParameter(0x12)->removeChangeListener(performance->getPartInfoCommonBlockPtr());
+			// m-fx rev parameters in setup --> performance
+			for (uint16 i = 0x18; i <= 0x1B; i++) patternSetup->getPatternSetupEffectsBlockPtr()->getParameter(i)->removeChangeListener(performance->getPartInfoCommonBlockPtr());
+			// m-fx dly parameters in setup --> performance
+			for (uint16 i = 0x1D; i <= 0x22; i++) patternSetup->getPatternSetupEffectsBlockPtr()->getParameter(i)->removeChangeListener(performance->getPartInfoCommonBlockPtr());
+			// part setup --> performance
+			for (uint16 partNo = 0; partNo <= 9; partNo++)
+			{
+				if (partNo != 7 && partNo != 8)
+				{
+					for (uint16 i = 0x00; i <= 0x08; i++) patternSetup->getPatternSetupPartBlockPtr((AllParts)partNo)->getParameter(i)->removeChangeListener(performance->getPartInfoPartBlockPtr((AllParts)partNo));
+				}
+			}
+
+			//listeners: setup listening to performance
+			// performance common m-fx parameters --> setup
+			for (uint16 i = 0x0D; i <= 0x19; i++) performance->getPartInfoCommonBlockPtr()->getParameter(i)->removeChangeListener(patternSetup->getPatternSetupEffectsBlockPtr());
+			// performance common m-fx dly send parameter--> setup
+			performance->getPartInfoCommonBlockPtr()->getParameter(0x1C)->removeChangeListener(patternSetup->getPatternSetupEffectsBlockPtr());
+			// performance common m-fx rev send parameter--> setup
+			performance->getPartInfoCommonBlockPtr()->getParameter(0x1D)->removeChangeListener(patternSetup->getPatternSetupEffectsBlockPtr());
+			// performance common dly parameters --> setup
+			for (uint16 i = 0x22; i <= 0x27; i++) performance->getPartInfoCommonBlockPtr()->getParameter(i)->removeChangeListener(patternSetup->getPatternSetupEffectsBlockPtr());
+			// performance common rev parameters --> setup
+			for (uint16 i = 0x28; i <= 0x2B; i++) performance->getPartInfoCommonBlockPtr()->getParameter(i)->removeChangeListener(patternSetup->getPatternSetupEffectsBlockPtr());
+			// performance part parameters --> setup
+			for (uint16 partNo = 0; partNo <= 9; partNo++)
+			{
+				if (partNo != 7 && partNo != 8)
+				{
+					// CC00, CC32, PC
+					for (uint16 i = 0x02; i <= 0x04; i++) performance->getPartInfoPartBlockPtr((AllParts)partNo)->getParameter(i)->removeChangeListener(patternSetup->getPatternSetupPartBlockPtr((AllParts)partNo));
+					// Level, Pan, Key+/-
+					for (uint16 i = 0x06; i <= 0x08; i++) performance->getPartInfoPartBlockPtr((AllParts)partNo)->getParameter(i)->removeChangeListener(patternSetup->getPatternSetupPartBlockPtr((AllParts)partNo));
+					// M-FX switch
+					performance->getPartInfoPartBlockPtr((AllParts)partNo)->getParameter(0x0A)->removeChangeListener(patternSetup->getPatternSetupPartBlockPtr((AllParts)partNo));
+					// Rev Dly send levels
+					for (uint16 i = 0x0C; i <= 0x0D; i++) performance->getPartInfoPartBlockPtr((AllParts)partNo)->getParameter(i)->removeChangeListener(patternSetup->getPatternSetupPartBlockPtr((AllParts)partNo));
+				}
+			}
+		}
+	}
+}
+
 SystemBlock* OverallMemoryBlock::getSystemBlock() 
 {
 	return dynamic_cast<SystemBlock*> (m_subBlocks[0]);

@@ -46,17 +46,17 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 
     //[UserPreSize]
 	int eachKeyRowHeight = 17;
-	m_tableHeader->addColumn("", NoteName, 25, 25, 25, 1);
-	m_tableHeader->addColumn("Key", KeyNo, 30, 30, 30, 1);
+	m_tableHeader->addColumn("", NoteName, 32, 32, 32, 1);
+	m_tableHeader->addColumn("Key", KeyNo, 32, 32, 32, 1);
 	m_tableHeader->addColumn("Rhy Group", RhyGrp, 80, 80, 80, 1);
-	m_tableHeader->addColumn("MtG", MuteGrp, 27, 27, 27, 1);
+	m_tableHeader->addColumn("MutG", MuteGrp, 36, 36, 36, 1);
 	m_tableHeader->addColumn("Waveform", RhyWave, 140, 140, 140, 1);
 	m_tableHeader->addColumn("GM Standard Drum", GmDrum, 130, 130, 130, 9);
 	m_tableHeader->addColumn("LEVEL", Level, 48, 48, 48, 1);
 	m_tableHeader->addColumn("PAN", Pan, 48, 48, 48, 1);
 	m_tableHeader->addColumn("REVERB", Rev, 48, 48, 48, 1);
 	m_tableHeader->addColumn("DELAY", Dly, 48, 48, 48, 1);
-	m_tableHeader->addColumn("M-FX", MFX, 48, 48, 48, 1);
+	m_tableHeader->addColumn("M-FX", MFX, 30, 30, 30, 1);
 	m_tableHeader->setColumnVisible(GmDrum, false);
 	m_drumNamesTable->setHeader(m_tableHeader);
 	m_drumNamesTable->setHeaderHeight(24);
@@ -91,6 +91,17 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 RhySetKeyboardWithList::~RhySetKeyboardWithList()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+	RhythmSetBlock* rhythmSetBlock = grooveboxMemory->getRhythmSetBlock();
+	for (int key = 35; key <= 98; key++)
+	{
+		RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)key);
+		Parameter* waveGroupId = rhythmNoteBlock->getParameter(0x02);
+		Parameter* waveNumber = rhythmNoteBlock->getParameter(0x03);
+		Parameter* muteGroup = rhythmNoteBlock->getParameter(0x07);
+		waveGroupId->removeChangeListener(this);
+		waveNumber->removeChangeListener(this);
+		muteGroup->removeChangeListener(this);
+	}
     //[/Destructor_pre]
 
     m_drumNamesTable = nullptr;
@@ -179,11 +190,14 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 	Parameter* muteGroup = rhythmNoteBlock->getParameter(0x07);
 	String waveText = waveForms->getButtonText(waveForms->getGroupForId(waveGroupId->getValue()), waveNumber->getValue());
 
+	String keyName = MidiMessage::getMidiNoteName(key, true, true, 4);
+	if (!keyName.containsChar('#')) keyName = keyName.substring(0,1) + " " + keyName.substring(1);
 	switch (columnId)
 	{
 	case NoteName:
 		if (key % 12 == 0) g.setFont(Font(14.0f, Font::bold));
-		g.drawText(MidiMessage::getMidiNoteName(key, true, true, 4), 2, 0, width - 2, height, Justification::centredLeft, false);
+		g.setFont(Font(Font::getDefaultMonospacedFontName(),13.5,0));
+		g.drawText(keyName, 0, 0, width, height, Justification::centred, false);
 		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case KeyNo:

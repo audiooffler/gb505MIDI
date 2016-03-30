@@ -50,7 +50,7 @@ ParameterComboBox::ParameterComboBox (const String& componentName)
 ParameterComboBox::~ParameterComboBox()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
-	if (getParamPtr() != nullptr) getParamPtr()->removeChangeListener(this);
+	if (m_paramPtr != nullptr) getParamPtr()->removeChangeListener(this);
     //[/Destructor_pre]
 
 
@@ -90,9 +90,10 @@ ParameterComboBox::ParameterComboBox(Parameter* paramPtr)
 
 void ParameterComboBox::setParameter(Parameter* param)
 {
-	m_paramPtr = param;
 	if (param != nullptr)
 	{
+		if (m_paramPtr != nullptr) m_paramPtr->removeChangeListener(this);
+		m_paramPtr = param;
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);
 		clear(dontSendNotification);

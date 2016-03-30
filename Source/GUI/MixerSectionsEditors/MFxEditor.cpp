@@ -329,6 +329,7 @@ MFXEditor::MFXEditor ()
 MFXEditor::~MFXEditor()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+	if (m_partInfoCommonBlock != nullptr && m_partInfoCommonBlock->getParameter(0x0D) != nullptr) m_partInfoCommonBlock->getParameter(0x0D)->removeChangeListener(this);
     //[/Destructor_pre]
 
     component = nullptr;

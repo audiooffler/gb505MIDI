@@ -35,11 +35,11 @@ m_ccIsMode2Only(ccIsMode2Only)
 	if (m_displayedValues.size() == 0)
 	{
 		// empty display for values below valid range
-		for (uint8 i = 0; i < m_min; i++) m_displayedValues.add(String::empty);
+		for (int i = 0; i < m_min; i++) m_displayedValues.add(String::empty);
 		// add default value strings
-		for (uint8 i = m_min; i <= m_max; i++)
+		for (int i = m_min; i <= m_max; i++)
 		{
-			m_displayedValues.add(*ScopedPointer<String>(new String(i)));
+			m_displayedValues.add(String(i));
 		}
 		// [] operator already returns empty string for indexes above array size
 	}

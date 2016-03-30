@@ -16,21 +16,19 @@
 #include "GrooveboxMemory/Waveforms.h"
 #include "MIDIConnection/GrooveboxConnector.h"
 #include "GUI/GrooveboxSplashScreen.h"
+//#include <vld.h> 
 
-ApplicationProperties* appProperties;
-MidiInput* midiInputDevice;
-MidiOutput* midiOutputDevice;
+ApplicationProperties* appProperties = nullptr;
+MidiInput* midiInputDevice = nullptr;
+MidiOutput* midiOutputDevice = nullptr;
 int preferredMidiInId=-1;
 int preferredMidiOutId = -1;
-GrooveboxConnector* grooveboxConnector=nullptr;
-TooltipWindow* toolTipWindow;
-UndoManager* undoManager;
-OverallMemoryBlock* grooveboxMemory;
-QuickSysExBlock* quickSysEx;
-Waveforms* waveForms;
-ApplicationCommandManager* applicationCommandManager;
-OpenGLContext* openGlContext;
-GrooveboxSplashScreen* splashScreen;
+GrooveboxConnector* grooveboxConnector = nullptr;
+UndoManager* undoManager = nullptr;
+OverallMemoryBlock* grooveboxMemory = nullptr;
+QuickSysExBlock* quickSysEx = nullptr;
+Waveforms* waveForms = nullptr;
+ApplicationCommandManager* applicationCommandManager = nullptr;
 
 //==============================================================================
 class MC307SysExApplication  : public JUCEApplication
@@ -46,7 +44,7 @@ public:
     //==============================================================================
     void initialise (const String& /*commandLine*/)
     {
-		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		//_CrtSetBreakAlloc(9554);
 		//_CrtSetBreakAlloc(9553);
 		//_CrtSetBreakAlloc(9552);
@@ -54,10 +52,7 @@ public:
         // This method is where you should put your application's initialisation code..
 
 		#if JUCE_OPENGL
-		if (openGlContext == nullptr)
-		{
-			openGlContext = new OpenGLContext();
-		}
+		openGlContext = new OpenGLContext();
 		#endif
 
 		splashScreen = new GrooveboxSplashScreen("STARTING UP " + String(getApplicationName()) + String(CharPointer_UTF8("\xe2\x80\xa6")), 480, 320, true);
@@ -86,7 +81,7 @@ public:
 		mainWindow->setResizable(true,true);
 		toolTipWindow = new TooltipWindow();
 		mainWindow->getContentComponent()->grabKeyboardFocus();
-		deleteAndZero(splashScreen);
+		splashScreen = nullptr;
 #if JUCE_OPENGL
 		if (openGlContext != nullptr) openGlContext->attachTo(*mainWindow);
 #endif
@@ -97,22 +92,23 @@ public:
         // Add your application's shutdown code here..
 #if JUCE_OPENGL
 		if (openGlContext != nullptr) openGlContext->detach();
-		deleteAndZero(openGlContext);
+		openGlContext=nullptr;
 #endif
-		if (splashScreen != nullptr) deleteAndZero(splashScreen);
+		splashScreen = nullptr;
 		mainWindow = nullptr; // (deletes our window)
 		lookAndFeel = nullptr;
 		appProperties->saveIfNeeded();
 		deleteAndZero(appProperties);
-		deleteAndZero(midiInputDevice);
-		deleteAndZero(midiOutputDevice);
-		deleteAndZero(toolTipWindow);
+		if (midiInputDevice != nullptr) deleteAndZero(midiInputDevice);
+		if (midiOutputDevice != nullptr) deleteAndZero(midiOutputDevice);
+		toolTipWindow = nullptr;
 		deleteAndZero(undoManager);
-		if (grooveboxConnector!=nullptr) deleteAndZero(grooveboxConnector);
-		deleteAndZero(quickSysEx);
-		deleteAndZero(waveForms);
-		if (grooveboxMemory!=nullptr) deleteAndZero(grooveboxMemory);
-		deleteAndZero(applicationCommandManager);
+		deleteAndZero(grooveboxConnector);
+		if (quickSysEx != nullptr) deleteAndZero(quickSysEx);
+		if (waveForms != nullptr) deleteAndZero(waveForms);
+		if (grooveboxMemory != nullptr) deleteAndZero(grooveboxMemory);
+		if (applicationCommandManager != nullptr) deleteAndZero(applicationCommandManager);
+		splashScreen = nullptr;
 		// deletes itself, dont uncomment this!: deleteAndZero(splashScreen);
     }
 
@@ -135,6 +131,9 @@ public:
 private:
     ScopedPointer<MainWindow> mainWindow;
 	ScopedPointer<GrooveboxLookAndFeel> lookAndFeel;
+	ScopedPointer<OpenGLContext> openGlContext = nullptr;
+	ScopedPointer<GrooveboxSplashScreen> splashScreen = nullptr;
+	ScopedPointer<TooltipWindow> toolTipWindow = nullptr;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(MC307SysExApplication);
 };
 

@@ -305,6 +305,7 @@ LfoEditorAdvanced::LfoEditorAdvanced (const String &componentName, SynthParts pa
 LfoEditorAdvanced::~LfoEditorAdvanced()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+	if (m_tempoSyncParam!=nullptr) m_tempoSyncParam->removeChangeListener(this);
     //[/Destructor_pre]
 
     m_lfoGrp = nullptr;

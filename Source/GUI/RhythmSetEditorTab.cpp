@@ -104,6 +104,7 @@ RhythmSetEditorTab::RhythmSetEditorTab ()
 			}
 		}
 	}
+	changeListenerCallback(m_rhySetKeyboardWithList);
 	m_rhySetKeyboardWithList->addChangeListener(this);
     //[/UserPreSize]
 
@@ -117,6 +118,7 @@ RhythmSetEditorTab::RhythmSetEditorTab ()
 RhythmSetEditorTab::~RhythmSetEditorTab()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+	m_rhySetKeyboardWithList->removeChangeListener(this);
     //[/Destructor_pre]
 
     m_commonGrp4 = nullptr;

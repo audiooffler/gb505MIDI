@@ -189,6 +189,13 @@ MixRhyTrack::MixRhyTrack ()
 MixRhyTrack::~MixRhyTrack()
 {
     //[Destructor_pre]. You can add your own custom destruction code here..
+	if (grooveboxMemory != nullptr)
+	{
+		if (PartInfoPartBlock* p = grooveboxMemory->getPartInfoBlock()->getPartInfoPartBlockPtr(PartR))
+		{
+			p->getParameter(0x0A)->removeChangeListener(this);
+		}
+	}
     //[/Destructor_pre]
 
     m_mfxLabel2 = nullptr;
