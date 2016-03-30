@@ -86,9 +86,9 @@ ParameterSlider::ParameterSlider(Parameter* paramPtr)
 
 void ParameterSlider::setParameter(Parameter* param)
 {
-	m_paramPtr = param;
-	if (param != nullptr)
+	if (param != nullptr && m_paramPtr != param)
 	{
+		m_paramPtr = param;
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);
 		setTooltip(param->getDescription());

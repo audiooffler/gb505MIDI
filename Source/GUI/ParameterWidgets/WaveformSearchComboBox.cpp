@@ -43,7 +43,7 @@ WaveformSearchComboBox::WaveformSearchComboBox (const String& componentName, All
 
 
     //[UserPreSize]
-	setupParameters(part, toneNumber);
+	setupParameters(part, toneNumber, true);
     //[/UserPreSize]
 
     setSize (128, 20);
@@ -117,13 +117,13 @@ void WaveformSearchComboBox::resized()
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
-void WaveformSearchComboBox::setupParameters(AllParts part, int toneNumber)
+void WaveformSearchComboBox::setupParameters(AllParts part, int toneNumber, bool calledDuringInit)
 {
 	if (grooveboxMemory == nullptr) return;
 
 	if (part == AllParts::PartR)
 	{
-		if (toneNumber >= 35 && toneNumber <= 98)
+		if ((calledDuringInit || toneNumber != m_toneNumber) && toneNumber >= 35 && toneNumber <= 98)
 		{
 			if (grooveboxMemory != nullptr)
 			{
@@ -142,8 +142,13 @@ void WaveformSearchComboBox::setupParameters(AllParts part, int toneNumber)
 						m_waveGroupId = noteBlock->getParameter(0x02);
 						m_waveNumber = noteBlock->getParameter(0x03);
 
-						populateComboboxItems();
-						setSelectedId(waveGroupAndNumberToItemId(waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue()), dontSendNotification);
+						if (m_waveGroupType == nullptr || m_waveGroupId == nullptr || m_waveNumber == nullptr)
+						{
+							DBG("null");
+						}
+
+						populateComboboxItems(true);
+						//setSelectedId(waveGroupAndNumberToItemId(waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue()), dontSendNotification);
 
 						changeListenerCallback(m_waveNumber);
 						m_waveGroupType->addChangeListener(this);
@@ -194,7 +199,7 @@ void WaveformSearchComboBox::setupParameters(AllParts part, int toneNumber)
 					m_waveGroupId = tone->getParameter(0x02);
 					m_waveNumber = tone->getParameter(0x03);
 
-					populateComboboxItems();
+					populateComboboxItems(true);
 					setSelectedId(waveGroupAndNumberToItemId(waveForms->getGroupForId(m_waveGroupId->getValue()), m_waveNumber->getValue()),dontSendNotification);
 
 					changeListenerCallback(m_waveNumber);
@@ -248,11 +253,11 @@ void WaveformSearchComboBox::itemIdToWaveGroupAndNumber(int id, Waveforms::WaveG
 	waveGroup = waveForms->getGroupForId((id >> 8) & 0x3);
 }
 
-void WaveformSearchComboBox::populateComboboxItems()
+void WaveformSearchComboBox::populateComboboxItems(bool initAll)
 {
 	clear(dontSendNotification);
 
-	String searchText = getText();
+	String searchText = initAll?"":getText();
 
 	// split up search text by some more rules than whitespace: make each special char single, split if change number<->letter, split camel case
 	juce_wchar current, predecessor;
@@ -337,7 +342,7 @@ void WaveformSearchComboBox::showPopup()
 {
 	if (getSelectedId() == 0)
 	{
-		populateComboboxItems();
+		populateComboboxItems(false);
 	}
 	ParameterComboBox::showPopup();
 }

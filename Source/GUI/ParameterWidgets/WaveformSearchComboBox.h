@@ -46,7 +46,7 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	WaveformSearchComboBox(const String& componentName, AllParts part, int toneNumber);
-	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
+	void setupParameters(AllParts part, int toneNumber, bool calledDuringInit=false); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
 	void showPopup() override;
 	void setParameter(Parameter* /*param*/) override { return; }
 	Parameter* getParamPtr() override { return m_waveNumber; }
@@ -72,7 +72,7 @@ private:
 	Parameter* m_waveGroupType;
 	Parameter* m_waveGroupId;
 	Parameter* m_waveNumber;
-	void populateComboboxItems();
+	void populateComboboxItems(bool initAll=false);
 	int waveGroupAndNumberToItemId(Waveforms::WaveGroup waveGroup, int waveNumber);
 	void itemIdToWaveGroupAndNumber(int id, Waveforms::WaveGroup& waveGroup, int& waveNumber);
 	bool m_isInTable = false;

@@ -92,9 +92,9 @@ ParameterToggle::ParameterToggle(Parameter* paramPtr)
 
 void ParameterToggle::setParameter(Parameter* param)
 {
-	m_paramPtr = param;
-	if (param != nullptr)
+	if (param != nullptr && param != m_paramPtr)
 	{
+		m_paramPtr = param;
 		m_paramPtr->addChangeListener(this);
 		setVisible(true);
 		setTooltip(param->getDescription());
