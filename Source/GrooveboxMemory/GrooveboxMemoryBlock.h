@@ -90,6 +90,8 @@ public:
 	// add, set (if addressOffset already used) or delete (if addressOffset already used and name is empty)
 	void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String::empty, uint8 cc = 102, bool ccIsMode2Only = false);
 
+	uint8 getRawDataByte(uint32 addressOffset){ return addressOffset < m_data.getSize() ? m_data[addressOffset] : 0; }
+
 protected:
 
 	String m_name;	  // name of the data block

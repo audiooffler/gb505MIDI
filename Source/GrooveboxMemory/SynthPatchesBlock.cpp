@@ -247,7 +247,7 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	setupParameter("Reserved", 0x11, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Volume Control Switch");
 	setupParameter("Reserved", 0x12, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Hold-1 Control Switch");
 	setupParameter("Reserved", 0x13, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Pitch Bend Control Switch");
-	setupParameter("Reserved", 0x14, 0, 1, 1, StringArray(), "JV-2080 Patch Tone Pan Control Switch");
+	setupParameter("Reserved", 0x14, 0, 1, 2, StringArray(), "JV-2080 Patch Tone Pan Control Switch");
 
 	setupParameter("Modulation Destination 1", 0x15, 0, 15, 0, controlDestinations, "Parameter 1 that will be controlled temporarily when the modulation controller of the external MIDI device is operated.");
 	setupParameter("Modulation Depth 1", 0x16, 0, 126, 63, modulationDepthStrings, "Specifies the amount of change that will occur for Parameter 1.\r\nWith positive (+) settings, higher values will allow greater control. With negative (-) settings, the direction of the change will be inverted.");

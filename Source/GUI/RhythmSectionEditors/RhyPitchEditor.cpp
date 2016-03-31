@@ -230,8 +230,8 @@ void RhyPitchEditor::resized()
 
     m_pitchGrp->setBounds (0, 0, getWidth() - 0, getHeight() - 0);
     m_pitchGrp2->setBounds (0, 104, getWidth() - 0, getHeight() - 104);
-    m_coarseTuneSlider->setBounds (16, 36, 48, 60);
-    m_coarseTuneLabel->setBounds (-4, 20, 88, 16);
+    m_coarseTuneSlider->setBounds (20, 36, 48, 60);
+    m_coarseTuneLabel->setBounds (0, 20, 88, 16);
     m_pitchEnv->setBounds (40, 120, 292, 156);
     m_randomPitchDepthSlider->setBounds (172, 80, 56, 16);
     m_randomPitchDepthLabel->setBounds (156, 60, 88, 16);
@@ -364,12 +364,12 @@ BEGIN_JUCER_METADATA
              virtualName="PanelGroupGrey" explicitFocusOrder="0" pos="0 104 0M 104M"
              sourceFile="../GroupWidgets/PanelGroupTransp.cpp" constructorParams="&quot;pitchEnvGrp&quot;, getName().toUpperCase()+&quot; ENVELOPE&quot;"/>
   <SLIDER name="coarseTuneSlider" id="533842793459863a" memberName="m_coarseTuneSlider"
-          virtualName="Knob" explicitFocusOrder="0" pos="16 36 48 60" textboxbkgd="fff2f59b"
+          virtualName="Knob" explicitFocusOrder="0" pos="20 36 48 60" textboxbkgd="fff2f59b"
           min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
           textBoxHeight="16" skewFactor="1"/>
   <LABEL name="coarseTuneLabel" id="b464bd3cbdae27fd" memberName="m_coarseTuneLabel"
-         virtualName="" explicitFocusOrder="0" pos="-4 20 88 16" textCol="ff000000"
+         virtualName="" explicitFocusOrder="0" pos="0 20 88 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="COARSE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
          fontsize="12" bold="1" italic="0" justification="36"/>

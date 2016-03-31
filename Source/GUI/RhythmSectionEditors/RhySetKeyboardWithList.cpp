@@ -23,6 +23,7 @@
 #include "../ParameterWidgets/WaveformSearchComboBox.h"
 #include "../ParameterWidgets/MicroParameterSlider.h"
 #include "../ParameterWidgets/SmallGreenToggle.h"
+#include "../../GrooveboxMemory/CopyableTone.h"
 //[/Headers]
 
 #include "RhySetKeyboardWithList.h"
@@ -31,6 +32,8 @@
 //[MiscUserDefs] You can add your own user definitions and misc code here...
 extern OverallMemoryBlock* grooveboxMemory;
 extern Waveforms* waveForms;
+extern ApplicationCommandManager* applicationCommandManager;
+extern CopyableTone* copyableToneClipboad;
 //[/MiscUserDefs]
 
 //==============================================================================
@@ -66,7 +69,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 
 	m_drumNamesTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_drumNamesTable->setColour(TableListBox::outlineColourId, Colours::grey);
-	m_drumNamesTable->selectRow(0); 
+	m_drumNamesTable->selectRow(0);
 	m_drumNamesTable->addMouseListener(this, true);
     //[/UserPreSize]
 
@@ -85,6 +88,8 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 		waveNumber->addChangeListener(this);
 		muteGroup->addChangeListener(this);
 	}
+
+	applicationCommandManager->registerAllCommandsForTarget(this);
     //[/Constructor]
 }
 
@@ -448,6 +453,106 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 	}
 	else return nullptr;
 }
+
+void RhySetKeyboardWithList::cellClicked(int rowNumber, int columnId, const MouseEvent& e)
+{
+	if (columnId!=MuteGrp && columnId < Level && e.mods.isPopupMenu())
+	{
+		int keyNumber = rowNumber + 35;
+
+		PopupMenu menu;
+		menu.addCommandItem(applicationCommandManager, initialiseTone);
+		menu.addSeparator();
+		menu.addCommandItem(applicationCommandManager, copyTone);
+		menu.addCommandItem(applicationCommandManager, pasteTone);
+		menu.addCommandItem(applicationCommandManager, swapTone);
+		Rectangle<int> area = m_drumNamesTable->getScreenBounds();
+		Rectangle<int> cellPos = m_drumNamesTable->getCellPosition(columnId, rowNumber, true);
+		area.setSize(0, 0);
+		area.translate(0,cellPos.getY());
+		area.translate((int)e.position.x, (int)e.position.y);
+		menu.showMenuAsync(PopupMenu::Options().withTargetScreenArea(area), nullptr);
+	}
+}
+
+ApplicationCommandTarget* RhySetKeyboardWithList::getNextCommandTarget()
+{
+	// this will return the next parent component that is an ApplicationCommandTarget (in this
+	// case, there probably isn't one, but it's best to use this method in your own apps).
+	if (ApplicationCommandTarget* foundTarget = findFirstTargetParentComponent())
+	{
+		return foundTarget;
+	}
+	else return dynamic_cast<ApplicationCommandTarget*>(JUCEApplication::getInstance());
+}
+
+void RhySetKeyboardWithList::getAllCommands(Array <CommandID>& commands)
+{
+	// this returns the set of all commands that this target can perform..
+	const CommandID ids[] = { initialiseTone, copyTone, pasteTone, swapTone };
+	commands.addArray(ids, numElementsInArray(ids));
+}
+
+void RhySetKeyboardWithList::getCommandInfo(CommandID commandID, ApplicationCommandInfo& result)
+{
+	const String category("tone management");
+	switch (commandID)
+	{
+	case initialiseTone:
+		result.setInfo("Initialise", "Resets all tone parameters.", category, 0);
+		//result.addDefaultKeypress('i', ModifierKeys::commandModifier);
+		//result.setActive(!grooveboxMemory->getPatternBodyBlock()->isPatternEmpty());
+		break;
+	case copyTone:
+		result.setInfo("Copy", "Copies tone to clipboard.", category, 0);
+		break;
+	case pasteTone:
+		result.setInfo("Paste", "Paste tone from clipboard", category, 0);
+		result.setActive(copyableToneClipboad != nullptr);
+		break;
+	case swapTone:
+		result.setInfo("Swap", "Swap with origin of copied tone.", category, 0);
+		result.setActive(copyableToneClipboad!=nullptr);
+		break;
+	default: break;
+	}
+}
+
+bool RhySetKeyboardWithList::perform(const InvocationInfo& info)
+{
+	switch (info.commandID)
+	{
+	case initialiseTone:
+		break;
+	case copyTone:
+		if (RhythmSetBlock* rhythmSetBlock = grooveboxMemory->getRhythmSetBlock())
+		{
+			if (RhythmNoteBlock* rhythmNoteBlock = rhythmSetBlock->getRhythmNoteBlockPtr((uint8)m_lastRowSelected + 35))
+			{
+				if (copyableToneClipboad != nullptr) deleteAndZero(copyableToneClipboad);
+				copyableToneClipboad = new CopyableTone(rhythmNoteBlock);
+				return true;
+			}
+		}
+		break;
+	case pasteTone:
+		if (copyableToneClipboad != nullptr)
+		{ 
+			copyableToneClipboad->copyTo(PartR, (uint8)m_lastRowSelected + 35);
+			return true;
+		}
+		break;
+	case swapTone:
+		if (copyableToneClipboad != nullptr)
+		{
+			copyableToneClipboad->swapWith(PartR, (uint8)m_lastRowSelected + 35);
+			return true;
+		}
+		break;
+	default: break;
+	}
+	return false;
+}
 //[/MiscUserCode]
 
 
@@ -461,7 +566,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="RhySetKeyboardWithList" componentName=""
-                 parentClasses="public Component, public TableListBoxModel, public ChangeListener, public ChangeBroadcaster"
+                 parentClasses="public Component, public TableListBoxModel, public ChangeListener, public ChangeBroadcaster, public ApplicationCommandTarget"
                  constructorParams="" variableInitialisers="" snapPixels="8" snapActive="1"
                  snapShown="1" overlayOpacity="0.330" fixedSize="1" initialWidth="425"
                  initialHeight="622">

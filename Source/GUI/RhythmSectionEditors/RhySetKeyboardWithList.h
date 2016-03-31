@@ -36,7 +36,8 @@
 class RhySetKeyboardWithList  : public Component,
                                 public TableListBoxModel,
                                 public ChangeListener,
-                                public ChangeBroadcaster
+                                public ChangeBroadcaster,
+                                public ApplicationCommandTarget
 {
 public:
     //==============================================================================
@@ -50,6 +51,21 @@ public:
 	void /*TableListBoxModel::*/paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	void /*TableListBoxModel::*/selectedRowsChanged(int lastRowSelected) override;
 	Component* /*TableListBoxModel::*/refreshComponentForCell(int rowNumber, int columnId, bool isRowSelected, Component *existingComponentToUpdate) override;
+	void /*TableListBoxModel::*/cellClicked(int rowNumber, int columnId, const MouseEvent& e) override;
+
+	/* ApplicationCommandTarget implementation: */
+	enum CommandIDs
+	{
+		initialiseTone = 0x5000,
+		copyTone = 0x5001,
+		pasteTone = 0x5002,
+		swapTone = 0x5003
+	};
+	ApplicationCommandTarget* getNextCommandTarget() override;
+	void getAllCommands(Array <CommandID>& commands) override;
+	void getCommandInfo(CommandID commandID, ApplicationCommandInfo& result) override;
+	bool perform(const InvocationInfo& info) override;
+
 	enum drumNamesTableColumnIds
 	{
 		NoteName = 1,
@@ -58,7 +74,7 @@ public:
 		MuteGrp = 4,
 		RhyWave = 5,
 		GmDrum = 6,
-		Level = 7, 
+		Level = 7,
 		Pan = 8,
 		Rev = 9,
 		Dly = 10,

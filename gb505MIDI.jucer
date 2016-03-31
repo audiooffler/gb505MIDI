@@ -335,6 +335,9 @@
               file="Source/GUI/TabbedComponentWithMenu.h"/>
       </GROUP>
       <GROUP id="{B296F93E-F914-9B58-F002-B467166E309C}" name="GrooveboxMemory">
+        <FILE id="Pa2uI9" name="CopyableTone.cpp" compile="1" resource="0"
+              file="Source/GrooveboxMemory/CopyableTone.cpp"/>
+        <FILE id="ElD5BP" name="CopyableTone.h" compile="0" resource="0" file="Source/GrooveboxMemory/CopyableTone.h"/>
         <FILE id="egVftm" name="GrooveboxMemoryBlock.cpp" compile="1" resource="0"
               file="Source/GrooveboxMemory/GrooveboxMemoryBlock.cpp"/>
         <FILE id="GeDzU2" name="GrooveboxMemoryBlock.h" compile="0" resource="0"

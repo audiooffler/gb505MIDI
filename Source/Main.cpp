@@ -16,6 +16,7 @@
 #include "GrooveboxMemory/Waveforms.h"
 #include "MIDIConnection/GrooveboxConnector.h"
 #include "GUI/GrooveboxSplashScreen.h"
+#include "GrooveboxMemory/CopyableTone.h"
 //#include <vld.h> 
 
 ApplicationProperties* appProperties = nullptr;
@@ -29,6 +30,7 @@ OverallMemoryBlock* grooveboxMemory = nullptr;
 QuickSysExBlock* quickSysEx = nullptr;
 Waveforms* waveForms = nullptr;
 ApplicationCommandManager* applicationCommandManager = nullptr;
+CopyableTone* copyableToneClipboad = nullptr;
 
 //==============================================================================
 class MC307SysExApplication  : public JUCEApplication
@@ -89,6 +91,7 @@ public:
 
     void shutdown()
     {
+		if (copyableToneClipboad != nullptr) deleteAndZero(copyableToneClipboad);
         // Add your application's shutdown code here..
 #if JUCE_OPENGL
 		if (openGlContext != nullptr) openGlContext->detach();
