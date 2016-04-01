@@ -217,6 +217,7 @@ void RhythmSetEditorTab::changeListenerCallback(ChangeBroadcaster* source)
 			m_rhyPitchEditor->setupParameters(m_currentKey);
 			m_rhyFilterEditor->setupParameters(m_currentKey);
 			m_rhyAmpEditor->setupParameters(m_currentKey);
+			m_rhyFxSendEditor->setupParameters(m_currentKey);
 		}
     }
 }

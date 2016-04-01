@@ -228,7 +228,7 @@ void RhySetKeyboardWithList::paintCell(Graphics& g, int rowNumber, int columnId,
 		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case RhyGrp:
-		g.drawText(rhyGrpString, 4, 0, width - 4, height, Justification::centred, false);
+		g.drawText(rhyGrpString, 4, 0, width - 4, height, Justification::centredLeft, false);
 		g.drawRect((float)width - 1.0f, 0.0f, 0.5f, (float)height);
 		break;
 	case MuteGrp:
