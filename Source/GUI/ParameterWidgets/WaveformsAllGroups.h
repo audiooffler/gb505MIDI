@@ -49,10 +49,10 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	void buttonClicked(Button* button);
-	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
-	void addListenerToAllButtons(ButtonListener* listener);
-	void textEditorTextChanged(TextEditor& textEditor); // highlightTextEditor
+	void buttonClicked(Button* button) override;
+	void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
+	void addListenerToAllButtons(Button::Listener* listener);
+	void textEditorTextChanged(TextEditor& textEditor) override; // highlightTextEditor
 	void tryScrollToSelectedButton();
     //[/UserMethods]
 

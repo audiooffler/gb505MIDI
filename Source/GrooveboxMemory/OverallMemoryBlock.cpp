@@ -1,4 +1,4 @@
-﻿/*
+/*
   ==============================================================================
 
     OverallMemoryBlock.cpp
@@ -297,7 +297,8 @@ bool OverallMemoryBlock::saveHexTextSysExFile(const File&file)
 	for (int i = 0; i < sysExCompilation.size(); i++)
 	{
 		sysExCompilation[i]->getAsSysExData(&sysExMsgData, sysExMsgSize);
-		outputStream->writeText(String::toHexString(sysExMsgData, sysExMsgSize).toUpperCase() + (i < sysExCompilation.size() - 1 ? "\r\n" : ""), false, false);
+		outputStream->writeText(
+            String::toHexString(sysExMsgData, sysExMsgSize).toUpperCase() + (i < sysExCompilation.size() - 1 ? "\r\n" : ""), false, false,"\r\n");
 	}
 	outputStream->flush();
 	return true;

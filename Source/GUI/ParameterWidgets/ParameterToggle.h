@@ -50,12 +50,12 @@ public:
 	void setParameter(Parameter* param);
 	Parameter* getParamPtr();
 	String getTooltip() override;
-	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
-	void buttonStateChanged();
+	void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
+	void buttonStateChanged() override;
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
 
 

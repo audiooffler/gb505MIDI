@@ -162,7 +162,7 @@ ToneMixTable::ToneMixTable (const String &componentName, SynthParts part)
     addAndMakeVisible (m_biasDirectionComboBox1 = new ParameterComboBox ("biasDirectionComboBox"));
     m_biasDirectionComboBox1->setEditableText (false);
     m_biasDirectionComboBox1->setJustificationType (Justification::centredLeft);
-    m_biasDirectionComboBox1->setTextWhenNothingSelected (String::empty);
+    m_biasDirectionComboBox1->setTextWhenNothingSelected (String());
     m_biasDirectionComboBox1->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_biasDirectionComboBox1->addListener (this);
 
@@ -308,7 +308,7 @@ ToneMixTable::ToneMixTable (const String &componentName, SynthParts part)
     addAndMakeVisible (m_biasDirectionComboBox2 = new ParameterComboBox ("biasDirectionComboBox"));
     m_biasDirectionComboBox2->setEditableText (false);
     m_biasDirectionComboBox2->setJustificationType (Justification::centredLeft);
-    m_biasDirectionComboBox2->setTextWhenNothingSelected (String::empty);
+    m_biasDirectionComboBox2->setTextWhenNothingSelected (String());
     m_biasDirectionComboBox2->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_biasDirectionComboBox2->addListener (this);
 
@@ -451,7 +451,7 @@ ToneMixTable::ToneMixTable (const String &componentName, SynthParts part)
     addAndMakeVisible (m_biasDirectionComboBox3 = new ParameterComboBox ("biasDirectionComboBox"));
     m_biasDirectionComboBox3->setEditableText (false);
     m_biasDirectionComboBox3->setJustificationType (Justification::centredLeft);
-    m_biasDirectionComboBox3->setTextWhenNothingSelected (String::empty);
+    m_biasDirectionComboBox3->setTextWhenNothingSelected (String());
     m_biasDirectionComboBox3->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_biasDirectionComboBox3->addListener (this);
 
@@ -594,7 +594,7 @@ ToneMixTable::ToneMixTable (const String &componentName, SynthParts part)
     addAndMakeVisible (m_biasDirectionComboBox4 = new ParameterComboBox ("biasDirectionComboBox"));
     m_biasDirectionComboBox4->setEditableText (false);
     m_biasDirectionComboBox4->setJustificationType (Justification::centredLeft);
-    m_biasDirectionComboBox4->setTextWhenNothingSelected (String::empty);
+    m_biasDirectionComboBox4->setTextWhenNothingSelected (String());
     m_biasDirectionComboBox4->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_biasDirectionComboBox4->addListener (this);
 
@@ -621,7 +621,7 @@ ToneMixTable::ToneMixTable (const String &componentName, SynthParts part)
     m_toneLevelSlider4->addListener (this);
 
     addAndMakeVisible (imageButton3 = new ImageButton ("new button"));
-    imageButton3->setButtonText (String::empty);
+    imageButton3->setButtonText (String());
     imageButton3->addListener (this);
 
     imageButton3->setImages (false, true, true,

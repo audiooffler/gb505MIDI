@@ -74,7 +74,7 @@ void Waveforms::loadWaveforms(WaveGroup group)
 		for (int i = 0; i < lines.size(); i++)
 		{
 			line.clear();
-			line = StringArray::fromTokens(lines[i], "\t", String::empty);
+			line = StringArray::fromTokens(lines[i], "\t", String());
 			if (line.size() > 0)
 			{
 				if (group == WAVES_A) m_aWaveNames.add(line[0]);
@@ -90,19 +90,19 @@ void Waveforms::loadWaveforms(WaveGroup group)
 				else
 				{
 					// long name not specified, add empty string for long name to maintain correct indexing
-					if (group == WAVES_A) m_aWaveLongNames.add(String::empty);
-					else if (group == WAVES_B) m_bWaveLongNames.add(String::empty);
-					else if (group == WAVES_C_JX305 || group == WAVES_C_MC307) m_cWaveLongNames.add(String::empty);
+					if (group == WAVES_A) m_aWaveLongNames.add(String());
+					else if (group == WAVES_B) m_bWaveLongNames.add(String());
+					else if (group == WAVES_C_JX305 || group == WAVES_C_MC307) m_cWaveLongNames.add(String());
 				}
 			}
 			else // no readable name specified, add empty string for name and long name to maintain correct indexing
 			{
-				if (group == WAVES_A) m_aWaveNames.add(String::empty);
-				else if (group == WAVES_B) m_bWaveNames.add(String::empty);
-				else if (group == WAVES_C_JX305 || group == WAVES_C_MC307) m_cWaveNames.add(String::empty);
-				if (group == WAVES_A) m_aWaveLongNames.add(String::empty);
-				else if (group == WAVES_B) m_bWaveLongNames.add(String::empty);
-				else if (group == WAVES_C_JX305 || group == WAVES_C_MC307) m_cWaveLongNames.add(String::empty);
+				if (group == WAVES_A) m_aWaveNames.add(String());
+				else if (group == WAVES_B) m_bWaveNames.add(String());
+				else if (group == WAVES_C_JX305 || group == WAVES_C_MC307) m_cWaveNames.add(String());
+				if (group == WAVES_A) m_aWaveLongNames.add(String());
+				else if (group == WAVES_B) m_bWaveLongNames.add(String());
+				else if (group == WAVES_C_JX305 || group == WAVES_C_MC307) m_cWaveLongNames.add(String());
 			}
 		}
 	}
@@ -110,22 +110,22 @@ void Waveforms::loadWaveforms(WaveGroup group)
 
 String Waveforms::getName(WaveGroup group, int waveIndexInGroup)
 {
-	if (waveIndexInGroup < 0)return String::empty;
+	if (waveIndexInGroup < 0)return String();
 
 	if (group == WAVES_A && m_aWaveNames.size() >= waveIndexInGroup + 1) return m_aWaveNames[waveIndexInGroup];
 	else if (group == WAVES_B && m_bWaveNames.size() >= waveIndexInGroup + 1) return m_bWaveNames[waveIndexInGroup];
 	else if ((group == WAVES_C_JX305 || group==WAVES_C_MC307) && m_cWaveNames.size() >= waveIndexInGroup + 1) return m_cWaveNames[waveIndexInGroup];
-	return String::empty;
+	return String();
 }
 
 String Waveforms::getLongName(WaveGroup group, int waveIndexInGroup)
 {
-	if (waveIndexInGroup < 0)return String::empty;
+	if (waveIndexInGroup < 0)return String();
 
 	if (group == WAVES_A && m_aWaveLongNames.size() >= waveIndexInGroup + 1) return m_aWaveLongNames[waveIndexInGroup];
 	else if (group == WAVES_B && m_bWaveLongNames.size() >= waveIndexInGroup + 1) return m_bWaveLongNames[waveIndexInGroup];
 	else if ((group == WAVES_C_JX305 || group == WAVES_C_MC307) && m_cWaveLongNames.size() >= waveIndexInGroup + 1) return m_cWaveLongNames[waveIndexInGroup];
-	return String::empty;
+	return String();
 }
 
 String Waveforms::getButtonText(WaveGroup group, int waveIndexInGroup)

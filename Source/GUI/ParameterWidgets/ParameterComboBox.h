@@ -50,13 +50,13 @@ public:
 	ParameterComboBox(Parameter* paramPtr = nullptr);
 	virtual void setParameter(Parameter* param);
 	virtual Parameter* getParamPtr();
-	virtual void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
-	virtual void comboBoxChanged(ComboBox *comboBoxThatHasChanged); // gui combobox selection change
+	virtual void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
+	virtual void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override; // gui combobox selection change
 	virtual String getTooltip() override;
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
 
 

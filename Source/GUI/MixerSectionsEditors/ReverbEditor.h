@@ -39,8 +39,8 @@
                                                                     //[/Comments]
 */
 class ReverbEditor  : public Component,
-                      public ComboBoxListener,
-                      public SliderListener
+                      public ComboBox::Listener,
+                      public Slider::Listener
 {
 public:
     //==============================================================================

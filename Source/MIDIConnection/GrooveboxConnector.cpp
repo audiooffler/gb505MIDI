@@ -79,9 +79,9 @@ int GrooveboxConnector::refreshConnections(bool warnMsgBox /*=true*/, int timeOu
 	m_checkThread->runThread();
 
 	// after thread: read connections from retrieved data
-	for (int i = 0; i < m_checkThread->getRetrievedMessages().size(); i++)
+	for (int i = 0; i < m_checkThread->getRetrievedMessages()->size(); i++)
 	{
-		SyxMsg* syxMsg (m_checkThread->getRetrievedMessages()[i]);
+		SyxMsg* syxMsg ((*m_checkThread->getRetrievedMessages())[i]);
 		if (syxMsg->getType() == SyxMsg::Type_Inquiry_Reply)
 		{
 			// will be managed by ownedarray or is to be deleted
@@ -286,8 +286,8 @@ void GrooveboxConnector::MIDIRetrieveTimeOutTimer::timerCallback()
 GrooveboxConnector::IndenityRequestReplyThread::IndenityRequestReplyThread(String windowTitle, int timeOutInMs) :
 	ThreadWithProgressWindow(windowTitle, true, true, timeOutInMs),
 	inquiry (new SyxMsg(SyxMsg::Type_Inquiry_Request)),
-	m_retrieveTimeout(timeOutInMs),
-	m_timeoutTimer(new MIDIRetrieveTimeOutTimer(this))
+	m_timeoutTimer(new MIDIRetrieveTimeOutTimer(this)),
+    m_retrieveTimeout(timeOutInMs)
 {
 	setProgress(-1.0);
 }
@@ -313,7 +313,7 @@ void GrooveboxConnector::IndenityRequestReplyThread::run()
 			// wait till timer signals
 			wait(250);
 			// repeat inquiry
-			if (m_retrievedSysExMessages.size() == 0) midiOutputDevice->sendMessageNow(inquiry->getAsMidiMessage());
+            if (m_retrievedSysExMessages.size() == 0) midiOutputDevice->sendMessageNow(GrooveboxConnector::IndenityRequestReplyThread::inquiry->getAsMidiMessage());
 			wait(250);
 		}
 	}

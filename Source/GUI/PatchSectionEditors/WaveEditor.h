@@ -48,9 +48,9 @@ Describe your class and how it works here!
 */
 class WaveEditor  : public Component,
                     public ChangeListener,
-                    public ButtonListener,
-                    public ComboBoxListener,
-                    public SliderListener
+                    public Button::Listener,
+                    public ComboBox::Listener,
+                    public Slider::Listener
 {
 public:
     //==============================================================================
@@ -60,7 +60,7 @@ public:
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
-	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
+	void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
 	class WaveFormDlgCallback : public ModalComponentManager::Callback
 	{
 	public:

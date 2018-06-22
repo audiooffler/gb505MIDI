@@ -38,7 +38,7 @@
 */
 class Envelope  : public Component,
                   public ChangeListener,
-                  public SliderListener
+                  public Slider::Listener
 {
 public:
     //==============================================================================
@@ -47,7 +47,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	void changeListenerCallback(ChangeBroadcaster *source);
+	void changeListenerCallback(ChangeBroadcaster *source) override;
 	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
     //[/UserMethods]
 

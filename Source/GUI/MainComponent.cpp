@@ -443,7 +443,7 @@ void MainComponent::buttonClicked(Button* buttonThatWasClicked)
 
 				Drawable* icon = getDrawableForCommand(commandsOfMainComponent[i], (commandInfo.flags & ApplicationCommandInfo::isDisabled) == ApplicationCommandInfo::isDisabled);
 
-				menu.addCommandItem(applicationCommandManager, commandsOfMainComponent[i], String::empty, icon);
+				menu.addCommandItem(applicationCommandManager, commandsOfMainComponent[i], String(), icon);
 
 				lastId = commandsOfMainComponent[i];
 			}
@@ -454,10 +454,10 @@ void MainComponent::buttonClicked(Button* buttonThatWasClicked)
 
 		menu.addSeparator();
 
-		menu.addCommandItem(applicationCommandManager, CommandIDs::showInfo, String::empty, Drawable::createFromImageData(info_png, info_pngSize));
+		menu.addCommandItem(applicationCommandManager, CommandIDs::showInfo, String(), Drawable::createFromImageData(info_png, info_pngSize));
 
 		// quit command from application instance
-		menu.addCommandItem(applicationCommandManager, StandardApplicationCommandIDs::quit, String::empty, Drawable::createFromImageData(quit_png, quit_pngSize));
+		menu.addCommandItem(applicationCommandManager, StandardApplicationCommandIDs::quit, String(), Drawable::createFromImageData(quit_png, quit_pngSize));
 
 		menu.showMenuAsync(PopupMenu::Options().withTargetComponent(buttonThatWasClicked).withMaximumNumColumns(2), nullptr);
 	}

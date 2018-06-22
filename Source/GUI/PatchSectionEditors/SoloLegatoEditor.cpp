@@ -113,7 +113,7 @@ SoloLegatoEditor::SoloLegatoEditor (const String &componentName, SynthParts part
     addAndMakeVisible (m_portamentoStartToggle = new ParameterLedSwitch ("portamentoStartToggle"));
     addAndMakeVisible (m_portamentoTypeToggle = new ParameterLedSwitch ("portamentoTypeToggle"));
     addAndMakeVisible (m_imageButton1 = new ImageButton ("imageButton1"));
-    m_imageButton1->setButtonText (String::empty);
+    m_imageButton1->setButtonText (String());
     m_imageButton1->addListener (this);
 
     m_imageButton1->setImages (false, true, true,
@@ -121,7 +121,7 @@ SoloLegatoEditor::SoloLegatoEditor (const String &componentName, SynthParts part
                                Image(), 1.000f, Colour (0x4340454a),
                                Image(), 1.000f, Colour (0x4340454a));
     addAndMakeVisible (m_imageButton2 = new ImageButton ("imageButton2"));
-    m_imageButton2->setButtonText (String::empty);
+    m_imageButton2->setButtonText (String());
     m_imageButton2->addListener (this);
 
     m_imageButton2->setImages (false, true, true,

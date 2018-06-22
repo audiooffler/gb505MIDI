@@ -26,7 +26,7 @@ public:
 
 	// careful when calculating with addresses or sizes, interpret as 4 x 7 bit instread of 4 x 8 bit!
 	// max must not exceed 127 if value is meant to be interpreted as 7 bit midi data. larger max values are used for msb/lsb nibbled 8bit values (0..255 as 2x4 bit in 2 7bit bytes)
-	Parameter(GrooveboxMemoryBlock* parentBlockPtr, String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default, StringArray displayedValues, String description, uint8 cc = CC_NONE, bool ccIsMode2Only = false);
+	Parameter(GrooveboxMemoryBlock* parentBlockPtr, String name, uint16 addressOffset, uint8 min, uint8 max, uint8 defaultValue, StringArray displayedValues, String description, uint8 cc = CC_NONE, bool ccIsMode2Only = false);
 
 	// --- getter functions: ---
 
@@ -72,7 +72,7 @@ public:
 	void setName(String name);
 	void setMin(uint8 min);
 	void setMax(uint8 max);
-	void setDefault(uint8 default);
+	void setDefault(uint8 defaultValue);
 	void resetToDefault();
 	void setDisplayedValues(StringArray displayedValues);
 	void setDescription(String description);

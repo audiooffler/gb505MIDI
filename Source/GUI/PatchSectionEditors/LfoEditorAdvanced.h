@@ -42,9 +42,9 @@
 */
 class LfoEditorAdvanced  : public Component,
                            public ChangeListener,
-                           public ComboBoxListener,
-                           public SliderListener,
-                           public ButtonListener
+                           public ComboBox::Listener,
+                           public Slider::Listener,
+                           public Button::Listener
 {
 public:
     //==============================================================================
@@ -53,7 +53,7 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-    void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
+    void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
     //[/UserMethods]
 
     void paint (Graphics& g) override;

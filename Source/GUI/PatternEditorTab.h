@@ -43,9 +43,9 @@
 class PatternEditorTab  : public Component,
                           public ChangeListener,
                           public ApplicationCommandTarget,
-                          public ComboBoxListener,
-                          public ButtonListener,
-                          public SliderListener
+                          public ComboBox::Listener,
+                          public Button::Listener,
+                          public Slider::Listener
 {
 public:
     //==============================================================================

@@ -46,8 +46,8 @@ Describe your class and how it works here!
                                                                     //[/Comments]
 */
 class FxmEditor  : public Component,
-                   public SliderListener,
-                   public ComboBoxListener
+                   public Slider::Listener,
+                   public ComboBox::Listener
 {
 public:
     //==============================================================================

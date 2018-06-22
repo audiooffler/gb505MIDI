@@ -53,7 +53,7 @@ public:
 	void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
 	void comboBoxChanged(ComboBox *comboBoxThatHasChanged) override; // gui combobox selection change
 	String getTooltip() override { return ""; }
-	void labelTextChanged(Label *label) override;
+	void labelTextChanged();
 	void mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& d) override;
 	void mouseDown(const MouseEvent &e) override;
 	bool keyPressed(const KeyPress &) override;

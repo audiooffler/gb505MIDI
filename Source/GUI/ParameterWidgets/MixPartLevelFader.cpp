@@ -243,7 +243,7 @@ void MixPartLevelFader::setTextBoxStyle(TextEntryBoxPosition newPosition, bool i
 	((Slider*)this)->setTextBoxStyle(newPosition, isReadOnly, textEntryBoxWidth, textEntryBoxHeight);
 	if (getTextBoxPosition() == Slider::NoTextBox || getTextBoxWidth() < 0 || getTextBoxHeight() < 0)
 	{
-		setPopupDisplayEnabled(true, nullptr);
+		setPopupDisplayEnabled(true, true, nullptr);
 	}
 }
 //[/MiscUserCode]

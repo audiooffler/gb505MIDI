@@ -17,14 +17,14 @@ PatchCommonBlock::PatchCommonBlock(SynthParts part) :
 	m_part(part)
 {
 	m_name = "Patch Common";
-	/*  3:*/StringArray boosterGain(StringArray::fromTokens("0dB; +6dB; +12dB; +18dB", ";", String::empty));
+	/*  3:*/StringArray boosterGain(StringArray::fromTokens("0dB; +6dB; +12dB; +18dB", ";", String()));
 	StringArray switchOnOffStrings(StringArray::fromTokens("OFF ON", false));
 	StringArray asciiCharacters;
 	asciiCharacters.add(" ");
 	asciiCharacters.addTokens("! \" # $ % & ' ( ) * + , - . / 0 1 2 3 4 5 6 7 8 9 : ; < = > ? @ A B C D E F G H I J K L M N O P Q R S T U V W X Y Z [ \\ ] ^ _ ` a b c d e f g h i j k l m n o p q r s t u v w x y z { | }", false);
 
 	// add, set (if addressOffset already used) or delete (if addressOffset already used and name is empty)
-	// void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String::empty, uint8 cc = 102, bool ccIsMode2Only = false);
+	// void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String(), uint8 cc = 102, bool ccIsMode2Only = false);
 	setupParameter("Patch Name  1", 0x00, 32, 125, 'L', asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name  2", 0x01, 32, 125, 'e', asciiCharacters, "Name assigned to the patch.");
 	setupParameter("Patch Name  3", 0x02, 32, 125, 'a', asciiCharacters, "Name assigned to the patch.");
@@ -124,8 +124,8 @@ void PatchCommonBlock::setPatchName(String name)
 
 PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	GrooveboxMemoryBlock(0x02000000 | ((uint32)part << 16 | (uint32)tone), "Tone " + String(((((uint16)tone >> 8) - 0x10) / 2) + 1) + " of Part " + String((uint8)part + 1), "1-3-2", 0x0101),
-	m_part(part),
-	m_tone(tone)
+	m_tone(tone),
+    m_part(part)
 {
 	switch (m_tone)
 	{
@@ -135,19 +135,19 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 	case Tone4: m_name = "Tone 4"; break;
 	default: break;
 	}
-	/*  1:*/StringArray waveGroupIdsStrings(StringArray::fromTokens("Reserved;Group A;Group B;Group C", ";", String::empty));
-	/*  2:*/StringArray waveGainStrings(StringArray::fromTokens(" -6dB;  0dB; +6dB;+12dB", ";", String::empty));
-	/*  5:*/StringArray noteNames(StringArray::fromTokens("C -1;C#-1;D -1;D#-1;E -1;F -1;F#-1;G -1;G#-1;A -1;A#-1;B -1;C  0;C# 0;D  0;D# 0;E  0;F  0;F# 0;G  0;G# 0;A  0;A# 0;B  0;C  1;C# 1;D  1;D# 1;E  1;F  1;F# 1;G  1;G# 1;A  1;A# 1;B  1;C  2;C# 2;D  2;D# 2;E  2;F  2;F# 2;G  2;G# 2;A  2;A# 2;B  2;C  3;C# 3;D  3;D# 3;E  3;F  3;F# 3;G  3;G# 3;A  3;A# 3;B  3;C  4;C# 4;D  4;D# 4;E  4;F  4;F# 4;G  4;G# 4;A  4;A# 4;B  4;C  5;C# 5;D  5;D# 5;E  5;F  5;F# 5;G  5;G# 5;A  5;A# 5;B  5;C  6;C# 6;D  6;D# 6;E  6;F  6;F# 6;G  6;G# 6;A  6;A# 6;B  6;C  7;C# 7;D  7;D# 7;E  7;F  7;F# 7;G  7;G# 7;A  7;A# 7;B  7;C  8;C# 8;D  8;D# 8;E  8;F  8;F# 8;G  8;G# 8;A  8;A# 8;B  8;C  9;C# 9;D  9;D# 9;E  9;F  9;F# 9;G  9", ";", String::empty));
-	/*  7:*/StringArray controlDestinations(StringArray::fromTokens("OFF;Pitch;Filter Cutoff;Filter Res;Tone Level;Tone Pan;LFO1 Pitch;LFO2 Pitch;LFO1 Filter;LFO2 Filter;LFO1 Amp;LFO2 Amp;LFO1 Pan;LFO2 Pan;LFO1 Rate;LFO2 Rate", ";", String::empty));
+	/*  1:*/StringArray waveGroupIdsStrings(StringArray::fromTokens("Reserved;Group A;Group B;Group C", ";", String()));
+	/*  2:*/StringArray waveGainStrings(StringArray::fromTokens(" -6dB;  0dB; +6dB;+12dB", ";", String()));
+	/*  5:*/StringArray noteNames(StringArray::fromTokens("C -1;C#-1;D -1;D#-1;E -1;F -1;F#-1;G -1;G#-1;A -1;A#-1;B -1;C  0;C# 0;D  0;D# 0;E  0;F  0;F# 0;G  0;G# 0;A  0;A# 0;B  0;C  1;C# 1;D  1;D# 1;E  1;F  1;F# 1;G  1;G# 1;A  1;A# 1;B  1;C  2;C# 2;D  2;D# 2;E  2;F  2;F# 2;G  2;G# 2;A  2;A# 2;B  2;C  3;C# 3;D  3;D# 3;E  3;F  3;F# 3;G  3;G# 3;A  3;A# 3;B  3;C  4;C# 4;D  4;D# 4;E  4;F  4;F# 4;G  4;G# 4;A  4;A# 4;B  4;C  5;C# 5;D  5;D# 5;E  5;F  5;F# 5;G  5;G# 5;A  5;A# 5;B  5;C  6;C# 6;D  6;D# 6;E  6;F  6;F# 6;G  6;G# 6;A  6;A# 6;B  6;C  7;C# 7;D  7;D# 7;E  7;F  7;F# 7;G  7;G# 7;A  7;A# 7;B  7;C  8;C# 8;D  8;D# 8;E  8;F  8;F# 8;G  8;G# 8;A  8;A# 8;B  8;C  9;C# 9;D  9;D# 9;E  9;F  9;F# 9;G  9", ";", String()));
+	/*  7:*/StringArray controlDestinations(StringArray::fromTokens("OFF;Pitch;Filter Cutoff;Filter Res;Tone Level;Tone Pan;LFO1 Pitch;LFO2 Pitch;LFO1 Filter;LFO2 Filter;LFO1 Amp;LFO2 Amp;LFO1 Pan;LFO2 Pan;LFO1 Rate;LFO2 Rate", ";", String()));
 	StringArray modulationDepthStrings; for (int i = -63; i <= 63; i++)
 	{
 		if (i<0) modulationDepthStrings.add("-" + String(-i));
 		else if (i == 0) modulationDepthStrings.add(String(i));
 		else if (i>0) modulationDepthStrings.add("+" + String(i));
 	}
-	/*  8:*/StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String::empty));
-	/*  9:*/StringArray lfoOffset(StringArray::fromTokens("-100; -50;   0; +50;+100", ";", String::empty));
-	/* 10:*/StringArray lfoFadeModes(StringArray::fromTokens("On-In;On-Out;Off-In;Off-Out", ";", String::empty));
+	/*  8:*/StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String()));
+	/*  9:*/StringArray lfoOffset(StringArray::fromTokens("-100; -50;   0; +50;+100", ";", String()));
+	/* 10:*/StringArray lfoFadeModes(StringArray::fromTokens("On-In;On-Out;Off-In;Off-Out", ";", String()));
 	StringArray coarseTuneStrings; for (int i = -48; i <= 48; i++)
 	{
 		if (i<0) coarseTuneStrings.add("-" + String(-i));
@@ -180,13 +180,13 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 		else randomPanSwitchStrings.add("ON");
 	}
 	/* 11:*/StringArray randomPitchFactors(StringArray::fromTokens("0 1 2 3 4 5 6 7 8 9 10 20 30 40 50 60 70 80 90 100 200 300 400 500 600 700 800 900 1000 1100 1200", false));
-	/* 12:*/StringArray keyFollowFactors(StringArray::fromTokens("-100, -70, -50, -30, -10,   0, +10, +20, +30, +40, +50, +70,+100,+120,+150,+200", ",", String::empty));
-	/* 13:*/StringArray veloSensFactors(StringArray::fromTokens("-100; -98; -96; -94; -92; -90; -88; -86; -84; -82; -80; -78; -76; -74; -72; -70; -68; -66; -64; -62; -60; -58; -56; -54; -52; -50; -48; -46; -44; -42; -40; -38; -36; -34; -32; -30; -28; -26; -24; -22; -20; -18; -16; -14; -12; -10;  -8;  -6;  -4;  -2;   0;  +2;  +4;  +6;  +8; +10; +12; +14; +16; +18; +20; +22; +24; +26; +28; +30; +32; +34; +36; +38; +40; +42; +44; +46; +48; +50; +52; +54; +56; +58; +60; +62; +64; +66; +68; +70; +72; +74; +76; +78; +80; +82; +84; +86; +88; +90; +92; +94; +96; +98;+100;+102;+104;+106;+108;+110;+112;+114;+116;+118;+120;+122;+124;+126;+128;+130;+132;+134;+136;+138;+140;+142;+144;+146;+148;+150", ";", String::empty));
-	/* 14:*/StringArray veloTimeFactorsAndEnvKeyFollow(StringArray::fromTokens("-100, -70, -50, -40, -30, -20, -10,   0, +10, +20, +30, +40, +50, +70,+100", ",", String::empty));
+	/* 12:*/StringArray keyFollowFactors(StringArray::fromTokens("-100, -70, -50, -30, -10,   0, +10, +20, +30, +40, +50, +70,+100,+120,+150,+200", ",", String()));
+	/* 13:*/StringArray veloSensFactors(StringArray::fromTokens("-100; -98; -96; -94; -92; -90; -88; -86; -84; -82; -80; -78; -76; -74; -72; -70; -68; -66; -64; -62; -60; -58; -56; -54; -52; -50; -48; -46; -44; -42; -40; -38; -36; -34; -32; -30; -28; -26; -24; -22; -20; -18; -16; -14; -12; -10;  -8;  -6;  -4;  -2;   0;  +2;  +4;  +6;  +8; +10; +12; +14; +16; +18; +20; +22; +24; +26; +28; +30; +32; +34; +36; +38; +40; +42; +44; +46; +48; +50; +52; +54; +56; +58; +60; +62; +64; +66; +68; +70; +72; +74; +76; +78; +80; +82; +84; +86; +88; +90; +92; +94; +96; +98;+100;+102;+104;+106;+108;+110;+112;+114;+116;+118;+120;+122;+124;+126;+128;+130;+132;+134;+136;+138;+140;+142;+144;+146;+148;+150", ";", String()));
+	/* 14:*/StringArray veloTimeFactorsAndEnvKeyFollow(StringArray::fromTokens("-100, -70, -50, -40, -30, -20, -10,   0, +10, +20, +30, +40, +50, +70,+100", ",", String()));
 	/* 15:*/StringArray filterTypes(StringArray::fromTokens("OFF LPF BPF HPF PKG", false));
 	/* 16:*/StringArray biasDirection(StringArray::fromTokens("LOWER UPPER LOW&UP ALL", false));
 	StringArray switchOnOffStrings(StringArray::fromTokens("OFF ON", false));
-	StringArray velocityCurves(StringArray::fromTokens("Curve 1;Curve 2;Curve 3;Curve 4;Curve 5;Curve 6;Curve 7", ";", String::empty));
+	StringArray velocityCurves(StringArray::fromTokens("Curve 1;Curve 2;Curve 3;Curve 4;Curve 5;Curve 6;Curve 7", ";", String()));
 
 	String lfoWaveformDescription(String("Select the LFO output waveform. The sound will be modulated in the same shape as the selected waveform.\r\n") +
 		"Available Settings :\r\n" +
@@ -224,7 +224,7 @@ PatchToneBlock::PatchToneBlock(SynthParts part, Tone tone) :
 		"- ON: The modulation speed will be synchronized to the tempo (BPM), and the LFO Rate parameter can be set in terms of a note value." +
 		"- OFF: The modulation speed will be determined by the LFO Rate setting, regardless of the tempo(BPM).");
 
-	// void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String::empty, uint8 cc = 102, bool ccIsMode2Only = false);
+	// void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String(), uint8 cc = 102, bool ccIsMode2Only = false);
 	setupParameter("Tone Switch", 0x00, 0, 1, (tone == Tone1 || tone == Tone2)?1:0, switchOnOffStrings, "Turn this \"ON\" if you want the tone to sound, or \"OFF\" if you do not want the tone to sound.\r\nIn order to make the best use of the available polyphony, unused tones should be turned \"OFF.\"");
 	setupParameter("Wave Group Type", 0x01, 0, 0, 0, StringArray::fromTokens("0", false));
 	setupParameter("Wave Group ID", 0x02, 1, 3, 1, waveGroupIdsStrings);

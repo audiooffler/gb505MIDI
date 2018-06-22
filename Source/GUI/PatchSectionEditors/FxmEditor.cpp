@@ -70,7 +70,7 @@ FxmEditor::FxmEditor (const String &componentName, SynthParts part, Tone tone)
     m_fxmDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_imageButton = new ImageButton ("new button"));
-    m_imageButton->setButtonText (String::empty);
+    m_imageButton->setButtonText (String());
 
     m_imageButton->setImages (false, true, true,
                               ImageCache::getFromMemory (fxm_png, fxm_pngSize), 1.000f, Colour (0x4340454a),

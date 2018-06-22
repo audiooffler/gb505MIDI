@@ -30,7 +30,7 @@ extern Waveforms* waveForms;
 
 //==============================================================================
 WaveformButton::WaveformButton ()
-    : TextButton(String())
+    : TextButton("")
 {
 
     //[UserPreSize]
@@ -178,7 +178,7 @@ bool WaveformButton::keyPressed (const KeyPress& key)
 
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 WaveformButton::WaveformButton(Waveforms::WaveGroup waveGroup, int waveformIndexInGroup)
-	: TextButton(String()),
+	: TextButton(""),
 	m_group (waveGroup),
 	m_numInGroup(waveformIndexInGroup)
 {

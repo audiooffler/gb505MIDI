@@ -38,7 +38,7 @@ ReverbEditor::ReverbEditor ()
     addAndMakeVisible (m_reverbTypeComboBox = new ParameterComboBox ("reverbTypeComboBox"));
     m_reverbTypeComboBox->setEditableText (false);
     m_reverbTypeComboBox->setJustificationType (Justification::centredLeft);
-    m_reverbTypeComboBox->setTextWhenNothingSelected (String());
+    m_reverbTypeComboBox->setTextWhenNothingSelected ({});
     m_reverbTypeComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_reverbTypeComboBox->addListener (this);
 

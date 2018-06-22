@@ -404,7 +404,7 @@ PatchControllerMatrixEditor::PatchControllerMatrixEditor (const String &componen
     addAndMakeVisible (m_aftertouchDestComboBox4 = new ParameterComboBox ("aftertouchDestComboBox"));
     m_aftertouchDestComboBox4->setEditableText (false);
     m_aftertouchDestComboBox4->setJustificationType (Justification::centredLeft);
-    m_aftertouchDestComboBox4->setTextWhenNothingSelected (String::empty);
+    m_aftertouchDestComboBox4->setTextWhenNothingSelected (String());
     m_aftertouchDestComboBox4->setTextWhenNoChoicesAvailable ("(no choices)");
     m_aftertouchDestComboBox4->addItem ("OFF", 1);
     m_aftertouchDestComboBox4->addItem ("Pitch", 2);
@@ -646,7 +646,7 @@ PatchControllerMatrixEditor::PatchControllerMatrixEditor (const String &componen
                                  ImageCache::getFromMemory (pitchBendLever_png, pitchBendLever_pngSize), 1.000f, Colour (0x00000000),
                                  Image(), 1.000f, Colour (0x00000000));
     addAndMakeVisible (m_line = new Label ("line",
-                                           String::empty));
+                                           String()));
     m_line->setFont (Font (15.00f, Font::plain));
     m_line->setJustificationType (Justification::centredLeft);
     m_line->setEditable (false, false, false);
@@ -655,7 +655,7 @@ PatchControllerMatrixEditor::PatchControllerMatrixEditor (const String &componen
     m_line->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (m_line2 = new Label ("line",
-                                            String::empty));
+                                            String()));
     m_line2->setFont (Font (15.00f, Font::plain));
     m_line2->setJustificationType (Justification::centredLeft);
     m_line2->setEditable (false, false, false);
@@ -664,7 +664,7 @@ PatchControllerMatrixEditor::PatchControllerMatrixEditor (const String &componen
     m_line2->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (imageButton4 = new ImageButton ("new button"));
-    imageButton4->setButtonText (String::empty);
+    imageButton4->setButtonText (String());
 
     imageButton4->setImages (false, true, true,
                              ImageCache::getFromMemory (modulation_png, modulation_pngSize), 1.000f, Colour (0x4340454a),

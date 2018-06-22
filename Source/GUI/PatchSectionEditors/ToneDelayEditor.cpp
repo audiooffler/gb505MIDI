@@ -52,7 +52,7 @@ ToneDelayEditor::ToneDelayEditor (const String &componentName, SynthParts part, 
     m_toneDelayTimeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 
     addAndMakeVisible (imageButton2 = new ImageButton ("new button"));
-    imageButton2->setButtonText (String::empty);
+    imageButton2->setButtonText (String());
 
     imageButton2->setImages (false, true, true,
                              ImageCache::getFromMemory (delay_png, delay_pngSize), 1.000f, Colour (0x4340454a),

@@ -38,7 +38,7 @@
                                                                     //[/Comments]
 */
 class RhyFxSendEditor  : public Component,
-                         public SliderListener
+                         public Slider::Listener
 {
 public:
     //==============================================================================

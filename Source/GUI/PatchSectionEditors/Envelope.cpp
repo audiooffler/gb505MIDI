@@ -29,10 +29,10 @@
 extern OverallMemoryBlock* grooveboxMemory;
 
 Envelope::EnvVis::EnvVis(Envelope* envPtr, EnvelopeTypes type)
-	: m_envPointer(envPtr),
-	  m_highlightedMarker(none),
-	  m_draggedMarker(none),
-	  m_type(type)
+	: m_type(type),
+      m_envPointer(envPtr),
+      m_highlightedMarker(none),
+	  m_draggedMarker(none)
 {
 	setSize(256, 64);
 }
@@ -407,7 +407,7 @@ void Envelope::EnvVis::mouseUp(const MouseEvent& e)
 
 //==============================================================================
 Envelope::Envelope (AllParts part, int toneNumber, EnvelopeTypes type, bool fullSize)
-    : m_part (part), m_toneNumber (toneNumber), m_type (type), m_fullSize (fullSize), m_name("Pitch Envelope"), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false)
+    : m_name("Pitch Envelope"), m_fullSize (fullSize), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false), m_part (part), m_toneNumber (toneNumber), m_type (type)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -568,7 +568,9 @@ Envelope::Envelope (AllParts part, int toneNumber, EnvelopeTypes type, bool full
 	m_level4->setRange(m_minLevel, m_maxLevel, 1.0);
 	if (m_level4Always0)
 	{
-		m_level4->setRange(0, 0, 0.0);
+		m_level4->setRange(0, 1, 0.0);
+        m_level4->setEnabled(false);
+        m_level4->setValue(0, dontSendNotification);
 		m_level4->setVisible(false);
 	}
     //[/UserPreSize]

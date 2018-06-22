@@ -37,8 +37,8 @@
 class SystemTab  : public Component,
                    public FileDragAndDropTarget,
                    public DragAndDropContainer,
-                   public ComboBoxListener,
-                   public ButtonListener
+                   public ComboBox::Listener,
+                   public Button::Listener
 {
 public:
     //==============================================================================
@@ -49,8 +49,8 @@ public:
     //[UserMethods]     -- You can add your own custom methods in this section.
 
 	/* FileDragAndDropTarget implementation: */
-	bool isInterestedInFileDrag(const StringArray &files);
-	void filesDropped(const StringArray &files, int x, int y);
+	bool isInterestedInFileDrag(const StringArray &files) override;
+	void filesDropped(const StringArray &files, int x, int y) override;
 
 	bool m_draggingFileToExternalAppActive;
 

@@ -302,7 +302,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -324,7 +324,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingCombo->getParamPtr() != nullptr && existingCombo->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -348,7 +348,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -370,7 +370,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -392,7 +392,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -414,7 +414,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingSlider->getParamPtr() != nullptr && existingSlider->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -436,7 +436,7 @@ Component* RhySetKeyboardWithList::refreshComponentForCell(int rowNumber, int co
 			{
 				if (existingToggle->getParamPtr() != nullptr && existingToggle->getParamPtr()->getBlock() == rhythmNoteBlock)
 				{
-					if (isRowSelected) existingComponentToUpdate->grabKeyboardFocus();
+					if (isRowSelected && isShowing()) existingComponentToUpdate->grabKeyboardFocus();
 					return existingComponentToUpdate;
 				}
 				else
@@ -458,7 +458,7 @@ void RhySetKeyboardWithList::cellClicked(int rowNumber, int columnId, const Mous
 {
 	if (columnId!=MuteGrp && columnId < Level && e.mods.isPopupMenu())
 	{
-		int keyNumber = rowNumber + 35;
+		//int keyNumber = rowNumber + 35;
 
 		PopupMenu menu;
 		menu.addCommandItem(applicationCommandManager, initialiseTone);

@@ -59,7 +59,7 @@ WaveformBrowser::WaveformBrowser (AllParts part, int toneNumber, Waveforms::Wave
     m_highlightTextEditor->setScrollbarsShown (true);
     m_highlightTextEditor->setCaretVisible (true);
     m_highlightTextEditor->setPopupMenuEnabled (true);
-    m_highlightTextEditor->setText (String());
+    m_highlightTextEditor->setText ({});
 
     addAndMakeVisible (m_highlightLabel = new Label ("highlightLabel",
                                                      TRANS("Find and Highlight Tags:")));
@@ -85,7 +85,7 @@ WaveformBrowser::WaveformBrowser (AllParts part, int toneNumber, Waveforms::Wave
     m_prevWaveformText->setCaretVisible (false);
     m_prevWaveformText->setPopupMenuEnabled (true);
     m_prevWaveformText->setColour (TextEditor::backgroundColourId, Colour (0xffe5e5e5));
-    m_prevWaveformText->setText (String());
+    m_prevWaveformText->setText ({});
 
     addAndMakeVisible (m_prevWaveformLabel2 = new Label ("prevWaveformLabel",
                                                          TRANS("New Selected Waveform:")));
@@ -103,7 +103,7 @@ WaveformBrowser::WaveformBrowser (AllParts part, int toneNumber, Waveforms::Wave
     m_newWaveformText->setCaretVisible (false);
     m_newWaveformText->setPopupMenuEnabled (true);
     m_newWaveformText->setColour (TextEditor::backgroundColourId, Colour (0xffe5e5e5));
-    m_newWaveformText->setText (String());
+    m_newWaveformText->setText ({});
 
 
     //[UserPreSize]

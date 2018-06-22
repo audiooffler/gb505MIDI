@@ -40,7 +40,7 @@ private:
 class PartInfoPartBlock : public GrooveboxMemoryBlock, public ChangeListener
 {
 public:
-	PartInfoPartBlock::PartInfoPartBlock(AllParts part);
+	PartInfoPartBlock(AllParts part);
 
 	AllParts getPart(){ return m_part; }
 
@@ -73,8 +73,8 @@ class PartInfoBlock : public GrooveboxMemoryBlock
 {
 public:
 	PartInfoBlock();
-
-	PartInfoCommonBlock* getPartInfoCommonBlockPtr() { return dynamic_cast<PartInfoCommonBlock*>(getSubBlock(0)); }
+    
+    PartInfoCommonBlock* getPartInfoCommonBlockPtr();
 
 	PartInfoPartBlock* getPartInfoPartBlockPtr(AllParts part);
 

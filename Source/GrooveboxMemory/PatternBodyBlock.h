@@ -135,7 +135,7 @@ public:
 	void paintRowBackground(Graphics& g, int rowNumber, int width, int height, bool rowIsSelected) override;
 	void paintCell(Graphics& g, int rowNumber, int columnId, int width, int height, bool rowIsSelected) override;
 	String getCellTooltip(int rowNumber, int columnId) override;
-	void timerCallback();
+	void timerCallback() override;
 	void selectedRowsChanged(int lastRowSelected) override;
 	void setTableSelectionMidiOutId(int id);
 	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut; }

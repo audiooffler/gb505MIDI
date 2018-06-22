@@ -28,8 +28,9 @@
 
 //==============================================================================
 ToneMixTableCanvas::ToneMixTableCanvas (const String &componentName, SynthParts part)
-    : Component(componentName), m_dragTonesConstrainer (new ToneLimitsConstrainer()),
-      m_part(part)
+    : Component(componentName),
+      m_part(part),
+      m_dragTonesConstrainer (new ToneLimitsConstrainer())
 {
 
     //[UserPreSize]

@@ -42,7 +42,7 @@ MidiLoggerTab::MidiLoggerTab ()
     m_logTextEditor->setCaretVisible (false);
     m_logTextEditor->setPopupMenuEnabled (true);
     m_logTextEditor->setColour (TextEditor::outlineColourId, Colours::grey);
-    m_logTextEditor->setText (String::empty);
+    m_logTextEditor->setText (String());
 
     addAndMakeVisible (m_grooveboxKeyboard = new GrooveboxKeyboard (state, MidiKeyboardComponent::horizontalKeyboard));
 

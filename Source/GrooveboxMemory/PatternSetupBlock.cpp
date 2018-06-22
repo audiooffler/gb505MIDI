@@ -521,7 +521,7 @@ MidiMessage PatternSetupConfigBlock::getPartMuteSysEx(uint8 deviceId, AllParts p
 {
 	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
 	uint8 quickSysExAddress[2]{0x70, 0x01};
-	uint8 quickSysExData[2]{(uint8)part, patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)part) ? 1 : 0};	// DataL: 0-6,9; DataE: none(0), mute(1)
+    uint8 quickSysExData[2]{(uint8)part, static_cast<uint8>(patternSetupConfigPtr->isPartMute((PatternBodyBlock::PatternPart)part) ? 1 : 0)};	// DataL: 0-6,9; DataE: none(0), mute(1)
 	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
 	return msg->toMidiMessage();
 }
@@ -530,7 +530,7 @@ MidiMessage PatternSetupConfigBlock::getRhythmGroupMuteSysEx(uint8 deviceId, Rhy
 {
 	PatternSetupConfigBlock* patternSetupConfigPtr = grooveboxMemory->getPatternSetupBlock()->getPatternSetupConfigBlockPtr();
 	uint8 quickSysExAddress[2]{0x70, 0x02};
-	uint8 quickSysExData[2]{(uint8)group, patternSetupConfigPtr->isRyhGroupMute(group) ? 1 : 0};	// DataL: 0-7; DataE: none(0), mute(1)
+    uint8 quickSysExData[2]{(uint8)group, static_cast<uint8>(patternSetupConfigPtr->isRyhGroupMute(group) ? 1 : 0)};	// DataL: 0-7; DataE: none(0), mute(1)
 	ScopedPointer<SyxMsg> msg(new SyxMsg(SyxMsg::Type_DT1_Quick, deviceId, quickSysExAddress, quickSysExData, 2, SyxMsg::calcDt1Checksum(quickSysExAddress, 2, quickSysExData, 2)));
 	return msg->toMidiMessage();
 }
@@ -785,12 +785,12 @@ PatternSetupPartBlock::PatternSetupPartBlock(AllParts part) :
 	setupParameter("Part " + partCharacter + " Bank Select MSB", 0x00, 0x00, 0x7F, 81);
 	setupParameter("Part " + partCharacter + " Bank Select LSB", 0x01, 0x00, 0x7F, 0);
 	setupParameter("Part " + partCharacter + " Progam Change PC", 0x02, 0x00, 0x7F, 0);
-	setupParameter("Part " + partCharacter + " Level", 0x03, 0, 127, 115, StringArray(), String::empty, 7, false);
-	setupParameter("Part " + partCharacter + " Pan", 0x04, 0, 127, 64, panPosStrings, String::empty, 10, false);
-	setupParameter("Part " + partCharacter + " Key Shift", 0x05, 16, 112, 64, keyShiftStrings, String::empty, 85, true);
-	setupParameter("Part " + partCharacter + " Delay Send Level", 0x06, 0, 127, 0, StringArray(), String::empty, 94, false);
-	setupParameter("Part " + partCharacter + " Reverb Send Level", 0x07, 0, 127, 0, StringArray(), String::empty, 91, false);
-	setupParameter("Part " + partCharacter + " M-FX Switch", 0x08, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String::empty, 86, true);
+	setupParameter("Part " + partCharacter + " Level", 0x03, 0, 127, 115, StringArray(), String(), 7, false);
+	setupParameter("Part " + partCharacter + " Pan", 0x04, 0, 127, 64, panPosStrings, String(), 10, false);
+	setupParameter("Part " + partCharacter + " Key Shift", 0x05, 16, 112, 64, keyShiftStrings, String(), 85, true);
+	setupParameter("Part " + partCharacter + " Delay Send Level", 0x06, 0, 127, 0, StringArray(), String(), 94, false);
+	setupParameter("Part " + partCharacter + " Reverb Send Level", 0x07, 0, 127, 0, StringArray(), String(), 91, false);
+	setupParameter("Part " + partCharacter + " M-FX Switch", 0x08, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String(), 86, true);
 }
 
 String PatternSetupPartBlock::getBankName(uint8 bankSelMSB00, uint8 bankSelLSB32)

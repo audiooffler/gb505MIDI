@@ -19,6 +19,8 @@
 extern GrooveboxConnector* grooveboxConnector;
 extern UndoManager* undoManager;
 
+class Parameter;
+
 class GrooveboxMemoryBlock
 {
 	friend class Parameter;
@@ -33,7 +35,7 @@ public:
 
 	// creates a grooevbox sysex memory block. the name property must be set by subclass constructrors.
 	// careful when calculating with address or totalSize, interpret as 4 x 7 bit instread of 4 x 8 bit!
-	GrooveboxMemoryBlock(uint32 address, String description = String::empty, String referenceSectionInOperationManual = String::empty, uint32 totalSize = 0);
+    GrooveboxMemoryBlock(uint32 address, String description = {}, String referenceSectionInOperationManual = {}, uint32 totalSize = 0);
 	
 	// virtual constructor makes this class abstract, only concrete subclasses can be instantiated
 	virtual ~GrooveboxMemoryBlock() = 0;		
@@ -53,7 +55,7 @@ public:
 	GrooveboxMemoryBlock* getSubBlock(String name);
 
 	// get by offset address in block
-	Parameter* getParameter(uint16 addressOffset);
+    Parameter* getParameter(uint16 addressOffset);
 
 	// look up parameter that is registered to a MIDI CC number. returns nullptr if none in this block matches the CC number.
 	Parameter* getParameterForCC(uint8 ccNo);
@@ -88,7 +90,7 @@ public:
 	void addSubBlock(GrooveboxMemoryBlock* subBlock);
 
 	// add, set (if addressOffset already used) or delete (if addressOffset already used and name is empty)
-	void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default = 0, StringArray displayedValues = StringArray(), String description = String::empty, uint8 cc = 102, bool ccIsMode2Only = false);
+    void setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 defaultVal = 0, StringArray displayedValues = StringArray(), String description = {}, uint8 cc = 102, bool ccIsMode2Only = false);
 
 	uint8 getRawDataByte(uint32 addressOffset){ return addressOffset < m_data.getSize() ? m_data[addressOffset] : 0; }
 

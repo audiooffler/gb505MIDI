@@ -16,7 +16,7 @@
 // TODO: Voice Reserve in Pattern Setup also?
 PartInfoCommonBlock::PartInfoCommonBlock() :
 	GrooveboxMemoryBlock(0x01000000, "Effects Setup, Voice Reserve", "1-2-1", 0x44),
-	m_EffectDescription(String::empty)
+	m_EffectDescription(String())
 {
 	m_name = "Part Info Common";
 	
@@ -39,7 +39,7 @@ PartInfoCommonBlock::PartInfoCommonBlock() :
 	StringArray jv2080EfxSources = StringArray::fromTokens("PERFORM	1 2 3 4 5 6 7 8 9 11 12 13 14 15 16", false);
 	setupParameter("Reserved", 0x0C, 0, 15, 0, jv2080EfxSources, "JV-2080 Performance EFX-A Source");
 
-	StringArray mFxTypeNameStrings(StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", String::empty));
+	StringArray mFxTypeNameStrings(StringArray::fromTokens("4BAND EQ,SPECTRUM,ENHANCER,OVERDRIVE,DISTORTION,LO-FI,NOISE,RADIO TUING,PHONOGRAPH,COMPRESSOR,LIMITER,SLICER,TREMOLO,PHASER,CHORUS,SPACE-D,TETRA CHORUS,FLANGER,STEP FLANGER,SHORT DELAY,AUTO PAN,FB PITCH SHIFTER,REVERB,GATE REVERB,ISOLATOR", ",", String()));
 	setupParameter("M-FX Type", 0x0D, 0, 24, 0, mFxTypeNameStrings, "Multi-Effects Type");
 	setupParameter("M-FX Parameter 1", 0x0E, 0, 127, 0);	// set by refreshParametersForMFXTypeValue
 	setupParameter("M-FX Parameter 2", 0x0F, 0, 127, 15);
@@ -577,7 +577,7 @@ void PartInfoCommonBlock::refreshParametersForMFXTypeValue(uint8 mFXTypeIndex)
 		setupParameter("", 0x19, 0, 127);
 		break;
 	default:
-		m_EffectDescription = String::empty;
+		m_EffectDescription = String();
 		setupParameter("M-FX Parameter 1", 0x0E, 0, 127, 0);
 		setupParameter("M-FX Parameter 2", 0x0F, 0, 127, 15);
 		setupParameter("M-FX Parameter 3", 0x10, 0, 127, 0);
@@ -698,16 +698,16 @@ PartInfoPartBlock::PartInfoPartBlock(AllParts part) :
 	setupParameter("Patch Number LS Nibble", 0x05, 0, 0xF);*/
 	String partCharacter(part == PartR ? String::charToString('R') : String::charToString((char)49 + (char)part));	// 49 is ascii character '1'
 
-	setupParameter("Part " + partCharacter + " Level", 0x06, 0, 127, 127, StringArray(), String::empty, 7, false);
-	setupParameter("Part " + partCharacter + " Pan", 0x07, 0, 127, 64, panPosStrings, String::empty, 10, false);
-	setupParameter("Part " + partCharacter + " Key Shift", 0x08, 0, 96, 48, keyShiftStrings, String::empty, 85, true);
+	setupParameter("Part " + partCharacter + " Level", 0x06, 0, 127, 127, StringArray(), String(), 7, false);
+	setupParameter("Part " + partCharacter + " Pan", 0x07, 0, 127, 64, panPosStrings, String(), 10, false);
+	setupParameter("Part " + partCharacter + " Key Shift", 0x08, 0, 96, 48, keyShiftStrings, String(), 85, true);
 	setupParameter("Part " + partCharacter + " Fine Tune", 0x09, 0, 100, 50, fineTuneStrings);
-	setupParameter("Part " + partCharacter + " M-FX Switch", 0x0A, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String::empty, 86, true);
+	setupParameter("Part " + partCharacter + " M-FX Switch", 0x0A, 0, 4, 0, StringArray::fromTokens("OFF,ON, , ,RHY", ",", ""), String(), 86, true);
 
 	setupParameter("Reserved", 0x0B, 0, 127, 127, StringArray(), "JV-2080 Performance Part Mix/EFX Send Level");
 
-	setupParameter("Delay Send Level", 0x0C, 0, 127, 0, StringArray(), String::empty, 94, false);
-	setupParameter("Reverb Send Level", 0x0D, 0, 127, 0, StringArray(), String::empty, 91, false);
+	setupParameter("Delay Send Level", 0x0C, 0, 127, 0, StringArray(), String(), 94, false);
+	setupParameter("Reverb Send Level", 0x0D, 0, 127, 0, StringArray(), String(), 91, false);
 
 	setupParameter("Reserved", 0x0E, 0, 1, 1, StringArray(), "JV-2080 Performance Part Receive Program Change Switch");
 	setupParameter("Reserved", 0x0F, 0, 1, 1, StringArray(), "JV-2080 Performance Part Receive Volume Switch");
@@ -779,7 +779,7 @@ String PartInfoPartBlock::getPatchGroupNameByTypeAndID(uint8 patchGroupType, uin
 		else if (patchGroupType == 3 && patchGroupId == 6) return "Card D"; // Card: guessed id value! no documentation found about MC-505/JX-305 group ids
 	}
 
-	return String::empty;
+	return String();
 }
 
 void PartInfoPartBlock::getBankSelMSB_LSBforGroup(uint8 patchGroupType, uint8 patchGroupId, uint8& msb, uint8& lsb, GrooveboxConnector::GrooveboxModel model /*= GrooveboxConnector::Model_MC_307*/)
@@ -1041,6 +1041,11 @@ PartInfoBlock::PartInfoBlock() :
 	addSubBlock(new PartInfoPartBlock(Part6));
 	addSubBlock(new PartInfoPartBlock(Part7));
 	addSubBlock(new PartInfoPartBlock(PartR));
+}
+
+PartInfoCommonBlock* PartInfoBlock::getPartInfoCommonBlockPtr()
+{
+    return dynamic_cast<PartInfoCommonBlock*>(getSubBlock(0));
 }
 
 PartInfoPartBlock* PartInfoBlock::getPartInfoPartBlockPtr(AllParts part)

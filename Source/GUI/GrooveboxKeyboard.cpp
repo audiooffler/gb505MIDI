@@ -85,25 +85,25 @@ void GrooveboxKeyboard::resized()
 //[MiscUserCode] You can add your own definitions of your custom methods or any other code here...
 String GrooveboxKeyboard::getWhiteNoteText(const int /*midiNoteNumber*/)
 {
-	return String::empty;
+	return String();
 }
 
-void GrooveboxKeyboard::drawWhiteNote(int midiNoteNumber, Graphics &g, int x, int y, int w, int h, bool isDown, bool isOver, const Colour &/*lineColour*/, const Colour &textColour)
+void GrooveboxKeyboard::drawWhiteNote(int midiNoteNumber, Graphics &g, Rectangle<float> area, bool isDown, bool isOver, Colour /*lineColour*/, Colour textColour)
 {
 	//MidiKeyboardComponent::drawWhiteNote(midiNoteNumber, g, x, y, w, h, isDown, isOver, lineColour, textColour);
 	g.setColour(Colours::black);
-	g.drawImageWithin(isDown ? cachedImage_whiteKeyOn_png : cachedImage_whiteKeyOff_png, x, 0, 30, 35,RectanglePlacement::yTop, false);
+	g.drawImageWithin(isDown ? cachedImage_whiteKeyOn_png : cachedImage_whiteKeyOff_png, area.getX(), 0, 30, 35,RectanglePlacement::yTop, false);
 
 	g.setColour(Colour(Colours::black).withAlpha(0.2f));
-	if (isOver) g.fillRect(x, 0, 30, 104);
+	if (isOver) g.fillRect(area.getX(), 0.0f, 30.0f, 104.0f);
 
 	g.setColour(Colours::black.withAlpha(0.5f));
 	g.setFont(Font(jmin(12.0f, getKeyWidth() *0.9f)).withHorizontalScale(0.8f));
-	g.drawFittedText(MidiMessage::getMidiNoteName(midiNoteNumber, true, true, 4), x, y+10, 30, 35-10, Justification::centred, 1);
-	g.drawLine((float)x + 30.0f, (float)35.0f, (float)x + 30.0f, 104.0f);
+	g.drawFittedText(MidiMessage::getMidiNoteName(midiNoteNumber, true, true, 4), area.getX(), area.getY()+10, 30, 35-10, Justification::centred, 1);
+	g.drawLine(area.getX() + 30.0f, (float)35.0f, area.getX() + 30.0f, 104.0f);
 
-	w = 30;
-	h = 104;
+	area.setWidth(30);
+	area.setHeight(104);
 
 	String name(MidiMessage::getRhythmInstrumentName(midiNoteNumber));
 	if (name.isNotEmpty())
@@ -116,30 +116,30 @@ void GrooveboxKeyboard::drawWhiteNote(int midiNoteNumber, Graphics &g, int x, in
 		else if (getOrientation() == verticalKeyboardFacingRight)
 			justification = Justification::centredRight;
 		g.saveState();
-		g.addTransform(AffineTransform::rotation(-0.5f*float_Pi, x+0.5f*(float)w, (float)y+(float)h-(float)0.5*(float)w));
-		g.drawFittedText(name, x+4, (int)(y - 0.5*w + 6.0), h-40, h, justification, 1);
+		g.addTransform(AffineTransform::rotation(-0.5f*float_Pi, area.getX()+0.5f*area.getWidth(), area.getY()+area.getHeight()-0.5*area.getWidth()));
+		g.drawFittedText(name, area.getX()+4, (int)(area.getY() - 0.5*area.getWidth()+ 6.0), area.getHeight()-40, area.getHeight(), justification, 1);
 		g.restoreState();
 	}
 }
 
-void GrooveboxKeyboard::drawBlackNote(int midiNoteNumber, Graphics &g, int x, int y, int w, int h, bool isDown, bool isOver, const Colour &/*noteFillColour*/)
+void GrooveboxKeyboard::drawBlackNote(int midiNoteNumber, Graphics &g, Rectangle<float> area, bool isDown, bool isOver, Colour /*noteFillColour*/)
 {
 	g.setColour(Colours::black);
-	g.drawImageWithin(isDown ? cachedImage_blackKeyOn_png : cachedImage_blackKeyOff_png, x, 0, 30, 35, RectanglePlacement::yTop, false);
+	g.drawImageWithin(isDown ? cachedImage_blackKeyOn_png : cachedImage_blackKeyOff_png, area.getX(), 0, 30, 35, RectanglePlacement::yTop, false);
 
 	g.setColour(Colour(Colours::white).withAlpha(0.2f));
-	if (isOver) g.fillRect(x, 0, 30, 35);
+	if (isOver) g.fillRect(area.getX(), 0.0f, 30.0f, 35.0f);
 	g.setColour(Colour(Colours::black).withAlpha(0.2f));
-	if (isOver) g.fillRect(x, 35, 30, 104);
+	if (isOver) g.fillRect(area.getX(), 35.0f, 30.0f, 104.0f);
 
 	g.setColour(Colour(Colours::white).withAlpha(0.5f));
 	g.setFont(Font(jmin(12.0f, getKeyWidth() *0.9f)).withHorizontalScale(0.8f));
-	g.drawFittedText(MidiMessage::getMidiNoteName(midiNoteNumber, true, true, 4), x, y+10, 30, 35-10, Justification::centred, 1);
+	g.drawFittedText(MidiMessage::getMidiNoteName(midiNoteNumber, true, true, 4), area.getX(), area.getY()+10, 30, 35-10, Justification::centred, 1);
 	g.setColour(Colour(Colours::black).withAlpha(0.5f));
-	g.drawLine((float)x + 30.0f, 35.0f, (float)x + 30.0f, 104.0f);
+	g.drawLine(area.getX() + 30.0f, 35.0f, area.getX() + 30.0f, 104.0f);
 
-	w = 30;
-	h = 104;
+	area.setWidth(30);
+	area.setHeight(104);
 
 	String name(MidiMessage::getRhythmInstrumentName(midiNoteNumber));
 	if (name.isNotEmpty())
@@ -152,13 +152,13 @@ void GrooveboxKeyboard::drawBlackNote(int midiNoteNumber, Graphics &g, int x, in
 		else if (getOrientation() == verticalKeyboardFacingRight)
 			justification = Justification::centredRight;
 		g.saveState();
-		g.addTransform(AffineTransform::rotation(-0.5f*float_Pi, (float)x + 0.5f*(float)w, (float)y + (float)h - 0.5f*(float)w));
-		g.drawFittedText(name, x + 4, (int)(y - 0.5*w + 6), h-40, h, justification, 1);
+		g.addTransform(AffineTransform::rotation(-0.5f*float_Pi, area.getX() + 0.5f*area.getWidth(), area.getY() + area.getHeight()- 0.5f*area.getWidth()));
+		g.drawFittedText(name, area.getX() + 4, (int)(area.getY() - 0.5*area.getWidth() + 6), area.getHeight()-40, area.getHeight(), justification, 1);
 		g.restoreState();
 	}
 }
 
-void GrooveboxKeyboard::getKeyPosition(int midiNoteNumber, float keyWidth, int &x, int &w) const
+Range<float> GrooveboxKeyboard::getKeyPosition(int midiNoteNumber, float keyWidth) const
 {
 	static const float notePos[] = {
 		0.0f, 1.0f,
@@ -172,8 +172,11 @@ void GrooveboxKeyboard::getKeyPosition(int midiNoteNumber, float keyWidth, int &
 	const int octave = midiNoteNumber / 12;
 	const int note = midiNoteNumber % 12;
 
-	x = roundToInt(octave * 12.0f * keyWidth + notePos[note] * keyWidth);
-	w = (int)keyWidth;
+    Range<float> result;
+    
+    result.setStart(octave * 12.0f * keyWidth + notePos[note] * keyWidth);
+    result.setLength(keyWidth);
+    return result;
 }
 
 bool GrooveboxKeyboard::hitTest(int /*x*/, int y)

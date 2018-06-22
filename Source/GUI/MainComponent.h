@@ -82,7 +82,7 @@ public:
 	class CustomViewport : public Viewport
 	{
 	public:
-		CustomViewport(const String &componentName = String::empty) : Viewport(componentName) {}
+		CustomViewport(const String &componentName = String()) : Viewport(componentName) {}
 		void paint(Graphics &g)
 		{
 			g.fillAll(Colour(0xff303030));

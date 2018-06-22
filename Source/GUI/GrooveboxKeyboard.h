@@ -43,22 +43,22 @@ public:
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
-	String getWhiteNoteText(const int /*midiNoteNumber*/);
-	void drawWhiteNote(int midiNoteNumber, Graphics &g, int x, int y, int w, int h, bool isDown, bool isOver, const Colour &/*lineColour*/, const Colour &textColour);
-	void drawBlackNote(int midiNoteNumber, Graphics &g, int x, int y, int w, int h, bool isDown, bool isOver, const Colour &/*noteFillColour*/);
-	bool hitTest(int /*x*/, int y);
-	void getKeyPosition(int midiNoteNumber, float keyWidth, int &x, int &w) const;
-	void mouseMove(const MouseEvent& e);
-	void mouseDrag(const MouseEvent& e);
-	void mouseDown(const MouseEvent& e);
-	void mouseUp(const MouseEvent& e);
-	void mouseEnter(const MouseEvent& e);
-	void mouseExit(const MouseEvent& e);
-	void mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& details);
+	String getWhiteNoteText(const int /*midiNoteNumber*/) override;
+	void drawWhiteNote(int midiNoteNumber, Graphics &g, Rectangle<float> area, bool isDown, bool isOver, Colour /*lineColour*/, Colour textColour) override;
+	void drawBlackNote(int midiNoteNumber, Graphics &g, Rectangle<float> area, bool isDown, bool isOver, Colour /*noteFillColour*/) override;
+	bool hitTest(int /*x*/, int y) override;
+	Range<float> getKeyPosition(int midiNoteNumber, float keyWidth) const override;
+	void mouseMove(const MouseEvent& e) override;
+	void mouseDrag(const MouseEvent& e) override;
+	void mouseDown(const MouseEvent& e) override;
+	void mouseUp(const MouseEvent& e) override;
+	void mouseEnter(const MouseEvent& e) override;
+	void mouseExit(const MouseEvent& e) override;
+	void mouseWheelMove(const MouseEvent& e, const MouseWheelDetails& details) override;
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
     // Binary resources:
     static const char* whiteKeyOff_png;

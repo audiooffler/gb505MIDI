@@ -69,7 +69,7 @@ void ParameterSlider::resized()
 {
     //[UserResized] Add your own custom resize handling here..
 	Slider::resized();
-	if (getTextBoxPosition() == Slider::NoTextBox) setPopupDisplayEnabled(true, this->getParentComponent());
+	if (getTextBoxPosition() == Slider::NoTextBox) setPopupDisplayEnabled(true, true, this->getParentComponent());
     //[/UserResized]
 }
 

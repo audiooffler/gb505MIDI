@@ -39,7 +39,7 @@
                                                                     //[/Comments]
 */
 class DelayEditor  : public Component,
-                     public SliderListener
+                     public Slider::Listener
 {
 public:
     //==============================================================================

@@ -46,7 +46,7 @@ public:
 
 	/*
 	m_dataArray = &m_completeSysEx[5];
-	/*  // might be something like
+	//   might be something like
 	m_completeSysEx[5],											// ID number (Roland = 41H)
 	m_completeSysEx[6], m_completeSysEx[7],								// Device family code (0BH 01H)
 	m_completeSysEx[8], m_completeSysEx[9],								// Device family number code (01H 00H)

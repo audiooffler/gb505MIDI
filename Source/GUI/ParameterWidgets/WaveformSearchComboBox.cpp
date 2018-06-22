@@ -50,6 +50,7 @@ WaveformSearchComboBox::WaveformSearchComboBox (const String& componentName, All
 
 
     //[Constructor] You can add your own custom stuff here..
+    onChange= [this]{labelTextChanged();};
     //[/Constructor]
 }
 
@@ -280,11 +281,10 @@ void WaveformSearchComboBox::populateComboboxItems(bool initAll)
 		if (!curIsSpace)
 		{
 			if (curIsSpecial ||				// insert space before special char
-				curIsNum && !preIsNum ||	// at start of number
-				curIsUpper && preIsLower || // camel case word start
-				curIsLetter && !preIsLetter ||  // word of letters starts
-				curIsUpper && preIsUpper && sucIsLower)
-
+                (curIsNum && !preIsNum) ||	// at start of number
+                (curIsUpper && preIsLower) || // camel case word start
+                (curIsLetter && !preIsLetter) ||  // word of letters starts
+                (curIsUpper && preIsUpper && sucIsLower))
 			{
 				searchText = searchText.substring(0, i) + " " + searchText.substring(i, searchText.length());
 			}
@@ -347,9 +347,9 @@ void WaveformSearchComboBox::showPopup()
 	ParameterComboBox::showPopup();
 }
 
-void WaveformSearchComboBox::labelTextChanged(Label *label)
+void WaveformSearchComboBox::labelTextChanged()
 {
-	ComboBox::labelTextChanged(label);
+	//ComboBox::labelTextChanged(label);
 	showPopup();
 }
 

@@ -45,8 +45,8 @@ Describe your class and how it works here!
                                                                     //[/Comments]
 */
 class ToneDelayEditor  : public Component,
-                         public ComboBoxListener,
-                         public SliderListener
+                         public ComboBox::Listener,
+                         public Slider::Listener
 {
 public:
     //==============================================================================

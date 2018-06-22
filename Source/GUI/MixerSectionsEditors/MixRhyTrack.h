@@ -46,8 +46,8 @@
 */
 class MixRhyTrack  : public Component,
                      public ChangeListener,
-                     public SliderListener,
-                     public ButtonListener
+                     public Slider::Listener,
+                     public Button::Listener
 {
 public:
     //==============================================================================

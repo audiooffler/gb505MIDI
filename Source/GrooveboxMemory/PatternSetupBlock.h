@@ -110,7 +110,7 @@ private:
 class PatternSetupEffectsBlock : public GrooveboxMemoryBlock, public ChangeListener
 {
 public:
-	static const StringArray PatternSetupEffectsBlock::mFxTypeNameStrings;
+	static const StringArray mFxTypeNameStrings;
 	PatternSetupEffectsBlock();
 	MidiMessageSequence getM_FX_SetupMidiMessageSequence(uint8 deviceId);
 	MidiMessageSequence getReverbSetupMidiMessageSequence(uint8 deviceId);

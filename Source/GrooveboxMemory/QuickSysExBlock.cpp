@@ -37,7 +37,7 @@ QuickSysExPartBlock::QuickSysExPartBlock(SynthParts part) :
 {
 	m_name = "Quick SysEx Part " + String(part + 1);
 
-	StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String::empty));
+	StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String()));
 	String lfoWaveformDescription(String("Select the LFO output waveform. The sound will be modulated in the same shape as the selected waveform.\r\n") +
 		"Available Settings :\r\n" +
 		"- TRI(triangle) : The sound will be modulated continuously.This is a frequently - used waveform, and is suited for effects such as vibrato.\r\n" +
@@ -142,7 +142,7 @@ QuickSysExRhythmBlock::QuickSysExRhythmBlock(RhythmGroup rhyGrp) :
 {
 	m_name = "Quick SysEx Rhythm";
 
-	StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String::empty));
+	StringArray lfoWaveforms(StringArray::fromTokens("TRI;SIN;SAW;SQR;TRP;S&H;RND;CHAOS", ";", String()));
 	String lfoWaveformDescription(String("Select the LFO output waveform. The sound will be modulated in the same shape as the selected waveform.\r\n") +
 		"Available Settings :\r\n" +
 		"- TRI(triangle) : The sound will be modulated continuously.This is a frequently - used waveform, and is suited for effects such as vibrato.\r\n" +

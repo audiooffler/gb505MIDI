@@ -28,7 +28,7 @@
 
 //==============================================================================
 ParameterTextLabel::ParameterTextLabel (const String &componentName)
-    : Label(componentName, String::empty)
+    : Label(componentName, String())
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -130,7 +130,7 @@ void ParameterTextLabel::changeListenerCallback(ChangeBroadcaster *source)
 	if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
 		// rebuild gui display text
-		String newText(String::empty);
+		String newText;
 		int i = 0;
 		char c = 0;
 		for (i = 0; i < m_params.size(); i++)
@@ -161,7 +161,7 @@ BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="ParameterTextLabel" componentName=""
                  parentClasses="public Label, public ChangeListener" constructorParams="const String &amp;componentName"
-                 variableInitialisers="Label(componentName, String::empty)" snapPixels="8"
+                 variableInitialisers="Label(componentName, {})" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="72" initialHeight="20">
   <BACKGROUND backgroundColour="0">

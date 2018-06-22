@@ -35,14 +35,14 @@ public:
 		case WAVES_B: return "WAVES_B";
 		case WAVES_C_JX305: return "WAVES_C_JX305";
 		case WAVES_C_MC307: return "WAVES_C_MC307";
-		default: return String::empty;
+		default: return String();
 		}
 	}
 	
 	static String getGroupFileName(WaveGroup group)
 	{
 		String groupName(getGroupName(group));
-		return groupName.isNotEmpty() ? groupName + ".txt" : String::empty;
+		return groupName.isNotEmpty() ? groupName + ".txt" : String();
 	}
 
 	static uint8 getGroupId(WaveGroup group)
@@ -96,7 +96,7 @@ private:
 	StringArray m_aWaveNames, m_bWaveNames, m_cWaveNames;
 	StringArray m_aWaveLongNames, m_bWaveLongNames, m_cWaveLongNames;
 
-	void Waveforms::loadWaveforms(WaveGroup group);
+	void loadWaveforms(WaveGroup group);
 };
 
 #endif  // WAVEFORMS_H_INCLUDED

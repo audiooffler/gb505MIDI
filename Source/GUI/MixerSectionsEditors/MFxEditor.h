@@ -41,8 +41,8 @@
 */
 class MFXEditor  : public Component,
                    public ChangeListener,
-                   public SliderListener,
-                   public ComboBoxListener
+                   public Slider::Listener,
+                   public ComboBox::Listener
 {
 public:
     //==============================================================================

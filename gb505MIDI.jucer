@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="qabmW6" name="gb505MIDI" projectType="guiapp" version="1.0.0"
               bundleIdentifier="de.spindler.gbMIDI" includeBinaryInAppConfig="1"
-              jucerVersion="4.1.0">
+              jucerVersion="5.3.2" cppLanguageStandard="11">
   <MAINGROUP id="n8CjoE" name="gb505MIDI">
     <GROUP id="{AC126E82-0D80-6CBE-EF59-78D17CC82F86}" name="Resources">
       <FILE id="zf7hCa" name="Audio-x-midi.svg" compile="0" resource="1"
@@ -402,6 +402,26 @@
         <MODULEPATH id="juce_opengl" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
       </MODULEPATHS>
     </VS2013>
+    <XCODE_MAC targetFolder="Builds/MacOSX">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug"/>
+        <CONFIGURATION isDebug="0" name="Release"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_opengl" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_graphics" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_events" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_core" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../in-harmony/main/libs/juce/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../in-harmony/main/libs/juce/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
   </EXPORTFORMATS>
   <MODULES>
     <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
@@ -418,4 +438,7 @@
     <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
   </MODULES>
   <JUCEOPTIONS/>
+  <LIVE_SETTINGS>
+    <OSX/>
+  </LIVE_SETTINGS>
 </JUCERPROJECT>

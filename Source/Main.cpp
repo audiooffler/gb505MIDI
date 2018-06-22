@@ -46,7 +46,9 @@ public:
     //==============================================================================
     void initialise (const String& /*commandLine*/)
     {
+#ifdef JUCE_WINDOWS
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+#endif
 		//_CrtSetBreakAlloc(9554);
 		//_CrtSetBreakAlloc(9553);
 		//_CrtSetBreakAlloc(9552);
@@ -64,6 +66,7 @@ public:
 		appProperties = new ApplicationProperties();
 		PropertiesFile::Options options;
 		options.applicationName = getApplicationName();
+        options.osxLibrarySubFolder = "Application Support";
 		appProperties->setStorageParameters(options);
 		undoManager = new UndoManager();
 		midiInputDevice = nullptr;

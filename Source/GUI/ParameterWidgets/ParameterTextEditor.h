@@ -41,7 +41,7 @@ class ParameterTextEditor  : public TextEditor,
 {
 public:
     //==============================================================================
-    ParameterTextEditor (const String &componentName=String::empty);
+    ParameterTextEditor (const String &componentName={});
     ~ParameterTextEditor();
 
     //==============================================================================

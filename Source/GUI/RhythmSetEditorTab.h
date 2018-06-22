@@ -47,7 +47,7 @@
 */
 class RhythmSetEditorTab  : public Component,
                             public ChangeListener,
-                            public ButtonListener
+                            public Button::Listener
 {
 public:
     //==============================================================================

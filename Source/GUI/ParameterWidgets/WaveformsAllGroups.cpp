@@ -34,7 +34,7 @@ extern Waveforms* waveForms;
 
 //==============================================================================
 WaveformsAllGroups::WaveformsAllGroups (GrooveboxConnector::GrooveboxModel grooveboxModel, AllParts part, int toneNumber)
-    : m_grooveboxModel (grooveboxModel), m_part (part), m_toneNumber (toneNumber)
+    : m_part (part), m_toneNumber (toneNumber), m_grooveboxModel (grooveboxModel)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
@@ -302,7 +302,7 @@ void WaveformsAllGroups::buttonClicked(Button* button)
 	//}
 }
 
-void WaveformsAllGroups::addListenerToAllButtons(ButtonListener* listener)
+void WaveformsAllGroups::addListenerToAllButtons(Button::Listener* listener)
 {
 	for (int i = 0; i < allButtonReferences.size(); i++)
 	{

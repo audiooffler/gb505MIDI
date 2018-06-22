@@ -121,7 +121,7 @@ void ParameterTextEditor::changeListenerCallback(ChangeBroadcaster *source)
 	if (Parameter* param = dynamic_cast<Parameter*>(source))
 	{
 		// rebuild gui display text
-		String newText(String::empty);
+		String newText;
 		int i = 0;
 		char c = 0;
 		for (i = 0; i < m_params.size(); i++)
@@ -183,7 +183,7 @@ BEGIN_JUCER_METADATA
 
 <JUCER_COMPONENT documentType="Component" className="ParameterTextEditor" componentName=""
                  parentClasses="public TextEditor, public TextEditor::Listener, public ChangeListener"
-                 constructorParams="const String &amp;componentName=String::empty"
+                 constructorParams="const String &amp;componentName={}"
                  variableInitialisers="TextEditor(componentName)" snapPixels="8"
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="0"
                  initialWidth="150" initialHeight="24">

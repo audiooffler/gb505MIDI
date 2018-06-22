@@ -52,13 +52,13 @@ public:
 	double getValueFromText(const String& text) override;
 	String getTooltip() override;
 	void setTooltip(const String &newTooltip) override;
-	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
-	void valueChanged();
+	void changeListenerCallback(ChangeBroadcaster *source) override;	// parameter changes of groovebox memory block
+	void valueChanged() override;
 
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (Graphics& g) override;
+    void resized() override;
 
 
 

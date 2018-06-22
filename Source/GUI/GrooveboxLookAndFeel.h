@@ -38,7 +38,7 @@ public:
 		m_asciiWithNoteValuesFont = Font(m_asciiWithNoteValuesTypeface);
 	}
 
-	void drawRotarySlider(Graphics &g, int , int , int width, int height, float sliderPosProportional, float , float , Slider &)
+	void drawRotarySlider(Graphics &g, int , int , int width, int height, float sliderPosProportional, float , float , Slider &) override
 	{
 		uint8 frameIndex((uint8)(sliderPosProportional * 127));
 		int outputSize(jmin(width, height));
@@ -53,7 +53,7 @@ public:
 		g.drawImage(*img, posX, posY, outputSize, outputSize, frameIndex * frameSize, 0, frameSize, frameSize);
 	}
 
-	void drawGroupComponentOutline(Graphics& g, int width, int height, const String& text, const Justification& position, GroupComponent& group)
+	void drawGroupComponentOutline(Graphics& g, int width, int height, const String& text, const Justification& position, GroupComponent& group) override
 	{
 		if (dynamic_cast<PanelGroupGrey*>(&group)!= nullptr ||
 			dynamic_cast<PanelGroupTransp*>(&group) != nullptr ||
@@ -69,14 +69,14 @@ public:
 
 	Typeface* getAsciiWithNoteValuesTypeface() { return m_asciiWithNoteValuesTypeface; }
 
-	Label* createSliderTextBox(Slider& slider)
+	Label* createSliderTextBox(Slider& slider) override
 	{
 		Label* l = LookAndFeel_V3::createSliderTextBox(slider);
 		if (l != nullptr) l->setFont(m_asciiWithNoteValuesFont);
 		return l;
 	}
 	
-	void drawToggleButton(Graphics& g, ToggleButton& button, bool isMouseOverButton, bool isButtonDown)
+	void drawToggleButton(Graphics& g, ToggleButton& button, bool isMouseOverButton, bool isButtonDown) override
 	{
 		if (button.hasKeyboardFocus(true))
 		{
@@ -122,7 +122,7 @@ public:
 		bool 	isEnabled,
 		bool 	isMouseOverButton,
 		bool 	isButtonDown
-		)
+		) override
     {
         if (ParameterLedSwitch* ledSwitch = dynamic_cast<ParameterLedSwitch*>(c.getParentComponent()))
 	{
@@ -166,7 +166,7 @@ public:
 		return tl;
 	}
 
-	void drawTooltip(Graphics &g, const String &text, int width, int height)
+	void drawTooltip(Graphics &g, const String &text, int width, int height) override
 	{
 		g.fillAll(findColour(TooltipWindow::backgroundColourId));
 

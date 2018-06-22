@@ -46,10 +46,10 @@
                                                                     //[/Comments]
 */
 class PitchEditorAdvanced  : public Component,
-                             public SliderListener,
-                             public LabelListener,
-                             public ButtonListener,
-                             public ComboBoxListener
+                             public Slider::Listener,
+                             public Label::Listener,
+                             public Button::Listener,
+                             public ComboBox::Listener
 {
 public:
     //==============================================================================

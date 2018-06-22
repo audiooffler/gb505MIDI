@@ -36,7 +36,7 @@
                                                                     //[/Comments]
 */
 class GrooveboxSplashScreen  : public SplashScreen,
-                               public ButtonListener
+                               public Button::Listener
 {
 public:
     //==============================================================================

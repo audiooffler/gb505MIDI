@@ -55,11 +55,11 @@ public:
 	bool getHighLight();
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
-    void mouseEnter (const MouseEvent& e);
-    void mouseDoubleClick (const MouseEvent& e);
-    bool keyPressed (const KeyPress& key);
+    void paint (Graphics& g) override;
+    void resized() override;
+    void mouseEnter (const MouseEvent& e) override;
+    void mouseDoubleClick (const MouseEvent& e) override;
+    bool keyPressed (const KeyPress& key) override;
 
 
 

@@ -19,23 +19,23 @@ extern MidiOutput* midiOutputDevice;
 
 // careful when calculating with addresses or sizes, interpret as 4 x 7 bit instread of 4 x 8 bit!
 // max must not exceed 127 if value is meant to be interpreted as 7 bit midi data. larger max values are used for msb/lsb nibbled 8bit values (0..255 as 2x4 bit in 2 7bit bytes)
-Parameter::Parameter(GrooveboxMemoryBlock* parentBlockPtr, String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default, StringArray displayedValues, String description, uint8 cc, bool ccIsMode2Only) :
-m_parentBlockPtr(parentBlockPtr),
+Parameter::Parameter(GrooveboxMemoryBlock* parentBlockPtr, String name, uint16 addressOffset, uint8 min, uint8 max, uint8 defaultValue, StringArray displayedValues, String description, uint8 cc, bool ccIsMode2Only) :
 m_name(name),
 m_addressOffset(addressOffset),
 m_min(min > max ? max - 1 : min),
 m_max(max),
-m_default(default),
+m_default(defaultValue),
 m_displayedValues(displayedValues),
 m_description(description),
 m_cc(cc),
-m_ccIsMode2Only(ccIsMode2Only)
+m_ccIsMode2Only(ccIsMode2Only),
+m_parentBlockPtr(parentBlockPtr)
 {
 	// if none are given calculate simple text representations for min..max as int values to strings
 	if (m_displayedValues.size() == 0)
 	{
 		// empty display for values below valid range
-		for (int i = 0; i < m_min; i++) m_displayedValues.add(String::empty);
+		for (int i = 0; i < m_min; i++) m_displayedValues.add(String());
 		// add default value strings
 		for (int i = m_min; i <= m_max; i++)
 		{
@@ -43,7 +43,7 @@ m_ccIsMode2Only(ccIsMode2Only)
 		}
 		// [] operator already returns empty string for indexes above array size
 	}
-	setValue(default, Init);
+	setValue(defaultValue, Init);
 }
 
 // --- getter functions: ---
@@ -66,7 +66,7 @@ uint8 Parameter::getValue()
 	//	m_parentBlockPtr->m_data[m_addressOffset] & 0xF) << 4 | (m_parentBlockPtr->m_data[m_addressOffset + 1] & 0xF)));
 	//}
 	return (m_max > 127) ?
-		(m_parentBlockPtr->m_data[m_addressOffset] & 0xF) << 4 | m_parentBlockPtr->m_data[m_addressOffset + 1] & 0xF :	// nibbled 8-bit (0..255)
+        (m_parentBlockPtr->m_data[m_addressOffset] & 0xF) << 4 | (m_parentBlockPtr->m_data[m_addressOffset + 1] & 0xF) :	// nibbled 8-bit (0..255)
 		m_parentBlockPtr->m_data[m_addressOffset] & 0x7F;																// simple 7-bit value (0..127)
 }
 
@@ -78,12 +78,12 @@ StringArray Parameter::getDisplayedValues()
 String Parameter::getDisplayedValue()
 {
 	uint8 value(getValue());
-	return (value >= m_min && value <= m_max) ? m_displayedValues[value] : String::empty;
+	return (value >= m_min && value <= m_max) ? m_displayedValues[value] : String();
 }
 
 String Parameter::getDisplayedValue(uint8 value)
 {
-	return (value >= m_min && value <= m_max) ? m_displayedValues[value] : String::empty;
+	return (value >= m_min && value <= m_max) ? m_displayedValues[value] : String();
 }
 
 String Parameter::getDescription() { return m_description; }
@@ -177,7 +177,10 @@ void Parameter::setValue(uint8 value, ChangeSource source)
 				"LFO Rate settings are common to PITCH (pitch), FILTER (brightness)and AMP(volume).The rate cannot be set independently for these three.");
 			if (m_addressOffset == 0x34)
 			{
-				patchToneBlock->setupParameter("LFO1 Rate", 0x2F, 0, max, 0, arr, lfoRateDescription);
+                // String name, uint16 addressOffset, uint8 min, uint8 max, uint8 defaultValue, StringArray displayedValues, String description, uint8 cc, bool ccIsMode2Only
+                ((GrooveboxMemoryBlock*)patchToneBlock)->setupParameter("", 10, 0, 128);
+
+                patchToneBlock->setupParameter("LFO1 Rate", 0x2F, 0, max, 0, arr, lfoRateDescription,102,false);
 			}
 			if (m_addressOffset == 0x3C)
 			{
@@ -285,9 +288,9 @@ void Parameter::setMax(uint8 max)
 	sendChangeMessage();
 }
 
-void Parameter::setDefault(uint8 default)
+void Parameter::setDefault(uint8 defaultValue)
 {
-	m_default = default;
+	m_default = defaultValue;
 }
 
 void Parameter::resetToDefault()
@@ -302,7 +305,7 @@ void Parameter::setDisplayedValues(StringArray displayedValues)
 	if (m_displayedValues.size() == 0)
 	{
 		// empty display for values below valid range
-		for (uint8 i = 0; i < m_min; i++) m_displayedValues.add(String::empty);
+		for (uint8 i = 0; i < m_min; i++) m_displayedValues.add(String());
 		// add default value strings
 		for (uint8 i = m_min; i <= m_max; i++) m_displayedValues.add(String(i));
 		// [] operator already returns empty string for indexes above array size

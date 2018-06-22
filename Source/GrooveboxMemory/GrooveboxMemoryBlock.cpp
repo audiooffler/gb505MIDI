@@ -353,12 +353,12 @@ void GrooveboxMemoryBlock::addSubBlock(GrooveboxMemoryBlock* subBlock)
 
 // set up a parameter for this data block (with given addressOffset 
 // this can also be used to change parameters (useful for the MFX parameter section when switching the effect type)
-void GrooveboxMemoryBlock::setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 default, StringArray displayedValues, String description, uint8 cc, bool ccIsMode2Only)
+void GrooveboxMemoryBlock::setupParameter(String name, uint16 addressOffset, uint8 min, uint8 max, uint8 defaultValue, StringArray displayedValues, String description, uint8 cc, bool ccIsMode2Only)
 {
 	// if empty: create parameter
 	if (m_parameters[addressOffset] == nullptr) 
 	{
-		m_parameters.set(addressOffset, new Parameter(this, name, addressOffset, min, max, default, displayedValues, description, cc, ccIsMode2Only), true);
+		m_parameters.set(addressOffset, new Parameter(this, name, addressOffset, min, max, defaultValue, displayedValues, description, cc, ccIsMode2Only), true);
 	}
 	// else: change param
 	else
@@ -367,7 +367,7 @@ void GrooveboxMemoryBlock::setupParameter(String name, uint16 addressOffset, uin
 		m_parameters[addressOffset]->setName(name);
 		m_parameters[addressOffset]->setMin(min);
 		m_parameters[addressOffset]->setMax(max);
-		m_parameters[addressOffset]->setDefault(default);
+		m_parameters[addressOffset]->setDefault(defaultValue);
 		m_parameters[addressOffset]->setDisplayedValues(displayedValues);
 		m_parameters[addressOffset]->setDescription(description);		
 		m_parameters[addressOffset]->setCC(cc);

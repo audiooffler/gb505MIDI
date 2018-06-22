@@ -16,12 +16,12 @@ SyxMsg::SyxMsg(const SyxMsg& otherToCopy) :
 	m_manufacturerId(0),
 	m_modelId(0),
 	m_commandId(0),
-	m_deviceId(0),
-	m_addressSize(0),
 	m_addressArray(nullptr),
-	m_dataArray(nullptr),
-	m_dataSize(0),
-	m_checkSum(0),
+    m_addressSize(0),
+    m_dataArray(nullptr),
+    m_dataSize(0),
+    m_deviceId(0),
+    m_checkSum(0),
 	m_checkSumOkay(false),
 	m_completeSysEx(nullptr)
 {
@@ -170,11 +170,11 @@ SyxMsg::SyxMsg(const uint8* rawData, uint32 rawDataSize, bool includingF0andF7/*
 	m_manufacturerId(0),
 	m_modelId(0),
 	m_commandId(0),
-	m_deviceId(0),
-	m_addressSize(0),
 	m_addressArray(nullptr),
-	m_dataArray(nullptr),
-	m_dataSize(0),
+    m_addressSize(0),
+    m_dataArray(nullptr),
+    m_dataSize(0),
+    m_deviceId(0),
 	m_checkSum(0),
 	m_checkSumOkay(false),
 	m_completeSysEx(nullptr)
@@ -189,10 +189,10 @@ SyxMsg::SyxMsg(MessageType type, uint8 deviceId/* = 0x00*/, const uint8 * addres
 	m_manufacturerId(0),
 	m_modelId(0),
 	m_commandId(0),
-	m_deviceId(deviceId),
 	m_addressSize(0),
 	m_dataSize(sizeOrDataLength),
-	m_checkSum(checkSum),
+    m_deviceId(deviceId),
+    m_checkSum(checkSum),
 	m_checkSumOkay(true),
 	m_completeSysEx(nullptr)
 {
@@ -387,11 +387,11 @@ SyxMsg::SyxMsg(const MidiMessage& msg) :
 	m_manufacturerId(0),
 	m_modelId(0),
 	m_commandId(0),
-	m_deviceId(0),
-	m_addressSize(0),
 	m_addressArray(nullptr),
-	m_dataArray(nullptr),
-	m_dataSize(0),
+    m_addressSize(0),
+    m_dataArray(nullptr),
+    m_dataSize(0),
+    m_deviceId(0),
 	m_checkSum(0),
 	m_checkSumOkay(false),
 	m_completeSysEx(nullptr)
@@ -410,9 +410,10 @@ MidiMessage SyxMsg::getAsMidiMessage()
 	return MidiMessage::createSysExMessage(&m_completeSysEx[1], m_completeLength - 2);
 }
 
+
+// m_dataArray = &m_completeSysEx[5];
+// might be something like
 /*
-m_dataArray = &m_completeSysEx[5];
-/*  // might be something like
 m_completeSysEx[5],											// ID number (Roland = 41H)
 m_completeSysEx[6], m_completeSysEx[7],								// Device family code (0BH 01H)
 m_completeSysEx[8], m_completeSysEx[9],								// Device family number code (01H 00H)
@@ -663,7 +664,7 @@ MidiMessage SyxMsg::createTextMetaEvent(MidiTextMetaEventType type, String text,
 	rawTextMetaEventMidiData[1] = (char)type;
 	rawTextMetaEventMidiData[2] = (char)text.length();
 	for (int i = 0; i < text.length(); i++) rawTextMetaEventMidiData[i + 3] = (char)text[i];
-	return MidiMessage(rawTextMetaEventMidiData.getData(), rawTextMetaEventMidiData.getSize(), timeStamp);
+	return MidiMessage(rawTextMetaEventMidiData.getData(), (int)rawTextMetaEventMidiData.getSize(), timeStamp);
 }
 
 // MIDI Channel Prefix FF 20 01 cc (cc: 00-0F)
@@ -674,7 +675,7 @@ MidiMessage SyxMsg::createChannelPrefixMetaEvent(uint8 cc, double timeStamp /*= 
 	rawTextMetaEventMidiData[1] = (char)(0x20);
 	rawTextMetaEventMidiData[2] = (char)(0x01);
 	rawTextMetaEventMidiData[3] = (char)cc;
-	return MidiMessage(rawTextMetaEventMidiData.getData(), rawTextMetaEventMidiData.getSize(), timeStamp);
+	return MidiMessage(rawTextMetaEventMidiData.getData(), (int)rawTextMetaEventMidiData.getSize(), timeStamp);
 }
 
 

@@ -14,7 +14,7 @@ AsciiWithNoteValuesTypeface::AsciiWithNoteValuesTypeface() :
 	CustomTypeface()
 {
 	// copy characteristics and ASCII glyphs from default font's typeface
-	Typeface* defaultTypeFacePtr = Font::Font().getTypeface();
+	Typeface* defaultTypeFacePtr = Font().getTypeface();
 	setCharacteristics(defaultTypeFacePtr->getName(), defaultTypeFacePtr->getStyle(), defaultTypeFacePtr->getAscent(), 0x32);
 	addGlyphsFromOtherTypeface(*defaultTypeFacePtr, 32, 94);
 
@@ -43,7 +43,7 @@ AsciiWithNoteValuesTypeface::AsciiWithNoteValuesTypeface() :
 		NoteValue_whole_dotted, 
 		NoteValue_double };
 
-	HashMap<long int, String> glyphNamesByCode;
+	HashMap<int32, String> glyphNamesByCode;
 	glyphNamesByCode.set(NoteValue_64th_triplet, "64th_triplet");
 	glyphNamesByCode.set(NoteValue_64th, "64th");
 	glyphNamesByCode.set(NoteValue_32nd_triplet, "32nd_triplet");
@@ -67,7 +67,7 @@ AsciiWithNoteValuesTypeface::AsciiWithNoteValuesTypeface() :
 	glyphNamesByCode.set(NoteValue_whole_dotted, "whole_dotted");
 	glyphNamesByCode.set(NoteValue_double, "double");
 	// reversed:
-	HashMap<String, long int> glyphCodesByName; for (int i = 0; i < 22; i++) { glyphCodesByName.set(glyphNamesByCode[glyphCodes[i]], glyphCodes[i]); }
+	HashMap<String, int32> glyphCodesByName; for (int i = 0; i < 22; i++) { glyphCodesByName.set(glyphNamesByCode[glyphCodes[i]], glyphCodes[i]); }
 
 	// load glyphs from svg resource
 	XmlDocument svgDocument(String::createStringFromData(BinaryData::NoteValueGlyphs_svg, BinaryData::NoteValueGlyphs_svgSize));
@@ -143,6 +143,6 @@ String AsciiWithNoteValuesTypeface::getNoteString(NoteValue value)
 	case AsciiWithNoteValuesTypeface::NoteValue_double:
 		return String(CharPointer_UTF8("\xee\x80\x95"));
 	default:
-		return String::empty;
+		return String();
 	}
 }

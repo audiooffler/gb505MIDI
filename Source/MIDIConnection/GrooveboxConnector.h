@@ -68,7 +68,7 @@ public:
 
 	void setActiveConnection(uint8 idToSelect) { m_selectedDeviceId = idToSelect; }
 
-	(OwnedArray<GrooveBoxConnectionEntry, CriticalSection>)& getConnections() { return m_activeConnections;  }
+	OwnedArray<GrooveBoxConnectionEntry, CriticalSection>* getConnections() { return &m_activeConnections;  }
 
 	void handleIncomingMidiMessage(MidiInput* input, const MidiMessage& msg);
 
@@ -103,11 +103,11 @@ private:
 		IndenityRequestReplyThread(String windowTitle, int timeOutInMs);
 		~IndenityRequestReplyThread();
 
-		void run();
+		void run() override;
 		void threadComplete(bool userPressedCancel) override;
 
 		void addMidiMessage(MidiInput *midiIn, const MidiMessage &midiInMsg);
-		(OwnedArray<SyxMsg, CriticalSection>)& getRetrievedMessages() { return m_retrievedSysExMessages; }
+		OwnedArray<SyxMsg, CriticalSection>* getRetrievedMessages() { return &m_retrievedSysExMessages; }
 
 	private:
 		ScopedPointer<SyxMsg> inquiry;

@@ -39,7 +39,7 @@ class ParameterLedSwitch  : public Component,
                             public KeyListener,
                             public ChangeListener,
                             public SettableTooltipClient,
-                            public ButtonListener
+                            public Button::Listener
 {
 public:
     //==============================================================================

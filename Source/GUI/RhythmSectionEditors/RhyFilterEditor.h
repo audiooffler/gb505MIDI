@@ -46,8 +46,8 @@
                                                                     //[/Comments]
 */
 class RhyFilterEditor  : public Component,
-                         public SliderListener,
-                         public ComboBoxListener
+                         public Slider::Listener,
+                         public ComboBox::Listener
 {
 public:
     //==============================================================================

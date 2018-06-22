@@ -34,9 +34,9 @@ extern OverallMemoryBlock* grooveboxMemory;
 //==============================================================================
 ToneMixTableToneVeloXFade::ToneMixTableToneVeloXFade (const String &componentName, Component* componentToWatch, ToneLimitsConstrainer* toneLimitsConstrainer, SynthParts part, Tone tone)
     : Component(componentName), ComponentMovementWatcher(componentToWatch),
+      m_toneLimitsConstrainer(toneLimitsConstrainer),
       m_part(part),
-      m_tone(tone),
-      m_toneLimitsConstrainer(toneLimitsConstrainer)
+      m_tone(tone)
 {
 
     //[UserPreSize]

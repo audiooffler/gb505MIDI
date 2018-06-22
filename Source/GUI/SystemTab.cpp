@@ -132,7 +132,7 @@ SystemTab::SystemTab ()
 	memInputStream = new MemoryInputStream(BinaryData::d2_png, BinaryData::d2_pngSize, false);
 	img_d2 = new Image(pngImgFormat.decodeImage(*memInputStream));
 
-	m_decodedNonEmptyEventsString = String::empty;
+	m_decodedNonEmptyEventsString = String();
 
 	StringArray midiInNames(MidiInput::getDevices());
 	m_midiInComboBox->addItemList(MidiInput::getDevices(),1);
@@ -287,9 +287,9 @@ void SystemTab::buttonClicked (Button* buttonThatWasClicked)
 		int id(grooveboxConnector->refreshConnections(m_afterConstructor, m_afterConstructor?10000:300));
 		if (id > 0)
 		{
-			for (int i = 0; i < grooveboxConnector->getConnections().size(); i++)
+            for (int i = 0; i < grooveboxConnector->getConnections()->size(); i++)
 			{
-				m_deviceToUseComboBox->addItem(String(grooveboxConnector->getConnections()[i]->deviceId+1) + " " + grooveboxConnector->getConnections()[i]->getGrooveboxModelAsString(), grooveboxConnector->getConnections()[i]->deviceId);
+				m_deviceToUseComboBox->addItem(String((*grooveboxConnector->getConnections())[i]->deviceId+1) + " " + (*grooveboxConnector->getConnections())[i]->getGrooveboxModelAsString(), (*grooveboxConnector->getConnections())[i]->deviceId);
 			}
 			if (m_deviceToUseComboBox->indexOfItemId(grooveboxConnector->getActiveDeviceId() >= 0))
 			{

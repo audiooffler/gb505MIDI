@@ -35,8 +35,7 @@ MFXEditor::MFXEditor ()
     //[/Constructor_pre]
 
     addAndMakeVisible (component = new PanelGroupGrey ("mfxEditorPanelGroup","MULTI-EFFECTS (M-FX)"));
-    addAndMakeVisible (m_paramLabel1 = new Label ("paramLabel1",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel1 = new Label ("paramLabel1", {}));
     m_paramLabel1->setFont (Font (12.00f, Font::bold));
     m_paramLabel1->setJustificationType (Justification::centredLeft);
     m_paramLabel1->setEditable (false, false, false);
@@ -59,8 +58,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider2->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider2->addListener (this);
 
-    addAndMakeVisible (m_paramLabel2 = new Label ("paramLabel2",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel2 = new Label ("paramLabel2", {}));
     m_paramLabel2->setFont (Font (12.00f, Font::bold));
     m_paramLabel2->setJustificationType (Justification::centredLeft);
     m_paramLabel2->setEditable (false, false, false);
@@ -75,8 +73,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider3->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider3->addListener (this);
 
-    addAndMakeVisible (m_paramLabel3 = new Label ("paramLabel3",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel3 = new Label ("paramLabel3",{}));
     m_paramLabel3->setFont (Font (12.00f, Font::bold));
     m_paramLabel3->setJustificationType (Justification::centredLeft);
     m_paramLabel3->setEditable (false, false, false);
@@ -91,8 +88,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider4->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider4->addListener (this);
 
-    addAndMakeVisible (m_paramLabel4 = new Label ("paramLabel4",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel4 = new Label ("paramLabel4", {}));
     m_paramLabel4->setFont (Font (12.00f, Font::bold));
     m_paramLabel4->setJustificationType (Justification::centredLeft);
     m_paramLabel4->setEditable (false, false, false);
@@ -107,8 +103,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider5->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider5->addListener (this);
 
-    addAndMakeVisible (m_paramLabel5 = new Label ("paramLabel5",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel5 = new Label ("paramLabel5", {}));
     m_paramLabel5->setFont (Font (12.00f, Font::bold));
     m_paramLabel5->setJustificationType (Justification::centredLeft);
     m_paramLabel5->setEditable (false, false, false);
@@ -123,8 +118,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider6->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider6->addListener (this);
 
-    addAndMakeVisible (m_paramLabel6 = new Label ("paramLabel6",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel6 = new Label ("paramLabel6", {}));
     m_paramLabel6->setFont (Font (12.00f, Font::bold));
     m_paramLabel6->setJustificationType (Justification::centredLeft);
     m_paramLabel6->setEditable (false, false, false);
@@ -139,8 +133,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider7->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider7->addListener (this);
 
-    addAndMakeVisible (m_paramLabel7 = new Label ("paramLabel7",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel7 = new Label ("paramLabel7", {}));
     m_paramLabel7->setFont (Font (12.00f, Font::bold));
     m_paramLabel7->setJustificationType (Justification::centredLeft);
     m_paramLabel7->setEditable (false, false, false);
@@ -155,8 +148,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider8->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider8->addListener (this);
 
-    addAndMakeVisible (m_paramLabel8 = new Label ("paramLabel8",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel8 = new Label ("paramLabel8", {}));
     m_paramLabel8->setFont (Font (12.00f, Font::bold));
     m_paramLabel8->setJustificationType (Justification::centredLeft);
     m_paramLabel8->setEditable (false, false, false);
@@ -171,8 +163,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider9->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider9->addListener (this);
 
-    addAndMakeVisible (m_paramLabel9 = new Label ("paramLabel9",
-                                                  String()));
+    addAndMakeVisible (m_paramLabel9 = new Label ("paramLabel9", {}));
     m_paramLabel9->setFont (Font (12.00f, Font::bold));
     m_paramLabel9->setJustificationType (Justification::centredLeft);
     m_paramLabel9->setEditable (false, false, false);
@@ -187,8 +178,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider10->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider10->addListener (this);
 
-    addAndMakeVisible (m_paramLabel10 = new Label ("paramLabel10",
-                                                   String()));
+    addAndMakeVisible (m_paramLabel10 = new Label ("paramLabel10", {}));
     m_paramLabel10->setFont (Font (12.00f, Font::bold));
     m_paramLabel10->setJustificationType (Justification::centredLeft);
     m_paramLabel10->setEditable (false, false, false);
@@ -203,8 +193,7 @@ MFXEditor::MFXEditor ()
     m_paramSlider11->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
     m_paramSlider11->addListener (this);
 
-    addAndMakeVisible (m_paramLabel11 = new Label ("paramLabel11",
-                                                   String()));
+    addAndMakeVisible (m_paramLabel11 = new Label ("paramLabel11", {}));
     m_paramLabel11->setFont (Font (12.00f, Font::bold));
     m_paramLabel11->setJustificationType (Justification::centredLeft);
     m_paramLabel11->setEditable (false, false, false);
@@ -214,7 +203,7 @@ MFXEditor::MFXEditor ()
     addAndMakeVisible (m_MFXTypeComboBox = new ParameterComboBox ("MFXTypeComboBox"));
     m_MFXTypeComboBox->setEditableText (false);
     m_MFXTypeComboBox->setJustificationType (Justification::centredLeft);
-    m_MFXTypeComboBox->setTextWhenNothingSelected (String());
+    m_MFXTypeComboBox->setTextWhenNothingSelected ({});
     m_MFXTypeComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_MFXTypeComboBox->addListener (this);
 
@@ -234,7 +223,7 @@ MFXEditor::MFXEditor ()
     m_MFXTypeDescriptionTextEditor->setCaretVisible (false);
     m_MFXTypeDescriptionTextEditor->setPopupMenuEnabled (true);
     m_MFXTypeDescriptionTextEditor->setColour (TextEditor::backgroundColourId, Colour (0xffe0e0e0));
-    m_MFXTypeDescriptionTextEditor->setText (String());
+    m_MFXTypeDescriptionTextEditor->setText ({});
 
     addAndMakeVisible (m_MFXSendLabel = new Label ("MFXSendLabel",
                                                    TRANS("M-FX SEND")));

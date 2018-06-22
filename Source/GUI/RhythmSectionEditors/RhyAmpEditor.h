@@ -47,7 +47,7 @@ Describe your class and how it works here!
                                                                     //[/Comments]
 */
 class RhyAmpEditor  : public Component,
-                      public SliderListener
+                      public Slider::Listener
 {
 public:
     //==============================================================================
