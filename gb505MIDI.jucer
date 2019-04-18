@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="qabmW6" name="gb505MIDI" projectType="guiapp" version="1.0.0"
               bundleIdentifier="de.spindler.gbMIDI" includeBinaryInAppConfig="1"
-              jucerVersion="5.3.2" cppLanguageStandard="11">
+              jucerVersion="5.4.3" cppLanguageStandard="11">
   <MAINGROUP id="n8CjoE" name="gb505MIDI">
     <GROUP id="{AC126E82-0D80-6CBE-EF59-78D17CC82F86}" name="Resources">
       <FILE id="zf7hCa" name="Audio-x-midi.svg" compile="0" resource="1"

@@ -691,7 +691,7 @@ void SyxMsg::initFromRawMidiSysEx(const uint8* rawData, const uint32 rawDataSize
 		m_completeSysEx[0] = 0xF0;
 		m_completeSysEx[m_completeLength - 1] = 0xF7;
 	}
-	for (uint32 i = 0; i < m_completeLength; i++) m_completeSysEx[i] = includingF0andF7 ? rawData[i] : rawData[i - 1];
+    for (uint32 i = 0; i < m_completeLength; i++) m_completeSysEx[i] = includingF0andF7 ? rawData[i] : (i > 0 ? rawData[i - 1] : 0);
 
 	// parse RQ1
 	if (m_completeLength == 16 &&
