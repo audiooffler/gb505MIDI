@@ -227,7 +227,7 @@ bool OverallMemoryBlock::loadFromArray(OwnedArray<SyxMsg, CriticalSection>& sysE
 
 bool OverallMemoryBlock::loadBinarySysExFile(const File& file)
 {
-	ScopedPointer<FileInputStream> inputStream = file.createInputStream();
+	std::unique_ptr<FileInputStream> inputStream (file.createInputStream());
 	MemoryBlock readBuffer(0);			// buffer for reading the next 1024 bytes from file input stream
 	MemoryBlock currentSysExMessage(0);	// buffer for creating a sysex message from read bytes
 	OwnedArray<SyxMsg, CriticalSection> sysExMessageArray;
@@ -264,7 +264,7 @@ bool OverallMemoryBlock::loadBinarySysExFile(const File& file)
 bool OverallMemoryBlock::saveBinarySysExFile(const File&file)
 {
 	if (file.existsAsFile()) file.deleteFile();	// overwrite!
-	ScopedPointer<FileOutputStream> outputStream = file.createOutputStream();
+    std::unique_ptr<FileOutputStream> outputStream (file.createOutputStream());
 	OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
 	getPartInfoBlock()->createBlockSendMessages(&sysExCompilation);
 	getSynthPatchesBlock()->createBlockSendMessages(&sysExCompilation);
@@ -285,7 +285,7 @@ bool OverallMemoryBlock::saveBinarySysExFile(const File&file)
 bool OverallMemoryBlock::saveHexTextSysExFile(const File&file)
 {
 	if (file.existsAsFile()) file.deleteFile();	// overwrite!
-	ScopedPointer<FileOutputStream> outputStream = file.createOutputStream();
+    std::unique_ptr<FileOutputStream> outputStream (file.createOutputStream());
 	OwnedArray<SyxMsg, CriticalSection> sysExCompilation;
 	getPartInfoBlock()->createBlockSendMessages(&sysExCompilation);
 	getSynthPatchesBlock()->createBlockSendMessages(&sysExCompilation);

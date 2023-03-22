@@ -534,36 +534,36 @@ void PatchToneEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_controlMatrixButton)
     {
         //[UserButtonCode_m_controlMatrixButton] -- add your button handler code here..
-		PatchControllerMatrixEditor* patchControllerMatrixEditor = new PatchControllerMatrixEditor("CONTROL MATRIX", m_part, m_tone);
-		CallOutBox::launchAsynchronously(patchControllerMatrixEditor, m_controlMatrixButton->getScreenBounds(), nullptr);
+		std::unique_ptr<Component> patchControllerMatrixEditor (new PatchControllerMatrixEditor("CONTROL MATRIX", m_part, m_tone));
+		CallOutBox::launchAsynchronously(std::move(patchControllerMatrixEditor), m_controlMatrixButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_controlMatrixButton]
     }
     else if (buttonThatWasClicked == m_pitchAdvancedButton)
     {
         //[UserButtonCode_m_pitchAdvancedButton] -- add your button handler code here..
-		PitchEditorAdvanced* advancedPitchEditor = new PitchEditorAdvanced("PITCH", m_part, m_tone);
-		CallOutBox::launchAsynchronously(advancedPitchEditor, m_pitchAdvancedButton->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedPitchEditor (new PitchEditorAdvanced("PITCH", m_part, m_tone));
+		CallOutBox::launchAsynchronously(std::move(advancedPitchEditor), m_pitchAdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_pitchAdvancedButton]
     }
     else if (buttonThatWasClicked == m_filterAdvancedButton)
     {
         //[UserButtonCode_m_filterAdvancedButton] -- add your button handler code here..
-		FilterEditorAdvanced* advancedFilterEditor = new FilterEditorAdvanced("FILTER", m_part, m_tone);
-		CallOutBox::launchAsynchronously(advancedFilterEditor, m_filterAdvancedButton->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedFilterEditor (new FilterEditorAdvanced("FILTER", m_part, m_tone));
+		CallOutBox::launchAsynchronously(std::move(advancedFilterEditor), m_filterAdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_filterAdvancedButton]
     }
     else if (buttonThatWasClicked == m_ampAdvancedButton)
     {
         //[UserButtonCode_m_ampAdvancedButton] -- add your button handler code here..
-		AmpEditorAdvanced* advancedAmpEditor = new AmpEditorAdvanced("AMP", m_part, m_tone);
-		CallOutBox::launchAsynchronously(advancedAmpEditor, m_ampAdvancedButton->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedAmpEditor (new AmpEditorAdvanced("AMP", m_part, m_tone));
+		CallOutBox::launchAsynchronously(std::move(advancedAmpEditor), m_ampAdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_ampAdvancedButton]
     }
     else if (buttonThatWasClicked == m_fxmAdvancedButton)
     {
         //[UserButtonCode_m_fxmAdvancedButton] -- add your button handler code here..
-		FxmEditor* advancedEditor = new FxmEditor("FXM", m_part, m_tone);
-		CallOutBox::launchAsynchronously(advancedEditor, buttonThatWasClicked->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedEditor (new FxmEditor("FXM", m_part, m_tone));
+		CallOutBox::launchAsynchronously(std::move(advancedEditor), buttonThatWasClicked->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_fxmAdvancedButton]
     }
     else if (buttonThatWasClicked == imageButton)
@@ -589,8 +589,8 @@ void PatchToneEditor::buttonClicked (Button* buttonThatWasClicked)
     else if (buttonThatWasClicked == m_delayAdvancedButton)
     {
         //[UserButtonCode_m_delayAdvancedButton] -- add your button handler code here..
-		ToneDelayEditor* advancedEditor = new ToneDelayEditor("DELAY", m_part, m_tone);
-		CallOutBox::launchAsynchronously(advancedEditor, buttonThatWasClicked->getScreenBounds(), nullptr);
+        std::unique_ptr<ToneDelayEditor> advancedEditor (new ToneDelayEditor("DELAY", m_part, m_tone));
+		CallOutBox::launchAsynchronously(std::move (advancedEditor), buttonThatWasClicked->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_delayAdvancedButton]
     }
 

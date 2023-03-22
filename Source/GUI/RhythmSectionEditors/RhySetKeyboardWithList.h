@@ -93,7 +93,7 @@ public:
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
     MidiKeyboardState m_keyboardStateDummy;
-	TableHeaderComponent* m_tableHeader;
+	std::unique_ptr<TableHeaderComponent> m_tableHeader;
 	int m_lastRowSelected = 0;
     //[/UserVariables]
 

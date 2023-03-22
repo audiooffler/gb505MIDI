@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_B31AB66F482E3EDA__
-#define __JUCE_HEADER_B31AB66F482E3EDA__
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
@@ -35,8 +34,11 @@
 
 #include "../GroupWidgets/PanelGroupGrey.h"
 #include "../GroupWidgets/PanelGroupTransp.h"
+#include "../GroupWidgets/PanelGroupTransp.h"
+#include "../GroupWidgets/PanelGroupTransp.h"
 #include "Envelope.h"
 #include "../ParameterWidgets/BlackToggle.h"
+#include "../GroupWidgets/PanelGroupTransp.h"
 
 
 //==============================================================================
@@ -48,24 +50,24 @@ Describe your class and how it works here!
                                                                     //[/Comments]
 */
 class AmpEditorAdvanced  : public Component,
-                           public Slider::Listener,
-                           public ComboBox::Listener,
-                           public Button::Listener
+                           public juce::Slider::Listener,
+                           public juce::ComboBox::Listener,
+                           public juce::Button::Listener
 {
 public:
     //==============================================================================
     AmpEditorAdvanced (const String &componentName, SynthParts part, Tone tone);
-    ~AmpEditorAdvanced();
+    ~AmpEditorAdvanced() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
-    void sliderValueChanged (Slider* sliderThatWasMoved) override;
-    void comboBoxChanged (ComboBox* comboBoxThatHasChanged) override;
-    void buttonClicked (Button* buttonThatWasClicked) override;
+    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
+    void comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged) override;
+    void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* amp_png;
@@ -81,52 +83,52 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<PanelGroupGrey> m_ampGrp;
-    ScopedPointer<PanelGroupGrey> m_ampEnvGrp;
-    ScopedPointer<PanelGroupGrey> m_panGrp;
-    ScopedPointer<PanelGroupGrey> m_biasGrp;
-    ScopedPointer<Knob> m_tonePanSlider;
-    ScopedPointer<Label> m_tonePanLabel;
-    ScopedPointer<Envelope> m_ampEnv;
-    ScopedPointer<Label> m_panKeyfollowLabel;
-    ScopedPointer<KeyfollowMicroParameterSlider> m_panKeyfollowSlider;
-    ScopedPointer<MicroParameterSlider> m_ampVelocitySensSlider;
-    ScopedPointer<Label> m_ampEnvVelocitySensLabel;
-    ScopedPointer<MicroParameterSlider> m_ampEnvVelocityTime1Slider;
-    ScopedPointer<Label> m_ampEnvVelocityTime1Label;
-    ScopedPointer<MicroParameterSlider> m_ampEnvVelocityTime4Slider;
-    ScopedPointer<Label> m_ampEnvVelocityTime4Label;
-    ScopedPointer<Label> m_ampEnvTimeKeyfollow;
-    ScopedPointer<KeyfollowMicroParameterSlider> m_ampKeyfollowSlider;
-    ScopedPointer<ParameterComboBox> m_ampEnvVelCurveComboBox;
-    ScopedPointer<ParameterVelCurveDisplay> m_ampEnvVelCurveDisplay;
-    ScopedPointer<Label> m_ampBiasDirectionLabel;
-    ScopedPointer<ParameterComboBox> m_ampBiasDirectionComboBox;
-    ScopedPointer<Label> m_ampEnvVelocityCurveLabel;
-    ScopedPointer<Label> m_biasPointLabel;
-    ScopedPointer<MicroParameterSlider> m_biasPointSlider;
-    ScopedPointer<Label> m_biasLevelLabel;
-    ScopedPointer<MicroParameterSlider> m_biasLevelSlider;
-    ScopedPointer<BlackToggle> m_panRandomToggle;
-    ScopedPointer<Label> m_panRandomLabel;
-    ScopedPointer<MicroParameterSlider> m_panAlternateSlider;
-    ScopedPointer<Label> m_panAlternateLabel;
-    ScopedPointer<PanelGroupGrey> m_lfoGrp;
-    ScopedPointer<Knob> m_lfo1AmpDepthSlider;
-    ScopedPointer<Label> m_lfo1AmpDepthLabel;
-    ScopedPointer<Knob> m_lfo2AmpDepthSlider;
-    ScopedPointer<Label> m_lfo2AmpDepthLabel;
-    ScopedPointer<TextWithArrowButton> m_lfo1AdvancedButton;
-    ScopedPointer<TextWithArrowButton> m_lfo2AdvancedButton;
-    ScopedPointer<Knob> m_lfo1PanDepthSlider;
-    ScopedPointer<Label> m_lfo1PanDepthLabel;
-    ScopedPointer<Knob> m_lfo2PanDepthSlider;
-    ScopedPointer<Label> m_lfo2PanDepthLabel;
-    ScopedPointer<ImageButton> m_imageButton;
-    ScopedPointer<ParameterEnvelopeSlider> m_toneLevelSlider;
-    ScopedPointer<Label> m_filterEnvelopeDepthLabel;
-    ScopedPointer<ImageButton> m_imageButton2;
-    ScopedPointer<ImageButton> m_imageButton3;
+    std::unique_ptr<PanelGroupGrey> m_ampGrp;
+    std::unique_ptr<PanelGroupGrey> m_ampEnvGrp;
+    std::unique_ptr<PanelGroupGrey> m_panGrp;
+    std::unique_ptr<PanelGroupGrey> m_biasGrp;
+    std::unique_ptr<Knob> m_tonePanSlider;
+    std::unique_ptr<juce::Label> m_tonePanLabel;
+    std::unique_ptr<Envelope> m_ampEnv;
+    std::unique_ptr<juce::Label> m_panKeyfollowLabel;
+    std::unique_ptr<KeyfollowMicroParameterSlider> m_panKeyfollowSlider;
+    std::unique_ptr<MicroParameterSlider> m_ampVelocitySensSlider;
+    std::unique_ptr<juce::Label> m_ampEnvVelocitySensLabel;
+    std::unique_ptr<MicroParameterSlider> m_ampEnvVelocityTime1Slider;
+    std::unique_ptr<juce::Label> m_ampEnvVelocityTime1Label;
+    std::unique_ptr<MicroParameterSlider> m_ampEnvVelocityTime4Slider;
+    std::unique_ptr<juce::Label> m_ampEnvVelocityTime4Label;
+    std::unique_ptr<juce::Label> m_ampEnvTimeKeyfollow;
+    std::unique_ptr<KeyfollowMicroParameterSlider> m_ampKeyfollowSlider;
+    std::unique_ptr<ParameterComboBox> m_ampEnvVelCurveComboBox;
+    std::unique_ptr<ParameterVelCurveDisplay> m_ampEnvVelCurveDisplay;
+    std::unique_ptr<juce::Label> m_ampBiasDirectionLabel;
+    std::unique_ptr<ParameterComboBox> m_ampBiasDirectionComboBox;
+    std::unique_ptr<juce::Label> m_ampEnvVelocityCurveLabel;
+    std::unique_ptr<juce::Label> m_biasPointLabel;
+    std::unique_ptr<MicroParameterSlider> m_biasPointSlider;
+    std::unique_ptr<juce::Label> m_biasLevelLabel;
+    std::unique_ptr<MicroParameterSlider> m_biasLevelSlider;
+    std::unique_ptr<BlackToggle> m_panRandomToggle;
+    std::unique_ptr<juce::Label> m_panRandomLabel;
+    std::unique_ptr<MicroParameterSlider> m_panAlternateSlider;
+    std::unique_ptr<juce::Label> m_panAlternateLabel;
+    std::unique_ptr<PanelGroupGrey> m_lfoGrp;
+    std::unique_ptr<Knob> m_lfo1AmpDepthSlider;
+    std::unique_ptr<juce::Label> m_lfo1AmpDepthLabel;
+    std::unique_ptr<Knob> m_lfo2AmpDepthSlider;
+    std::unique_ptr<juce::Label> m_lfo2AmpDepthLabel;
+    std::unique_ptr<TextWithArrowButton> m_lfo1AdvancedButton;
+    std::unique_ptr<TextWithArrowButton> m_lfo2AdvancedButton;
+    std::unique_ptr<Knob> m_lfo1PanDepthSlider;
+    std::unique_ptr<juce::Label> m_lfo1PanDepthLabel;
+    std::unique_ptr<Knob> m_lfo2PanDepthSlider;
+    std::unique_ptr<juce::Label> m_lfo2PanDepthLabel;
+    std::unique_ptr<juce::ImageButton> m_imageButton;
+    std::unique_ptr<ParameterEnvelopeSlider> m_toneLevelSlider;
+    std::unique_ptr<juce::Label> m_filterEnvelopeDepthLabel;
+    std::unique_ptr<juce::ImageButton> m_imageButton2;
+    std::unique_ptr<juce::ImageButton> m_imageButton3;
 
 
     //==============================================================================
@@ -136,4 +138,3 @@ private:
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_B31AB66F482E3EDA__

@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -31,6 +31,9 @@ extern Waveforms* waveForms;
 WaveformsGroup::WaveformsGroup (Waveforms::WaveGroup group)
     : m_group (group)
 {
+    //[Constructor_pre] You can add your own custom stuff here..
+    //[/Constructor_pre]
+
 
     //[UserPreSize]
 	m_waveformButtons.clear();
@@ -71,7 +74,7 @@ WaveformsGroup::~WaveformsGroup()
 }
 
 //==============================================================================
-void WaveformsGroup::paint (Graphics& g)
+void WaveformsGroup::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
 	#ifdef JUCE_MSVC
@@ -85,6 +88,9 @@ void WaveformsGroup::paint (Graphics& g)
 
 void WaveformsGroup::resized()
 {
+    //[UserPreResize] Add your own custom resize code here..
+    //[/UserPreResize]
+
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
@@ -107,9 +113,9 @@ void WaveformsGroup::buttonClicked(Button* buttonThatWasClicked)
 
 //==============================================================================
 #if 0
-/*  -- Introjucer information section --
+/*  -- Projucer information section --
 
-    This is where the Introjucer stores the metadata that describe this GUI layout, so
+    This is where the Projucer stores the metadata that describe this GUI layout, so
     make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
@@ -129,3 +135,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

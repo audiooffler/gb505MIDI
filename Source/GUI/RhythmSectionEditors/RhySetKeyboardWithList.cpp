@@ -40,7 +40,7 @@ extern CopyableTone* copyableToneClipboad;
 RhySetKeyboardWithList::RhySetKeyboardWithList ()
 {
     //[Constructor_pre] You can add your own custom stuff here..
-	m_tableHeader = new TableHeaderComponent();
+    m_tableHeader.reset (new TableHeaderComponent());
     //[/Constructor_pre]
 
     addAndMakeVisible (m_drumNamesTable = new TableListBox ("drumNamesTable", this));
@@ -61,7 +61,7 @@ RhySetKeyboardWithList::RhySetKeyboardWithList ()
 	m_tableHeader->addColumn("DELAY", Dly, 48, 48, 48, 1);
 	m_tableHeader->addColumn("M-FX", MFX, 30, 30, 30, 1);
 	m_tableHeader->setColumnVisible(GmDrum, false);
-	m_drumNamesTable->setHeader(m_tableHeader);
+	m_drumNamesTable->setHeader(std::move(m_tableHeader));
 	m_drumNamesTable->setHeaderHeight(24);
 	m_drumNamesTable->setRowHeight(eachKeyRowHeight);
 	m_drumNamesTable->setOutlineThickness(1);

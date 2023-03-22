@@ -163,7 +163,7 @@ void KeyfollowBubbleComponent::loadSvg()
 	int width(0), height(0);
 	getContentSize(width, height);
 
-	ScopedPointer<Drawable> drawableDiagram = Drawable::createFromSVG(*m_svgXmlElement);
+	std::unique_ptr<Drawable> drawableDiagram = Drawable::createFromSVG(*m_svgXmlElement);
 	Rectangle<float> destArea(Rectangle<float>(4.0f, 4.0f, (float)width - 8.0f, (float)height - 8.0f));
 	m_SvgCoordsToComponentCoords = RectanglePlacement(RectanglePlacement::fillDestination).getTransformToFit(drawableDiagram->getDrawableBounds(), destArea);
 	m_preRenderedDiagram = Image(Image::ARGB, width - 4, height - 4, true);

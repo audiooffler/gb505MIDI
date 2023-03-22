@@ -14,8 +14,8 @@
 #include "../GrooveboxMemory/Waveforms.h"
 
 extern ApplicationProperties* appProperties;
-extern MidiInput* midiInputDevice;
-extern MidiOutput* midiOutputDevice;
+extern std::unique_ptr<MidiInput> midiInputDevice;
+extern std::unique_ptr<MidiOutput> midiOutputDevice;
 extern int preferredMidiInId;
 extern int preferredMidiOutId;
 extern OverallMemoryBlock* grooveboxMemory;
@@ -48,13 +48,13 @@ GrooveboxConnector::~GrooveboxConnector()
 bool GrooveboxConnector::openGrooveboxMidiInAndOut(bool warnMsgBox)
 {
 	// open midi in and out
-	if (midiOutputDevice != nullptr) deleteAndZero(midiOutputDevice);
+	//if (midiOutputDevice != nullptr) deleteAndZero(midiOutputDevice);
 	if ((midiOutputDevice = MidiOutput::openDevice(preferredMidiOutId)) == nullptr)
 	{
 		if (warnMsgBox) AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error opening Midi out port."), TRANS("Could not access selected MIDI out port.\r\nThis might be because it's still in use by another application."));
 		return false;
 	}
-	if (midiInputDevice != nullptr) deleteAndZero(midiInputDevice);
+	//if (midiInputDevice != nullptr) deleteAndZero(midiInputDevice);
 	if ((midiInputDevice = MidiInput::openDevice(preferredMidiInId, this)) == nullptr)
 	{
 		if (warnMsgBox) AlertWindow::showMessageBox(AlertWindow::WarningIcon, TRANS("Error opening Midi in port."), TRANS("Could not access selected MIDI in port.\r\nThis might be because it's still in use by another application."));
@@ -159,11 +159,11 @@ void GrooveboxConnector::handleIncomingMidiMessage(MidiInput* input, const MidiM
 		// get responses
 		m_checkThread->addMidiMessage(input, msg);
 	}
-	else if (m_recvBulkDumpThread != nullptr && m_recvBulkDumpThread->isThreadRunning() && input == midiInputDevice)
+	else if (m_recvBulkDumpThread != nullptr && m_recvBulkDumpThread->isThreadRunning() && input == midiInputDevice.get())
 	{
 		m_recvBulkDumpThread->addReceivedMidiMessage(msg);
 	}
-	else if (input == midiInputDevice)
+	else if (input == midiInputDevice.get())
 	{
 		//DBG("Midi In Message from \"" + input->getName().trim() + "\": " + String::toHexString(msg.getRawData(), msg.getRawDataSize()).toUpperCase());
 		// TODO CC, SYSEX, PC, Note, ...? Handling
@@ -329,7 +329,7 @@ void GrooveboxConnector::IndenityRequestReplyThread::threadComplete(bool userPre
 
 void GrooveboxConnector::IndenityRequestReplyThread::addMidiMessage(MidiInput *midiIn, const MidiMessage &midiInMsg)
 {
-	if (midiIn == midiInputDevice && midiInMsg.isSysEx())
+	if (midiIn == midiInputDevice.get() && midiInMsg.isSysEx())
 	{
 		SyxMsg* syxMsg = new SyxMsg(midiInMsg.getSysExData(), midiInMsg.getSysExDataSize());
 		//DBG("Retrieved " + String::toHexString(midiInMsg.getRawData(), midiInMsg.getRawDataSize()));

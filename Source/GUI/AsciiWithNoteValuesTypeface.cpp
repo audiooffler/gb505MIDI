@@ -71,7 +71,7 @@ AsciiWithNoteValuesTypeface::AsciiWithNoteValuesTypeface() :
 
 	// load glyphs from svg resource
 	XmlDocument svgDocument(String::createStringFromData(BinaryData::NoteValueGlyphs_svg, BinaryData::NoteValueGlyphs_svgSize));
-	ScopedPointer<XmlElement> svg = svgDocument.getDocumentElement();
+	std::unique_ptr<XmlElement> svg = svgDocument.getDocumentElement();
 	// svg elements must not be deleted, they are jsut references to within the svg  element tree. at the end the whole svg element must be deleted (here: scoped pointer does it)
 	XmlElement* group;
 	// prepare and and glyphs

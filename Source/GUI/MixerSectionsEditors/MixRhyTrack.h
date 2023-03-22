@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_CFF0C7B8230D1F0C__
-#define __JUCE_HEADER_CFF0C7B8230D1F0C__
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
@@ -46,23 +45,23 @@
 */
 class MixRhyTrack  : public Component,
                      public ChangeListener,
-                     public Slider::Listener,
-                     public Button::Listener
+                     public juce::Slider::Listener,
+                     public juce::Button::Listener
 {
 public:
     //==============================================================================
     MixRhyTrack ();
-    ~MixRhyTrack();
+    ~MixRhyTrack() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	void changeListenerCallback(ChangeBroadcaster* source) override;
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
-    void sliderValueChanged (Slider* sliderThatWasMoved) override;
-    void buttonClicked (Button* buttonThatWasClicked) override;
+    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
+    void buttonClicked (juce::Button* buttonThatWasClicked) override;
 
     // Binary resources:
     static const char* partNameR_png;
@@ -88,24 +87,24 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> m_mfxLabel2;
-    ScopedPointer<Label> m_mfxLabel;
-    ScopedPointer<GrabSwitch> m_mfxGrab;
-    ScopedPointer<MixPartLevelFader> m_mixLevel;
-    ScopedPointer<Knob> m_panSlider;
-    ScopedPointer<Knob> m_delaySlider;
-    ScopedPointer<Knob> m_ReverbSlider;
-    ScopedPointer<MicroParameterSlider> m_keyShiftSlider;
-    ScopedPointer<BigOrangeToggle> m_muteToggle;
-    ScopedPointer<ImageButton> imageButton;
-    ScopedPointer<Label> m_panLabel;
-    ScopedPointer<Label> m_keyShiftLabel;
-    ScopedPointer<Label> m_reverbLabel;
-    ScopedPointer<Label> m_delayLabel;
-    ScopedPointer<ParameterTextLabel> m_patchNameEditor;
-    ScopedPointer<MicroParameterSlider> m_voiceResvSlider;
-    ScopedPointer<Label> m_voiceResvLabel;
-    ScopedPointer<SmallGreenToggle> m_mfx_RHYtoggle;
+    std::unique_ptr<juce::Label> m_mfxLabel2;
+    std::unique_ptr<juce::Label> m_mfxLabel;
+    std::unique_ptr<GrabSwitch> m_mfxGrab;
+    std::unique_ptr<MixPartLevelFader> m_mixLevel;
+    std::unique_ptr<Knob> m_panSlider;
+    std::unique_ptr<Knob> m_delaySlider;
+    std::unique_ptr<Knob> m_ReverbSlider;
+    std::unique_ptr<MicroParameterSlider> m_keyShiftSlider;
+    std::unique_ptr<BigOrangeToggle> m_muteToggle;
+    std::unique_ptr<juce::ImageButton> imageButton;
+    std::unique_ptr<juce::Label> m_panLabel;
+    std::unique_ptr<juce::Label> m_keyShiftLabel;
+    std::unique_ptr<juce::Label> m_reverbLabel;
+    std::unique_ptr<juce::Label> m_delayLabel;
+    std::unique_ptr<ParameterTextLabel> m_patchNameEditor;
+    std::unique_ptr<MicroParameterSlider> m_voiceResvSlider;
+    std::unique_ptr<juce::Label> m_voiceResvLabel;
+    std::unique_ptr<SmallGreenToggle> m_mfx_RHYtoggle;
 
 
     //==============================================================================
@@ -115,4 +114,3 @@ private:
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_CFF0C7B8230D1F0C__

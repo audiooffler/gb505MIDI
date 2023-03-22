@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="qabmW6" name="gb505MIDI" projectType="guiapp" version="1.0.0"
               bundleIdentifier="de.spindler.gbMIDI" includeBinaryInAppConfig="1"
-              jucerVersion="5.4.3" cppLanguageStandard="11">
+              displaySplashScreen="1" jucerFormatVersion="1" defines="JUCE_MODAL_LOOPS_PERMITTED=1">
   <MAINGROUP id="n8CjoE" name="gb505MIDI">
     <GROUP id="{AC126E82-0D80-6CBE-EF59-78D17CC82F86}" name="Resources">
       <FILE id="zf7hCa" name="Audio-x-midi.svg" compile="0" resource="1"
@@ -379,29 +379,6 @@
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
-    <VS2013 targetFolder="Builds/VisualStudio2013" smallIcon="vDWcGB" bigIcon="y9F0jy"
-            toolset="v120_xp">
-      <CONFIGURATIONS>
-        <CONFIGURATION name="Debug" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="1" optimisation="1" targetName="gb505MIDI"/>
-        <CONFIGURATION name="Release" winWarningLevel="4" generateManifest="1" winArchitecture="32-bit"
-                       isDebug="0" optimisation="3" targetName="gb505MIDI"/>
-      </CONFIGURATIONS>
-      <MODULEPATHS>
-        <MODULEPATH id="juce_gui_extra" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_gui_basics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_graphics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_events" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_data_structures" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_core" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_audio_processors" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_audio_formats" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_audio_devices" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_audio_utils" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_audio_basics" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-        <MODULEPATH id="juce_opengl" path="F:\Users\Spindler\tinnitus\main\libs\juce\modules"/>
-      </MODULEPATHS>
-    </VS2013>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug"/>
@@ -424,20 +401,20 @@
     </XCODE_MAC>
   </EXPORTFORMATS>
   <MODULES>
-    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0"/>
-    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0"/>
-    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0"/>
+    <MODULES id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULES id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
   </MODULES>
-  <JUCEOPTIONS/>
+  <JUCEOPTIONS JUCE_USE_FLAC="0"/>
   <LIVE_SETTINGS>
     <OSX/>
   </LIVE_SETTINGS>

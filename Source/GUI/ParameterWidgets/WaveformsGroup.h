@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 3.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright 2004-13 by Raw Material Software Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_489CE0A148F98946__
-#define __JUCE_HEADER_489CE0A148F98946__
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
@@ -42,15 +41,15 @@ class WaveformsGroup  : public Component,
 public:
     //==============================================================================
     WaveformsGroup (Waveforms::WaveGroup group);
-    ~WaveformsGroup();
+    ~WaveformsGroup() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
 	void buttonClicked(Button* buttonThatWasClicked);
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (juce::Graphics& g) override;
+    void resized() override;
 
 
 
@@ -75,4 +74,3 @@ private:
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_489CE0A148F98946__

@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -28,12 +28,12 @@
 
 //==============================================================================
 ParameterTextLabel::ParameterTextLabel (const String &componentName)
-    : Label(componentName, String())
+    : Label(componentName, {})
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    cachedImage_mixerTapeLabel_png_1 = ImageCache::getFromMemory (mixerTapeLabel_png, mixerTapeLabel_pngSize);
+    cachedImage_mixerTapeLabel_png_1 = juce::ImageCache::getFromMemory (mixerTapeLabel_png, mixerTapeLabel_pngSize);
 
     //[UserPreSize]
     setFont(Font(Font::getDefaultSansSerifFontName(),11.0f,Font::italic));
@@ -61,15 +61,20 @@ ParameterTextLabel::~ParameterTextLabel()
 }
 
 //==============================================================================
-void ParameterTextLabel::paint (Graphics& g)
+void ParameterTextLabel::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.setColour (Colours::black);
-    g.drawImage (cachedImage_mixerTapeLabel_png_1,
-                 (getWidth() / 2) - (72 / 2), (getHeight() / 2) - (20 / 2), 72, 20,
-                 0, 0, cachedImage_mixerTapeLabel_png_1.getWidth(), cachedImage_mixerTapeLabel_png_1.getHeight());
+    {
+        int x = (getWidth() / 2) - (72 / 2), y = (getHeight() / 2) - (20 / 2), width = 72, height = 20;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (juce::Colours::black);
+        g.drawImage (cachedImage_mixerTapeLabel_png_1,
+                     x, y, width, height,
+                     0, 0, cachedImage_mixerTapeLabel_png_1.getWidth(), cachedImage_mixerTapeLabel_png_1.getHeight());
+    }
 
     //[UserPaint] Add your own custom painting code here..
     Label::paint(g);
@@ -152,9 +157,9 @@ void ParameterTextLabel::changeListenerCallback(ChangeBroadcaster *source)
 
 //==============================================================================
 #if 0
-/*  -- Introjucer information section --
+/*  -- Projucer information section --
 
-    This is where the Introjucer stores the metadata that describe this GUI layout, so
+    This is where the Projucer stores the metadata that describe this GUI layout, so
     make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
@@ -165,7 +170,7 @@ BEGIN_JUCER_METADATA
                  snapActive="1" snapShown="1" overlayOpacity="0.330" fixedSize="1"
                  initialWidth="72" initialHeight="20">
   <BACKGROUND backgroundColour="0">
-    <IMAGE pos="0Cc 0Cc 72 20" resource="mixerTapeLabel_png" opacity="1"
+    <IMAGE pos="0Cc 0Cc 72 20" resource="mixerTapeLabel_png" opacity="1.0"
            mode="0"/>
   </BACKGROUND>
 </JUCER_COMPONENT>
@@ -207,3 +212,4 @@ const int ParameterTextLabel::mixerTapeLabel_pngSize = 1246;
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

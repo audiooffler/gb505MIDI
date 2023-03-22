@@ -92,7 +92,7 @@ public:
 
 private:
     //[UserVariables]   -- You can add your own custom variables in this section.
-	TableHeaderComponent* m_patternEventTableHeader; // will be owed by m_patternEventTable
+	std::unique_ptr<TableHeaderComponent> m_patternEventTableHeader; // will be owed by m_patternEventTable
     //[/UserVariables]
 
     //==============================================================================

@@ -39,7 +39,7 @@ PatternEditorTab::PatternEditorTab ()
 	PatternBodyBlock* patternBodyBlock = grooveboxMemory->getPatternBodyBlock();
 	PatternSetupBlock* patternSetupBlock = grooveboxMemory->getPatternSetupBlock();
 	patternBodyBlock->addChangeListener(this);
-	m_patternEventTableHeader = new TableHeaderComponent();
+	m_patternEventTableHeader.reset(new TableHeaderComponent());
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Position], PatternBodyBlock::Col_Position, 70);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_Raw0], PatternBodyBlock::Col_Raw0, 30);
 	m_patternEventTableHeader->addColumn(PatternBodyBlock::PATTERNTABLE_COLUMN_NAMES_FOR_IDS[PatternBodyBlock::Col_TicksInc], PatternBodyBlock::Col_TicksInc, 30);
@@ -500,7 +500,7 @@ PatternEditorTab::PatternEditorTab ()
 	m_patternEventTable->setMultipleSelectionEnabled(true);
 	m_patternEventTable->setColour(TableListBox::backgroundColourId, GrooveboxLookAndFeel::Mc307LcdBackground);
 	m_patternEventTable->setModel(patternBodyBlock);
-	m_patternEventTable->setHeader(m_patternEventTableHeader);
+	m_patternEventTable->setHeader(std::move(m_patternEventTableHeader));
 	m_patternEventTable->setHeaderHeight(24);
 	changeListenerCallback(patternBodyBlock);
 	patternBodyBlock->setTableSelectionMidiOutId( m_midiOutComboBox->getSelectedId() > 0 ? m_midiOutComboBox->getSelectedId() - 1 : -1);
@@ -1131,7 +1131,7 @@ void PatternEditorTab::savePatternFile()
 			if (file.getFileExtension().toLowerCase() == ".mid")
 			{
 				if (file.existsAsFile()) file.deleteFile();
-				ScopedPointer<OutputStream> saveStream = file.createOutputStream();
+				std::unique_ptr<OutputStream> saveStream (file.createOutputStream());
 				ScopedPointer<MidiFile> midiFile = grooveboxMemory->getPatternBodyBlock()->convertToMidiFile();
 				midiFile->writeTo(*saveStream);
 				writtenSucessfully = true;

@@ -598,15 +598,15 @@ void PitchEditorAdvanced::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == m_lfo1AdvancedButton)
     {
         //[UserButtonCode_m_lfo1AdvancedButton] -- add your button handler code here..
-		LfoEditorAdvanced* advancedLfoEditor = new LfoEditorAdvanced("LFO", m_part, m_tone, false);
-		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo1AdvancedButton->getScreenBounds(), nullptr);
+		std::unique_ptr<Component> advancedLfoEditor (new LfoEditorAdvanced("LFO", m_part, m_tone, false));
+		CallOutBox::launchAsynchronously(std::move(advancedLfoEditor), m_lfo1AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo1AdvancedButton]
     }
     else if (buttonThatWasClicked == m_lfo2AdvancedButton)
     {
         //[UserButtonCode_m_lfo2AdvancedButton] -- add your button handler code here..
-		LfoEditorAdvanced* advancedLfoEditor = new LfoEditorAdvanced("LFO", m_part, m_tone, true);
-		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo2AdvancedButton->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedLfoEditor (new LfoEditorAdvanced("LFO", m_part, m_tone, true));
+		CallOutBox::launchAsynchronously(std::move(advancedLfoEditor), m_lfo2AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo2AdvancedButton]
     }
     else if (buttonThatWasClicked == m_imageButton3)

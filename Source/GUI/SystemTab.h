@@ -72,7 +72,7 @@ private:
 
 	String m_decodedNonEmptyEventsString;
 
-	ScopedPointer<Drawable> m_logoDrawable;
+    std::unique_ptr<Drawable> m_logoDrawable;
 
 	ScopedPointer<Image> img_backgroundTexture;
 	ScopedPointer<Image> img_mc505;

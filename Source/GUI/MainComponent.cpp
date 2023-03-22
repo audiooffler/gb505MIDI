@@ -441,9 +441,9 @@ void MainComponent::buttonClicked(Button* buttonThatWasClicked)
 				// add a separator if ids are not in strict row of incrementing +1
 				if (lastId != 0 && (commandsOfMainComponent[i] - lastId) != 1) menu.addSeparator();
 
-				Drawable* icon = getDrawableForCommand(commandsOfMainComponent[i], (commandInfo.flags & ApplicationCommandInfo::isDisabled) == ApplicationCommandInfo::isDisabled);
+				std::unique_ptr<Drawable> icon (getDrawableForCommand(commandsOfMainComponent[i], (commandInfo.flags & ApplicationCommandInfo::isDisabled) == ApplicationCommandInfo::isDisabled));
 
-				menu.addCommandItem(applicationCommandManager, commandsOfMainComponent[i], String(), icon);
+				menu.addCommandItem(applicationCommandManager, commandsOfMainComponent[i], String(), std::move(icon));
 
 				lastId = commandsOfMainComponent[i];
 			}
@@ -469,7 +469,7 @@ void MainComponent::showInfoDlg()
 	OptionalScopedPointer<Component> splashScreenPtr(splashScreen, true);
 	DialogWindow::LaunchOptions options;
 	options.dialogTitle = JUCEApplication::getInstance()->getApplicationName();
-	options.content = splashScreenPtr;
+	options.content = std::move(splashScreenPtr);
 	options.escapeKeyTriggersCloseButton = true;
 	options.resizable = false;
 	options.launchAsync();

@@ -20,8 +20,8 @@
 //#include <vld.h> 
 
 ApplicationProperties* appProperties = nullptr;
-MidiInput* midiInputDevice = nullptr;
-MidiOutput* midiOutputDevice = nullptr;
+std::unique_ptr<MidiInput> midiInputDevice (nullptr);
+std::unique_ptr<MidiOutput> midiOutputDevice ( nullptr);
 int preferredMidiInId=-1;
 int preferredMidiOutId = -1;
 GrooveboxConnector* grooveboxConnector = nullptr;
@@ -105,8 +105,8 @@ public:
 		lookAndFeel = nullptr;
 		appProperties->saveIfNeeded();
 		deleteAndZero(appProperties);
-		if (midiInputDevice != nullptr) deleteAndZero(midiInputDevice);
-		if (midiOutputDevice != nullptr) deleteAndZero(midiOutputDevice);
+		//if (midiInputDevice != nullptr) deleteAndZero(midiInputDevice);
+		//if (midiOutputDevice != nullptr) deleteAndZero(midiOutputDevice);
 		toolTipWindow = nullptr;
 		deleteAndZero(undoManager);
 		deleteAndZero(grooveboxConnector);

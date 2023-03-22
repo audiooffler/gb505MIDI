@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_6E1B5FB9E7A807DC__
-#define __JUCE_HEADER_6E1B5FB9E7A807DC__
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
@@ -41,7 +40,7 @@ class ParameterTextLabel  : public Label,
 public:
     //==============================================================================
     ParameterTextLabel (const String &componentName);
-    ~ParameterTextLabel();
+    ~ParameterTextLabel() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -55,8 +54,8 @@ public:
 	void changeListenerCallback(ChangeBroadcaster *source);	// parameter changes of groovebox memory block
     //[/UserMethods]
 
-    void paint (Graphics& g);
-    void resized();
+    void paint (juce::Graphics& g) override;
+    void resized() override;
 
     // Binary resources:
     static const char* mixerTapeLabel_png;
@@ -69,7 +68,7 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    Image cachedImage_mixerTapeLabel_png_1;
+    juce::Image cachedImage_mixerTapeLabel_png_1;
 
 
     //==============================================================================
@@ -79,4 +78,3 @@ private:
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_6E1B5FB9E7A807DC__

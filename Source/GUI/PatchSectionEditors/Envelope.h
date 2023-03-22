@@ -1,24 +1,23 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
 
-#ifndef __JUCE_HEADER_C313BABE1D82994__
-#define __JUCE_HEADER_C313BABE1D82994__
+#pragma once
 
 //[Headers]     -- You can add your own extra header files here --
 #include "JuceHeader.h"
@@ -38,12 +37,12 @@
 */
 class Envelope  : public Component,
                   public ChangeListener,
-                  public Slider::Listener
+                  public juce::Slider::Listener
 {
 public:
     //==============================================================================
     Envelope (AllParts part, int toneNumber, EnvelopeTypes type, bool fullSize);
-    ~Envelope();
+    ~Envelope() override;
 
     //==============================================================================
     //[UserMethods]     -- You can add your own custom methods in this section.
@@ -51,9 +50,9 @@ public:
 	void setupParameters(AllParts part, int toneNumber); // allowed toneNumber values are Tone1 = 0x1000, Tone2 = 0x1200, Tone3 = 0x1400, Tone4 = 0x1600 for synth parts or 35..98 for rhythm part
     //[/UserMethods]
 
-    void paint (Graphics& g) override;
+    void paint (juce::Graphics& g) override;
     void resized() override;
-    void sliderValueChanged (Slider* sliderThatWasMoved) override;
+    void sliderValueChanged (juce::Slider* sliderThatWasMoved) override;
 
 
 
@@ -118,21 +117,21 @@ private:
     //[/UserVariables]
 
     //==============================================================================
-    ScopedPointer<Label> m_level3Label;
-    ScopedPointer<MicroParameterSlider> m_time1;
-    ScopedPointer<Label> m_time1Label;
-    ScopedPointer<MicroParameterSlider> m_level1;
-    ScopedPointer<MicroParameterSlider> m_time2;
-    ScopedPointer<MicroParameterSlider> m_level2;
-    ScopedPointer<MicroParameterSlider> m_time3;
-    ScopedPointer<Label> m_time3Label;
-    ScopedPointer<MicroParameterSlider> m_level3;
-    ScopedPointer<MicroParameterSlider> m_time4;
-    ScopedPointer<Label> m_time4Label;
-    ScopedPointer<MicroParameterSlider> m_level4;
-    ScopedPointer<Label> m_timeLabel;
-    ScopedPointer<Label> m_levelLabel;
-    ScopedPointer<EnvVis> m_envVisComponent;
+    std::unique_ptr<juce::Label> m_level3Label;
+    std::unique_ptr<MicroParameterSlider> m_time1;
+    std::unique_ptr<juce::Label> m_time1Label;
+    std::unique_ptr<MicroParameterSlider> m_level1;
+    std::unique_ptr<MicroParameterSlider> m_time2;
+    std::unique_ptr<MicroParameterSlider> m_level2;
+    std::unique_ptr<MicroParameterSlider> m_time3;
+    std::unique_ptr<juce::Label> m_time3Label;
+    std::unique_ptr<MicroParameterSlider> m_level3;
+    std::unique_ptr<MicroParameterSlider> m_time4;
+    std::unique_ptr<juce::Label> m_time4Label;
+    std::unique_ptr<MicroParameterSlider> m_level4;
+    std::unique_ptr<juce::Label> m_timeLabel;
+    std::unique_ptr<juce::Label> m_levelLabel;
+    std::unique_ptr<EnvVis> m_envVisComponent;
 
 
     //==============================================================================
@@ -142,4 +141,3 @@ private:
 //[EndFile] You can add extra defines here...
 //[/EndFile]
 
-#endif   // __JUCE_HEADER_C313BABE1D82994__

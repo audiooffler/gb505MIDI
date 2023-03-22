@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -46,7 +46,7 @@ SmallGreenToggle::SmallGreenToggle (const String& componentName)
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    cachedImage_smallOrangeToggleOff_png_1 = ImageCache::getFromMemory (smallOrangeToggleOff_png, smallOrangeToggleOff_pngSize);
+    cachedImage_smallOrangeToggleOff_png_1 = juce::ImageCache::getFromMemory (smallOrangeToggleOff_png, smallOrangeToggleOff_pngSize);
 
     //[UserPreSize]
 	cachedImage_smallGreenToggleOn_png = ImageCache::getFromMemory(smallGreenToggleOn_png, smallGreenToggleOn_pngSize);
@@ -71,16 +71,21 @@ SmallGreenToggle::~SmallGreenToggle()
 }
 
 //==============================================================================
-void SmallGreenToggle::paint (Graphics& g)
+void SmallGreenToggle::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
 	//ToggleButton::paint(g);
     //[/UserPrePaint]
 
-    g.setColour (Colours::black);
-    g.drawImage (cachedImage_smallOrangeToggleOff_png_1,
-                 (getWidth() / 2) - (12 / 2), (getHeight() / 2) - (12 / 2), 12, 12,
-                 0, 0, cachedImage_smallOrangeToggleOff_png_1.getWidth(), cachedImage_smallOrangeToggleOff_png_1.getHeight());
+    {
+        int x = (getWidth() / 2) - (12 / 2), y = (getHeight() / 2) - (12 / 2), width = 12, height = 12;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (juce::Colours::black);
+        g.drawImage (cachedImage_smallOrangeToggleOff_png_1,
+                     x, y, width, height,
+                     0, 0, cachedImage_smallOrangeToggleOff_png_1.getWidth(), cachedImage_smallOrangeToggleOff_png_1.getHeight());
+    }
 
     //[UserPaint] Add your own custom painting code here..
 	if (getToggleState())
@@ -103,7 +108,7 @@ void SmallGreenToggle::resized()
     //[/UserResized]
 }
 
-void SmallGreenToggle::mouseDown (const MouseEvent& e)
+void SmallGreenToggle::mouseDown (const juce::MouseEvent& e)
 {
     //[UserCode_mouseDown] -- Add your code here...
     if (m_isInTable) getParentComponent()->mouseDown(e);
@@ -119,9 +124,9 @@ void SmallGreenToggle::mouseDown (const MouseEvent& e)
 
 //==============================================================================
 #if 0
-/*  -- Introjucer information section --
+/*  -- Projucer information section --
 
-    This is where the Introjucer stores the metadata that describe this GUI layout, so
+    This is where the Projucer stores the metadata that describe this GUI layout, so
     make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
@@ -135,7 +140,7 @@ BEGIN_JUCER_METADATA
     <METHOD name="mouseDown (const MouseEvent&amp; e)"/>
   </METHODS>
   <BACKGROUND backgroundColour="0">
-    <IMAGE pos="0Cc 0Cc 12 12" resource="smallOrangeToggleOff_png" opacity="1"
+    <IMAGE pos="0Cc 0Cc 12 12" resource="smallOrangeToggleOff_png" opacity="1.0"
            mode="0"/>
   </BACKGROUND>
 </JUCER_COMPONENT>
@@ -184,3 +189,4 @@ const int SmallGreenToggle::smallGreenToggleOn_pngSize = 660;
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

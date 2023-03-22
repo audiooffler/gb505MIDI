@@ -335,8 +335,8 @@ void LfoEditor::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == m_advancedButton)
     {
         //[UserButtonCode_m_advancedButton] -- add your button handler code here..
-		LfoEditorAdvanced* advancedLfoEditor = new LfoEditorAdvanced("LFO", m_part, m_tone, m_lfo2);
-		CallOutBox::launchAsynchronously(advancedLfoEditor, m_advancedButton->getScreenBounds(), nullptr);
+		std::unique_ptr<Component> advancedLfoEditor (new LfoEditorAdvanced("LFO", m_part, m_tone, m_lfo2));
+		CallOutBox::launchAsynchronously(std::move(advancedLfoEditor), m_advancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_advancedButton]
     }
     else if (buttonThatWasClicked == m_imageButton)

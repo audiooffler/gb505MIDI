@@ -74,7 +74,7 @@ private:
 	// creates a pre-rendered image (stored in m_preRenderedDiagram)
 	void loadSvg();
 
-	ScopedPointer<XmlElement> m_svgXmlElement;
+	std::unique_ptr<XmlElement> m_svgXmlElement;
 	AffineTransform m_valueToSvgCoords;
 	AffineTransform m_SvgCoordsToComponentCoords;
 	Image m_preRenderedDiagram;

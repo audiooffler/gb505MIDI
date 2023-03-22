@@ -138,7 +138,7 @@ public:
 	void timerCallback() override;
 	void selectedRowsChanged(int lastRowSelected) override;
 	void setTableSelectionMidiOutId(int id);
-	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut; }
+	MidiOutput* getOpenTableSelectionMidiOut() { return tableSelectionMidiOut.get(); }
 
 	void refreshFilteredContent();
 	void changeListenerCallback(ChangeBroadcaster *source) override;
@@ -231,7 +231,7 @@ private:
 	OwnedArray<PatternEventData> m_sequenceBlocks;	// containing 8 bytes each
 	OwnedArray<PatternEventData> m_filteredsequenceBlocks;	// event references (still owned by m_sequenceBlocks) to be shown in table (m_sequenceBlocks after view filtering according to VirtualPatternTableFilterBlock m_patternTableFilterParams)
 	int m_lastSelectedRowFilteredsequence = -1;
-	ScopedPointer<MidiOutput> tableSelectionMidiOut = nullptr;
+    std::unique_ptr<juce::MidiOutput> tableSelectionMidiOut = nullptr;
 	ScopedPointer<PlayerThread> m_playerThread;
 	ScopedPointer<VirtualPatternTableFilterBlock> m_patternTableFilterParams;
 	HashMap<int, String> m_midiCCNames;

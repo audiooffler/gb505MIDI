@@ -607,15 +607,15 @@ void PatchEditor::buttonClicked (Button* buttonThatWasClicked)
     if (buttonThatWasClicked == m_soloLegatoEditButton)
     {
         //[UserButtonCode_m_soloLegatoEditButton] -- add your button handler code here..
-		SoloLegatoEditor* soloLegatoEditor = new SoloLegatoEditor("SOLO / LEGATO EDITOR", m_part);
-		CallOutBox::launchAsynchronously(soloLegatoEditor, buttonThatWasClicked->getScreenBounds(), nullptr);
+		std::unique_ptr<Component> soloLegatoEditor ( new SoloLegatoEditor("SOLO / LEGATO EDITOR", m_part) );
+		CallOutBox::launchAsynchronously(std::move(soloLegatoEditor), buttonThatWasClicked->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_soloLegatoEditButton]
     }
     else if (buttonThatWasClicked == m_toneMixTableButton)
     {
         //[UserButtonCode_m_toneMixTableButton] -- add your button handler code here..
-		ToneMixTable* toneMixTable = new ToneMixTable("TONE MIX TABLE", m_part);
-		CallOutBox::launchAsynchronously(toneMixTable, buttonThatWasClicked->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> toneMixTable ( new ToneMixTable("TONE MIX TABLE", m_part) );
+		CallOutBox::launchAsynchronously(std::move(toneMixTable), buttonThatWasClicked->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_toneMixTableButton]
     }
     else if (buttonThatWasClicked == imageButton2)

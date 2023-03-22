@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -407,124 +407,139 @@ void Envelope::EnvVis::mouseUp(const MouseEvent& e)
 
 //==============================================================================
 Envelope::Envelope (AllParts part, int toneNumber, EnvelopeTypes type, bool fullSize)
-    : m_name("Pitch Envelope"), m_fullSize (fullSize), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false), m_part (part), m_toneNumber (toneNumber), m_type (type)
+    : m_part (part), m_toneNumber (toneNumber), m_type (type), m_fullSize (fullSize), m_name("Pitch Envelope"), m_minLevel(-63), m_maxLevel(63), m_level4Always0(false)
 {
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (m_level3Label = new Label ("level3Label",
-                                                  TRANS("S")));
-    m_level3Label->setFont (Font (12.00f, Font::bold));
-    m_level3Label->setJustificationType (Justification::centred);
+    m_level3Label.reset (new juce::Label ("level3Label",
+                                          TRANS("S")));
+    addAndMakeVisible (m_level3Label.get());
+    m_level3Label->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_level3Label->setJustificationType (juce::Justification::centred);
     m_level3Label->setEditable (false, false, false);
-    m_level3Label->setColour (TextEditor::textColourId, Colours::black);
-    m_level3Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_level3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_level3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_time1 = new MicroParameterSlider ("time1"));
+    m_time1.reset (new MicroParameterSlider ("time1"));
+    addAndMakeVisible (m_time1.get());
     m_time1->setRange (0, 127, 1);
-    m_time1->setSliderStyle (Slider::LinearBar);
-    m_time1->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_time1->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_time1->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_time1->setSliderStyle (juce::Slider::LinearBar);
+    m_time1->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_time1->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_time1->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_time1->addListener (this);
 
-    addAndMakeVisible (m_time1Label = new Label ("time1Label",
-                                                 TRANS("A")));
-    m_time1Label->setFont (Font (12.00f, Font::bold));
-    m_time1Label->setJustificationType (Justification::centred);
+    m_time1Label.reset (new juce::Label ("time1Label",
+                                         TRANS("A")));
+    addAndMakeVisible (m_time1Label.get());
+    m_time1Label->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_time1Label->setJustificationType (juce::Justification::centred);
     m_time1Label->setEditable (false, false, false);
-    m_time1Label->setColour (TextEditor::textColourId, Colours::black);
-    m_time1Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_time1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_time1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_level1 = new MicroParameterSlider ("level1"));
+    m_level1.reset (new MicroParameterSlider ("level1"));
+    addAndMakeVisible (m_level1.get());
     m_level1->setRange (0, 127, 1);
-    m_level1->setSliderStyle (Slider::LinearBar);
-    m_level1->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_level1->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_level1->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_level1->setSliderStyle (juce::Slider::LinearBar);
+    m_level1->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_level1->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_level1->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_level1->addListener (this);
 
-    addAndMakeVisible (m_time2 = new MicroParameterSlider ("time2"));
+    m_time2.reset (new MicroParameterSlider ("time2"));
+    addAndMakeVisible (m_time2.get());
     m_time2->setRange (0, 127, 1);
-    m_time2->setSliderStyle (Slider::LinearBar);
-    m_time2->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_time2->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_time2->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_time2->setSliderStyle (juce::Slider::LinearBar);
+    m_time2->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_time2->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_time2->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_time2->addListener (this);
 
-    addAndMakeVisible (m_level2 = new MicroParameterSlider ("level2"));
+    m_level2.reset (new MicroParameterSlider ("level2"));
+    addAndMakeVisible (m_level2.get());
     m_level2->setRange (0, 127, 1);
-    m_level2->setSliderStyle (Slider::LinearBar);
-    m_level2->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_level2->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_level2->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_level2->setSliderStyle (juce::Slider::LinearBar);
+    m_level2->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_level2->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_level2->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_level2->addListener (this);
 
-    addAndMakeVisible (m_time3 = new MicroParameterSlider ("time3"));
+    m_time3.reset (new MicroParameterSlider ("time3"));
+    addAndMakeVisible (m_time3.get());
     m_time3->setRange (0, 127, 1);
-    m_time3->setSliderStyle (Slider::LinearBar);
-    m_time3->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_time3->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_time3->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_time3->setSliderStyle (juce::Slider::LinearBar);
+    m_time3->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_time3->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_time3->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_time3->addListener (this);
 
-    addAndMakeVisible (m_time3Label = new Label ("time3Label",
-                                                 TRANS("D")));
-    m_time3Label->setFont (Font (12.00f, Font::bold));
-    m_time3Label->setJustificationType (Justification::centred);
+    m_time3Label.reset (new juce::Label ("time3Label",
+                                         TRANS("D")));
+    addAndMakeVisible (m_time3Label.get());
+    m_time3Label->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_time3Label->setJustificationType (juce::Justification::centred);
     m_time3Label->setEditable (false, false, false);
-    m_time3Label->setColour (TextEditor::textColourId, Colours::black);
-    m_time3Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_time3Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_time3Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_level3 = new MicroParameterSlider ("level3"));
+    m_level3.reset (new MicroParameterSlider ("level3"));
+    addAndMakeVisible (m_level3.get());
     m_level3->setRange (0, 127, 1);
-    m_level3->setSliderStyle (Slider::LinearBar);
-    m_level3->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_level3->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_level3->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_level3->setSliderStyle (juce::Slider::LinearBar);
+    m_level3->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_level3->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_level3->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_level3->addListener (this);
 
-    addAndMakeVisible (m_time4 = new MicroParameterSlider ("time4"));
+    m_time4.reset (new MicroParameterSlider ("time4"));
+    addAndMakeVisible (m_time4.get());
     m_time4->setRange (0, 127, 1);
-    m_time4->setSliderStyle (Slider::LinearBar);
-    m_time4->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_time4->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_time4->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_time4->setSliderStyle (juce::Slider::LinearBar);
+    m_time4->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_time4->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_time4->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_time4->addListener (this);
 
-    addAndMakeVisible (m_time4Label = new Label ("time4Label",
-                                                 TRANS("R")));
-    m_time4Label->setFont (Font (12.00f, Font::bold));
-    m_time4Label->setJustificationType (Justification::centred);
+    m_time4Label.reset (new juce::Label ("time4Label",
+                                         TRANS("R")));
+    addAndMakeVisible (m_time4Label.get());
+    m_time4Label->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_time4Label->setJustificationType (juce::Justification::centred);
     m_time4Label->setEditable (false, false, false);
-    m_time4Label->setColour (TextEditor::textColourId, Colours::black);
-    m_time4Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_time4Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_time4Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_level4 = new MicroParameterSlider ("level4"));
+    m_level4.reset (new MicroParameterSlider ("level4"));
+    addAndMakeVisible (m_level4.get());
     m_level4->setRange (0, 127, 1);
-    m_level4->setSliderStyle (Slider::LinearBar);
-    m_level4->setTextBoxStyle (Slider::TextBoxLeft, false, 64, 20);
-    m_level4->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_level4->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_level4->setSliderStyle (juce::Slider::LinearBar);
+    m_level4->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 64, 20);
+    m_level4->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_level4->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_level4->addListener (this);
 
-    addAndMakeVisible (m_timeLabel = new Label ("timeLabel",
-                                                TRANS("TIME")));
-    m_timeLabel->setFont (Font (12.00f, Font::bold));
-    m_timeLabel->setJustificationType (Justification::centredRight);
+    m_timeLabel.reset (new juce::Label ("timeLabel",
+                                        TRANS("TIME")));
+    addAndMakeVisible (m_timeLabel.get());
+    m_timeLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_timeLabel->setJustificationType (juce::Justification::centredRight);
     m_timeLabel->setEditable (false, false, false);
-    m_timeLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_timeLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_timeLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_timeLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_levelLabel = new Label ("levelLabel",
-                                                 TRANS("LEVEL")));
-    m_levelLabel->setFont (Font (12.00f, Font::bold));
-    m_levelLabel->setJustificationType (Justification::centredRight);
+    m_levelLabel.reset (new juce::Label ("levelLabel",
+                                         TRANS("LEVEL")));
+    addAndMakeVisible (m_levelLabel.get());
+    m_levelLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_levelLabel->setJustificationType (juce::Justification::centredRight);
     m_levelLabel->setEditable (false, false, false);
-    m_levelLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_levelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_levelLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_levelLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_envVisComponent = new EnvVis (this, type));
+    m_envVisComponent.reset (new EnvVis (this, type));
+    addAndMakeVisible (m_envVisComponent.get());
     m_envVisComponent->setName ("envVisComponent");
 
 
@@ -618,7 +633,7 @@ Envelope::~Envelope()
 }
 
 //==============================================================================
-void Envelope::paint (Graphics& g)
+void Envelope::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
 	#if JUCE_MSVC
@@ -655,47 +670,47 @@ void Envelope::resized()
     //[/UserResized]
 }
 
-void Envelope::sliderValueChanged (Slider* sliderThatWasMoved)
+void Envelope::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == m_time1)
+    if (sliderThatWasMoved == m_time1.get())
     {
         //[UserSliderCode_m_time1] -- add your slider handling code here..
         //[/UserSliderCode_m_time1]
     }
-    else if (sliderThatWasMoved == m_level1)
+    else if (sliderThatWasMoved == m_level1.get())
     {
         //[UserSliderCode_m_level1] -- add your slider handling code here..
         //[/UserSliderCode_m_level1]
     }
-    else if (sliderThatWasMoved == m_time2)
+    else if (sliderThatWasMoved == m_time2.get())
     {
         //[UserSliderCode_m_time2] -- add your slider handling code here..
         //[/UserSliderCode_m_time2]
     }
-    else if (sliderThatWasMoved == m_level2)
+    else if (sliderThatWasMoved == m_level2.get())
     {
         //[UserSliderCode_m_level2] -- add your slider handling code here..
         //[/UserSliderCode_m_level2]
     }
-    else if (sliderThatWasMoved == m_time3)
+    else if (sliderThatWasMoved == m_time3.get())
     {
         //[UserSliderCode_m_time3] -- add your slider handling code here..
         //[/UserSliderCode_m_time3]
     }
-    else if (sliderThatWasMoved == m_level3)
+    else if (sliderThatWasMoved == m_level3.get())
     {
         //[UserSliderCode_m_level3] -- add your slider handling code here..
         //[/UserSliderCode_m_level3]
     }
-    else if (sliderThatWasMoved == m_time4)
+    else if (sliderThatWasMoved == m_time4.get())
     {
         //[UserSliderCode_m_time4] -- add your slider handling code here..
         //[/UserSliderCode_m_time4]
     }
-    else if (sliderThatWasMoved == m_level4)
+    else if (sliderThatWasMoved == m_level4.get())
     {
         //[UserSliderCode_m_level4] -- add your slider handling code here..
         //[/UserSliderCode_m_level4]
@@ -952,9 +967,9 @@ void Envelope::changeListenerCallback(ChangeBroadcaster* source)
 
 //==============================================================================
 #if 0
-/*  -- Introjucer information section --
+/*  -- Projucer information section --
 
-    This is where the Introjucer stores the metadata that describe this GUI layout, so
+    This is where the Projucer stores the metadata that describe this GUI layout, so
     make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
@@ -968,72 +983,73 @@ BEGIN_JUCER_METADATA
   <LABEL name="level3Label" id="3bad768bd7aaf71e" memberName="m_level3Label"
          virtualName="" explicitFocusOrder="0" pos="174 20Rr 48 16" edTextCol="ff000000"
          edBkgCol="0" labelText="S" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="36"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
+         kerning="0.0" bold="1" italic="0" justification="36" typefaceStyle="Bold"/>
   <SLIDER name="time1" id="2b89b2c11e2ad524" memberName="m_time1" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="50 34Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="time1Label" id="18f640a804ccc217" memberName="m_time1Label"
          virtualName="" explicitFocusOrder="0" pos="54 48Rr 48 16" edTextCol="ff000000"
          edBkgCol="0" labelText="A" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="36"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
+         kerning="0.0" bold="1" italic="0" justification="36" typefaceStyle="Bold"/>
   <SLIDER name="level1" id="3dafcb7ace1815c1" memberName="m_level1" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="50 6Rr 56 16" bkgcol="fff2f59b" thumbcol="ffc4c86d"
-          min="0" max="127" int="1" style="LinearBar" textBoxPos="TextBoxLeft"
-          textBoxEditable="1" textBoxWidth="64" textBoxHeight="20" skewFactor="1"/>
+          min="0.0" max="127.0" int="1.0" style="LinearBar" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="64" textBoxHeight="20" skewFactor="1.0"
+          needsCallback="1"/>
   <SLIDER name="time2" id="1cc14093ff75920c" memberName="m_time2" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="110 34Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <SLIDER name="level2" id="dd578938f7654389" memberName="m_level2" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="110 6Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <SLIDER name="time3" id="2678b83fffabda5f" memberName="m_time3" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="170 34Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="time3Label" id="eda22862a10f1fab" memberName="m_time3Label"
          virtualName="" explicitFocusOrder="0" pos="174 48Rr 48 16" edTextCol="ff000000"
          edBkgCol="0" labelText="D" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="36"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
+         kerning="0.0" bold="1" italic="0" justification="36" typefaceStyle="Bold"/>
   <SLIDER name="level3" id="cdaf309610cf03e9" memberName="m_level3" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="170 6Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <SLIDER name="time4" id="5110947541e3217e" memberName="m_time4" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="230 34Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="time4Label" id="ee6a791ad2fe125" memberName="m_time4Label"
          virtualName="" explicitFocusOrder="0" pos="234 48Rr 48 16" edTextCol="ff000000"
          edBkgCol="0" labelText="R" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="36"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
+         kerning="0.0" bold="1" italic="0" justification="36" typefaceStyle="Bold"/>
   <SLIDER name="level4" id="84174e1eb072d650" memberName="m_level4" virtualName="MicroParameterSlider"
           explicitFocusOrder="0" pos="230 6Rr 56 16" bkgcol="fff2f59b"
-          thumbcol="ffc4c86d" min="0" max="127" int="1" style="LinearBar"
+          thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0" style="LinearBar"
           textBoxPos="TextBoxLeft" textBoxEditable="1" textBoxWidth="64"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="timeLabel" id="2b5a8ff5555917df" memberName="m_timeLabel"
          virtualName="" explicitFocusOrder="0" pos="4 34Rr 44 16" edTextCol="ff000000"
          edBkgCol="0" labelText="TIME" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="34"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
+         kerning="0.0" bold="1" italic="0" justification="34" typefaceStyle="Bold"/>
   <LABEL name="levelLabel" id="1f0cf42ee7f140e4" memberName="m_levelLabel"
          virtualName="" explicitFocusOrder="0" pos="4 6Rr 44 16" edTextCol="ff000000"
          edBkgCol="0" labelText="LEVEL" editableSingleClick="0" editableDoubleClick="0"
-         focusDiscardsChanges="0" fontname="Default font" fontsize="12"
-         bold="1" italic="0" justification="34"/>
+         focusDiscardsChanges="0" fontname="Default font" fontsize="12.0"
+         kerning="0.0" bold="1" italic="0" justification="34" typefaceStyle="Bold"/>
   <GENERICCOMPONENT name="envVisComponent" id="3dcfd7ac420d53cd" memberName="m_envVisComponent"
                     virtualName="" explicitFocusOrder="0" pos="4 4 8M 68M" class="EnvVis"
                     params="this, type"/>
@@ -1046,3 +1062,4 @@ END_JUCER_METADATA
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

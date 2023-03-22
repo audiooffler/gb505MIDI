@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -35,323 +35,451 @@ AmpEditorAdvanced::AmpEditorAdvanced (const String &componentName, SynthParts pa
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    addAndMakeVisible (m_ampGrp = new PanelGroupGrey ("ampGrp", getName()));
-    addAndMakeVisible (m_ampEnvGrp = new PanelGroupGrey ("ampEnvGrp", getName().toUpperCase()+" ENVELOPE"));
-    addAndMakeVisible (m_panGrp = new PanelGroupGrey ("panGrp", "PAN"));
-    addAndMakeVisible (m_biasGrp = new PanelGroupGrey ("biasGrp", "BIAS"));
-    addAndMakeVisible (m_tonePanSlider = new Knob ("tonePanSlider"));
+    m_ampGrp.reset (new PanelGroupGrey ("ampGrp", getName()));
+    addAndMakeVisible (m_ampGrp.get());
+    m_ampEnvGrp.reset (new PanelGroupGrey ("ampEnvGrp", getName().toUpperCase()+" ENVELOPE"));
+    addAndMakeVisible (m_ampEnvGrp.get());
+    m_panGrp.reset (new PanelGroupGrey ("panGrp", "PAN"));
+    addAndMakeVisible (m_panGrp.get());
+    m_biasGrp.reset (new PanelGroupGrey ("biasGrp", "BIAS"));
+    addAndMakeVisible (m_biasGrp.get());
+    m_tonePanSlider.reset (new Knob ("tonePanSlider"));
+    addAndMakeVisible (m_tonePanSlider.get());
     m_tonePanSlider->setRange (0, 127, 1);
-    m_tonePanSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_tonePanSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 16);
-    m_tonePanSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_tonePanSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    m_tonePanSlider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 80, 16);
+    m_tonePanSlider->setColour (juce::Slider::textBoxBackgroundColourId, juce::Colour (0xfff2f59b));
     m_tonePanSlider->addListener (this);
 
-    addAndMakeVisible (m_tonePanLabel = new Label ("tonePanLabel",
-                                                   TRANS("TONE PAN")));
-    m_tonePanLabel->setFont (Font (12.00f, Font::bold));
-    m_tonePanLabel->setJustificationType (Justification::centred);
+    m_tonePanSlider->setBounds (208, 40, 48, 60);
+
+    m_tonePanLabel.reset (new juce::Label ("tonePanLabel",
+                                           TRANS("TONE PAN")));
+    addAndMakeVisible (m_tonePanLabel.get());
+    m_tonePanLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_tonePanLabel->setJustificationType (juce::Justification::centred);
     m_tonePanLabel->setEditable (false, false, false);
-    m_tonePanLabel->setColour (Label::textColourId, Colours::black);
-    m_tonePanLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_tonePanLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_tonePanLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_tonePanLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_tonePanLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_ampEnv = new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Amp, false));
-    addAndMakeVisible (m_panKeyfollowLabel = new Label ("panKeyfollowLabel",
-                                                        TRANS("KEYFOLLOW")));
-    m_panKeyfollowLabel->setFont (Font (12.00f, Font::bold));
-    m_panKeyfollowLabel->setJustificationType (Justification::centred);
+    m_tonePanLabel->setBounds (196, 20, 72, 16);
+
+    m_ampEnv.reset (new Envelope ((AllParts)m_part, m_tone, EnvelopeTypes::Amp, false));
+    addAndMakeVisible (m_ampEnv.get());
+    m_ampEnv->setBounds (72, 156, 296, 156);
+
+    m_panKeyfollowLabel.reset (new juce::Label ("panKeyfollowLabel",
+                                                TRANS("KEYFOLLOW")));
+    addAndMakeVisible (m_panKeyfollowLabel.get());
+    m_panKeyfollowLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_panKeyfollowLabel->setJustificationType (juce::Justification::centred);
     m_panKeyfollowLabel->setEditable (false, false, false);
-    m_panKeyfollowLabel->setColour (Label::textColourId, Colours::black);
-    m_panKeyfollowLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_panKeyfollowLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_panKeyfollowLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_panKeyfollowLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_panKeyfollowLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_panKeyfollowSlider = new KeyfollowMicroParameterSlider ("panKeyfollowSlider"));
+    m_panKeyfollowLabel->setBounds (280, 32, 80, 16);
+
+    m_panKeyfollowSlider.reset (new KeyfollowMicroParameterSlider ("panKeyfollowSlider"));
+    addAndMakeVisible (m_panKeyfollowSlider.get());
     m_panKeyfollowSlider->setRange (0, 127, 1);
-    m_panKeyfollowSlider->setSliderStyle (Slider::LinearBar);
-    m_panKeyfollowSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_panKeyfollowSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_panKeyfollowSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_panKeyfollowSlider->setSliderStyle (juce::Slider::LinearBar);
+    m_panKeyfollowSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_panKeyfollowSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_panKeyfollowSlider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_panKeyfollowSlider->addListener (this);
 
-    addAndMakeVisible (m_ampVelocitySensSlider = new MicroParameterSlider ("ampVelocitySensSlider"));
+    m_panKeyfollowSlider->setBounds (296, 48, 48, 16);
+
+    m_ampVelocitySensSlider.reset (new MicroParameterSlider ("ampVelocitySensSlider"));
+    addAndMakeVisible (m_ampVelocitySensSlider.get());
     m_ampVelocitySensSlider->setRange (0, 127, 1);
-    m_ampVelocitySensSlider->setSliderStyle (Slider::LinearBar);
-    m_ampVelocitySensSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_ampVelocitySensSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_ampVelocitySensSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_ampVelocitySensSlider->setSliderStyle (juce::Slider::LinearBar);
+    m_ampVelocitySensSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_ampVelocitySensSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_ampVelocitySensSlider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_ampVelocitySensSlider->addListener (this);
 
-    addAndMakeVisible (m_ampEnvVelocitySensLabel = new Label ("ampEnvVelocitySensLabel",
-                                                              TRANS("VELO SENS")));
-    m_ampEnvVelocitySensLabel->setFont (Font (12.00f, Font::bold));
-    m_ampEnvVelocitySensLabel->setJustificationType (Justification::centred);
-    m_ampEnvVelocitySensLabel->setEditable (false, false, false);
-    m_ampEnvVelocitySensLabel->setColour (Label::textColourId, Colours::black);
-    m_ampEnvVelocitySensLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_ampEnvVelocitySensLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_ampVelocitySensSlider->setBounds (8, 306, 56, 16);
 
-    addAndMakeVisible (m_ampEnvVelocityTime1Slider = new MicroParameterSlider ("ampEnvVelocityTime1Slider"));
+    m_ampEnvVelocitySensLabel.reset (new juce::Label ("ampEnvVelocitySensLabel",
+                                                      TRANS("VELO SENS")));
+    addAndMakeVisible (m_ampEnvVelocitySensLabel.get());
+    m_ampEnvVelocitySensLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_ampEnvVelocitySensLabel->setJustificationType (juce::Justification::centred);
+    m_ampEnvVelocitySensLabel->setEditable (false, false, false);
+    m_ampEnvVelocitySensLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_ampEnvVelocitySensLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_ampEnvVelocitySensLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_ampEnvVelocitySensLabel->setBounds (0, 290, 72, 16);
+
+    m_ampEnvVelocityTime1Slider.reset (new MicroParameterSlider ("ampEnvVelocityTime1Slider"));
+    addAndMakeVisible (m_ampEnvVelocityTime1Slider.get());
     m_ampEnvVelocityTime1Slider->setRange (0, 127, 1);
-    m_ampEnvVelocityTime1Slider->setSliderStyle (Slider::LinearBar);
-    m_ampEnvVelocityTime1Slider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_ampEnvVelocityTime1Slider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_ampEnvVelocityTime1Slider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_ampEnvVelocityTime1Slider->setSliderStyle (juce::Slider::LinearBar);
+    m_ampEnvVelocityTime1Slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_ampEnvVelocityTime1Slider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_ampEnvVelocityTime1Slider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_ampEnvVelocityTime1Slider->addListener (this);
 
-    addAndMakeVisible (m_ampEnvVelocityTime1Label = new Label ("ampEnvVelocityTime1Label",
-                                                               TRANS("VELO SENS TIME 1")));
-    m_ampEnvVelocityTime1Label->setFont (Font (12.00f, Font::bold));
-    m_ampEnvVelocityTime1Label->setJustificationType (Justification::centred);
-    m_ampEnvVelocityTime1Label->setEditable (false, false, false);
-    m_ampEnvVelocityTime1Label->setColour (Label::textColourId, Colours::black);
-    m_ampEnvVelocityTime1Label->setColour (TextEditor::textColourId, Colours::black);
-    m_ampEnvVelocityTime1Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_ampEnvVelocityTime1Slider->setBounds (124, 332, 56, 16);
 
-    addAndMakeVisible (m_ampEnvVelocityTime4Slider = new MicroParameterSlider ("ampEnvVelocityTime4Slider"));
+    m_ampEnvVelocityTime1Label.reset (new juce::Label ("ampEnvVelocityTime1Label",
+                                                       TRANS("VELO SENS TIME 1")));
+    addAndMakeVisible (m_ampEnvVelocityTime1Label.get());
+    m_ampEnvVelocityTime1Label->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_ampEnvVelocityTime1Label->setJustificationType (juce::Justification::centred);
+    m_ampEnvVelocityTime1Label->setEditable (false, false, false);
+    m_ampEnvVelocityTime1Label->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_ampEnvVelocityTime1Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_ampEnvVelocityTime1Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_ampEnvVelocityTime1Label->setBounds (84, 316, 112, 16);
+
+    m_ampEnvVelocityTime4Slider.reset (new MicroParameterSlider ("ampEnvVelocityTime4Slider"));
+    addAndMakeVisible (m_ampEnvVelocityTime4Slider.get());
     m_ampEnvVelocityTime4Slider->setRange (0, 127, 1);
-    m_ampEnvVelocityTime4Slider->setSliderStyle (Slider::LinearBar);
-    m_ampEnvVelocityTime4Slider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_ampEnvVelocityTime4Slider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_ampEnvVelocityTime4Slider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_ampEnvVelocityTime4Slider->setSliderStyle (juce::Slider::LinearBar);
+    m_ampEnvVelocityTime4Slider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_ampEnvVelocityTime4Slider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_ampEnvVelocityTime4Slider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_ampEnvVelocityTime4Slider->addListener (this);
 
-    addAndMakeVisible (m_ampEnvVelocityTime4Label = new Label ("ampEnvVelocityTime4Label",
-                                                               TRANS("VELO SENS TIME 4")));
-    m_ampEnvVelocityTime4Label->setFont (Font (12.00f, Font::bold));
-    m_ampEnvVelocityTime4Label->setJustificationType (Justification::centred);
+    m_ampEnvVelocityTime4Slider->setBounds (300, 332, 56, 16);
+
+    m_ampEnvVelocityTime4Label.reset (new juce::Label ("ampEnvVelocityTime4Label",
+                                                       TRANS("VELO SENS TIME 4")));
+    addAndMakeVisible (m_ampEnvVelocityTime4Label.get());
+    m_ampEnvVelocityTime4Label->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_ampEnvVelocityTime4Label->setJustificationType (juce::Justification::centred);
     m_ampEnvVelocityTime4Label->setEditable (false, false, false);
-    m_ampEnvVelocityTime4Label->setColour (Label::textColourId, Colours::black);
-    m_ampEnvVelocityTime4Label->setColour (TextEditor::textColourId, Colours::black);
-    m_ampEnvVelocityTime4Label->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_ampEnvVelocityTime4Label->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_ampEnvVelocityTime4Label->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_ampEnvVelocityTime4Label->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_ampEnvTimeKeyfollow = new Label ("ampEnvTimeKeyfollow",
-                                                          TRANS("KEYFOLLOW TIME 2/3/4 ")));
-    m_ampEnvTimeKeyfollow->setFont (Font (12.00f, Font::bold));
-    m_ampEnvTimeKeyfollow->setJustificationType (Justification::centred);
+    m_ampEnvVelocityTime4Label->setBounds (264, 316, 112, 16);
+
+    m_ampEnvTimeKeyfollow.reset (new juce::Label ("ampEnvTimeKeyfollow",
+                                                  TRANS("KEYFOLLOW TIME 2/3/4 ")));
+    addAndMakeVisible (m_ampEnvTimeKeyfollow.get());
+    m_ampEnvTimeKeyfollow->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_ampEnvTimeKeyfollow->setJustificationType (juce::Justification::centred);
     m_ampEnvTimeKeyfollow->setEditable (false, false, false);
-    m_ampEnvTimeKeyfollow->setColour (Label::textColourId, Colours::black);
-    m_ampEnvTimeKeyfollow->setColour (TextEditor::textColourId, Colours::black);
-    m_ampEnvTimeKeyfollow->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_ampEnvTimeKeyfollow->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_ampEnvTimeKeyfollow->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_ampEnvTimeKeyfollow->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_ampKeyfollowSlider = new KeyfollowMicroParameterSlider ("ampKeyfollowSlider"));
+    m_ampEnvTimeKeyfollow->setBounds (184, 356, 172, 16);
+
+    m_ampKeyfollowSlider.reset (new KeyfollowMicroParameterSlider ("ampKeyfollowSlider"));
+    addAndMakeVisible (m_ampKeyfollowSlider.get());
     m_ampKeyfollowSlider->setRange (0, 127, 1);
-    m_ampKeyfollowSlider->setSliderStyle (Slider::LinearBar);
-    m_ampKeyfollowSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_ampKeyfollowSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_ampKeyfollowSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_ampKeyfollowSlider->setSliderStyle (juce::Slider::LinearBar);
+    m_ampKeyfollowSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_ampKeyfollowSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_ampKeyfollowSlider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_ampKeyfollowSlider->addListener (this);
 
-    addAndMakeVisible (m_ampEnvVelCurveComboBox = new ParameterComboBox ("ampEnvVelCurveComboBox"));
+    m_ampKeyfollowSlider->setBounds (252, 372, 56, 16);
+
+    m_ampEnvVelCurveComboBox.reset (new ParameterComboBox ("ampEnvVelCurveComboBox"));
+    addAndMakeVisible (m_ampEnvVelCurveComboBox.get());
     m_ampEnvVelCurveComboBox->setEditableText (false);
-    m_ampEnvVelCurveComboBox->setJustificationType (Justification::centred);
+    m_ampEnvVelCurveComboBox->setJustificationType (juce::Justification::centred);
     m_ampEnvVelCurveComboBox->setTextWhenNothingSelected (TRANS("Normal"));
     m_ampEnvVelCurveComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_ampEnvVelCurveComboBox->addListener (this);
 
-    addAndMakeVisible (m_ampEnvVelCurveDisplay = new ParameterVelCurveDisplay ("ampEnvVelCurveDisplay"));
+    m_ampEnvVelCurveComboBox->setBounds (8, 343, 68, 16);
+
+    m_ampEnvVelCurveDisplay.reset (new ParameterVelCurveDisplay ("ampEnvVelCurveDisplay"));
+    addAndMakeVisible (m_ampEnvVelCurveDisplay.get());
     m_ampEnvVelCurveDisplay->setRange (0, 10, 0);
-    m_ampEnvVelCurveDisplay->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_ampEnvVelCurveDisplay->setTextBoxStyle (Slider::NoTextBox, false, 80, 20);
+    m_ampEnvVelCurveDisplay->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    m_ampEnvVelCurveDisplay->setTextBoxStyle (juce::Slider::NoTextBox, false, 80, 20);
     m_ampEnvVelCurveDisplay->addListener (this);
 
-    addAndMakeVisible (m_ampBiasDirectionLabel = new Label ("ampBiasDirectionLabel",
-                                                            TRANS("DIRECTION")));
-    m_ampBiasDirectionLabel->setFont (Font (12.00f, Font::bold));
-    m_ampBiasDirectionLabel->setJustificationType (Justification::centred);
-    m_ampBiasDirectionLabel->setEditable (false, false, false);
-    m_ampBiasDirectionLabel->setColour (Label::textColourId, Colours::black);
-    m_ampBiasDirectionLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_ampBiasDirectionLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_ampEnvVelCurveDisplay->setBounds (20, 363, 36, 36);
 
-    addAndMakeVisible (m_ampBiasDirectionComboBox = new ParameterComboBox ("ampBiasDirectionComboBox"));
+    m_ampBiasDirectionLabel.reset (new juce::Label ("ampBiasDirectionLabel",
+                                                    TRANS("DIRECTION")));
+    addAndMakeVisible (m_ampBiasDirectionLabel.get());
+    m_ampBiasDirectionLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_ampBiasDirectionLabel->setJustificationType (juce::Justification::centred);
+    m_ampBiasDirectionLabel->setEditable (false, false, false);
+    m_ampBiasDirectionLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_ampBiasDirectionLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_ampBiasDirectionLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_ampBiasDirectionLabel->setBounds (96, 32, 84, 16);
+
+    m_ampBiasDirectionComboBox.reset (new ParameterComboBox ("ampBiasDirectionComboBox"));
+    addAndMakeVisible (m_ampBiasDirectionComboBox.get());
     m_ampBiasDirectionComboBox->setEditableText (false);
-    m_ampBiasDirectionComboBox->setJustificationType (Justification::centred);
-    m_ampBiasDirectionComboBox->setTextWhenNothingSelected (String());
+    m_ampBiasDirectionComboBox->setJustificationType (juce::Justification::centred);
+    m_ampBiasDirectionComboBox->setTextWhenNothingSelected (juce::String());
     m_ampBiasDirectionComboBox->setTextWhenNoChoicesAvailable (TRANS("(no choices)"));
     m_ampBiasDirectionComboBox->addListener (this);
 
-    addAndMakeVisible (m_ampEnvVelocityCurveLabel = new Label ("ampEnvVelocityCurveLabel",
-                                                               TRANS("VELO CURVE")));
-    m_ampEnvVelocityCurveLabel->setFont (Font (12.00f, Font::bold));
-    m_ampEnvVelocityCurveLabel->setJustificationType (Justification::centred);
+    m_ampBiasDirectionComboBox->setBounds (88, 48, 100, 16);
+
+    m_ampEnvVelocityCurveLabel.reset (new juce::Label ("ampEnvVelocityCurveLabel",
+                                                       TRANS("VELO CURVE")));
+    addAndMakeVisible (m_ampEnvVelocityCurveLabel.get());
+    m_ampEnvVelocityCurveLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_ampEnvVelocityCurveLabel->setJustificationType (juce::Justification::centred);
     m_ampEnvVelocityCurveLabel->setEditable (false, false, false);
-    m_ampEnvVelocityCurveLabel->setColour (Label::textColourId, Colours::black);
-    m_ampEnvVelocityCurveLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_ampEnvVelocityCurveLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_ampEnvVelocityCurveLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_ampEnvVelocityCurveLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_ampEnvVelocityCurveLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_biasPointLabel = new Label ("biasPointLabel",
-                                                     TRANS("POINT")));
-    m_biasPointLabel->setFont (Font (12.00f, Font::bold));
-    m_biasPointLabel->setJustificationType (Justification::centred);
+    m_ampEnvVelocityCurveLabel->setBounds (0, 327, 80, 16);
+
+    m_biasPointLabel.reset (new juce::Label ("biasPointLabel",
+                                             TRANS("POINT")));
+    addAndMakeVisible (m_biasPointLabel.get());
+    m_biasPointLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_biasPointLabel->setJustificationType (juce::Justification::centred);
     m_biasPointLabel->setEditable (false, false, false);
-    m_biasPointLabel->setColour (Label::textColourId, Colours::black);
-    m_biasPointLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_biasPointLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_biasPointLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_biasPointLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_biasPointLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
 
-    addAndMakeVisible (m_biasPointSlider = new MicroParameterSlider ("biasPointSlider"));
+    m_biasPointLabel->setBounds (88, 68, 48, 16);
+
+    m_biasPointSlider.reset (new MicroParameterSlider ("biasPointSlider"));
+    addAndMakeVisible (m_biasPointSlider.get());
     m_biasPointSlider->setRange (0, 127, 1);
-    m_biasPointSlider->setSliderStyle (Slider::LinearBar);
-    m_biasPointSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_biasPointSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_biasPointSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_biasPointSlider->setSliderStyle (juce::Slider::LinearBar);
+    m_biasPointSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_biasPointSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_biasPointSlider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_biasPointSlider->addListener (this);
 
-    addAndMakeVisible (m_biasLevelLabel = new Label ("biasLevelLabel",
-                                                     TRANS("LEVEL")));
-    m_biasLevelLabel->setFont (Font (12.00f, Font::bold));
-    m_biasLevelLabel->setJustificationType (Justification::centred);
-    m_biasLevelLabel->setEditable (false, false, false);
-    m_biasLevelLabel->setColour (Label::textColourId, Colours::black);
-    m_biasLevelLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_biasLevelLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_biasPointSlider->setBounds (88, 84, 48, 16);
 
-    addAndMakeVisible (m_biasLevelSlider = new MicroParameterSlider ("biasLevelSlider"));
+    m_biasLevelLabel.reset (new juce::Label ("biasLevelLabel",
+                                             TRANS("LEVEL")));
+    addAndMakeVisible (m_biasLevelLabel.get());
+    m_biasLevelLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_biasLevelLabel->setJustificationType (juce::Justification::centred);
+    m_biasLevelLabel->setEditable (false, false, false);
+    m_biasLevelLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_biasLevelLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_biasLevelLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_biasLevelLabel->setBounds (140, 68, 48, 16);
+
+    m_biasLevelSlider.reset (new MicroParameterSlider ("biasLevelSlider"));
+    addAndMakeVisible (m_biasLevelSlider.get());
     m_biasLevelSlider->setRange (0, 127, 1);
-    m_biasLevelSlider->setSliderStyle (Slider::LinearBar);
-    m_biasLevelSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_biasLevelSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_biasLevelSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_biasLevelSlider->setSliderStyle (juce::Slider::LinearBar);
+    m_biasLevelSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_biasLevelSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_biasLevelSlider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_biasLevelSlider->addListener (this);
 
-    addAndMakeVisible (m_panRandomToggle = new BlackToggle());
-    addAndMakeVisible (m_panRandomLabel = new Label ("panRandomLabel",
-                                                     TRANS("RANDOM")));
-    m_panRandomLabel->setFont (Font (12.00f, Font::bold));
-    m_panRandomLabel->setJustificationType (Justification::centred);
-    m_panRandomLabel->setEditable (false, false, false);
-    m_panRandomLabel->setColour (Label::textColourId, Colours::black);
-    m_panRandomLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_panRandomLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_biasLevelSlider->setBounds (140, 84, 48, 16);
 
-    addAndMakeVisible (m_panAlternateSlider = new MicroParameterSlider ("panAlternateSlider"));
+    m_panRandomToggle.reset (new BlackToggle());
+    addAndMakeVisible (m_panRandomToggle.get());
+    m_panRandomToggle->setBounds (307, 82, 25, 17);
+
+    m_panRandomLabel.reset (new juce::Label ("panRandomLabel",
+                                             TRANS("RANDOM")));
+    addAndMakeVisible (m_panRandomLabel.get());
+    m_panRandomLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_panRandomLabel->setJustificationType (juce::Justification::centred);
+    m_panRandomLabel->setEditable (false, false, false);
+    m_panRandomLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_panRandomLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_panRandomLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_panRandomLabel->setBounds (287, 66, 64, 16);
+
+    m_panAlternateSlider.reset (new MicroParameterSlider ("panAlternateSlider"));
+    addAndMakeVisible (m_panAlternateSlider.get());
     m_panAlternateSlider->setRange (0, 127, 1);
-    m_panAlternateSlider->setSliderStyle (Slider::LinearBar);
-    m_panAlternateSlider->setTextBoxStyle (Slider::TextBoxLeft, false, 40, 20);
-    m_panAlternateSlider->setColour (Slider::backgroundColourId, Colour (0xfff2f59b));
-    m_panAlternateSlider->setColour (Slider::thumbColourId, Colour (0xffc4c86d));
+    m_panAlternateSlider->setSliderStyle (juce::Slider::LinearBar);
+    m_panAlternateSlider->setTextBoxStyle (juce::Slider::TextBoxLeft, false, 40, 20);
+    m_panAlternateSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0xfff2f59b));
+    m_panAlternateSlider->setColour (juce::Slider::thumbColourId, juce::Colour (0xffc4c86d));
     m_panAlternateSlider->addListener (this);
 
-    addAndMakeVisible (m_panAlternateLabel = new Label ("panAlternateLabel",
-                                                        TRANS("ALTERNATE")));
-    m_panAlternateLabel->setFont (Font (12.00f, Font::bold));
-    m_panAlternateLabel->setJustificationType (Justification::centred);
-    m_panAlternateLabel->setEditable (false, false, false);
-    m_panAlternateLabel->setColour (Label::textColourId, Colours::black);
-    m_panAlternateLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_panAlternateLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_panAlternateSlider->setBounds (292, 116, 56, 16);
 
-    addAndMakeVisible (m_lfoGrp = new PanelGroupGrey ("lfoGrp", "LFO MODULATION"));
-    addAndMakeVisible (m_lfo1AmpDepthSlider = new Knob ("lfo1AmpDepthSlider"));
+    m_panAlternateLabel.reset (new juce::Label ("panAlternateLabel",
+                                                TRANS("ALTERNATE")));
+    addAndMakeVisible (m_panAlternateLabel.get());
+    m_panAlternateLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_panAlternateLabel->setJustificationType (juce::Justification::centred);
+    m_panAlternateLabel->setEditable (false, false, false);
+    m_panAlternateLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_panAlternateLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_panAlternateLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_panAlternateLabel->setBounds (280, 100, 80, 16);
+
+    m_lfoGrp.reset (new PanelGroupGrey ("lfoGrp", "LFO MODULATION"));
+    addAndMakeVisible (m_lfoGrp.get());
+    m_lfo1AmpDepthSlider.reset (new Knob ("lfo1AmpDepthSlider"));
+    addAndMakeVisible (m_lfo1AmpDepthSlider.get());
     m_lfo1AmpDepthSlider->setRange (0, 127, 1);
-    m_lfo1AmpDepthSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_lfo1AmpDepthSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 16);
-    m_lfo1AmpDepthSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_lfo1AmpDepthSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    m_lfo1AmpDepthSlider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 80, 16);
+    m_lfo1AmpDepthSlider->setColour (juce::Slider::textBoxBackgroundColourId, juce::Colour (0xfff2f59b));
     m_lfo1AmpDepthSlider->addListener (this);
 
-    addAndMakeVisible (m_lfo1AmpDepthLabel = new Label ("lfo1AmpDepthLabel",
-                                                        TRANS("LVL LFO 1")));
-    m_lfo1AmpDepthLabel->setFont (Font (12.00f, Font::bold));
-    m_lfo1AmpDepthLabel->setJustificationType (Justification::centred);
-    m_lfo1AmpDepthLabel->setEditable (false, false, false);
-    m_lfo1AmpDepthLabel->setColour (Label::textColourId, Colours::black);
-    m_lfo1AmpDepthLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_lfo1AmpDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_lfo1AmpDepthSlider->setBounds (16, 436, 32, 48);
 
-    addAndMakeVisible (m_lfo2AmpDepthSlider = new Knob ("lfo2AmpDepthSlider"));
+    m_lfo1AmpDepthLabel.reset (new juce::Label ("lfo1AmpDepthLabel",
+                                                TRANS("LVL LFO 1")));
+    addAndMakeVisible (m_lfo1AmpDepthLabel.get());
+    m_lfo1AmpDepthLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_lfo1AmpDepthLabel->setJustificationType (juce::Justification::centred);
+    m_lfo1AmpDepthLabel->setEditable (false, false, false);
+    m_lfo1AmpDepthLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_lfo1AmpDepthLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_lfo1AmpDepthLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_lfo1AmpDepthLabel->setBounds (0, 420, 68, 16);
+
+    m_lfo2AmpDepthSlider.reset (new Knob ("lfo2AmpDepthSlider"));
+    addAndMakeVisible (m_lfo2AmpDepthSlider.get());
     m_lfo2AmpDepthSlider->setRange (0, 127, 1);
-    m_lfo2AmpDepthSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_lfo2AmpDepthSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 16);
-    m_lfo2AmpDepthSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_lfo2AmpDepthSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    m_lfo2AmpDepthSlider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 80, 16);
+    m_lfo2AmpDepthSlider->setColour (juce::Slider::textBoxBackgroundColourId, juce::Colour (0xfff2f59b));
     m_lfo2AmpDepthSlider->addListener (this);
 
-    addAndMakeVisible (m_lfo2AmpDepthLabel = new Label ("lfo2AmpDepthLabel",
-                                                        TRANS("LVL LFO 2")));
-    m_lfo2AmpDepthLabel->setFont (Font (12.00f, Font::bold));
-    m_lfo2AmpDepthLabel->setJustificationType (Justification::centred);
-    m_lfo2AmpDepthLabel->setEditable (false, false, false);
-    m_lfo2AmpDepthLabel->setColour (Label::textColourId, Colours::black);
-    m_lfo2AmpDepthLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_lfo2AmpDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_lfo2AmpDepthSlider->setBounds (204, 436, 32, 48);
 
-    addAndMakeVisible (m_lfo1AdvancedButton = new TextWithArrowButton ("lfo1AdvancedButton"));
+    m_lfo2AmpDepthLabel.reset (new juce::Label ("lfo2AmpDepthLabel",
+                                                TRANS("LVL LFO 2")));
+    addAndMakeVisible (m_lfo2AmpDepthLabel.get());
+    m_lfo2AmpDepthLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_lfo2AmpDepthLabel->setJustificationType (juce::Justification::centred);
+    m_lfo2AmpDepthLabel->setEditable (false, false, false);
+    m_lfo2AmpDepthLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_lfo2AmpDepthLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_lfo2AmpDepthLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_lfo2AmpDepthLabel->setBounds (188, 420, 68, 16);
+
+    m_lfo1AdvancedButton.reset (new TextWithArrowButton ("lfo1AdvancedButton"));
+    addAndMakeVisible (m_lfo1AdvancedButton.get());
     m_lfo1AdvancedButton->setButtonText (TRANS("LFO 1"));
     m_lfo1AdvancedButton->addListener (this);
 
-    addAndMakeVisible (m_lfo2AdvancedButton = new TextWithArrowButton ("lfo2AdvancedButton"));
+    m_lfo1AdvancedButton->setBounds (124, 464, 56, 21);
+
+    m_lfo2AdvancedButton.reset (new TextWithArrowButton ("lfo2AdvancedButton"));
+    addAndMakeVisible (m_lfo2AdvancedButton.get());
     m_lfo2AdvancedButton->setButtonText (TRANS("LFO 2"));
     m_lfo2AdvancedButton->addListener (this);
 
-    addAndMakeVisible (m_lfo1PanDepthSlider = new Knob ("lfo1PanDepthSlider"));
+    m_lfo2AdvancedButton->setBounds (312, 464, 56, 21);
+
+    m_lfo1PanDepthSlider.reset (new Knob ("lfo1PanDepthSlider"));
+    addAndMakeVisible (m_lfo1PanDepthSlider.get());
     m_lfo1PanDepthSlider->setRange (0, 127, 1);
-    m_lfo1PanDepthSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_lfo1PanDepthSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 16);
-    m_lfo1PanDepthSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_lfo1PanDepthSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    m_lfo1PanDepthSlider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 80, 16);
+    m_lfo1PanDepthSlider->setColour (juce::Slider::textBoxBackgroundColourId, juce::Colour (0xfff2f59b));
     m_lfo1PanDepthSlider->addListener (this);
 
-    addAndMakeVisible (m_lfo1PanDepthLabel = new Label ("lfo1PanDepthLabel",
-                                                        TRANS("PAN LFO 1")));
-    m_lfo1PanDepthLabel->setFont (Font (12.00f, Font::bold));
-    m_lfo1PanDepthLabel->setJustificationType (Justification::centred);
-    m_lfo1PanDepthLabel->setEditable (false, false, false);
-    m_lfo1PanDepthLabel->setColour (Label::textColourId, Colours::black);
-    m_lfo1PanDepthLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_lfo1PanDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_lfo1PanDepthSlider->setBounds (84, 436, 32, 48);
 
-    addAndMakeVisible (m_lfo2PanDepthSlider = new Knob ("lfo2PanDepthSlider"));
+    m_lfo1PanDepthLabel.reset (new juce::Label ("lfo1PanDepthLabel",
+                                                TRANS("PAN LFO 1")));
+    addAndMakeVisible (m_lfo1PanDepthLabel.get());
+    m_lfo1PanDepthLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_lfo1PanDepthLabel->setJustificationType (juce::Justification::centred);
+    m_lfo1PanDepthLabel->setEditable (false, false, false);
+    m_lfo1PanDepthLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_lfo1PanDepthLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_lfo1PanDepthLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_lfo1PanDepthLabel->setBounds (68, 420, 68, 16);
+
+    m_lfo2PanDepthSlider.reset (new Knob ("lfo2PanDepthSlider"));
+    addAndMakeVisible (m_lfo2PanDepthSlider.get());
     m_lfo2PanDepthSlider->setRange (0, 127, 1);
-    m_lfo2PanDepthSlider->setSliderStyle (Slider::RotaryHorizontalVerticalDrag);
-    m_lfo2PanDepthSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 80, 16);
-    m_lfo2PanDepthSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_lfo2PanDepthSlider->setSliderStyle (juce::Slider::RotaryHorizontalVerticalDrag);
+    m_lfo2PanDepthSlider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 80, 16);
+    m_lfo2PanDepthSlider->setColour (juce::Slider::textBoxBackgroundColourId, juce::Colour (0xfff2f59b));
     m_lfo2PanDepthSlider->addListener (this);
 
-    addAndMakeVisible (m_lfo2PanDepthLabel = new Label ("lfo2PanDepthLabel",
-                                                        TRANS("PAN LFO 2")));
-    m_lfo2PanDepthLabel->setFont (Font (12.00f, Font::bold));
-    m_lfo2PanDepthLabel->setJustificationType (Justification::centred);
-    m_lfo2PanDepthLabel->setEditable (false, false, false);
-    m_lfo2PanDepthLabel->setColour (Label::textColourId, Colours::black);
-    m_lfo2PanDepthLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_lfo2PanDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_lfo2PanDepthSlider->setBounds (272, 436, 32, 48);
 
-    addAndMakeVisible (m_imageButton = new ImageButton ("imageButton"));
-    m_imageButton->setButtonText (String());
+    m_lfo2PanDepthLabel.reset (new juce::Label ("lfo2PanDepthLabel",
+                                                TRANS("PAN LFO 2")));
+    addAndMakeVisible (m_lfo2PanDepthLabel.get());
+    m_lfo2PanDepthLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_lfo2PanDepthLabel->setJustificationType (juce::Justification::centred);
+    m_lfo2PanDepthLabel->setEditable (false, false, false);
+    m_lfo2PanDepthLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_lfo2PanDepthLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_lfo2PanDepthLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_lfo2PanDepthLabel->setBounds (256, 420, 68, 16);
+
+    m_imageButton.reset (new juce::ImageButton ("imageButton"));
+    addAndMakeVisible (m_imageButton.get());
+    m_imageButton->setButtonText (juce::String());
 
     m_imageButton->setImages (false, true, true,
-                              ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, Colour (0x4340454a),
-                              Image(), 1.000f, Colour (0x4340454a),
-                              Image(), 1.000f, Colour (0x4340454a));
-    addAndMakeVisible (m_toneLevelSlider = new ParameterEnvelopeSlider ("toneLevelSlider"));
+                              juce::ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, juce::Colour (0x4340454a),
+                              juce::Image(), 1.000f, juce::Colour (0x4340454a),
+                              juce::Image(), 1.000f, juce::Colour (0x4340454a));
+    m_imageButton->setBounds (3, 1, 16, 16);
+
+    m_toneLevelSlider.reset (new ParameterEnvelopeSlider ("toneLevelSlider"));
+    addAndMakeVisible (m_toneLevelSlider.get());
     m_toneLevelSlider->setRange (0, 127, 1);
-    m_toneLevelSlider->setSliderStyle (Slider::LinearVertical);
-    m_toneLevelSlider->setTextBoxStyle (Slider::TextBoxBelow, false, 56, 16);
-    m_toneLevelSlider->setColour (Slider::backgroundColourId, Colour (0x00f2f59b));
-    m_toneLevelSlider->setColour (Slider::textBoxBackgroundColourId, Colour (0xfff2f59b));
+    m_toneLevelSlider->setSliderStyle (juce::Slider::LinearVertical);
+    m_toneLevelSlider->setTextBoxStyle (juce::Slider::TextBoxBelow, false, 56, 16);
+    m_toneLevelSlider->setColour (juce::Slider::backgroundColourId, juce::Colour (0x00f2f59b));
+    m_toneLevelSlider->setColour (juce::Slider::textBoxBackgroundColourId, juce::Colour (0xfff2f59b));
     m_toneLevelSlider->addListener (this);
 
-    addAndMakeVisible (m_filterEnvelopeDepthLabel = new Label ("filterEnvelopeDepthLabel",
-                                                               TRANS("TONE LEVEL")));
-    m_filterEnvelopeDepthLabel->setFont (Font (12.00f, Font::bold));
-    m_filterEnvelopeDepthLabel->setJustificationType (Justification::centred);
-    m_filterEnvelopeDepthLabel->setEditable (false, false, false);
-    m_filterEnvelopeDepthLabel->setColour (Label::textColourId, Colours::black);
-    m_filterEnvelopeDepthLabel->setColour (TextEditor::textColourId, Colours::black);
-    m_filterEnvelopeDepthLabel->setColour (TextEditor::backgroundColourId, Colour (0x00000000));
+    m_toneLevelSlider->setBounds (8, 168, 56, 116);
 
-    addAndMakeVisible (m_imageButton2 = new ImageButton ("imageButton"));
-    m_imageButton2->setButtonText (String());
+    m_filterEnvelopeDepthLabel.reset (new juce::Label ("filterEnvelopeDepthLabel",
+                                                       TRANS("TONE LEVEL")));
+    addAndMakeVisible (m_filterEnvelopeDepthLabel.get());
+    m_filterEnvelopeDepthLabel->setFont (juce::Font (12.00f, juce::Font::plain).withTypefaceStyle ("Bold"));
+    m_filterEnvelopeDepthLabel->setJustificationType (juce::Justification::centred);
+    m_filterEnvelopeDepthLabel->setEditable (false, false, false);
+    m_filterEnvelopeDepthLabel->setColour (juce::Label::textColourId, juce::Colours::black);
+    m_filterEnvelopeDepthLabel->setColour (juce::TextEditor::textColourId, juce::Colours::black);
+    m_filterEnvelopeDepthLabel->setColour (juce::TextEditor::backgroundColourId, juce::Colour (0x00000000));
+
+    m_filterEnvelopeDepthLabel->setBounds (0, 156, 72, 16);
+
+    m_imageButton2.reset (new juce::ImageButton ("imageButton"));
+    addAndMakeVisible (m_imageButton2.get());
+    m_imageButton2->setButtonText (juce::String());
 
     m_imageButton2->setImages (false, true, true,
-                               ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, Colour (0x4340454a),
-                               Image(), 1.000f, Colour (0x4340454a),
-                               Image(), 1.000f, Colour (0x4340454a));
-    addAndMakeVisible (m_imageButton3 = new ImageButton ("imageButton"));
-    m_imageButton3->setButtonText (String());
+                               juce::ImageCache::getFromMemory (amp_png, amp_pngSize), 1.000f, juce::Colour (0x4340454a),
+                               juce::Image(), 1.000f, juce::Colour (0x4340454a),
+                               juce::Image(), 1.000f, juce::Colour (0x4340454a));
+    m_imageButton2->setBounds (3, 141, 16, 16);
+
+    m_imageButton3.reset (new juce::ImageButton ("imageButton"));
+    addAndMakeVisible (m_imageButton3.get());
+    m_imageButton3->setButtonText (juce::String());
     m_imageButton3->addListener (this);
 
     m_imageButton3->setImages (false, true, true,
-                               ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, Colour (0x4340454a),
-                               Image(), 1.000f, Colour (0x4340454a),
-                               Image(), 1.000f, Colour (0x4340454a));
+                               juce::ImageCache::getFromMemory (lfo_png, lfo_pngSize), 1.000f, juce::Colour (0x4340454a),
+                               juce::Image(), 1.000f, juce::Colour (0x4340454a),
+                               juce::Image(), 1.000f, juce::Colour (0x4340454a));
+    m_imageButton3->setBounds (3, 405, 16, 16);
+
 
     //[UserPreSize]
 	m_ampGrp->setText("AMP OF PART " + String(part + 1) + " TONE " + String(((tone - 4096) / 512) + 1));
@@ -477,7 +605,7 @@ AmpEditorAdvanced::~AmpEditorAdvanced()
 }
 
 //==============================================================================
-void AmpEditorAdvanced::paint (Graphics& g)
+void AmpEditorAdvanced::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
 #ifdef JUCE_MSVC
@@ -498,128 +626,87 @@ void AmpEditorAdvanced::resized()
     m_ampEnvGrp->setBounds (0, 140, getWidth() - 0, 260);
     m_panGrp->setBounds (272, 18, getWidth() - 280, 118);
     m_biasGrp->setBounds (84, 18, getWidth() - 268, 118);
-    m_tonePanSlider->setBounds (208, 40, 48, 60);
-    m_tonePanLabel->setBounds (196, 20, 72, 16);
-    m_ampEnv->setBounds (72, 156, 296, 156);
-    m_panKeyfollowLabel->setBounds (280, 32, 80, 16);
-    m_panKeyfollowSlider->setBounds (296, 48, 48, 16);
-    m_ampVelocitySensSlider->setBounds (8, 306, 56, 16);
-    m_ampEnvVelocitySensLabel->setBounds (0, 290, 72, 16);
-    m_ampEnvVelocityTime1Slider->setBounds (124, 332, 56, 16);
-    m_ampEnvVelocityTime1Label->setBounds (84, 316, 112, 16);
-    m_ampEnvVelocityTime4Slider->setBounds (300, 332, 56, 16);
-    m_ampEnvVelocityTime4Label->setBounds (264, 316, 112, 16);
-    m_ampEnvTimeKeyfollow->setBounds (184, 356, 172, 16);
-    m_ampKeyfollowSlider->setBounds (252, 372, 56, 16);
-    m_ampEnvVelCurveComboBox->setBounds (8, 343, 68, 16);
-    m_ampEnvVelCurveDisplay->setBounds (20, 363, 36, 36);
-    m_ampBiasDirectionLabel->setBounds (96, 32, 84, 16);
-    m_ampBiasDirectionComboBox->setBounds (88, 48, 100, 16);
-    m_ampEnvVelocityCurveLabel->setBounds (0, 327, 80, 16);
-    m_biasPointLabel->setBounds (88, 68, 48, 16);
-    m_biasPointSlider->setBounds (88, 84, 48, 16);
-    m_biasLevelLabel->setBounds (140, 68, 48, 16);
-    m_biasLevelSlider->setBounds (140, 84, 48, 16);
-    m_panRandomToggle->setBounds (307, 82, 25, 17);
-    m_panRandomLabel->setBounds (287, 66, 64, 16);
-    m_panAlternateSlider->setBounds (292, 116, 56, 16);
-    m_panAlternateLabel->setBounds (280, 100, 80, 16);
     m_lfoGrp->setBounds (0, 404, getWidth() - 0, 88);
-    m_lfo1AmpDepthSlider->setBounds (16, 436, 32, 48);
-    m_lfo1AmpDepthLabel->setBounds (0, 420, 68, 16);
-    m_lfo2AmpDepthSlider->setBounds (204, 436, 32, 48);
-    m_lfo2AmpDepthLabel->setBounds (188, 420, 68, 16);
-    m_lfo1AdvancedButton->setBounds (124, 464, 56, 21);
-    m_lfo2AdvancedButton->setBounds (312, 464, 56, 21);
-    m_lfo1PanDepthSlider->setBounds (84, 436, 32, 48);
-    m_lfo1PanDepthLabel->setBounds (68, 420, 68, 16);
-    m_lfo2PanDepthSlider->setBounds (272, 436, 32, 48);
-    m_lfo2PanDepthLabel->setBounds (256, 420, 68, 16);
-    m_imageButton->setBounds (3, 1, 16, 16);
-    m_toneLevelSlider->setBounds (8, 168, 56, 116);
-    m_filterEnvelopeDepthLabel->setBounds (0, 156, 72, 16);
-    m_imageButton2->setBounds (3, 141, 16, 16);
-    m_imageButton3->setBounds (3, 405, 16, 16);
     //[UserResized] Add your own custom resize handling here..
     //[/UserResized]
 }
 
-void AmpEditorAdvanced::sliderValueChanged (Slider* sliderThatWasMoved)
+void AmpEditorAdvanced::sliderValueChanged (juce::Slider* sliderThatWasMoved)
 {
     //[UsersliderValueChanged_Pre]
     //[/UsersliderValueChanged_Pre]
 
-    if (sliderThatWasMoved == m_tonePanSlider)
+    if (sliderThatWasMoved == m_tonePanSlider.get())
     {
         //[UserSliderCode_m_tonePanSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_tonePanSlider]
     }
-    else if (sliderThatWasMoved == m_panKeyfollowSlider)
+    else if (sliderThatWasMoved == m_panKeyfollowSlider.get())
     {
         //[UserSliderCode_m_panKeyfollowSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_panKeyfollowSlider]
     }
-    else if (sliderThatWasMoved == m_ampVelocitySensSlider)
+    else if (sliderThatWasMoved == m_ampVelocitySensSlider.get())
     {
         //[UserSliderCode_m_ampVelocitySensSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_ampVelocitySensSlider]
     }
-    else if (sliderThatWasMoved == m_ampEnvVelocityTime1Slider)
+    else if (sliderThatWasMoved == m_ampEnvVelocityTime1Slider.get())
     {
         //[UserSliderCode_m_ampEnvVelocityTime1Slider] -- add your slider handling code here..
         //[/UserSliderCode_m_ampEnvVelocityTime1Slider]
     }
-    else if (sliderThatWasMoved == m_ampEnvVelocityTime4Slider)
+    else if (sliderThatWasMoved == m_ampEnvVelocityTime4Slider.get())
     {
         //[UserSliderCode_m_ampEnvVelocityTime4Slider] -- add your slider handling code here..
         //[/UserSliderCode_m_ampEnvVelocityTime4Slider]
     }
-    else if (sliderThatWasMoved == m_ampKeyfollowSlider)
+    else if (sliderThatWasMoved == m_ampKeyfollowSlider.get())
     {
         //[UserSliderCode_m_ampKeyfollowSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_ampKeyfollowSlider]
     }
-    else if (sliderThatWasMoved == m_ampEnvVelCurveDisplay)
+    else if (sliderThatWasMoved == m_ampEnvVelCurveDisplay.get())
     {
         //[UserSliderCode_m_ampEnvVelCurveDisplay] -- add your slider handling code here..
         //[/UserSliderCode_m_ampEnvVelCurveDisplay]
     }
-    else if (sliderThatWasMoved == m_biasPointSlider)
+    else if (sliderThatWasMoved == m_biasPointSlider.get())
     {
         //[UserSliderCode_m_biasPointSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_biasPointSlider]
     }
-    else if (sliderThatWasMoved == m_biasLevelSlider)
+    else if (sliderThatWasMoved == m_biasLevelSlider.get())
     {
         //[UserSliderCode_m_biasLevelSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_biasLevelSlider]
     }
-    else if (sliderThatWasMoved == m_panAlternateSlider)
+    else if (sliderThatWasMoved == m_panAlternateSlider.get())
     {
         //[UserSliderCode_m_panAlternateSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_panAlternateSlider]
     }
-    else if (sliderThatWasMoved == m_lfo1AmpDepthSlider)
+    else if (sliderThatWasMoved == m_lfo1AmpDepthSlider.get())
     {
         //[UserSliderCode_m_lfo1AmpDepthSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_lfo1AmpDepthSlider]
     }
-    else if (sliderThatWasMoved == m_lfo2AmpDepthSlider)
+    else if (sliderThatWasMoved == m_lfo2AmpDepthSlider.get())
     {
         //[UserSliderCode_m_lfo2AmpDepthSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_lfo2AmpDepthSlider]
     }
-    else if (sliderThatWasMoved == m_lfo1PanDepthSlider)
+    else if (sliderThatWasMoved == m_lfo1PanDepthSlider.get())
     {
         //[UserSliderCode_m_lfo1PanDepthSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_lfo1PanDepthSlider]
     }
-    else if (sliderThatWasMoved == m_lfo2PanDepthSlider)
+    else if (sliderThatWasMoved == m_lfo2PanDepthSlider.get())
     {
         //[UserSliderCode_m_lfo2PanDepthSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_lfo2PanDepthSlider]
     }
-    else if (sliderThatWasMoved == m_toneLevelSlider)
+    else if (sliderThatWasMoved == m_toneLevelSlider.get())
     {
         //[UserSliderCode_m_toneLevelSlider] -- add your slider handling code here..
         //[/UserSliderCode_m_toneLevelSlider]
@@ -629,17 +716,17 @@ void AmpEditorAdvanced::sliderValueChanged (Slider* sliderThatWasMoved)
     //[/UsersliderValueChanged_Post]
 }
 
-void AmpEditorAdvanced::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
+void AmpEditorAdvanced::comboBoxChanged (juce::ComboBox* comboBoxThatHasChanged)
 {
     //[UsercomboBoxChanged_Pre]
     //[/UsercomboBoxChanged_Pre]
 
-    if (comboBoxThatHasChanged == m_ampEnvVelCurveComboBox)
+    if (comboBoxThatHasChanged == m_ampEnvVelCurveComboBox.get())
     {
         //[UserComboBoxCode_m_ampEnvVelCurveComboBox] -- add your combo box handling code here..
         //[/UserComboBoxCode_m_ampEnvVelCurveComboBox]
     }
-    else if (comboBoxThatHasChanged == m_ampBiasDirectionComboBox)
+    else if (comboBoxThatHasChanged == m_ampBiasDirectionComboBox.get())
     {
         //[UserComboBoxCode_m_ampBiasDirectionComboBox] -- add your combo box handling code here..
         //[/UserComboBoxCode_m_ampBiasDirectionComboBox]
@@ -649,26 +736,26 @@ void AmpEditorAdvanced::comboBoxChanged (ComboBox* comboBoxThatHasChanged)
     //[/UsercomboBoxChanged_Post]
 }
 
-void AmpEditorAdvanced::buttonClicked (Button* buttonThatWasClicked)
+void AmpEditorAdvanced::buttonClicked (juce::Button* buttonThatWasClicked)
 {
     //[UserbuttonClicked_Pre]
     //[/UserbuttonClicked_Pre]
 
-    if (buttonThatWasClicked == m_lfo1AdvancedButton)
+    if (buttonThatWasClicked == m_lfo1AdvancedButton.get())
     {
         //[UserButtonCode_m_lfo1AdvancedButton] -- add your button handler code here..
-		LfoEditorAdvanced* advancedLfoEditor = new LfoEditorAdvanced("LFO", m_part, m_tone, false);
-		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo1AdvancedButton->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedLfoEditor (new LfoEditorAdvanced("LFO", m_part, m_tone, false));
+		CallOutBox::launchAsynchronously(std::move(advancedLfoEditor), m_lfo1AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo1AdvancedButton]
     }
-    else if (buttonThatWasClicked == m_lfo2AdvancedButton)
+    else if (buttonThatWasClicked == m_lfo2AdvancedButton.get())
     {
         //[UserButtonCode_m_lfo2AdvancedButton] -- add your button handler code here..
-		LfoEditorAdvanced* advancedLfoEditor = new LfoEditorAdvanced("LFO", m_part, m_tone, true);
-		CallOutBox::launchAsynchronously(advancedLfoEditor, m_lfo2AdvancedButton->getScreenBounds(), nullptr);
+        std::unique_ptr<Component> advancedLfoEditor ( new LfoEditorAdvanced("LFO", m_part, m_tone, true));
+		CallOutBox::launchAsynchronously(std::move(advancedLfoEditor), m_lfo2AdvancedButton->getScreenBounds(), nullptr);
         //[/UserButtonCode_m_lfo2AdvancedButton]
     }
-    else if (buttonThatWasClicked == m_imageButton3)
+    else if (buttonThatWasClicked == m_imageButton3.get())
     {
         //[UserButtonCode_m_imageButton3] -- add your button handler code here..
         //[/UserButtonCode_m_imageButton3]
@@ -686,9 +773,9 @@ void AmpEditorAdvanced::buttonClicked (Button* buttonThatWasClicked)
 
 //==============================================================================
 #if 0
-/*  -- Introjucer information section --
+/*  -- Projucer information section --
 
-    This is where the Introjucer stores the metadata that describe this GUI layout, so
+    This is where the Projucer stores the metadata that describe this GUI layout, so
     make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
@@ -713,14 +800,15 @@ BEGIN_JUCER_METADATA
              constructorParams="&quot;biasGrp&quot;, &quot;BIAS&quot;"/>
   <SLIDER name="tonePanSlider" id="533842793459863a" memberName="m_tonePanSlider"
           virtualName="Knob" explicitFocusOrder="0" pos="208 40 48 60"
-          textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
+          textboxbkgd="fff2f59b" min="0.0" max="127.0" int="1.0" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="16" skewFactor="1"/>
+          textBoxHeight="16" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="tonePanLabel" id="b464bd3cbdae27fd" memberName="m_tonePanLabel"
          virtualName="" explicitFocusOrder="0" pos="196 20 72 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="TONE PAN" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <JUCERCOMP name="ampEnv" id="99a40d72d7ad1e22" memberName="m_ampEnv" virtualName=""
              explicitFocusOrder="0" pos="72 156 296 156" sourceFile="Envelope.cpp"
              constructorParams="(AllParts)m_part, m_tone, EnvelopeTypes::Amp, false"/>
@@ -728,66 +816,74 @@ BEGIN_JUCER_METADATA
          virtualName="" explicitFocusOrder="0" pos="280 32 80 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="KEYFOLLOW" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="panKeyfollowSlider" id="70b45a3a21f5522" memberName="m_panKeyfollowSlider"
           virtualName="KeyfollowMicroParameterSlider" explicitFocusOrder="0"
-          pos="296 48 48 16" bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0"
-          max="127" int="1" style="LinearBar" textBoxPos="TextBoxLeft"
-          textBoxEditable="1" textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          pos="296 48 48 16" bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0"
+          max="127.0" int="1.0" style="LinearBar" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="40" textBoxHeight="20" skewFactor="1.0"
+          needsCallback="1"/>
   <SLIDER name="ampVelocitySensSlider" id="ce3036a9c9d2d09a" memberName="m_ampVelocitySensSlider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="8 306 56 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="ampEnvVelocitySensLabel" id="da6b2f045679c497" memberName="m_ampEnvVelocitySensLabel"
          virtualName="" explicitFocusOrder="0" pos="0 290 72 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="ampEnvVelocityTime1Slider" id="26e8b1e9ec956faf" memberName="m_ampEnvVelocityTime1Slider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="124 332 56 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="ampEnvVelocityTime1Label" id="fcf555c7750e1905" memberName="m_ampEnvVelocityTime1Label"
          virtualName="" explicitFocusOrder="0" pos="84 316 112 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS TIME 1"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
+         fontname="Default font" fontsize="12.0" kerning="0.0" bold="1"
+         italic="0" justification="36" typefaceStyle="Bold"/>
   <SLIDER name="ampEnvVelocityTime4Slider" id="96d5b92b9bc16388" memberName="m_ampEnvVelocityTime4Slider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="300 332 56 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="ampEnvVelocityTime4Label" id="d741df9cfd6aac2d" memberName="m_ampEnvVelocityTime4Label"
          virtualName="" explicitFocusOrder="0" pos="264 316 112 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="VELO SENS TIME 4"
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
+         fontname="Default font" fontsize="12.0" kerning="0.0" bold="1"
+         italic="0" justification="36" typefaceStyle="Bold"/>
   <LABEL name="ampEnvTimeKeyfollow" id="cf887a8299fda426" memberName="m_ampEnvTimeKeyfollow"
          virtualName="" explicitFocusOrder="0" pos="184 356 172 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="KEYFOLLOW TIME 2/3/4 "
          editableSingleClick="0" editableDoubleClick="0" focusDiscardsChanges="0"
-         fontname="Default font" fontsize="12" bold="1" italic="0" justification="36"/>
+         fontname="Default font" fontsize="12.0" kerning="0.0" bold="1"
+         italic="0" justification="36" typefaceStyle="Bold"/>
   <SLIDER name="ampKeyfollowSlider" id="fd7fba1a74d4d802" memberName="m_ampKeyfollowSlider"
           virtualName="KeyfollowMicroParameterSlider" explicitFocusOrder="0"
-          pos="252 372 56 16" bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0"
-          max="127" int="1" style="LinearBar" textBoxPos="TextBoxLeft"
-          textBoxEditable="1" textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          pos="252 372 56 16" bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0"
+          max="127.0" int="1.0" style="LinearBar" textBoxPos="TextBoxLeft"
+          textBoxEditable="1" textBoxWidth="40" textBoxHeight="20" skewFactor="1.0"
+          needsCallback="1"/>
   <COMBOBOX name="ampEnvVelCurveComboBox" id="5f5f3969c23f54e2" memberName="m_ampEnvVelCurveComboBox"
             virtualName="ParameterComboBox" explicitFocusOrder="0" pos="8 343 68 16"
             editable="0" layout="36" items="" textWhenNonSelected="Normal"
             textWhenNoItems="(no choices)"/>
   <SLIDER name="ampEnvVelCurveDisplay" id="d9c13bc39fc51534" memberName="m_ampEnvVelCurveDisplay"
           virtualName="ParameterVelCurveDisplay" explicitFocusOrder="0"
-          pos="20 363 36 36" min="0" max="10" int="0" style="RotaryHorizontalVerticalDrag"
+          pos="20 363 36 36" min="0.0" max="10.0" int="0.0" style="RotaryHorizontalVerticalDrag"
           textBoxPos="NoTextBox" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="20" skewFactor="1"/>
+          textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="ampBiasDirectionLabel" id="c41c307042cbea72" memberName="m_ampBiasDirectionLabel"
          virtualName="" explicitFocusOrder="0" pos="96 32 84 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="DIRECTION" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <COMBOBOX name="ampBiasDirectionComboBox" id="e8c10ecedfc6fd9e" memberName="m_ampBiasDirectionComboBox"
             virtualName="ParameterComboBox" explicitFocusOrder="0" pos="88 48 100 16"
             editable="0" layout="36" items="" textWhenNonSelected="" textWhenNoItems="(no choices)"/>
@@ -795,27 +891,30 @@ BEGIN_JUCER_METADATA
          virtualName="" explicitFocusOrder="0" pos="0 327 80 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="VELO CURVE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <LABEL name="biasPointLabel" id="8db74046eb660d30" memberName="m_biasPointLabel"
          virtualName="" explicitFocusOrder="0" pos="88 68 48 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="POINT" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="biasPointSlider" id="4ef39c9a6ee52b73" memberName="m_biasPointSlider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="88 84 48 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="biasLevelLabel" id="1b7c77405f23be2c" memberName="m_biasLevelLabel"
          virtualName="" explicitFocusOrder="0" pos="140 68 48 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="LEVEL" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="biasLevelSlider" id="2155aedfd6600e68" memberName="m_biasLevelSlider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="140 84 48 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <JUCERCOMP name="panRandomToggle" id="1dee3cc7cfd57bb1" memberName="m_panRandomToggle"
              virtualName="" explicitFocusOrder="0" pos="307 82 25 17" sourceFile="../ParameterWidgets/BlackToggle.cpp"
              constructorParams=""/>
@@ -823,40 +922,44 @@ BEGIN_JUCER_METADATA
          virtualName="" explicitFocusOrder="0" pos="287 66 64 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="RANDOM" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="panAlternateSlider" id="7aed98a67fac3fdb" memberName="m_panAlternateSlider"
           virtualName="MicroParameterSlider" explicitFocusOrder="0" pos="292 116 56 16"
-          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0" max="127" int="1"
+          bkgcol="fff2f59b" thumbcol="ffc4c86d" min="0.0" max="127.0" int="1.0"
           style="LinearBar" textBoxPos="TextBoxLeft" textBoxEditable="1"
-          textBoxWidth="40" textBoxHeight="20" skewFactor="1"/>
+          textBoxWidth="40" textBoxHeight="20" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="panAlternateLabel" id="674286f7173a73be" memberName="m_panAlternateLabel"
          virtualName="" explicitFocusOrder="0" pos="280 100 80 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="ALTERNATE" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <JUCERCOMP name="lfoGrp" id="5d2169b0330e13c6" memberName="m_lfoGrp" virtualName="PanelGroupGrey"
              explicitFocusOrder="0" pos="0 404 0M 88" sourceFile="../GroupWidgets/PanelGroupTransp.cpp"
              constructorParams="&quot;lfoGrp&quot;, &quot;LFO MODULATION&quot;"/>
   <SLIDER name="lfo1AmpDepthSlider" id="5139dffd40f5b193" memberName="m_lfo1AmpDepthSlider"
           virtualName="Knob" explicitFocusOrder="0" pos="16 436 32 48"
-          textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
+          textboxbkgd="fff2f59b" min="0.0" max="127.0" int="1.0" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="16" skewFactor="1"/>
+          textBoxHeight="16" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="lfo1AmpDepthLabel" id="ddaad26232bd3db3" memberName="m_lfo1AmpDepthLabel"
          virtualName="" explicitFocusOrder="0" pos="0 420 68 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="LVL LFO 1" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="lfo2AmpDepthSlider" id="37bb334dae2c4ad2" memberName="m_lfo2AmpDepthSlider"
           virtualName="Knob" explicitFocusOrder="0" pos="204 436 32 48"
-          textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
+          textboxbkgd="fff2f59b" min="0.0" max="127.0" int="1.0" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="16" skewFactor="1"/>
+          textBoxHeight="16" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="lfo2AmpDepthLabel" id="20feaad1dd36b9a5" memberName="m_lfo2AmpDepthLabel"
          virtualName="" explicitFocusOrder="0" pos="188 420 68 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="LVL LFO 2" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <TEXTBUTTON name="lfo1AdvancedButton" id="9de90d61ee7dcce4" memberName="m_lfo1AdvancedButton"
               virtualName="TextWithArrowButton" explicitFocusOrder="0" pos="124 464 56 21"
               buttonText="LFO 1" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
@@ -865,52 +968,56 @@ BEGIN_JUCER_METADATA
               buttonText="LFO 2" connectedEdges="0" needsCallback="1" radioGroupId="0"/>
   <SLIDER name="lfo1PanDepthSlider" id="c423b0297a1ea359" memberName="m_lfo1PanDepthSlider"
           virtualName="Knob" explicitFocusOrder="0" pos="84 436 32 48"
-          textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
+          textboxbkgd="fff2f59b" min="0.0" max="127.0" int="1.0" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="16" skewFactor="1"/>
+          textBoxHeight="16" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="lfo1PanDepthLabel" id="ae0b0bedb7b968c0" memberName="m_lfo1PanDepthLabel"
          virtualName="" explicitFocusOrder="0" pos="68 420 68 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PAN LFO 1" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <SLIDER name="lfo2PanDepthSlider" id="d7070b8492bc762b" memberName="m_lfo2PanDepthSlider"
           virtualName="Knob" explicitFocusOrder="0" pos="272 436 32 48"
-          textboxbkgd="fff2f59b" min="0" max="127" int="1" style="RotaryHorizontalVerticalDrag"
+          textboxbkgd="fff2f59b" min="0.0" max="127.0" int="1.0" style="RotaryHorizontalVerticalDrag"
           textBoxPos="TextBoxBelow" textBoxEditable="1" textBoxWidth="80"
-          textBoxHeight="16" skewFactor="1"/>
+          textBoxHeight="16" skewFactor="1.0" needsCallback="1"/>
   <LABEL name="lfo2PanDepthLabel" id="4c1b4ff05ff89f84" memberName="m_lfo2PanDepthLabel"
          virtualName="" explicitFocusOrder="0" pos="256 420 68 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="PAN LFO 2" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <IMAGEBUTTON name="imageButton" id="f18ffef17196cb40" memberName="m_imageButton"
                virtualName="" explicitFocusOrder="0" pos="3 1 16 16" buttonText=""
                connectedEdges="0" needsCallback="0" radioGroupId="0" keepProportions="1"
-               resourceNormal="amp_png" opacityNormal="1" colourNormal="4340454a"
-               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
-               opacityDown="1" colourDown="4340454a"/>
+               resourceNormal="amp_png" opacityNormal="1.0" colourNormal="4340454a"
+               resourceOver="" opacityOver="1.0" colourOver="4340454a" resourceDown=""
+               opacityDown="1.0" colourDown="4340454a"/>
   <SLIDER name="toneLevelSlider" id="b0bd5a61181f569c" memberName="m_toneLevelSlider"
           virtualName="ParameterEnvelopeSlider" explicitFocusOrder="0"
-          pos="8 168 56 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0"
-          max="127" int="1" style="LinearVertical" textBoxPos="TextBoxBelow"
-          textBoxEditable="1" textBoxWidth="56" textBoxHeight="16" skewFactor="1"/>
+          pos="8 168 56 116" bkgcol="f2f59b" textboxbkgd="fff2f59b" min="0.0"
+          max="127.0" int="1.0" style="LinearVertical" textBoxPos="TextBoxBelow"
+          textBoxEditable="1" textBoxWidth="56" textBoxHeight="16" skewFactor="1.0"
+          needsCallback="1"/>
   <LABEL name="filterEnvelopeDepthLabel" id="611da7e96f52143f" memberName="m_filterEnvelopeDepthLabel"
          virtualName="" explicitFocusOrder="0" pos="0 156 72 16" textCol="ff000000"
          edTextCol="ff000000" edBkgCol="0" labelText="TONE LEVEL" editableSingleClick="0"
          editableDoubleClick="0" focusDiscardsChanges="0" fontname="Default font"
-         fontsize="12" bold="1" italic="0" justification="36"/>
+         fontsize="12.0" kerning="0.0" bold="1" italic="0" justification="36"
+         typefaceStyle="Bold"/>
   <IMAGEBUTTON name="imageButton" id="3a50d5aaabf6910d" memberName="m_imageButton2"
                virtualName="" explicitFocusOrder="0" pos="3 141 16 16" buttonText=""
                connectedEdges="0" needsCallback="0" radioGroupId="0" keepProportions="1"
-               resourceNormal="amp_png" opacityNormal="1" colourNormal="4340454a"
-               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
-               opacityDown="1" colourDown="4340454a"/>
+               resourceNormal="amp_png" opacityNormal="1.0" colourNormal="4340454a"
+               resourceOver="" opacityOver="1.0" colourOver="4340454a" resourceDown=""
+               opacityDown="1.0" colourDown="4340454a"/>
   <IMAGEBUTTON name="imageButton" id="570f3b3b741de5e4" memberName="m_imageButton3"
                virtualName="" explicitFocusOrder="0" pos="3 405 16 16" buttonText=""
                connectedEdges="0" needsCallback="1" radioGroupId="0" keepProportions="1"
-               resourceNormal="lfo_png" opacityNormal="1" colourNormal="4340454a"
-               resourceOver="" opacityOver="1" colourOver="4340454a" resourceDown=""
-               opacityDown="1" colourDown="4340454a"/>
+               resourceNormal="lfo_png" opacityNormal="1.0" colourNormal="4340454a"
+               resourceOver="" opacityOver="1.0" colourOver="4340454a" resourceDown=""
+               opacityDown="1.0" colourDown="4340454a"/>
 </JUCER_COMPONENT>
 
 END_JUCER_METADATA
@@ -943,3 +1050,4 @@ const int AmpEditorAdvanced::lfo_pngSize = 235;
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+

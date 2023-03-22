@@ -12,6 +12,7 @@
 
 #include "OverallMemoryBlock.h"
 #include "QuickSysExBlock.h"
+#include <float.h>
 
 extern OverallMemoryBlock* grooveboxMemory;
 extern QuickSysExBlock* quickSysEx;
@@ -30,7 +31,7 @@ BeatSignature::BeatSignature(uint8 numerator, uint8 denominator) :
 	bool fractionIsOkay = false;
 	
 	unsigned int indexOfLeastDiff = 0;
-	float leastDiff = FLT_MAX; // indefinite by default
+	float leastDiff =  FLT_MAX; // indefinite by default
 
 	for (unsigned int i = 0; i < ALLOWED_FRACTIONS_SIZE; i++)
 	{

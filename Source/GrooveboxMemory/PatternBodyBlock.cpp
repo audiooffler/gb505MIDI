@@ -859,7 +859,7 @@ void PatternBodyBlock::setTableSelectionMidiOutId(int id)
 {
 	if (id >= 0 && id < MidiOutput::getDevices().size())
 	{
-		tableSelectionMidiOut = MidiOutput::openDevice(id);
+		tableSelectionMidiOut = juce::MidiOutput::openDevice(id);
 	}
 }
 
@@ -1466,7 +1466,7 @@ void PatternBodyBlock::createBlockSendMessages(OwnedArray<SyxMsg, CriticalSectio
 
 void PatternBodyBlock::loadMidiFile(File &file)
 {
-	ScopedPointer<InputStream> loadStream = file.createInputStream();
+	std::unique_ptr<InputStream> loadStream (file.createInputStream());
 	MidiFile midiFile;
 	midiFile.readFrom(*loadStream);
 

@@ -1,18 +1,18 @@
 /*
   ==============================================================================
 
-  This is an automatically generated GUI class created by the Introjucer!
+  This is an automatically generated GUI class created by the Projucer!
 
   Be careful when adding custom code to these files, as only the code within
   the "//[xyz]" and "//[/xyz]" sections will be retained when the file is loaded
   and re-saved.
 
-  Created with Introjucer version: 4.1.0
+  Created with Projucer version: 7.0.2
 
   ------------------------------------------------------------------------------
 
-  The Introjucer is part of the JUCE library - "Jules' Utility Class Extensions"
-  Copyright (c) 2015 - ROLI Ltd.
+  The Projucer is part of the JUCE library.
+  Copyright (c) 2020 - Raw Material Software Limited.
 
   ==============================================================================
 */
@@ -33,7 +33,7 @@ GrabSwitch::GrabSwitch (const String &name)
     //[Constructor_pre] You can add your own custom stuff here..
     //[/Constructor_pre]
 
-    cachedImage_grabSwitchOff54x49_png_1 = ImageCache::getFromMemory (grabSwitchOff54x49_png, grabSwitchOff54x49_pngSize);
+    cachedImage_grabSwitchOff54x49_png_1 = juce::ImageCache::getFromMemory (grabSwitchOff54x49_png, grabSwitchOff54x49_pngSize);
 
     //[UserPreSize]
 	cachedImage_grabSwitchOn54x49_png = ImageCache::getFromMemory(grabSwitchOn54x49_png, grabSwitchOn54x49_pngSize);
@@ -60,16 +60,21 @@ GrabSwitch::~GrabSwitch()
 }
 
 //==============================================================================
-void GrabSwitch::paint (Graphics& g)
+void GrabSwitch::paint (juce::Graphics& g)
 {
     //[UserPrePaint] Add your own custom painting code here..
     //[/UserPrePaint]
 
-    g.setColour (Colours::black);
-    g.drawImageWithin (cachedImage_grabSwitchOff54x49_png_1,
-                       0, 0, getWidth() - 0, getHeight() - 0,
-                       RectanglePlacement::centred | RectanglePlacement::onlyReduceInSize,
-                       false);
+    {
+        int x = 0, y = 0, width = getWidth() - 0, height = getHeight() - 0;
+        //[UserPaintCustomArguments] Customize the painting arguments here..
+        //[/UserPaintCustomArguments]
+        g.setColour (juce::Colours::black);
+        g.drawImageWithin (cachedImage_grabSwitchOff54x49_png_1,
+                           x, y, width, height,
+                           juce::RectanglePlacement::centred | juce::RectanglePlacement::onlyReduceInSize,
+                           false);
+    }
 
     //[UserPaint] Add your own custom painting code here..
 	g.setColour(Colours::transparentBlack);
@@ -105,7 +110,7 @@ void GrabSwitch::resized()
     //[/UserResized]
 }
 
-void GrabSwitch::mouseDown (const MouseEvent& e)
+void GrabSwitch::mouseDown (const juce::MouseEvent& e)
 {
     //[UserCode_mouseDown] -- Add your code here...
 	if (m_grabbed)
@@ -127,7 +132,7 @@ void GrabSwitch::mouseDown (const MouseEvent& e)
     //[/UserCode_mouseDown]
 }
 
-void GrabSwitch::mouseUp (const MouseEvent& e)
+void GrabSwitch::mouseUp (const juce::MouseEvent& e)
 {
     //[UserCode_mouseUp] -- Add your code here...
 	#ifdef JUCE_MSVC
@@ -155,9 +160,9 @@ bool GrabSwitch::hitTest(int x, int y)
 
 //==============================================================================
 #if 0
-/*  -- Introjucer information section --
+/*  -- Projucer information section --
 
-    This is where the Introjucer stores the metadata that describe this GUI layout, so
+    This is where the Projucer stores the metadata that describe this GUI layout, so
     make changes in here at your peril!
 
 BEGIN_JUCER_METADATA
@@ -172,7 +177,7 @@ BEGIN_JUCER_METADATA
     <METHOD name="mouseUp (const MouseEvent&amp; e)"/>
   </METHODS>
   <BACKGROUND backgroundColour="0">
-    <IMAGE pos="0 0 0M 0M" resource="grabSwitchOff54x49_png" opacity="1"
+    <IMAGE pos="0 0 0M 0M" resource="grabSwitchOff54x49_png" opacity="1.0"
            mode="2"/>
   </BACKGROUND>
 </JUCER_COMPONENT>
@@ -323,3 +328,4 @@ const int GrabSwitch::grabSwitchOn54x49_pngSize = 2275;
 
 //[EndFile] You can add extra defines here...
 //[/EndFile]
+
